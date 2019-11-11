@@ -67,7 +67,7 @@ body {
     object-fit: cover;
 }
 
-.default, footer div {
+.default {
     padding: 1rem 2rem;
 }
 
@@ -242,12 +242,62 @@ header div:nth-child(2) ul {
 }
 
 footer {
-    background-color: #cccccc;
+    background-color: white;
     padding: 20px 0px;
-    font-size: 0.5em;
-    color: #888888;
     text-align: center;
-    display: block;
+    display: grid;
+    grid-template-areas: "l a b r"
+                         "l c c r";
+    font-family: "Adobe Clean",sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+footer div {
+    box-sizing: border-box;
+}
+
+footer ul {
+    margin: 0;
+    padding: 0;
+}
+
+footer ul li {
+    display: inline-block;
+}
+
+footer div:nth-of-type(1) {
+    grid-area: a;
+    text-align: left;
+}
+
+footer div:nth-of-type(2) {
+    grid-area: b;
+    text-align: right;
+}
+
+footer div:nth-of-type(2) li::before {
+    content: " / ";
+}
+
+footer div:nth-of-type(2) li:first-of-type::before {
+    content: " ";
+}
+
+footer div:nth-of-type(3) {
+    grid-area: c;
+    text-align: right;
+}
+
+footer svg {
+    fill: currentColor;
+    height: 1.5em;
+    width: 1.5em;
+    margin: 5px;
+}
+
+footer li:first-child svg {
+    fill: red;
 }
 
 header:empty, footer:empty {
@@ -323,8 +373,14 @@ main div:first-of-type h1 {
 }
 
 @media (min-width:900px) {
-    .default, footer div {
-        width: 800px;
+    .default {
         margin: auto;
+        width: 800px;
+    }
+
+    footer {
+        grid-template-columns: auto 300px 500px auto;
+        grid-template-rows: 50px 50px;
+        
     }
 }
