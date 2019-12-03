@@ -16,15 +16,15 @@ Travelocity even lets customers request custom deals based on price, travel date
 
 To read more about how Travelocity uses Adobe Marketing Cloud, visit: <http://www.adobe.com/content/dam/Adobe/en/customer-success/pdfs/travelocity-case-study.pdf>.
 
-* * *
+---
 
 by Lisa Hanna  
 posted on 12-14-2016
 
-* * *
+---
 
 Topics: Travel
 
-* * *
+---
 
 Products:

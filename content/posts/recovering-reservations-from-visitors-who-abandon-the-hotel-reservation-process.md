@@ -77,15 +77,15 @@ Jason Price is Executive Vice President and Mariana Mechoso Safer is Vice Presid
 HeBS Digital & Adobe Partnership  
 With HeBS Digital’s expertise in the hospitality industry and Adobe’s leading edge analytical and design tools, the two companies have forged a partnership in best practices in online marketing and distribution. To learn more about the partnership please visit us at http&#x3A;//www.hebsdigital.com/aboutus/adobepartnership.php or contact HeBS Digital consultants at (212) 752-8186 or success@hebsdigital.com.
 
-* * *
+---
 
 by Mark Boothe  
 posted on 02-07-2012
 
-* * *
+---
 
 Topics: Analytics, Travel
 
-* * *
+---
 
 Products:

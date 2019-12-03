@@ -50,15 +50,15 @@ Combining these industry-leading capabilities benefits companies and consumers a
 
 The ecommerce industry has fundamentally shifted as consumer preferences and expectations continue to change and rise. Now, headless commerce and best-of-breed technologies are no longer just industry buzzwords — they’re critical to the success of your modern ecommerce business.
 
-* * *
+---
 
 by James Gagliardi  
 posted on 11-21-2019
 
-* * *
+---
 
 Topics: Commerce, Customer Experience
 
-* * *
+---
 
 Products: Magento, Advertising Cloud, Data Analytics Cloud, Experience Manager

@@ -20,15 +20,15 @@ Core to who we are — genuine, exceptional, innovative and involved — Adobe h
 
 _For more details on how Adobe approached global gender pay parity, read [how we got there](https://theblog.adobe.com/global-pay-parity-how-we-got-there/)._
 
-* * *
+---
 
 by Donna Morris, Chief Human Resources Officer & Executive Vice President, Employee Experience  
 posted on 10-22-2018
 
-* * *
+---
 
 Topics: Adobe Leaders, Diversity, Leadership
 
-* * *
+---
 
 Products:

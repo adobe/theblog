@@ -38,15 +38,15 @@ The chant for “equal pay” that continues reinforces why I am incredibly prou
 
 Congratulations to USWNT on their stellar performance at the 2019 FIFA Women’s World Cup. You are an inspiration to all of us, and I support you while you’re on your journey towards equal pay!
 
-* * *
+---
 
 by Donna Morris, Chief Human Resources Officer & Executive Vice President, Employee Experience  
 posted on 07-12-2019
 
-* * *
+---
 
 Topics: Adobe Leaders, Diversity, Sustainability & Social Impact
 
-* * *
+---
 
 Products:

@@ -36,15 +36,15 @@ With most of the competing data governance and data labeling technology availabl
 
 _To learn more about other enhancements announced for Adobe Experience Platform,_[_click here_](https://www.adobe.com/content/dam/www/us/en/experience-platform/pdfs/data-governance-whitepaper.pdf).
 
-* * *
+---
 
 by Arun Manoharan  
 posted on 11-14-2019
 
-* * *
+---
 
 Topics: News
 
-* * *
+---
 
 Products: Experience Platform

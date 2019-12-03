@@ -43,15 +43,15 @@ Have a question about anything related to SiteCatalyst? Is there something on yo
 
 
 
-* * *
+---
 
 by Adam Greco  
 posted on 08-08-2008
 
-* * *
+---
 
 Topics:
 
-* * *
+---
 
 Products: Analytics

@@ -86,15 +86,15 @@ If you’re interested in trying Fresco for yourself, you have a great opportuni
 
 I know that professional artists will find a lot to love in Fresco. But I’m just as eager to have kids and people who have never thought of themselves as artists try it. Fresco on iPad lets you experiment with materials that most novices would never have access to. You can try out different kinds of media and different techniques and if things don’t turn out the way you expected, you can just undo and try something else. It’s the kind of flexible and forgiving environment that I hope will lead lots more people to discover the joys of painting and drawing.
 
-* * *
+---
 
 by Kyle Webster  
 posted on 09-24-2019
 
-* * *
+---
 
 Topics: Art, Creativity, News
 
-* * *
+---
 
 Products: Fresco

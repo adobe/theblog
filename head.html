@@ -24,8 +24,41 @@
     if (footer.innerHTML == "/footer.plain.html") footer.innerHTML = "";
   }
 
+  function getDiv(index) {
+    const nodes = document.querySelectorAll("div.default");
+    return nodes.length === 4 ? nodes[index] : null;
+  }
+
+  function fetchAuthor() {
+    const div = getDiv(1);
+    if (div) {
+      const r = /by ([a-zA-Z ]*)$/gm.exec(div.innerText);
+      const author = r.length > 1 ? r[1] : null;
+      if (author) {
+        const xhr = new XMLHttpRequest();
+        const fileName = author.replace(/\s/gm, '-').toLowerCase();
+        xhr.open('GET', '/content/authors/' + fileName + '.html');
+        xhr.onload = function() {
+          if (xhr.status != 200 || xhr.status != 304) { // analyze HTTP status of the response
+            const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText);
+            let main = groups.length > 2 ? groups[2] : null;
+            if (main) {
+              main = main.replace(fileName, '../authors/' + fileName);
+              div.outerHTML = main;
+              getDiv(1).classList.add('author');
+            }
+          } else {
+            console.log('Author not found...', xhr.response);
+          }
+        };
+        xhr.send();
+      }
+    }
+  }
+
   window.onload = function() {
     removeHeaderAndFooter();
+    fetchAuthor();
     scrani.onload();
   }
 
@@ -36,4 +69,5 @@
       document.querySelector("header div:nth-child(2)").style="";
     }
   }
+
 </script>

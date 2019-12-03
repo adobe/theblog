@@ -30,15 +30,15 @@ Beyond identifying the right accounts to target, ICF saw opportunities to levera
 
 _ICF is using Marketo Engage to delivering [personalized experiences](https://www.adobe.com/experience-cloud/use-cases/personalized-experiences.html "personalized experiences") across niche industries. [Learn more](https://www.adobe.com/marketing/marketo.html)._
 
-* * *
+---
 
 by The Adobe Blog team  
 posted on 10-22-2019
 
-* * *
+---
 
 Topics: Customer Experience, Email Marketing
 
-* * *
+---
 
 Products: Marketing Cloud, Marketo

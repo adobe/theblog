@@ -40,15 +40,15 @@ As Adobe continues to grow, we are dedicated to creating and enhancing workplace
 
 Our headquarters expansion marks a new chapter for Adobe, and we are thrilled to start it right here in San Jose. We plan to complete the North Tower in 2022, and we’ve set up a [construction time-lapse camera](https://app.oxblue.com/open/ADOBE/NORTHTOWER) to share the progress we’re making.
 
-* * *
+---
 
 by Donna Morris, Chief Human Resources Officer & Executive Vice President, Employee Experience  
 posted on 06-24-2019
 
-* * *
+---
 
 Topics: Adobe Leaders, News, Work
 
-* * *
+---
 
 Products:

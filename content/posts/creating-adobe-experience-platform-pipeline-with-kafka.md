@@ -95,15 +95,15 @@ _Follow the_[_Adobe Tech Blog_](http://medium.com/adobetech)_for more developer 
 
 _Originally published on the_[_Adobe Tech Blog_](https://medium.com/adobetech)_._
 
-* * *
+---
 
 by Jaemi Bremner  
 posted on 11-22-2019
 
-* * *
+---
 
 Topics: Analytics, Customer Experience
 
-* * *
+---
 
 Products: Experience Platform, Experience Cloud
