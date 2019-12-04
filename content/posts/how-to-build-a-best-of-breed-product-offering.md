@@ -2,9 +2,16 @@
 
 ### 
 
+---
+
 ![](how-to-build-a-best-of-breed-product-offering/Artboard-2-1800x0-c-default.png)
 
-How to Build a Best-Of-Breed Product Offering
+---
+
+by James Gagliardi  
+posted on 11-21-2019
+
+---
 
 In today’s competitive and ever-evolving [ecommerce](https://magento.com "ecommerce") industry, it’s crucial for brands to offer unparalleled shopping experiences. And as customer expectations continue to rise, these online merchants face a wealth of challenges to keep up and stand out from the pack.
 
@@ -52,13 +59,5 @@ The ecommerce industry has fundamentally shifted as consumer preferences and exp
 
 ---
 
-by James Gagliardi  
-posted on 11-21-2019
-
----
-
-Topics: Commerce, Customer Experience
-
----
-
+Topics: Commerce, Customer Experience  
 Products: Magento, Advertising Cloud, Data Analytics Cloud, Experience Manager

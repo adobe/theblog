@@ -2,9 +2,16 @@
 
 ### Investing in our employees and community as we expand our headquarters
 
+---
+
 ![](adobe-breaks-ground-on-north-tower-in-san-jose/AdobeNorthTowerRendering_01a.jpg)
 
-Adobe Breaks Ground on North Tower in San Jose
+---
+
+by Donna Morris  
+posted on 06-24-2019
+
+---
 
 Today we held a groundbreaking ceremony for the Adobe North Tower—the fourth tower at our global headquarters in downtown San Jose. We’re excited to expand our presence and our commitment to San Jose, adding capacity for approximately 4,000 incremental employees and growing our corporate campus. Adobe is tremendously proud to have called San Jose home for the last 25 years. It’s a city that is the heart of Silicon Valley and a location that allows us to attract some of the best talent in the industry.
 
@@ -42,13 +49,5 @@ Our headquarters expansion marks a new chapter for Adobe, and we are thrilled to
 
 ---
 
-by Donna Morris, Chief Human Resources Officer & Executive Vice President, Employee Experience  
-posted on 06-24-2019
-
----
-
-Topics: Adobe Leaders, News, Work
-
----
-
+Topics: Adobe Leaders, News, Work  
 Products:

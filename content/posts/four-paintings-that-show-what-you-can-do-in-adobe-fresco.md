@@ -2,11 +2,18 @@
 
 ### Now available for iPad
 
+---
+
 ![](four-paintings-that-show-what-you-can-do-in-adobe-fresco/image004.jpg)
 
 Artwork created by Kyle Webster.
 
-Four Paintings that Show What You Can Do in Adobe Fresco
+---
+
+by Kyle Webster  
+posted on 09-24-2019
+
+---
 
 A couple of years ago, I joined the Adobe team building our new [drawing and painting](https://www.adobe.com/creativecloud/drawing-painting.html) app, Adobe Fresco, to provide my perspective as a professional artist, illustrator and digital brush maker. Now, as we release Fresco to the world, I want to share an artist’s view of what you can do with the app and what I think makes it special.
 
@@ -88,13 +95,5 @@ I know that professional artists will find a lot to love in Fresco. But I’m ju
 
 ---
 
-by Kyle Webster  
-posted on 09-24-2019
-
----
-
-Topics: Art, Creativity, News
-
----
-
+Topics: Art, Creativity, News  
 Products: Fresco

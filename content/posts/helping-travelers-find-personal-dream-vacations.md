@@ -2,9 +2,16 @@
 
 ### 
 
+---
+
 ![](helping-travelers-find-personal-dream-vacations/Image-Helping-each-traveler-find-a-personal-dream-vacation-e1481591290520-1800x0-c-default.jpeg)
 
-Helping Travelers Find Their Personal Dream Vacations
+---
+
+by Lisa Hanna  
+posted on 12-14-2016
+
+---
 
 Wanderlust has never been easier to satisfy thanks to the proliferation of always-open travel websites and smartphone apps. However, the sheer number of options available challenges travelers to find deals tailored to their needs and preferences. Travelocity helps them locate the right trip at the right price with [Adobe Campaign](http://www.adobe.com/marketing-cloud/campaign-management.html) in [Adobe Marketing Cloud](http://www.adobe.com/marketing-cloud.html).
 
@@ -18,13 +25,5 @@ To read more about how Travelocity uses Adobe Marketing Cloud, visit: <http://ww
 
 ---
 
-by Lisa Hanna  
-posted on 12-14-2016
-
----
-
-Topics: Travel
-
----
-
+Topics: Travel  
 Products:

@@ -2,9 +2,16 @@
 
 ### 
 
+---
+
 ![](weve-achieved-global-gender-pay-parity-a-milestone-worth-celebrating/15-DSC_0516-e1539987003257-1800x0-c-default.jpg)
 
-We’ve Achieved Global Gender Pay Parity — a Milestone Worth Celebrating!
+---
+
+by Donna Morris  
+posted on 10-22-2018
+
+---
 
 Today, Adobe [announced](https://news.adobe.com/press-release/corporate/adobe-achieves-global-gender-pay-parity) that we have achieved global gender pay parity for all Adobe employees — a goal we set for ourselves earlier this year. I’m extremely proud of this accomplishment and the investment we continue to make in creating a culture that fairly rewards and recognizes the contributions of all our employees.
 
@@ -22,13 +29,5 @@ _For more details on how Adobe approached global gender pay parity, read [how we
 
 ---
 
-by Donna Morris, Chief Human Resources Officer & Executive Vice President, Employee Experience  
-posted on 10-22-2018
-
----
-
-Topics: Adobe Leaders, Diversity, Leadership
-
----
-
+Topics: Adobe Leaders, Diversity, Leadership  
 Products:

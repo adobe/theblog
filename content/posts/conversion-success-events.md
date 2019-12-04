@@ -2,7 +2,16 @@
 
 ### 
 
+---
+
 08-08-2008
+
+---
+
+by Adam Greco  
+posted on 08-08-2008
+
+---
 
 **SiteCatalyst Conversion Variables  
 **Omniture [SiteCatalyst](http://www.omniture.com/en/products/web_analytics/sitecatalyst) breaks its variables into two types: Traffic and Conversion. As discussed in my [last post](http://blogs.omniture.com/2008/08/05/traffic-variables-sprops/), Traffic Variables allow you to segment traffic metrics (i.e. Page Views) and utilize Pathing, whereas Conversion Variables allow you to quantify and segment the success actions taken by your site visitors. The Conversion area of SiteCatalyst is made up of two distinct variable types – Success Events and Conversion Variables (also known as eVars). In this post I will discuss Success Events, followed by Conversion Variables in my next posts.
@@ -45,13 +54,5 @@ Have a question about anything related to SiteCatalyst? Is there something on yo
 
 ---
 
-by Adam Greco  
-posted on 08-08-2008
-
----
-
-Topics:
-
----
-
+Topics:  
 Products: Analytics

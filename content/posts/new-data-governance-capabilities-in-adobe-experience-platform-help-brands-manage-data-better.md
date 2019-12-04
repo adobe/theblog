@@ -2,9 +2,16 @@
 
 ### 
 
+---
+
 ![](new-data-governance-capabilities-in-adobe-experience-platform-help-brands-manage-data-better/AdobeStock_214539256-e1573665817960-1800x0-c-default.jpeg)
 
-New Data Governance Capabilities in Adobe Experience Platform Help Brands Manage Data Better
+---
+
+by Arun Manoharan  
+posted on 11-14-2019
+
+---
 
 It’s an understatement to say that data is at the crux of business decision-making today. That’s precisely why so many companies are committed to democratizing data across their organizations, and empowering sales, marketing, IT, customer support and other teams, to better understand the wants and needs of customers.
 
@@ -38,13 +45,5 @@ _To learn more about other enhancements announced for Adobe Experience Platform,
 
 ---
 
-by Arun Manoharan  
-posted on 11-14-2019
-
----
-
-Topics: News
-
----
-
+Topics: News  
 Products: Experience Platform

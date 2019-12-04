@@ -2,9 +2,16 @@
 
 ### How we deployed a single enterprise-level message bus (“Pipeline”) using Kafka for Adobe Experience Platform.
 
+---
+
 ![](creating-adobe-experience-platform-pipeline-with-kafka/Blog-1920-x-1080-e1574389168935-1800x0-c-default.jpg)
 
-Creating Adobe Experience Platform Pipeline with Kafka
+---
+
+by Jaemi Bremner  
+posted on 11-22-2019
+
+---
 
 Over the last decade, the expectations for data processing at scale have changed dramatically. Data collection and processing have moved from being a largely batch-oriented affair to requiring fully streaming methodologies. This change has been driven by the needs of companies to work on high-velocity data and respond to changes in customer behavior and demand in seconds, not days and hours.
 
@@ -97,13 +104,5 @@ _Originally published on the_[_Adobe Tech Blog_](https://medium.com/adobetech)_.
 
 ---
 
-by Jaemi Bremner  
-posted on 11-22-2019
-
----
-
-Topics: Analytics, Customer Experience
-
----
-
+Topics: Analytics, Customer Experience  
 Products: Experience Platform, Experience Cloud

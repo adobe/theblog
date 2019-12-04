@@ -2,9 +2,16 @@
 
 ### 
 
+---
+
 ![](how-marketo-engage-helped-icf-align-sales-and-marketing/AdobeStock_132655772-e1571067327505-1800x0-c-default.jpeg)
 
-How Marketo Engage Helped ICF Align Sales And Marketing
+---
+
+by The Adobe Blog team  
+posted on 10-22-2019
+
+---
 
 Marketing transformation is not an easy task for a 50-year-old legacy company. Yet it’s a journey that global consulting and digital services firm [ICF](https://www.icf.com/) embarked on just over three years ago, as part of the company’s efforts to help clients solve their most complex challenges, navigate change and shape the future.
 
@@ -32,13 +39,5 @@ _ICF is using Marketo Engage to delivering [personalized experiences](https://ww
 
 ---
 
-by The Adobe Blog team  
-posted on 10-22-2019
-
----
-
-Topics: Customer Experience, Email Marketing
-
----
-
+Topics: Customer Experience, Email Marketing  
 Products: Marketing Cloud, Marketo

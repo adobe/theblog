@@ -2,7 +2,16 @@
 
 ### 
 
+---
+
 02-07-2012
+
+---
+
+by Mark Boothe  
+posted on 02-07-2012
+
+---
 
 This post starts the Adobe Digital Marketing Suite customer blog series. Today, we are focusing on what one of our extremely innovative customers–HeBS Digital–is doing with Adobe solutions. Check out this post to see how HeBS Digital has helped one of its customers make a significant amount of revenue for a customer.
 
@@ -79,13 +88,5 @@ With HeBS Digital’s expertise in the hospitality industry and Adobe’s leadin
 
 ---
 
-by Mark Boothe  
-posted on 02-07-2012
-
----
-
-Topics: Analytics, Travel
-
----
-
+Topics: Analytics, Travel  
 Products:

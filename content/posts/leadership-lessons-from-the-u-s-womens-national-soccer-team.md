@@ -2,9 +2,16 @@
 
 ### 
 
+---
+
 ![](leadership-lessons-from-the-u-s-womens-national-soccer-team/AdobeStock_1199494641-e1562939194859-1800x0-c-default.jpeg)
 
-Leadership Lessons from the U.S. Women’s National Soccer Team
+---
+
+by Donna Morris  
+posted on 07-12-2019
+
+---
 
 Few things bring people together the way that sports do. Whether you’re a player on the field or a fan cheering in the stands or watching on TV or online, sports foster a sense of belonging, comradery, and healthy competition. Team sports at their best underscore the importance of setting a collective goal, working together to leverage each individuals’ strengths and celebrating victory or loss as a group.
 
@@ -40,13 +47,5 @@ Congratulations to USWNT on their stellar performance at the 2019 FIFA Women’s
 
 ---
 
-by Donna Morris, Chief Human Resources Officer & Executive Vice President, Employee Experience  
-posted on 07-12-2019
-
----
-
-Topics: Adobe Leaders, Diversity, Sustainability & Social Impact
-
----
-
+Topics: Adobe Leaders, Diversity, Sustainability & Social Impact  
 Products:
