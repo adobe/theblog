@@ -24,14 +24,13 @@
     if (footer.innerHTML == "/footer.plain.html") footer.innerHTML = "";
   }
 
-  function getDiv(index) {
-    const nodes = document.querySelectorAll("div.default");
-    // TODO define edge cases, i.e. if number of divs is not what is 
-    return nodes.length === 4 ? nodes[index] : null;
+  function getSection(index) {
+    const nodes = document.querySelectorAll("main div");
+    return nodes.length > index ? nodes[index] : null;
   }
 
   function fetchAuthor() {
-    const div = getDiv(1);
+    const div = getSection(2);
     if (div) {
       const r = /by (.*)\n(.*)$/gm.exec(div.innerText);
       const author = r.length > 0 ? r[1] : null;
