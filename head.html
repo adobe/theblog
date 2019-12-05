@@ -38,7 +38,7 @@
       if (author) {
         const xhr = new XMLHttpRequest();
         const fileName = author.replace(/\s/gm, '-').toLowerCase();
-        const pageURL = '/content/authors/' + fileName + '.html';
+        const pageURL = '/authors/' + fileName + '.html';
         xhr.open('GET', pageURL);
         xhr.onload = function() {
           if (xhr.status != 200 || xhr.status != 304) {
