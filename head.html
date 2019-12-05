@@ -41,7 +41,8 @@
         const pageURL = '/content/authors/' + fileName + '.html';
         xhr.open('GET', pageURL);
         xhr.onload = function() {
-          if (xhr.status != 200 || xhr.status != 304) { // analyze HTTP status of the response
+          if (xhr.status != 200 || xhr.status != 304) {
+            // try to get <main> elements and find author image
             const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText);
             let main = groups.length > 2 ? groups[2] : null;
             if (main) {
