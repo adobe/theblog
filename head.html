@@ -16,6 +16,9 @@
 
 <script src="/scrani.js"></script>
 <script>
+
+  var nodes;
+
   function removeHeaderAndFooter () {
     // workaound until the ESI is fixed
     const header = document.querySelector("header");
@@ -25,8 +28,8 @@
   }
 
   function getSection(index) {
-    const nodes = document.querySelectorAll("main div");
-    return nodes.length > index ? nodes[index] : null;
+    if (!nodes) nodes = document.querySelectorAll("main div");
+    return index && nodes.length > index ? nodes[index] : nodes[nodes.length - 1];
   }
 
   function fetchAuthor() {
@@ -64,9 +67,34 @@
     }
   }
 
+  function fetchTopics() {
+    const div = getSection();
+    if (div) {
+      const r = /^Topics\: (.*)$/gm.exec(div.innerText);
+      const topics = r.length > 0 ? r[1].split(', ') : null;
+      if (topics) {
+        div.innerText = div.innerText.substring(0, div.innerText.lastIndexOf(r[0]));
+        const topicsWrap = document.createElement('div');
+        topicsWrap.className = 'default topics';
+        // const btnWrap = document.createElement('div');
+        topics.forEach((topic) => {
+          const btn = document.createElement('a');
+          btn.href = `/topics/${topic.replace(/\s/gm, '-').toLowerCase()}.html`;
+          btn.title = topic;
+          btn.innerText = topic;
+
+          topicsWrap.appendChild(btn);
+        });
+        // topicsWrap.appendChild(btnWrap);
+        div.parentNode.appendChild(topicsWrap);
+      }
+    }
+  }
+
   window.onload = function() {
     removeHeaderAndFooter();
     fetchAuthor();
+    fetchTopics();
     scrani.onload();
   }
 
