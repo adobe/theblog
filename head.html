@@ -32,7 +32,7 @@
   function fetchAuthor() {
     const div = getSection(2);
     if (div) {
-      const r = /by (.*)\n*(.*)$/gm.exec(div.innerText);
+      const r = /^[Bb]y (.*)\n*(.*)$/gm.exec(div.innerText);
       const author = r.length > 0 ? r[1] : null;
       const date = r.length > 1 ? r[2] : ''
       if (author) {
