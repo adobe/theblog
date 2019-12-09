@@ -24,8 +24,49 @@
     if (footer.innerHTML == "/footer.plain.html") footer.innerHTML = "";
   }
 
+  function getSection(index) {
+    const nodes = document.querySelectorAll("main div");
+    return nodes.length > index ? nodes[index] : null;
+  }
+
+  function fetchAuthor() {
+    const div = getSection(2);
+    if (div) {
+      const r = /^[Bb]y (.*)\n*(.*)$/gm.exec(div.innerText);
+      const author = r.length > 0 ? r[1] : null;
+      const date = r.length > 1 ? r[2] : ''
+      if (author) {
+        const xhr = new XMLHttpRequest();
+        const fileName = author.replace(/\s/gm, '-').toLowerCase();
+        const pageURL = '/authors/' + fileName + '.html';
+        xhr.open('GET', pageURL);
+        xhr.onload = function() {
+          if (xhr.status != 200 || xhr.status != 304) {
+            // try to get <main> elements and find author image
+            const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText);
+            let main = groups.length > 2 ? groups[2] : null;
+            if (main) {
+              main = main.replace(fileName, '../authors/' + fileName);
+
+              const avatarURL = /<img src="(.*?)">/.exec(main)[1];
+              div.innerHTML = '<img src="' + avatarURL + '"> \
+                <span class="post-author">by <a href="' + pageURL + '">' + author + '</a></span> \
+                <span class="post-date">' + date + '</span> \
+                ';
+              div.classList.add('author');
+            }
+          } else {
+            console.log('Author not found...', xhr.response);
+          }
+        };
+        xhr.send();
+      }
+    }
+  }
+
   window.onload = function() {
     removeHeaderAndFooter();
+    fetchAuthor();
     scrani.onload();
   }
 
@@ -36,4 +77,5 @@
       document.querySelector("header div:nth-child(2)").style="";
     }
   }
+
 </script>
