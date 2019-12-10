@@ -73,7 +73,7 @@
       const r = /^Topics\: (.*)$/gm.exec(div.innerText);
       const topics = r.length > 0 ? r[1].split(', ') : null;
       if (topics) {
-        div.innerText = div.innerText.substring(0, div.innerText.lastIndexOf(r[0]));
+        div.innerText = div.innerText.replace(r[0], '');
         const topicsWrap = document.createElement('div');
         topicsWrap.className = 'default topics';
         // const btnWrap = document.createElement('div');
