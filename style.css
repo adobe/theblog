@@ -477,3 +477,44 @@ main div:first-of-type h1 {
 .topics a:hover {
   color: #007bff;
 }
+
+
+.products::before {
+    content: "Adobe Products in this article";
+    display: block;
+    margin-bottom: 15px;
+    color: rgb(10,10,10);
+    text-align: center;
+    text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    font-family: "Adobe Clean",sans-serif;
+    font-size: .75rem;
+    line-height:18px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    user-select: text;
+  }
+
+.products {
+    left: calc(((100vw - 700px)/ 2 - 170px)/ 2);
+    position: absolute;
+    z-index: 10;
+    width: 170px;
+    margin-top: 230px;
+
+    font-family: "Adobe Clean",sans-serif;
+    font-size: .75rem;
+    text-align: center;
+}
+
+.products a {
+    margin: 0 .125rem .5rem;
+}
+
+.products a img {
+    width: 3.125rem;
+    height: 3.125rem;
+    max-width: 1.875rem;
+    max-height: 1.875rem;
+    margin: 0 .188rem;
+}

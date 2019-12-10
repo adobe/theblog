@@ -57,6 +57,8 @@
                 <span class="post-date">' + date + '</span> \
                 ';
               div.classList.add('author');
+
+              fetchProducts(div);
             }
           } else {
             console.log('Author not found...', xhr.response);
@@ -87,6 +89,35 @@
         });
         // topicsWrap.appendChild(btnWrap);
         div.parentNode.appendChild(topicsWrap);
+      }
+    }
+  }
+
+  function fetchProducts(inserAfter) {
+    const div = getSection();
+    if (div) {
+      const r = /^Products\: (.*)$/gm.exec(div.innerText);
+      const products = r.length > 0 ? r[1].split(', ') : null;
+      if (products) {
+        div.innerText = div.innerText.replace(r[0], '');
+        const productsWrap = document.createElement('div');
+        productsWrap.className = 'default products';
+        products.forEach((product) => {
+          const productRef = product.replace(/\s/gm, '-').toLowerCase();
+
+          const btn = document.createElement('a');
+          btn.href = `https://www.adobe.com/${productRef}.html`;
+          btn.title = product;
+
+          const img = document.createElement('img');
+          img.src = `/products/${productRef}.svg`;
+          img.alt = product;
+
+          btn.appendChild(img);
+
+          productsWrap.appendChild(btn);
+        });
+        inserAfter.after(productsWrap);
       }
     }
   }
