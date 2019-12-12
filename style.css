@@ -477,3 +477,39 @@ main div:first-of-type h1 {
 .topics a:hover {
   color: #007bff;
 }
+
+.social::before {
+  content: "Follow me on";
+  display: block;
+  margin-bottom: 5px;
+  color: rgb(10,10,10);
+  text-align: center;
+  text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  font-family: "Adobe Clean",sans-serif;
+  font-size: .75rem;
+  line-height:18px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  user-select: text;
+}
+.social {
+  margin: 0 auto 100px auto;
+  text-align:center;
+}
+
+.social svg {
+  fill: #000;
+  height: 1em;
+  width: 1em;
+  margin: 0 10px;
+}
+
+.author .social {
+  margin: 0;
+  width: auto;
+}
+
+.author .social svg {
+  margin: 0 5px;
+}
