@@ -112,13 +112,15 @@
     const div = getSection();
     if (div) {
       const r = /^Topics\: (.*)$/gm.exec(div.innerText);
-      const topics = r && r.length > 0 ? r[1].split(', ') : null;
+      const topics = r.length > 0 ? r[1].split(',') : null;
       if (topics) {
         div.innerText = div.innerText.replace(r[0], '');
         const topicsWrap = document.createElement('div');
         topicsWrap.className = 'default topics';
         // const btnWrap = document.createElement('div');
         topics.forEach((topic) => {
+          topic = topic.trim();
+          if (!topic) return;
           const btn = document.createElement('a');
           btn.href = `/topics/${topic.replace(/\s/gm, '-').toLowerCase()}.html`;
           btn.title = topic;
@@ -165,12 +167,14 @@
     }
     if (source) {
       const r = /^Social\: (.*)$/gm.exec(source.innerText);
-      const links = r && r.length > 0 ? r[1].split(', ') : null;
+      const links = r && r.length > 0 ? r[1].split(',') : null;
       if (links) {
         source.innerHTML = source.innerHTML.replace(/<p>Social\: .*<\/p>/gi, '');
         const socialWrap = document.createElement('div');
         socialWrap.className = 'default social';
         links.forEach((url) => {
+          url = url.trim();
+          if (!url) return;
           const { title, type } = getSocialLinkDetails(url);
           const link = document.createElement('a');
           link.className = `social-${type}`;
