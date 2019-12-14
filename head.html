@@ -160,7 +160,7 @@
 
   function fetchSocialLinks(source, target) {
     if (!source) {
-      source = getSection(); // get the last section of the current document
+      source = getSection(0); // get the last section of the current document
     }
     if (!target) {
       target = source.parentNode;
@@ -183,7 +183,7 @@
           link.appendChild(createSVG(type));
           socialWrap.appendChild(link);
         });
-        target.appendChild(socialWrap);
+        target.insertBefore(socialWrap, source.nextSibling);
       }
     }
   }
