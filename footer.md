@@ -51,7 +51,7 @@ Copyright &copy; 2019 Adobe. All rights reserved.
       instantsearch.widgets.configure({
         hitsPerPage: 10,
         facetFilters: [
-          `author:"${document.title}"`,
+          `blog-posts.author:${document.title}`,
         ],
       }),
     ]);
