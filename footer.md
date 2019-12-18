@@ -41,23 +41,26 @@ Copyright &copy; 2019 Adobe. All rights reserved.
     const latestWrap = document.createElement('div');
     latestWrap.className = 'default latest-posts';
     getSection().parentNode.appendChild(latestWrap);
-    const searchClient = algoliasearch('A8PL9E4TZT', 'c5f99b37bfef18fd6ad1c440b5abd6c9');
+    const searchClient = algoliasearch('LPQI0MG7ST', '9bf61456f606d21ddc1723f30500659e');
     const search = instantsearch({
-      indexName: 'davidnuescheler--theblog--blogposts',
-      searchClient,    
+      indexName: 'davidnuescheler--theblog--blog-posts',
+      searchClient,
       routing: true,
     });
     search.addWidgets([
       instantsearch.widgets.configure({
         hitsPerPage: 10,
-      })
+        facetFilters: [
+          `author:"${document.title}"`,
+        ],
+      }),
     ]);
     search.addWidgets([
       instantsearch.widgets.hits({
         container: '.latest-posts',
         templates: {
           item: document.getElementById('post-template').innerHTML,
-          empty: 'This author has not posted anything yet.',
+          empty: 'This author has not posted any articles yet.',
         },
       })
     ]);
