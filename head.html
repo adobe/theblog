@@ -142,10 +142,10 @@
     const insertInside = getSection(2);
     if (insertInside) {
       insertInside.classList.add('left');
-      const r = /^Products\: (.*)$/gm.exec(last.innerText);
+      const r = /^Products\: (.*)$/gmi.exec(last.innerText);
       const products = r.length > 0 ? r[1].split(', ') : null;
       if (products) {
-        last.innerText = last.innerText.replace(r[0], '');
+        last.innerText = last.innerHTML.replace(`<p>${r[0]}</p>`, '');
         const productsWrap = document.createElement('div');
         productsWrap.className = 'products';
         products.forEach((product) => {
