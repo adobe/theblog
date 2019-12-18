@@ -57,8 +57,6 @@
                 <span class="post-date">' + date + '</span> \
                 ';
               div.classList.add('author');
-
-              fetchProducts(div);
             }
           } else {
             console.log('Author not found...', xhr.response);
@@ -93,9 +91,10 @@
     }
   }
 
-  function fetchProducts(inserAfter) {
+  function fetchProducts() {
     const div = getSection();
-    if (div) {
+    const insertAfter = getSection(2);
+    if (insertAfter) {
       const r = /^Products\: (.*)$/gm.exec(div.innerText);
       const products = r.length > 0 ? r[1].split(', ') : null;
       if (products) {
@@ -117,7 +116,7 @@
 
           productsWrap.appendChild(btn);
         });
-        inserAfter.after(productsWrap);
+        insertAfter.after(productsWrap);
       }
     }
   }
@@ -126,6 +125,7 @@
     removeHeaderAndFooter();
     fetchAuthor();
     fetchTopics();
+    fetchProducts();
     scrani.onload();
   }
 
