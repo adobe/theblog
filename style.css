@@ -395,7 +395,7 @@ main div:first-of-type h1 {
     }
 }
 
-.author {
+.left {
     left: calc(((100vw - 700px)/ 2 - 170px)/ 2);
     position: absolute;
     z-index: 10;
@@ -495,15 +495,7 @@ main div:first-of-type h1 {
   }
 
 .products {
-    left: calc(((100vw - 700px)/ 2 - 170px)/ 2);
-    position: absolute;
-    z-index: 10;
-    width: 170px;
-    margin-top: 250px;
-
-    font-family: "Adobe Clean",sans-serif;
-    font-size: .75rem;
-    text-align: center;
+    margin-top: 1.25rem;
 }
 
 .products a {
