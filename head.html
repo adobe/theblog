@@ -141,7 +141,7 @@
       const r = /^Products\: (.*)$/gm.exec(div.innerText);
       const products = r.length > 0 ? r[1].split(', ') : null;
       if (products) {
-        div.innerText = div.innerText.replace(r[0], '');
+        div.innerHTML = div.innerHTML.replace(`<p>${r[0]}</p>`, '');
         const productsWrap = document.createElement('div');
         productsWrap.className = 'default products';
         products.forEach((product) => {
