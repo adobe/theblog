@@ -494,7 +494,7 @@ main div:first-of-type h1 {
   user-select: text;
 }
 .social {
-  margin: 0 auto 100px auto;
+  margin: 0 auto 50px auto;
   text-align:center;
 }
 
@@ -519,7 +519,6 @@ main div:first-of-type h1 {
   display: block;
   margin-bottom: 5px;
   color: rgb(10,10,10);
-  text-align: center;
   text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
   font-family: "Adobe Clean",sans-serif;
@@ -531,5 +530,5 @@ main div:first-of-type h1 {
 }
 
 .latest-posts {
-  border:3px solid lime;
+  margin-bottom:100px;
 }

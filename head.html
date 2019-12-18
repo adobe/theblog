@@ -68,7 +68,7 @@
   function fetchAuthor() {
     const div = getSection(2);
     if (div) {
-      const r = /^[Bb]y (.*)\n*(.*)$/gm.exec(div.innerText);
+      const r = /^By (.*)\n*(.*)$/gmi.exec(div.innerText);
       const author = r && r.length > 0 ? r[1] : null;
       const date = r && r.length > 1 ? r[2] : ''
       if (author) {
@@ -93,7 +93,6 @@
             }
             // try to get the author's social links
             const socialLinks = /<p>(Social\: .*)<\/p>/gi.exec(xhr.responseText);
-            console.log(socialLinks);
             if (socialLinks) {
               const p = document.createElement('p');
               p.innerHTML = socialLinks[1];
@@ -111,13 +110,12 @@
   function fetchTopics() {
     const div = getSection();
     if (div) {
-      const r = /^Topics\: (.*)$/gm.exec(div.innerText);
+      const r = /^Topics\: (.*)$/gmi.exec(div.innerText);
       const topics = r.length > 0 ? r[1].split(',') : null;
       if (topics) {
-        div.innerText = div.innerText.replace(r[0], '');
+        div.innerHTML = div.innerHTML.replace(`<p>${r[0]}</p>`, '');
         const topicsWrap = document.createElement('div');
         topicsWrap.className = 'default topics';
-        // const btnWrap = document.createElement('div');
         topics.forEach((topic) => {
           topic = topic.trim();
           if (!topic) return;
@@ -128,7 +126,6 @@
 
           topicsWrap.appendChild(btn);
         });
-        // topicsWrap.appendChild(btnWrap);
         div.parentNode.appendChild(topicsWrap);
       }
     }
@@ -152,9 +149,12 @@
         title = t;
       }
     });
+    if (!title) title = 'Unknown';
+    const type = title.toLowerCase();
     return { 
       title,
-      type: title.toLowerCase(),
+      type,
+      className: `social-${type}`,
     };
   }
 
@@ -166,7 +166,7 @@
       target = source.parentNode;
     }
     if (source) {
-      const r = /^Social\: (.*)$/gm.exec(source.innerText);
+      const r = /^Social\: (.*)$/gmi.exec(source.innerText);
       const links = r && r.length > 0 ? r[1].split(',') : null;
       if (links) {
         source.innerHTML = source.innerHTML.replace(/<p>Social\: .*<\/p>/gi, '');
@@ -175,9 +175,9 @@
         links.forEach((url) => {
           url = url.trim();
           if (!url) return;
-          const { title, type } = getSocialLinkDetails(url);
+          const { title, type, className } = getSocialLinkDetails(url);
           const link = document.createElement('a');
-          link.className = `social-${type}`;
+          link.className = className;
           link.title = title;
           link.href = url;
           link.appendChild(createSVG(type));
