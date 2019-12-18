@@ -17,7 +17,36 @@
 <script src="/scrani.js"></script>
 <script>
 
-  var nodes;
+  /*
+   * all pages
+   */
+
+  let nodes;
+  const pageTypes = [
+    'posts',
+    'authors',
+    'topics',
+    'products',
+  ];
+
+  function getPageType(path) {
+    const type = /^\/(.*)\//.exec(path);
+    if (type) {
+      const idx = pageTypes.indexOf(type[1]);
+      if (idx !== -1) {
+        return pageTypes[idx];
+      }
+    }
+    return pageTypes[0]; // fall back to post
+  }
+
+  function createSVG(id) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+    use.setAttributeNS('http://www.w3.org/1999/xlink','href',`/icons.svg#${id}`);
+    svg.appendChild(use);
+    return svg;
+  }
 
   function removeHeaderAndFooter () {
     // workaound until the ESI is fixed
@@ -32,12 +61,16 @@
     return index && nodes.length > index ? nodes[index] : nodes[nodes.length - 1];
   }
 
+  /*
+   * post page
+   */
+
   function fetchAuthor() {
     const div = getSection(2);
     if (div) {
       const r = /^[Bb]y (.*)\n*(.*)$/gm.exec(div.innerText);
-      const author = r.length > 0 ? r[1] : null;
-      const date = r.length > 1 ? r[2] : ''
+      const author = r && r.length > 0 ? r[1] : null;
+      const date = r && r.length > 1 ? r[2] : ''
       if (author) {
         const xhr = new XMLHttpRequest();
         const fileName = author.replace(/\s/gm, '-').toLowerCase();
@@ -58,6 +91,14 @@
                 ';
               div.classList.add('author');
             }
+            // try to get the author's social links
+            const socialLinks = /<p>(Social\: .*)<\/p>/gi.exec(xhr.responseText);
+            console.log(socialLinks);
+            if (socialLinks) {
+              const p = document.createElement('p');
+              p.innerHTML = socialLinks[1];
+              fetchSocialLinks(p, div);
+            }
           } else {
             console.log('Author not found...', xhr.response);
           }
@@ -71,13 +112,15 @@
     const div = getSection();
     if (div) {
       const r = /^Topics\: (.*)$/gm.exec(div.innerText);
-      const topics = r.length > 0 ? r[1].split(', ') : null;
+      const topics = r.length > 0 ? r[1].split(',') : null;
       if (topics) {
         div.innerText = div.innerText.replace(r[0], '');
         const topicsWrap = document.createElement('div');
         topicsWrap.className = 'default topics';
         // const btnWrap = document.createElement('div');
         topics.forEach((topic) => {
+          topic = topic.trim();
+          if (!topic) return;
           const btn = document.createElement('a');
           btn.href = `/topics/${topic.replace(/\s/gm, '-').toLowerCase()}.html`;
           btn.title = topic;
@@ -121,11 +164,73 @@
     }
   }
 
+  /*
+   * author page
+   */
+
+  const socialLinkTitles = [
+    'Twitter',
+    'LinkedIn',
+    'Facebook',
+    'YouTube',
+  ];
+
+  function getSocialLinkDetails(url) {
+    let title;
+    socialLinkTitles.forEach((t) => {
+      if (!title && url.indexOf(t.toLowerCase()) > 0) {
+        title = t;
+      }
+    });
+    return { 
+      title,
+      type: title.toLowerCase(),
+    };
+  }
+
+  function fetchSocialLinks(source, target) {
+    if (!source) {
+      source = getSection(); // get the last section of the current document
+    }
+    if (!target) {
+      target = source.parentNode;
+    }
+    if (source) {
+      const r = /^Social\: (.*)$/gm.exec(source.innerText);
+      const links = r && r.length > 0 ? r[1].split(',') : null;
+      if (links) {
+        source.innerHTML = source.innerHTML.replace(/<p>Social\: .*<\/p>/gi, '');
+        const socialWrap = document.createElement('div');
+        socialWrap.className = 'default social';
+        links.forEach((url) => {
+          url = url.trim();
+          if (!url) return;
+          const { title, type } = getSocialLinkDetails(url);
+          const link = document.createElement('a');
+          link.className = `social-${type}`;
+          link.title = title;
+          link.href = url;
+          link.appendChild(createSVG(type));
+          socialWrap.appendChild(link);
+        });
+        target.appendChild(socialWrap);
+      }
+    }
+  }
+
   window.onload = function() {
-    removeHeaderAndFooter();
-    fetchAuthor();
-    fetchTopics();
-    fetchProducts();
+    switch (getPageType(window.location.pathname)) {
+      case pageTypes[0]: // posts
+        fetchAuthor();
+        fetchTopics();
+      case pageTypes[1]: // authors
+        fetchSocialLinks();
+        fetchProducts();
+      case pageTypes[2]: // topics
+      case pageTypes[3]: // products
+      default: // all pages
+        removeHeaderAndFooter();
+    }
     scrani.onload();
   }
 
