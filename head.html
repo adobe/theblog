@@ -37,28 +37,28 @@
    */
 
   let nodes;
-  const pageTypes = [
-    'posts',
-    'authors',
-    'topics',
-    'products',
-  ];
+  const TYPE = {
+    POST: 'posts',
+    AUTHOR: 'authors',
+    TOPIC: 'topics',
+    PRODUCT: 'products',
+  }
 
   function getPageType() {
     const type = /^\/(.*)\//.exec(window.location.pathname);
     if (type) {
-      const idx = pageTypes.indexOf(type[1]);
+      const idx = TYPE.keys().indexOf(type[1]);
       if (idx !== -1) {
-        return pageTypes[idx];
+        return TYPE.keys()[idx];
       }
     }
-    return pageTypes[0]; // fall back to post
+    return TYPE.POST; // fall back to post
   }
   const pageType = getPageType();
-  const isPost = pageType === pageTypes[0];
-  const isAuthor = pageType === pageTypes[1];
-  const isTopic = pageType === pageTypes[2];
-  const isProduct = pageType === pageTypes[3];
+  const isPost = pageType === TYPE.POST;
+  const isAuthor = pageType === TYPE.AUTHOR;
+  const isTopic = pageType === TYPE.TOPIC;
+  const isProduct = pageType === TYPE.PRODUCT;
 
   function createSVG(id) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -101,7 +101,7 @@
         insertInside.innerHTML = '';
         const xhr = new XMLHttpRequest();
         const fileName = author.replace(/\s/gm, '-').toLowerCase();
-        const pageURL = getLink(pageTypes[1], author);
+        const pageURL = getLink(TYPE.AUTHOR, author);
         xhr.open('GET', pageURL);
         xhr.onload = function() {
           if (xhr.status != 200 || xhr.status != 304) {
@@ -155,7 +155,7 @@
           topic = topic.trim();
           if (!topic) return;
           const btn = document.createElement('a');
-          btn.href = getLink(pageTypes[2], topic);
+          btn.href = getLink(TYPE.TOPIC, topic);
           btn.title = topic;
           btn.innerText = topic;
 
@@ -294,7 +294,7 @@
               month: '2-digit',
               year: 'numeric',
             }),
-            authorUrl: getLink(pageTypes[1], item.author),
+            authorUrl: getLink(TYPE.AUTHOR, item.author),
           }));
         },
       }),
