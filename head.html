@@ -6,16 +6,16 @@
 <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.0.0/dist/instantsearch.production.min.js" integrity="sha256-6S7q0JJs/Kx4kb/fv0oMjS855QTz5Rc2hh9AkIUjUsk=" crossorigin="anonymous"></script>
 <script type="text/html" id="post-template">
   <div class="post">
-    <div class="related-topics__wrapper hit-content">
-      <div class="related-topics__thumb hit-image">
-        <img src="{{hero}}" alt="{{name}}">
+    <a href="/{{path}}" title="{{{title}}}">
+      <div class="hero"><img src="{{hero}}" alt="{{{title}}}"></div>
+      <div class="content">
+        <span class="author">
+          <a href="{{authorUrl}}" title="{{{author}}}">{{{author}}}</a>
+        </span>
+        <h2>{{{title}}}</h2>
+        <span class="date">{{{date}}}</span>
       </div>
-      <a class="related-topics__link hit-view" href="/{{path}}" target="_new">
-        <span class="related-topics__txt hit-description">{{{author}}}</span>
-        <h2 class="related-topics__subHl hit-name">{{{title}}}</h2>
-        <span class="related-topics__txt hit-description">{{{date}}}</span>
-      </a>
-    </div>
+    </a>
   </div>
 </script>
 <script>
@@ -77,6 +77,10 @@
     return index && nodes.length > index ? nodes[index] : nodes[nodes.length - 1];
   }
 
+  function getLink(type, name) {
+    return `/${type}/${name.replace(/\s/gm, '-').toLowerCase()}.html`;
+  }
+
   /*
    * post page
    */
@@ -93,7 +97,7 @@
         insertInside.innerHTML = '';
         const xhr = new XMLHttpRequest();
         const fileName = author.replace(/\s/gm, '-').toLowerCase();
-        const pageURL = '/authors/' + fileName + '.html';
+        const pageURL = getLink(pageTypes[1], author);
         xhr.open('GET', pageURL);
         xhr.onload = function() {
           if (xhr.status != 200 || xhr.status != 304) {
@@ -147,7 +151,7 @@
           topic = topic.trim();
           if (!topic) return;
           const btn = document.createElement('a');
-          btn.href = `/topics/${topic.replace(/\s/gm, '-').toLowerCase()}.html`;
+          btn.href = getLink(pageTypes[2], topic);
           btn.title = topic;
           btn.innerText = topic;
 
@@ -286,6 +290,7 @@
               month: '2-digit',
               year: 'numeric',
             }),
+            authorUrl: getLink(pageTypes[1], item.author),
           }));
         },
       }),
