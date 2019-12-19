@@ -2,6 +2,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 
+<script src="https://cdn.jsdelivr.net/npm/algoliasearch@3/dist/algoliasearch.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.0.0/dist/instantsearch.production.min.js" integrity="sha256-6S7q0JJs/Kx4kb/fv0oMjS855QTz5Rc2hh9AkIUjUsk=" crossorigin="anonymous"></script>
+<script type="text/html" id="post-template">
+  <div class="post">
+      <div class="hero"><a href="/{{path}}" title="{{{title}}}"><img src="{{hero}}" alt="{{{title}}}"></a></div>
+      <div class="content">
+        <span class="author">
+          <a href="{{authorUrl}}" title="{{{author}}}">{{{author}}}</a>
+        </span>
+        <h2><a href="/{{path}}" title="{{{title}}}">{{{title}}}</a></h2>
+        <span class="date">{{{date}}}</span>
+      </div>
+    </a>
+  </div>
+</script>
 <script>
   (function(d) {
       var config = {
@@ -29,8 +44,8 @@
     'products',
   ];
 
-  function getPageType(path) {
-    const type = /^\/(.*)\//.exec(path);
+  function getPageType() {
+    const type = /^\/(.*)\//.exec(window.location.pathname);
     if (type) {
       const idx = pageTypes.indexOf(type[1]);
       if (idx !== -1) {
@@ -39,6 +54,11 @@
     }
     return pageTypes[0]; // fall back to post
   }
+  const pageType = getPageType();
+  const isPost = pageType === pageTypes[0];
+  const isAuthor = pageType === pageTypes[1];
+  const isTopic = pageType === pageTypes[2];
+  const isProduct = pageType === pageTypes[3];
 
   function createSVG(id) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -61,6 +81,10 @@
     return index && nodes.length > index ? nodes[index] : nodes[nodes.length - 1];
   }
 
+  function getLink(type, name) {
+    return `/${type}/${name.replace(/\s/gm, '-').toLowerCase()}.html`;
+  }
+
   /*
    * post page
    */
@@ -69,7 +93,7 @@
     const insertInside = getSection(2);
     if (insertInside) {
       insertInside.classList.add('left');
-      const r = /^[Bb]y (.*)\n*(.*)$/gm.exec(insertInside.innerText);
+      const r = /^By (.*)\n*(.*)$/gmi.exec(insertInside.innerText);
       const author = r && r.length > 0 ? r[1] : null;
       const date = r && r.length > 1 ? r[2] : ''
       if (author) {
@@ -77,7 +101,7 @@
         insertInside.innerHTML = '';
         const xhr = new XMLHttpRequest();
         const fileName = author.replace(/\s/gm, '-').toLowerCase();
-        const pageURL = '/authors/' + fileName + '.html';
+        const pageURL = getLink(pageTypes[1], author);
         xhr.open('GET', pageURL);
         xhr.onload = function() {
           if (xhr.status != 200 || xhr.status != 304) {
@@ -131,7 +155,7 @@
           topic = topic.trim();
           if (!topic) return;
           const btn = document.createElement('a');
-          btn.href = `/topics/${topic.replace(/\s/gm, '-').toLowerCase()}.html`;
+          btn.href = getLink(pageTypes[2], topic);
           btn.title = topic;
           btn.innerText = topic;
 
@@ -198,9 +222,12 @@
         title = t;
       }
     });
+    if (!title) title = 'Unknown';
+    const type = title.toLowerCase();
     return { 
       title,
-      type: title.toLowerCase(),
+      type,
+      className: `social-${type}`,
     };
   }
 
@@ -212,7 +239,7 @@
       target = source.parentNode;
     }
     if (source) {
-      const r = /^Social\: (.*)$/gm.exec(source.innerText);
+      const r = /^Social\: (.*)$/gmi.exec(source.innerText);
       const links = r && r.length > 0 ? r[1].split(',') : null;
       if (links) {
         source.innerHTML = source.innerHTML.replace(/<p>Social\: .*<\/p>/gi, '');
@@ -221,33 +248,79 @@
         links.forEach((url) => {
           url = url.trim();
           if (!url) return;
-          const { title, type } = getSocialLinkDetails(url);
+          const { title, type, className } = getSocialLinkDetails(url);
           const link = document.createElement('a');
-          link.className = `social-${type}`;
+          link.className = className;
           link.title = title;
           link.href = url;
           link.appendChild(createSVG(type));
           socialWrap.appendChild(link);
         });
-        target.appendChild(socialWrap);
+        target.insertBefore(socialWrap, source.nextSibling);
       }
     }
   }
 
+  function fetchLatestPosts() {
+    const latestWrap = document.createElement('div');
+    latestWrap.className = 'default latest-posts';
+    getSection().parentNode.appendChild(latestWrap);
+    const searchClient = algoliasearch('LPQI0MG7ST', '9bf61456f606d21ddc1723f30500659e');
+    const search = instantsearch({
+      indexName: 'davidnuescheler--theblog--blog-posts',
+      searchClient,
+      routing: true,
+    });
+    search.addWidgets([
+      instantsearch.widgets.configure({
+        hitsPerPage: 10,
+        facetFilters: [
+          `author:${document.title}`,
+        ],
+      }),
+    ]);
+    search.addWidgets([
+      instantsearch.widgets.hits({
+        container: '.latest-posts',
+        templates: {
+          item: document.getElementById('post-template').innerHTML,
+          empty: 'This author has not posted any articles yet.',
+        },
+        transformItems(items) {
+          return items.map(item => ({
+            ...item,
+            date: new Date(item.date * 1000).toLocaleDateString('en-US', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+            }),
+            authorUrl: getLink(pageTypes[1], item.author),
+          }));
+        },
+      }),
+    ]);
+    search.start();
+  }
+
   window.onload = function() {
-    switch (getPageType(window.location.pathname)) {
-      case pageTypes[0]: // posts
-        fetchAuthor();
-        fetchTopics();
-        fetchProducts();
-      case pageTypes[1]: // authors
-        fetchSocialLinks();
-      case pageTypes[2]: // topics
-      case pageTypes[3]: // products
-      default: // all pages
-        removeHeaderAndFooter();
-    }
+    removeHeaderAndFooter();
     scrani.onload();
+
+    if (isPost) {
+      fetchAuthor();
+      fetchTopics();
+      fetchProducts();
+    }
+    if (isAuthor) {
+      fetchSocialLinks();
+      fetchLatestPosts();
+    }
+    if (isTopic) {
+      // todo
+    }
+    if (isProduct) {
+      // todo
+    }
   }
 
   window.onhashchange = function() {

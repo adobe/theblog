@@ -460,7 +460,7 @@ main div:first-of-type h1 {
   text-transform: uppercase;
   text-decoration: none;
   line-height: 1;
-  color: #000;
+  color: rgb(10,10,10);
   position: relative;
   font-weight: 500;
   font-size: .693rem;
@@ -527,7 +527,7 @@ main div:first-of-type h1 {
 }
 
 .social {
-  margin: 0 auto 100px auto;
+  margin: 0 auto 50px auto;
   text-align:center;
 }
 
@@ -545,4 +545,92 @@ main div:first-of-type h1 {
 
 .author .social svg {
   margin: 0 5px;
+}
+
+.latest-posts::before {
+  content: "Latest";
+  display: block;
+  margin-bottom: 10px;
+  color: rgba(10,10,10, 0.8);
+  text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  font-family: "Adobe Clean",sans-serif;
+  font-size: .75rem;
+  line-height: 18px;
+  font-weight: 800;
+  letter-spacing: .02em;
+  user-select: text;
+}
+
+.latest-posts {
+  margin-bottom:100px;
+  background-color: rgb(232, 232, 232);
+}
+
+.ais-Hits ol,
+.ais-Hits ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+
+.post {
+  background-color: white;
+  font-size: .75rem;
+  color: rgb(10,10,10);
+  width:256px;
+  height: 350px;
+  margin: 0 15px 15px 0;
+  display: inline-block;
+  text-align: left;
+}
+
+.post .hero {
+  height: 120px;
+}
+
+.post .hero img {
+  object-fit: cover;
+  width: 100%;
+  height: 120px;
+  margin: 0;
+}
+
+.post .content {
+  padding: 10px 10px 10px 20px;
+  height: 205px;
+  text-align: left;
+  display: inline-flex;
+  flex-direction: column;
+}
+
+.post h2 {
+  text-align: left;
+  margin: 0 0 10px 0;
+  font-size: 1.5rem;
+  flex-grow: 1;
+  text-overflow: ellipsis;
+}
+
+.post a {
+  text-decoration:none;
+  color: currentColor;
+}
+
+.post span {
+  display: block;
+  width: 100%;
+}
+
+.post span {
+  font-family: "Adobe Clean", sans-serif;
+  font-weight: 800;
+  color: rgb(153, 153, 153);
+}
+
+.post .date {
+  align-self: flex-end;
 }
