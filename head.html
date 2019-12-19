@@ -6,13 +6,12 @@
 <script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.0.0/dist/instantsearch.production.min.js" integrity="sha256-6S7q0JJs/Kx4kb/fv0oMjS855QTz5Rc2hh9AkIUjUsk=" crossorigin="anonymous"></script>
 <script type="text/html" id="post-template">
   <div class="post">
-    <a href="/{{path}}" title="{{{title}}}">
-      <div class="hero"><img src="{{hero}}" alt="{{{title}}}"></div>
+      <div class="hero"><a href="/{{path}}" title="{{{title}}}"><img src="{{hero}}" alt="{{{title}}}"></a></div>
       <div class="content">
         <span class="author">
           <a href="{{authorUrl}}" title="{{{author}}}">{{{author}}}</a>
         </span>
-        <h2>{{{title}}}</h2>
+        <h2><a href="/{{path}}" title="{{{title}}}">{{{title}}}</a></h2>
         <span class="date">{{{date}}}</span>
       </div>
     </a>
@@ -45,8 +44,8 @@
     'products',
   ];
 
-  function getPageType(path) {
-    const type = /^\/(.*)\//.exec(path);
+  function getPageType() {
+    const type = /^\/(.*)\//.exec(window.location.pathname);
     if (type) {
       const idx = pageTypes.indexOf(type[1]);
       if (idx !== -1) {
@@ -55,6 +54,11 @@
     }
     return pageTypes[0]; // fall back to post
   }
+  const pageType = getPageType();
+  const isPost = pageType === pageTypes[0];
+  const isAuthor = pageType === pageTypes[1];
+  const isTopic = pageType === pageTypes[2];
+  const isProduct = pageType === pageTypes[3];
 
   function createSVG(id) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -299,20 +303,24 @@
   }
 
   window.onload = function() {
-    switch (getPageType(window.location.pathname)) {
-      case pageTypes[0]: // posts
-        fetchAuthor();
-        fetchTopics();
-        fetchProducts();
-      case pageTypes[1]: // authors
-        fetchSocialLinks();
-        fetchLatestPosts();
-      case pageTypes[2]: // topics
-      case pageTypes[3]: // products
-      default: // all pages
-        removeHeaderAndFooter();
-    }
+    removeHeaderAndFooter();
     scrani.onload();
+
+    if (isPost) {
+      fetchAuthor();
+      fetchTopics();
+      fetchProducts();
+    }
+    if (isAuthor) {
+      fetchSocialLinks();
+      fetchLatestPosts();
+    }
+    if (isTopic) {
+      // todo
+    }
+    if (isProduct) {
+      // todo
+    }
   }
 
   window.onhashchange = function() {
