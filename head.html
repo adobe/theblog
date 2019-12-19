@@ -278,6 +278,16 @@
           item: document.getElementById('post-template').innerHTML,
           empty: 'This author has not posted any articles yet.',
         },
+        transformItems(items) {
+          return items.map(item => ({
+            ...item,
+            date: new Date(item.date * 1000).toLocaleDateString('en-US', {
+              day: '2-digit',
+              month: '2-digit',
+              year: 'numeric',
+            }),
+          }));
+        },
       }),
     ]);
     search.start();
