@@ -229,7 +229,7 @@
 
   function fetchSocialLinks(source, target) {
     if (!source) {
-      source = getSection(0); // get the last section of the current document
+      source = getSection(); // get the last section of the current document
     }
     if (!target) {
       target = source.parentNode;
