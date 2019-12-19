@@ -148,7 +148,7 @@
     const insertInside = getSection(2);
     if (insertInside) {
       insertInside.classList.add('left');
-      let topics, container;
+      let products, container;
       Array.from(last.children).forEach((i) => {
         const r = /^Products\: (.*)$/gmi.exec(i.innerText);
         if (r && r.length > 0) {
