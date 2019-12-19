@@ -115,16 +115,16 @@
   function fetchTopics() {
     const last = getSection();
     if (last) {
-      let topics, div;
+      let topics, container;
       Array.from(last.children).forEach((i) => {
         const r = /^Topics\: (.*)$/gmi.exec(i.innerText);
         if (r && r.length > 0) {
           topics = r[1].split(',');
-          div = i;
+          container = i;
         }
       });
       if (topics) {
-        div.remove();
+        container.remove();
         const topicsWrap = document.createElement('div');
         topicsWrap.className = 'default topics';
         topics.forEach((topic) => {
@@ -148,16 +148,16 @@
     const insertInside = getSection(2);
     if (insertInside) {
       insertInside.classList.add('left');
-      let topics, div;
+      let topics, container;
       Array.from(last.children).forEach((i) => {
         const r = /^Products\: (.*)$/gmi.exec(i.innerText);
         if (r && r.length > 0) {
           products = r[1].split(',');
-          div = i;
+          container = i;
         }
       });
       if (products) {
-        div.remove();
+        container.remove();
         const productsWrap = document.createElement('div');
         productsWrap.className = 'products';
         products.forEach((product) => {
@@ -239,9 +239,9 @@
       case pageTypes[0]: // posts
         fetchAuthor();
         fetchTopics();
+        fetchProducts();
       case pageTypes[1]: // authors
         fetchSocialLinks();
-        fetchProducts();
       case pageTypes[2]: // topics
       case pageTypes[3]: // products
       default: // all pages
