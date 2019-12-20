@@ -80,6 +80,10 @@ body {
     width: 100vw;
 }
 
+.homepage main {
+  padding-top: 76px;
+}
+
 .default img {
     max-width: 100%;
 }

@@ -36,8 +36,8 @@
    * all pages
    */
 
-  let nodes;
   const TYPE = {
+    HOME: 'homepage',
     POST: 'posts',
     AUTHOR: 'authors',
     TOPIC: 'topics',
@@ -47,14 +47,17 @@
   function getPageType() {
     const type = /^\/(.*)\//.exec(window.location.pathname);
     if (type) {
-      const idx = TYPE.keys().indexOf(type[1]);
-      if (idx !== -1) {
-        return TYPE.keys()[idx];
+      for (let [key, value] of Object.entries(TYPE)) {
+        if (value === type[1]) {
+          return value;
+        }
       }
     }
-    return TYPE.POST; // fall back to post
+    return TYPE.HOME; // fall back to hoempage
   }
+
   const pageType = getPageType();
+  const isHome = pageType == TYPE.HOME;
   const isPost = pageType === TYPE.POST;
   const isAuthor = pageType === TYPE.AUTHOR;
   const isTopic = pageType === TYPE.TOPIC;
@@ -77,12 +80,76 @@
   }
 
   function getSection(index) {
-    if (!nodes) nodes = document.querySelectorAll("main div");
+    const nodes = document.querySelectorAll("main div");
     return index && nodes.length > index ? nodes[index] : nodes[nodes.length - 1];
   }
 
   function getLink(type, name) {
     return `/${type}/${name.replace(/\s/gm, '-').toLowerCase()}.html`;
+  }
+
+  function setupSearch({
+    indexName = 'davidnuescheler--theblog--blog-posts',
+    hitsPerPage = 10,
+    facetFilters = [],
+    container = '.posts',
+    templates = {
+      item: '',
+      empty: '',
+    },
+    transformer = (item) => item,
+  }) {
+    const searchClient = algoliasearch('LPQI0MG7ST', '9bf61456f606d21ddc1723f30500659e');
+    const search = instantsearch({
+      indexName,
+      searchClient,
+      routing: true,
+    });
+    search.addWidgets([
+      instantsearch.widgets.configure({
+        hitsPerPage,
+        facetFilters,
+      }),
+    ]);
+    search.addWidgets([
+      instantsearch.widgets.hits({
+        container,
+        templates,
+        transformItems(items) {
+          return items.map(item => transformer(item));
+        },
+      }),
+    ]);
+    return search;
+  }
+
+  /*
+   * homepage
+   */
+
+  function setupHomepage() {
+    document.body.classList.add('homepage');
+    document.querySelectorAll('main div')[0].remove();
+
+    const latestWrap = document.createElement('div');
+    latestWrap.className = 'default latest-posts';
+    getSection().parentNode.appendChild(latestWrap);
+    setupSearch({
+      container: '.latest-posts',
+      templates: {
+        item: document.getElementById('post-template').innerHTML,
+        empty: 'There are no articles yet.',
+      },
+      transformer: (item) => ({
+        ...item,
+        date: new Date(item.date * 1000).toLocaleDateString('en-US', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+        }),
+        authorUrl: getLink(TYPE.AUTHOR, item.author),
+      }),
+    }).start();
   }
 
   /*
@@ -265,60 +332,42 @@
     const latestWrap = document.createElement('div');
     latestWrap.className = 'default latest-posts';
     getSection().parentNode.appendChild(latestWrap);
-    const searchClient = algoliasearch('LPQI0MG7ST', '9bf61456f606d21ddc1723f30500659e');
-    const search = instantsearch({
-      indexName: 'davidnuescheler--theblog--blog-posts',
-      searchClient,
-      routing: true,
-    });
-    search.addWidgets([
-      instantsearch.widgets.configure({
-        hitsPerPage: 10,
-        facetFilters: [
+    setupSearch({
+      facetFilters: [
           `author:${document.title}`,
         ],
+      container: '.latest-posts',
+      templates: {
+        item: document.getElementById('post-template').innerHTML,
+        empty: 'This author has not posted any articles yet.',
+      },
+      transformer: (item) => ({
+        ...item,
+        date: new Date(item.date * 1000).toLocaleDateString('en-US', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+        }),
+        authorUrl: getLink(TYPE.AUTHOR, item.author),
       }),
-    ]);
-    search.addWidgets([
-      instantsearch.widgets.hits({
-        container: '.latest-posts',
-        templates: {
-          item: document.getElementById('post-template').innerHTML,
-          empty: 'This author has not posted any articles yet.',
-        },
-        transformItems(items) {
-          return items.map(item => ({
-            ...item,
-            date: new Date(item.date * 1000).toLocaleDateString('en-US', {
-              day: '2-digit',
-              month: '2-digit',
-              year: 'numeric',
-            }),
-            authorUrl: getLink(TYPE.AUTHOR, item.author),
-          }));
-        },
-      }),
-    ]);
-    search.start();
+    }).start();
   }
 
   window.onload = function() {
     removeHeaderAndFooter();
     scrani.onload();
-
-    if (isPost) {
+    if (isHome) {
+      setupHomepage();
+    } else if (isPost) {
       fetchAuthor();
       fetchTopics();
       fetchProducts();
-    }
-    if (isAuthor) {
+    } else if (isAuthor) {
       fetchSocialLinks();
       fetchLatestPosts();
-    }
-    if (isTopic) {
+    } else if (isTopic) {
       // todo
-    }
-    if (isProduct) {
+    } else if (isProduct) {
       // todo
     }
   }
