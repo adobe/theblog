@@ -47,13 +47,15 @@
   function getPageType() {
     const type = /^\/(.*)\//.exec(window.location.pathname);
     if (type) {
-      const idx = TYPE.keys().indexOf(type[1]);
-      if (idx !== -1) {
-        return TYPE.keys()[idx];
+      for (let [key, value] of Object.entries(TYPE)) {
+        if (value === type[1]) {
+          return value;
+        }
       }
     }
-    return TYPE.POST; // fall back to post
+    return TYPE.HOME; // fall back to hoempage
   }
+
   const pageType = getPageType();
   const isPost = pageType === TYPE.POST;
   const isAuthor = pageType === TYPE.AUTHOR;
