@@ -74,6 +74,7 @@ body {
 .image {
     padding: 0;
     margin: 0;
+    font-size: 0;
 }
 
 .image img {
@@ -572,7 +573,7 @@ main div:first-of-type h1 {
 
 .latest-posts {
   margin-bottom:100px;
-  background-color: rgb(232, 232, 232);
+  background-color: #f7f4f4;
 }
 
 .ais-Hits ol,
@@ -643,39 +644,75 @@ main div:first-of-type h1 {
 }
 
 .homepage main .default {
-  margin: 0;
-  padding: 0;
   width:100vw;
 }
 
-.homepage .posts li:first-child .post {
+.homepage .latest-posts {
+  padding: 0 0 2rem 0;
+}
+
+.homepage .latest-posts::before {
+  display: none;
+}
+
+.homepage main .ais-Hits ol,
+.homepage main .ais-Hits ul {
+  justify-content: center;
+}
+
+.homepage main .post {
+  margin: 0 20px;
+}
+
+.homepage main li .content {
+  flex-direction: column-reverse;
+}
+
+.homepage main li .content {
+  flex-direction: column-reverse;
+}
+
+.homepage main li:first-child .post {
   width: 100vw;
   height: 50vh;
   min-height:240px;
-  margin-bottom: 30px;
+  margin: 0 0 30px 0;
   display: flex;
   font-size: 1rem;
 }
 
-.homepage .posts li:first-child .hero img {
+.homepage main li:first-child .hero img {
   height: 50vh;
   min-height: 240px;
-  width: 70vw;
+  width: 60vw;
 }
 
-.homepage .posts li:first-child h2 {
-  font-size: 2rem;
+.homepage main li:first-child h2 {
+  font-size: 2.25rem;
 }
 
-.homepage .posts li:first-child .content {
-  flex-direction: column-reverse;
-  width: 30vw;
-  min-width: 200px;
+.homepage main li:first-child .content {
+  padding: 10px 30px;
+  width: 40vw;
   height: 50vh;
-  min-height:240px;
   box-sizing: border-box;
 }
 
-.homepage .posts li:first-child span {
+.homepage main li:first-child span {
   font-weight: 600;
+}
+
+.homepage main li:first-child::after {
+  content: "Latest Stories";
+  display: block;
+  margin: 40px 0;
+  color: rgb(153,153,153);
+  text-align: center;
+  text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  font-family: "Adobe Clean",sans-serif;
+  font-size: 1.5rem;
+  line-height:18px;
+  font-weight: 600;
+  user-select: text;
 }
