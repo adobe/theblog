@@ -131,11 +131,11 @@
     document.body.classList.add('homepage');
     document.querySelectorAll('main div')[0].remove();
 
-    const latestWrap = document.createElement('div');
-    latestWrap.className = 'default latest-posts';
-    getSection().parentNode.appendChild(latestWrap);
+    const postsWrap = document.createElement('div');
+    postsWrap.className = 'default posts';
+    getSection().parentNode.appendChild(postsWrap);
     setupSearch({
-      container: '.latest-posts',
+      container: '.homepage .posts',
       templates: {
         item: document.getElementById('post-template').innerHTML,
         empty: 'There are no articles yet.',

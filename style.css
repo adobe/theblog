@@ -84,6 +84,12 @@ body {
   padding-top: 76px;
 }
 
+.homepage main .default {
+  margin: 0;
+  padding: 0;
+  width:100vw;
+}
+
 .default img {
     max-width: 100%;
 }
@@ -312,6 +318,14 @@ footer svg {
 
 footer li:first-child svg {
     fill: red;
+}
+
+header svg {
+  fill: red;
+  height: 1em;
+  width: 1em;
+  margin: 5px 10px;
+  float: left;
 }
 
 header:empty, footer:empty {
@@ -580,7 +594,6 @@ main div:first-of-type h1 {
   flex-flow: row wrap;
 }
 
-
 .post {
   background-color: white;
   font-size: .75rem;
@@ -590,10 +603,6 @@ main div:first-of-type h1 {
   margin: 0 15px 15px 0;
   display: inline-block;
   text-align: left;
-}
-
-.post .hero {
-  height: 120px;
 }
 
 .post .hero img {
@@ -637,4 +646,36 @@ main div:first-of-type h1 {
 
 .post .date {
   align-self: flex-end;
+}
+
+.homepage .posts li:first-child .post {
+  width: 100vw;
+  height: 50vh;
+  min-height:240px;
+  margin-bottom: 30px;
+  display: flex;
+  font-size: 1rem;
+}
+
+.homepage .posts li:first-child .hero img {
+  height: 50vh;
+  min-height: 240px;
+  width: 70vw;
+}
+
+.homepage .posts li:first-child h2 {
+  font-size: 2rem;
+}
+
+.homepage .posts li:first-child .content {
+  flex-direction: column-reverse;
+  width: 30vw;
+  min-width: 200px;
+  height: 50vh;
+  min-height:240px;
+  box-sizing: border-box;
+}
+
+.homepage .posts li:first-child span {
+  font-weight: 600;
 }
