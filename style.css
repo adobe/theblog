@@ -80,16 +80,6 @@ body {
     width: 100vw;
 }
 
-.homepage main {
-  padding-top: 76px;
-}
-
-.homepage main .default {
-  margin: 0;
-  padding: 0;
-  width:100vw;
-}
-
 .default img {
     max-width: 100%;
 }
@@ -646,6 +636,16 @@ main div:first-of-type h1 {
 
 .post .date {
   align-self: flex-end;
+}
+
+.homepage main {
+  padding-top: 76px;
+}
+
+.homepage main .default {
+  margin: 0;
+  padding: 0;
+  width:100vw;
 }
 
 .homepage .posts li:first-child .post {
