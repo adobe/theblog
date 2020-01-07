@@ -48,7 +48,7 @@
     const type = /^\/(.*)\//.exec(window.location.pathname);
     if (type) {
       for (let [key, value] of Object.entries(TYPE)) {
-        if (value === type[1]) {
+        if (type[1].indexOf(value) !== -1) {
           return value;
         }
       }
