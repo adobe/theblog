@@ -80,7 +80,7 @@
   }
 
   function getSection(index) {
-    const nodes = document.querySelectorAll("main div");
+    const nodes = document.querySelectorAll("main > div");
     return index && nodes.length > index ? nodes[index] : nodes[nodes.length - 1];
   }
 
@@ -229,7 +229,7 @@
           topicsWrap.appendChild(btn);
         });
         // topicsWrap.appendChild(btnWrap);
-        last.parentNode.appendChild(topicsWrap);
+        last.parentNode.insertBefore(topicsWrap, last);
       }
     }
   }
