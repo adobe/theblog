@@ -37,15 +37,15 @@
    */
 
   const TYPE = {
-    HOME: 'homepage',
-    POST: 'posts',
-    AUTHOR: 'authors',
-    TOPIC: 'topics',
-    PRODUCT: 'products',
+    HOME: 'home',
+    POST: 'post',
+    AUTHOR: 'author',
+    TOPIC: 'topic',
+    PRODUCT: 'product',
   }
 
   function getPageType() {
-    const type = /^\/(.*)\//.exec(window.location.pathname);
+    const type = /^\/(.*)s?\//.exec(window.location.pathname);
     if (type) {
       for (let [key, value] of Object.entries(TYPE)) {
         if (type[1].indexOf(value) !== -1) {
@@ -62,6 +62,10 @@
   const isAuthor = pageType === TYPE.AUTHOR;
   const isTopic = pageType === TYPE.TOPIC;
   const isProduct = pageType === TYPE.PRODUCT;
+
+  function addPageTypeAsBodyClass() {
+    document.body.classList.add(`${pageType}-page`);
+  }
 
   function createSVG(id) {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -128,7 +132,6 @@
    */
 
   function setupHomepage() {
-    document.body.classList.add('homepage');
     document.querySelectorAll('main div')[0].remove();
 
     const postsWrap = document.createElement('div');
@@ -355,6 +358,7 @@
 
   window.onload = function() {
     removeHeaderAndFooter();
+    addPageTypeAsBodyClass();
     scrani.onload();
     if (isHome) {
       setupHomepage();
