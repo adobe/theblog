@@ -221,10 +221,8 @@ header p:nth-child(2) a {
 }
 
 header a:any-link{
-    color: white;
-    font-size: 1.5em;
+    color: black;
     text-decoration: none;
-    font-weight: 100;
 }
 
 header div:nth-child(2) {
@@ -639,40 +637,40 @@ main div:first-of-type h1 {
   align-self: flex-end;
 }
 
-.homepage main {
+.home-page main {
   padding-top: 76px;
 }
 
-.homepage main .default {
+.home-page main .default {
   width:100vw;
 }
 
-.homepage .latest-posts {
+.home-page .latest-posts {
   padding: 0 0 2rem 0;
 }
 
-.homepage .latest-posts::before {
+.home-page .latest-posts::before {
   display: none;
 }
 
-.homepage main .ais-Hits ol,
-.homepage main .ais-Hits ul {
+.home-page main .ais-Hits ol,
+.home-page main .ais-Hits ul {
   justify-content: center;
 }
 
-.homepage main .post {
+.home-page main .post {
   margin: 0 20px;
 }
 
-.homepage main li .content {
+.home-page main li .content {
   flex-direction: column-reverse;
 }
 
-.homepage main li .content {
+.home-page main li .content {
   flex-direction: column-reverse;
 }
 
-.homepage main li:first-child .post {
+.home-page main li:first-child .post {
   width: 100vw;
   height: 50vh;
   min-height:240px;
@@ -681,28 +679,28 @@ main div:first-of-type h1 {
   font-size: 1rem;
 }
 
-.homepage main li:first-child .hero img {
+.home-page main li:first-child .hero img {
   height: 50vh;
   min-height: 240px;
   width: 60vw;
 }
 
-.homepage main li:first-child h2 {
+.home-page main li:first-child h2 {
   font-size: 2.25rem;
 }
 
-.homepage main li:first-child .content {
+.home-page main li:first-child .content {
   padding: 10px 30px;
   width: 40vw;
   height: 50vh;
   box-sizing: border-box;
 }
 
-.homepage main li:first-child span {
+.home-page main li:first-child span {
   font-weight: 600;
 }
 
-.homepage main li:first-child::after {
+.home-page main li:first-child::after {
   content: "Latest Stories";
   display: block;
   margin: 40px 0;

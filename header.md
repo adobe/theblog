@@ -1,6 +1,6 @@
 ---
 
-<svg><use xlink:href="/icons.svg#adobe"></use></svg> Adobe Blog
+<svg><use xlink:href="/icons.svg#adobe"></use></svg> [Adobe Blog](/)
 
 ---
 
