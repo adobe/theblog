@@ -100,20 +100,20 @@ h1, h2 {
 }
 
 h1 {
-    font-size: 2.6rem;
+    font-size: 2.0rem;
 }
 
 h2 {
-    font-size: 2.0rem;
+    font-size: 1.8rem;
 }
 
 
 h3 {
-    font-size: 1.75rem;
+    font-size: 1.6rem;
 }
 
 h4 {
-    font-size: 1.25rem;
+    font-size: 1.4rem;
 }
 
 h3:first-of-type {
@@ -255,7 +255,8 @@ footer {
     padding: 20px 0px;
     text-align: center;
     display: grid;
-    grid-template-areas: "l a b r"
+    grid-template-areas: "l a a r"
+                         "l b b r"
                          "l c c r";
     font-family: "Adobe Clean",sans-serif;
     font-weight: 400;
@@ -277,12 +278,12 @@ footer ul li {
 
 footer div:nth-of-type(1) {
     grid-area: a;
-    text-align: left;
+    text-align: center;
 }
 
 footer div:nth-of-type(2) {
     grid-area: b;
-    text-align: right;
+    text-align: center;
 }
 
 footer div:nth-of-type(2) li::before {
@@ -295,7 +296,7 @@ footer div:nth-of-type(2) li:first-of-type::before {
 
 footer div:nth-of-type(3) {
     grid-area: c;
-    text-align: right;
+    text-align: center;
 }
 
 footer svg {
@@ -354,60 +355,33 @@ main div:first-of-type h1 {
     margin-top: 2em;
 }
 
-
-@media (min-width:600px) {
-
-    h1 {
-        font-size: 3.375rem;
-    }
-    
-    .title h1+p {
-        font-size: 2rem;
-        font-weight: 300;
-    }
-
-    h2 {
-        font-size: 2.8rem;
-    }
-
-    h3 {
-        font-size: 2.5rem;
-    }
-    
-    h4 {
-        font-size: 1.75rem;
-    }
-
-    body {
-        font-size: 1.25rem;
-    }
-
-    blockquote {
-        font-size: 1.2rem;
-        line-height: 1.7;    
-    }
-
+main {
+    display: grid;
+    grid-template-areas: "title"
+                         "image"
+                         "post"
+                         "author"
+                         "topics";
 }
 
-@media (min-width:900px) {
-    .default {
-        margin: auto;
-        width: 800px;
-    }
-
-    footer {
-        grid-template-columns: auto 300px 500px auto;
-        grid-template-rows: 50px 50px;
-        
-    }
+main div:first-of-type {
+    grid-area: title;
 }
+
+main div:nth-of-type(2) {
+    grid-area: image;
+}
+
+main div.left, main {
+    grid-area: author;
+}
+
+main div.topics {
+    grid-area: topics;
+}
+
 
 .left {
-    left: calc(((100vw - 700px)/ 2 - 170px)/ 2);
-    position: absolute;
-    z-index: 10;
-    width: 170px;
-
     font-family: "Adobe Clean",sans-serif;
     font-size: .75rem;
     text-align: center;
@@ -478,7 +452,8 @@ main div:first-of-type h1 {
   overflow: hidden;
   border: 1px solid #eaeaea;
   border-radius: 6px;
-  margin: 0 15px 20px 0;
+  margin: 0 15px 10px 0;
+  display: inline-block;
 }
 
 .topics a:hover {
@@ -713,4 +688,87 @@ main div:first-of-type h1 {
   line-height:18px;
   font-weight: 600;
   user-select: text;
+}
+
+
+@media (min-width:600px) {
+
+    h1 {
+        font-size: 3.375rem;
+    }
+    
+    .title h1+p {
+        font-size: 2rem;
+        font-weight: 300;
+    }
+
+    h2 {
+        font-size: 2.8rem;
+    }
+
+    h3 {
+        font-size: 2.5rem;
+    }
+    
+    h4 {
+        font-size: 1.75rem;
+    }
+
+    body {
+        font-size: 1.25rem;
+    }
+
+    blockquote {
+        font-size: 1.2rem;
+        line-height: 1.7;    
+    }
+
+    footer {
+    }
+
+}
+
+@media (min-width:900px) {
+    .default {
+        margin: auto;
+        width: 700px;
+        box-sizing: border-box;
+    }
+
+    footer {
+        grid-template-columns: auto 300px 500px auto;
+        grid-template-rows: 50px 50px;
+        grid-template-areas: "l a b r"
+        "l c c r";
+    }
+
+    footer div:nth-of-type(1) {
+        text-align: left;
+    }
+    
+    footer div:nth-of-type(2) {
+        text-align: right;
+    }
+
+    footer div:nth-of-type(3) {
+        text-align: right;
+    }
+
+
+    
+    main {
+        grid-template-areas: "title title title" 
+                             "image image image"
+                             "author post ."
+                             "topics topics topics";
+
+        grid-template-columns: 20% 60% 20%;
+    }
+
+    div.default.left {
+        margin-top: 30px;
+        margin-right: 0;
+        width: unset;
+        align-self: start;
+    }    
 }
