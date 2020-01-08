@@ -141,6 +141,9 @@
    */
 
   function setupHomepage() {
+    if (!document.title) {
+      document.title = 'The Blog | Welcome to the Adobe Blog';
+    }
     document.querySelectorAll('main div')[0].remove();
 
     const postsWrap = document.createElement('div');
