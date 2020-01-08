@@ -45,7 +45,7 @@
   }
 
   function getPageType() {
-    const type = /^\/(.*)s?\//.exec(window.location.pathname);
+    const type = /^\/.*\/(.*)s?\//.exec(window.location.pathname);
     if (type) {
       for (let [key, value] of Object.entries(TYPE)) {
         if (type[1].indexOf(value) !== -1) {
