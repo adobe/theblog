@@ -57,7 +57,7 @@
   }
 
   function getContext() {
-    const ctx = /^\/(ms|g)?\//.exec(window.location.pathname);
+    const ctx = /^\/(ms|g)?/.exec(window.location.pathname);
     if (ctx && ctx.length === 2) {
       return `/${ctx[1]}/`;
     }
