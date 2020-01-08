@@ -90,6 +90,48 @@
 })();
 
   /*
+   * navigation
+   */
+
+function addNavToggleListener() {
+    const t=document.querySelector('#menuToggle input');
+    if (t) {
+        t.addEventListener('change', function() {
+            if(this.checked) {
+                document.querySelector("header div:nth-of-type(2)").classList.add('on');
+            } else {
+                document.querySelector("header div:nth-of-type(2)").classList.remove('on');
+            }
+        });
+    const n=document.querySelector("header div:nth-of-type(2)");
+    if (n) {
+        n.addEventListener("click",function(e) {
+            if (e.target && e.target.matches("li")) {
+                const ul=e.target.querySelector("ul");
+                if (ul) {
+                    if (!ul.classList.contains("expanded")) {
+                        n.querySelectorAll("ul.expanded").forEach((e) => {
+                            e.classList.remove("expanded");
+                        })
+                        ul.classList.add("expanded");
+                        const pul=ul.parentNode.parentNode;
+                        if (pul.matches("ul")) {
+                            pul.classList.add("expanded");
+                        }
+
+                    } else {
+                        ul.classList.remove("expanded");
+                    }
+                }
+              }
+            e.stopPropagation();
+          });
+    }
+    }
+}
+
+
+  /*
    * all pages
    */
 
@@ -446,6 +488,7 @@
   window.onload = function() {
     removeHeaderAndFooter();
     addPageTypeAsBodyClass();
+    this.addNavToggleListener();
     scrani.onload();
     if (isHome) {
       setupHomepage();

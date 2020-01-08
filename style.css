@@ -196,6 +196,123 @@ header {
     font-family: "Adobe Clean",sans-serif;
 }
 
+header div:first-of-type {
+    text-align: center;
+    position: relative;
+}
+
+
+header div:first-of-type #menuToggle {
+  display: block;
+  position: absolute;
+  top: 2px;
+  right: 0px;
+  width: 40px;
+  height: 40px;
+  
+  z-index: 1;
+  
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+header div:first-of-type #menuToggle input {
+  display: block;
+  width: 40px;
+  height: 32px;
+  position: absolute;
+  top: -7px;
+  left: -5px;
+  
+  cursor: pointer;
+  
+  opacity: 0; 
+  z-index: 2;
+  
+  -webkit-touch-callout: none;
+}
+
+header div:first-of-type #menuToggle span {
+  display: block;
+  width: 33px;
+  height: 4px;
+  margin-bottom: 6px;
+  position: relative;
+  
+  background: #cdcdcd;
+  border-radius: 3px;
+  
+  z-index: 1;
+  
+  transform-origin: 4px 0px;
+  
+  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              opacity 0.55s ease;
+}
+
+header div:first-of-type #menuToggle span:first-of-type {
+  transform-origin: 0% 0%;
+}
+
+header div:first-of-type #menuToggle span:last-of-type {
+  transform-origin: 0% 100%;
+}
+
+header div:first-of-type #menuToggle input:checked ~ span {
+  opacity: 1;
+  transform: rotate(45deg) translate(-2px, -1px);
+  background: #232323;
+}
+
+header div:first-of-type #menuToggle input:checked ~ span:nth-of-type(2) {
+  opacity: 0;
+  transform: rotate(0deg) scale(0.2, 0.2);
+}
+
+header div:first-of-type #menuToggle input:checked ~ span:last-of-type {
+  transform: rotate(-45deg) translate(0, -1px);
+}
+
+/*
+ * Make this absolute positioned
+ * at the top left of the screen
+ */
+header div:nth-of-type(2)
+{
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  padding: 50px;
+  padding-top: 50px;
+  box-sizing: border-box;
+  
+  background: #ededed;
+  list-style-type: none;
+  -webkit-font-smoothing: antialiased;
+  /* to stop flickering of text in safari */
+  
+  transform-origin: 0% 0%;
+  transform: translate(-100%, 0);
+  
+  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+}
+
+header div:nth-of-type(2) ul ul {
+    display: none;
+}
+
+header div:nth-of-type(2) ul.expanded {
+    display: block;
+}
+
+
+header div:nth-of-type(2).on {
+  transform: none;
+}
+
 
 header img {
     height: 1em;
@@ -223,31 +340,6 @@ header p:nth-child(2) a {
 header a:any-link{
     color: black;
     text-decoration: none;
-}
-
-header div:nth-child(2) {
-    display: none;
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    background-color: #222222;
-    padding: 10px 20px;
-    box-sizing: border-box;
-
-}
-
-header div:nth-child(2)>p {
-    display: block;
-    float: right;
-    font-size: 1.8em;
-    margin-top: -3px;
-}
-
-header div:nth-child(2) ul {
-    font-size: 2em;
-    list-style: none;
 }
 
 footer {
