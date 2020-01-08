@@ -618,6 +618,7 @@ main div.topics {
 
 .home-page main .default {
   width:100vw;
+  padding: 0;
 }
 
 .home-page .latest-posts {
@@ -634,7 +635,7 @@ main div.topics {
 }
 
 .home-page main .post {
-  margin: 0 20px;
+  margin: 0 20px 20px 0;
 }
 
 .home-page main li .content {
