@@ -45,18 +45,27 @@
   }
 
   function getPageType() {
-    const type = /^\/.*\/(.*)s?\//.exec(window.location.pathname);
-    if (type) {
+    const type = /^\/(ms|g)\/(archive\/)?([a-z]*)s\//.exec(window.location.pathname);
+    if (type && type.length === 4) {
       for (let [key, value] of Object.entries(TYPE)) {
-        if (type[1].indexOf(value) !== -1) {
+        if (type[3].indexOf(value) !== -1) {
           return value;
         }
       }
     }
-    return TYPE.HOME; // fall back to hoempage
+    return TYPE.HOME; // fall back to homepage
+  }
+
+  function getContext() {
+    const ctx = /^\/(ms|g)?\//.exec(window.location.pathname);
+    if (ctx && ctx.length === 2) {
+      return `/${ctx[1]}/`;
+    }
+    return '/';
   }
 
   const pageType = getPageType();
+  const context = getContext();
   const isHome = pageType == TYPE.HOME;
   const isPost = pageType === TYPE.POST;
   const isAuthor = pageType === TYPE.AUTHOR;
@@ -89,7 +98,7 @@
   }
 
   function getLink(type, name) {
-    return `/${type}s/${name.replace(/\s/gm, '-').toLowerCase()}.html`;
+    return `${context}${type}s/${name.replace(/\s/gm, '-').toLowerCase()}.html`;
   }
 
   function setupSearch({
