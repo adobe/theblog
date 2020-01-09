@@ -29,7 +29,7 @@ indices:
           match(el, '(Products: )? ([^,]+)')
         faceted: true
       hero:
-        select: main > div > img:first-of-type
+        select: main > div:nth-of-type(2) img:first-of-type
         value: |
           attribute(el, 'src')
       teaser:
