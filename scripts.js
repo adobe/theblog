@@ -205,13 +205,17 @@ function addNavToggleListener() {
     hitsPerPage = 9,
     facetFilters = [],
     container = '.posts',
-    itemTemplate = `<div class="post">
+    itemTemplate = `
+    <div class="post">
       <div class="hero"><a href="/{{path}}" title="{{{title}}}"><img src="{{hero}}" alt="{{{title}}}"></a></div>
-        <div class="content">
+      <div class="content">
         <span class="author">
-            <a href="{{authorUrl}}" title="{{{author}}}">{{{author}}}</a>
+          <a href="{{authorUrl}}" title="{{{author}}}">{{{author}}}</a>
         </span>
         <h2><a href="/{{path}}" title="{{{title}}}">{{{title}}}</a></h2>
+        <span class="teaser">
+          <a href="/{{path}}" title="{{{teaser}}}…">{{{teaser}}}…</a>
+        </span>
         <span class="date">{{{date}}}</span>
       </div>
     </a>
@@ -272,6 +276,22 @@ function addNavToggleListener() {
     setupSearch({
       hitsPerPage: 13,
       container: '.latest-posts',
+      itemTemplate: `
+      <div class="post">
+        <div class="hero"><a href="/{{path}}" title="{{{title}}}"><img src="{{hero}}" alt="{{{title}}}"></a></div>
+        <div class="content">
+          <span class="date">{{{date}}}</span>
+          <h2><a href="/{{path}}" title="{{{title}}}">{{{title}}}</a></h2>
+          <span class="teaser">
+            <a href="/{{path}}" title="{{{teaser}}}…">{{{teaser}}}…</a>
+          </span>
+          <span class="author">
+            <a href="{{authorUrl}}" title="{{{author}}}">{{{author}}}</a>
+          </span>
+      </div>
+    </a>
+    </div>
+    `,
     }).start();
   }
 

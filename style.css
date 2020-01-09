@@ -694,7 +694,6 @@ main div.topics {
   text-align: left;
   margin: 0 0 10px 0;
   font-size: 1.5rem;
-  flex-grow: 1;
   text-overflow: ellipsis;
 }
 
@@ -706,12 +705,16 @@ main div.topics {
 .post span {
   display: block;
   width: 100%;
-}
-
-.post span {
   font-family: "Adobe Clean", sans-serif;
   font-weight: 800;
   color: rgb(153, 153, 153);
+}
+
+.post .teaser {
+    font-size: 0.875rem;
+    font-weight: normal;
+    text-overflow: ellipsis;
+    flex-grow: 1;
 }
 
 .post .date {
@@ -744,14 +747,6 @@ main div.topics {
   margin: 0 20px 20px 0;
 }
 
-.home-page main li .content {
-  flex-direction: column-reverse;
-}
-
-.home-page main li .content {
-  flex-direction: column-reverse;
-}
-
 .home-page main li:first-child .post {
   width: 100vw;
   height: 50vh;
@@ -780,6 +775,12 @@ main div.topics {
 
 .home-page main li:first-child span {
   font-weight: 600;
+}
+
+.home-page main li:first-child .teaser {
+    color: currentColor;
+    font-weight: normal;
+    font-size: 1.1rem;
 }
 
 .home-page main li:first-child::after {
