@@ -71,18 +71,18 @@ body {
     padding: 1rem 2rem;
 }
 
-.image, div:nth-of-type(2) {
+.image, main div:nth-of-type(2) {
     padding: 0;
     margin: 0;
     font-size: 0;
 }
 
-.image img, div:nth-of-type(2) img {
+.image img, main div:nth-of-type(2) img {
     width: 100vw;
 }
 
 /* hero caption */
-div:nth-of-type(2) p:nth-of-type(2) {
+main div:nth-of-type(2) p:nth-of-type(2) {
     text-align: right;
 
     width: 100%;
