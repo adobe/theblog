@@ -903,12 +903,13 @@ main div.topics {
     font-size: 1.1rem;
     transition: all .2s;
     text-align: left;
-}
+  }
 
-header>div {
-  vertical-align: top;
-}
+  header>div {
+    vertical-align: top;
+  }
 
+}
 
 @media (min-width:900px) {
   .default {
