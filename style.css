@@ -100,20 +100,20 @@ h1, h2 {
 }
 
 h1 {
-    font-size: 2.6rem;
+    font-size: 2.0rem;
 }
 
 h2 {
-    font-size: 2.0rem;
+    font-size: 1.8rem;
 }
 
 
 h3 {
-    font-size: 1.75rem;
+    font-size: 1.6rem;
 }
 
 h4 {
-    font-size: 1.25rem;
+    font-size: 1.4rem;
 }
 
 h3:first-of-type {
@@ -196,6 +196,123 @@ header {
     font-family: "Adobe Clean",sans-serif;
 }
 
+header div:first-of-type {
+    text-align: center;
+    position: relative;
+}
+
+
+header div:first-of-type #menuToggle {
+  display: block;
+  position: absolute;
+  top: 2px;
+  right: 0px;
+  width: 40px;
+  height: 40px;
+  
+  z-index: 1;
+  
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+header div:first-of-type #menuToggle input {
+  display: block;
+  width: 40px;
+  height: 32px;
+  position: absolute;
+  top: -7px;
+  left: -5px;
+  
+  cursor: pointer;
+  
+  opacity: 0; 
+  z-index: 2;
+  
+  -webkit-touch-callout: none;
+}
+
+header div:first-of-type #menuToggle span {
+  display: block;
+  width: 33px;
+  height: 4px;
+  margin-bottom: 6px;
+  position: relative;
+  
+  background: #cdcdcd;
+  border-radius: 3px;
+  
+  z-index: 1;
+  
+  transform-origin: 4px 0px;
+  
+  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              opacity 0.55s ease;
+}
+
+header div:first-of-type #menuToggle span:first-of-type {
+  transform-origin: 0% 0%;
+}
+
+header div:first-of-type #menuToggle span:last-of-type {
+  transform-origin: 0% 100%;
+}
+
+header div:first-of-type #menuToggle input:checked ~ span {
+  opacity: 1;
+  transform: rotate(45deg) translate(-2px, -1px);
+  background: #232323;
+}
+
+header div:first-of-type #menuToggle input:checked ~ span:nth-of-type(2) {
+  opacity: 0;
+  transform: rotate(0deg) scale(0.2, 0.2);
+}
+
+header div:first-of-type #menuToggle input:checked ~ span:last-of-type {
+  transform: rotate(-45deg) translate(0, -1px);
+}
+
+/*
+ * Make this absolute positioned
+ * at the top left of the screen
+ */
+header div:nth-of-type(2)
+{
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  padding: 50px;
+  padding-top: 50px;
+  box-sizing: border-box;
+  
+  background: #ededed;
+  list-style-type: none;
+  -webkit-font-smoothing: antialiased;
+  /* to stop flickering of text in safari */
+  
+  transform-origin: 0% 0%;
+  transform: translate(-100%, 0);
+  
+  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+}
+
+header div:nth-of-type(2) ul ul {
+    display: none;
+}
+
+header div:nth-of-type(2) ul.expanded {
+    display: block;
+}
+
+
+header div:nth-of-type(2).on {
+  transform: none;
+}
+
 
 header img {
     height: 1em;
@@ -221,35 +338,8 @@ header p:nth-child(2) a {
 }
 
 header a:any-link{
-    color: white;
-    font-size: 1.5em;
+    color: black;
     text-decoration: none;
-    font-weight: 100;
-}
-
-header div:nth-child(2) {
-    display: none;
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    background-color: #222222;
-    padding: 10px 20px;
-    box-sizing: border-box;
-
-}
-
-header div:nth-child(2)>p {
-    display: block;
-    float: right;
-    font-size: 1.8em;
-    margin-top: -3px;
-}
-
-header div:nth-child(2) ul {
-    font-size: 2em;
-    list-style: none;
 }
 
 footer {
@@ -257,7 +347,8 @@ footer {
     padding: 20px 0px;
     text-align: center;
     display: grid;
-    grid-template-areas: "l a b r"
+    grid-template-areas: "l a a r"
+                         "l b b r"
                          "l c c r";
     font-family: "Adobe Clean",sans-serif;
     font-weight: 400;
@@ -279,12 +370,12 @@ footer ul li {
 
 footer div:nth-of-type(1) {
     grid-area: a;
-    text-align: left;
+    text-align: center;
 }
 
 footer div:nth-of-type(2) {
     grid-area: b;
-    text-align: right;
+    text-align: center;
 }
 
 footer div:nth-of-type(2) li::before {
@@ -297,7 +388,7 @@ footer div:nth-of-type(2) li:first-of-type::before {
 
 footer div:nth-of-type(3) {
     grid-area: c;
-    text-align: right;
+    text-align: center;
 }
 
 footer svg {
@@ -356,60 +447,33 @@ main div:first-of-type h1 {
     margin-top: 2em;
 }
 
-
-@media (min-width:600px) {
-
-    h1 {
-        font-size: 3.375rem;
-    }
-    
-    .title h1+p {
-        font-size: 2rem;
-        font-weight: 300;
-    }
-
-    h2 {
-        font-size: 2.8rem;
-    }
-
-    h3 {
-        font-size: 2.5rem;
-    }
-    
-    h4 {
-        font-size: 1.75rem;
-    }
-
-    body {
-        font-size: 1.25rem;
-    }
-
-    blockquote {
-        font-size: 1.2rem;
-        line-height: 1.7;    
-    }
-
+main {
+    display: grid;
+    grid-template-areas: "title"
+                         "image"
+                         "post"
+                         "author"
+                         "topics";
 }
 
-@media (min-width:900px) {
-    .default {
-        margin: auto;
-        width: 800px;
-    }
-
-    footer {
-        grid-template-columns: auto 300px 500px auto;
-        grid-template-rows: 50px 50px;
-        
-    }
+main div:first-of-type {
+    grid-area: title;
 }
+
+main div:nth-of-type(2) {
+    grid-area: image;
+}
+
+main div.left, main {
+    grid-area: author;
+}
+
+main div.topics {
+    grid-area: topics;
+}
+
 
 .left {
-    left: calc(((100vw - 700px)/ 2 - 170px)/ 2);
-    position: absolute;
-    z-index: 10;
-    width: 170px;
-
     font-family: "Adobe Clean",sans-serif;
     font-size: .75rem;
     text-align: center;
@@ -480,7 +544,8 @@ main div:first-of-type h1 {
   overflow: hidden;
   border: 1px solid #eaeaea;
   border-radius: 6px;
-  margin: 0 15px 20px 0;
+  margin: 0 15px 10px 0;
+  display: inline-block;
 }
 
 .topics a:hover {
@@ -639,40 +704,41 @@ main div:first-of-type h1 {
   align-self: flex-end;
 }
 
-.homepage main {
+.home-page main {
   padding-top: 76px;
 }
 
-.homepage main .default {
+.home-page main .default {
   width:100vw;
+  padding: 0;
 }
 
-.homepage .latest-posts {
+.home-page .latest-posts {
   padding: 0 0 2rem 0;
 }
 
-.homepage .latest-posts::before {
+.home-page .latest-posts::before {
   display: none;
 }
 
-.homepage main .ais-Hits ol,
-.homepage main .ais-Hits ul {
+.home-page main .ais-Hits ol,
+.home-page main .ais-Hits ul {
   justify-content: center;
 }
 
-.homepage main .post {
-  margin: 0 20px;
+.home-page main .post {
+  margin: 0 20px 20px 0;
 }
 
-.homepage main li .content {
+.home-page main li .content {
   flex-direction: column-reverse;
 }
 
-.homepage main li .content {
+.home-page main li .content {
   flex-direction: column-reverse;
 }
 
-.homepage main li:first-child .post {
+.home-page main li:first-child .post {
   width: 100vw;
   height: 50vh;
   min-height:240px;
@@ -681,28 +747,28 @@ main div:first-of-type h1 {
   font-size: 1rem;
 }
 
-.homepage main li:first-child .hero img {
+.home-page main li:first-child .hero img {
   height: 50vh;
   min-height: 240px;
   width: 60vw;
 }
 
-.homepage main li:first-child h2 {
+.home-page main li:first-child h2 {
   font-size: 2.25rem;
 }
 
-.homepage main li:first-child .content {
+.home-page main li:first-child .content {
   padding: 10px 30px;
   width: 40vw;
   height: 50vh;
   box-sizing: border-box;
 }
 
-.homepage main li:first-child span {
+.home-page main li:first-child span {
   font-weight: 600;
 }
 
-.homepage main li:first-child::after {
+.home-page main li:first-child::after {
   content: "Latest Stories";
   display: block;
   margin: 40px 0;
@@ -715,4 +781,87 @@ main div:first-of-type h1 {
   line-height:18px;
   font-weight: 600;
   user-select: text;
+}
+
+
+@media (min-width:600px) {
+
+    h1 {
+        font-size: 3.375rem;
+    }
+    
+    .title h1+p {
+        font-size: 2rem;
+        font-weight: 300;
+    }
+
+    h2 {
+        font-size: 2.8rem;
+    }
+
+    h3 {
+        font-size: 2.5rem;
+    }
+    
+    h4 {
+        font-size: 1.75rem;
+    }
+
+    body {
+        font-size: 1.25rem;
+    }
+
+    blockquote {
+        font-size: 1.2rem;
+        line-height: 1.7;    
+    }
+
+    footer {
+    }
+
+}
+
+@media (min-width:900px) {
+    .default {
+        margin: auto;
+        width: 700px;
+        box-sizing: border-box;
+    }
+
+    footer {
+        grid-template-columns: auto 300px 500px auto;
+        grid-template-rows: 50px 50px;
+        grid-template-areas: "l a b r"
+        "l c c r";
+    }
+
+    footer div:nth-of-type(1) {
+        text-align: left;
+    }
+    
+    footer div:nth-of-type(2) {
+        text-align: right;
+    }
+
+    footer div:nth-of-type(3) {
+        text-align: right;
+    }
+
+
+    
+    main {
+        grid-template-areas: "title title title" 
+                             "image image image"
+                             "author post ."
+                             "topics topics topics";
+
+        grid-template-columns: 20% 60% 20%;
+    }
+
+    div.default.left {
+        margin-top: 30px;
+        margin-right: 0;
+        width: unset;
+        align-self: start;
+    }    
 }

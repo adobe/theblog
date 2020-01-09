@@ -1,6 +1,8 @@
 ---
 
-<svg><use xlink:href="/icons.svg#adobe"></use></svg> Adobe Blog
+<svg><use xlink:href="/icons.svg#adobe"></use></svg> [Adobe Blog](/) 
+
+<div id="menuToggle"><input type="checkbox" /><span></span><span></span><span></span></div>
 
 ---
 
@@ -8,6 +10,14 @@
 - My Feed
 - Topics
   - Creativity
+    - 3D & AR
+    - Art
+    - Creative Inspirations & Trends
+    - Design
+    - Illustration
+    - Photography
+    - Typography
+    - Video & Audio
   - News
   - Customer Experience
   - Events
