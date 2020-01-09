@@ -228,8 +228,8 @@ function addNavToggleListener() {
       authorUrl: getLink(TYPE.AUTHOR, item.author),
     }),
   }) {
-    const searchClient = algoliasearch('LPQI0MG7ST', '9bf61456f606d21ddc1723f30500659e');
-    // const searchClient = algoliasearch('A8PL9E4TZT', '9e59db3654d13f71d79c4fbb4a23cc72');
+    // const searchClient = algoliasearch('LPQI0MG7ST', '9bf61456f606d21ddc1723f30500659e');
+    const searchClient = algoliasearch('A8PL9E4TZT', '9e59db3654d13f71d79c4fbb4a23cc72');
     const search = instantsearch({
       indexName,
       searchClient,
