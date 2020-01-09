@@ -71,14 +71,28 @@ body {
     padding: 1rem 2rem;
 }
 
-.image {
+.image, main div:nth-of-type(2) {
     padding: 0;
     margin: 0;
     font-size: 0;
 }
 
-.image img {
+.image img, main div:nth-of-type(2) img {
     width: 100vw;
+}
+
+/* hero caption */
+main div:nth-of-type(2) p:nth-of-type(2) {
+    text-align: right;
+
+    width: 100%;
+    max-width: calc(100% - 60px);
+    margin-top: .625rem;
+    font-style: italic;
+
+    font-size: 1rem;
+    line-height: 1.5;
+
 }
 
 .default img {
@@ -827,6 +841,10 @@ main div.topics {
         margin: auto;
         width: 700px;
         box-sizing: border-box;
+    }
+
+    div:nth-of-type(2) {
+      width: 100%
     }
 
     footer {
