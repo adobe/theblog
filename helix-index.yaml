@@ -33,6 +33,6 @@ indices:
         value: |
           attribute(el, 'src')
       teaser:
-        select: main > div:nth-last-of-type(-n+4) p
+        select: main > div:nth-child(n+4) p
         value: |
           words(textContent(el), 0, 20)
