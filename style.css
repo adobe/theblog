@@ -352,6 +352,10 @@ header p:nth-child(2) a {
     display: inline-block;
 }
 
+header a {
+  display: inline-block;
+  margin-top: 5px;
+}
 header a:any-link{
     color: black;
     text-decoration: none;
@@ -695,7 +699,6 @@ main div.topics {
   text-align: left;
   margin: 0 0 10px 0;
   font-size: 1.5rem;
-  flex-grow: 1;
   text-overflow: ellipsis;
 }
 
@@ -707,12 +710,22 @@ main div.topics {
 .post span {
   display: block;
   width: 100%;
-}
-
-.post span {
   font-family: "Adobe Clean", sans-serif;
   font-weight: 800;
   color: rgb(153, 153, 153);
+}
+
+.post .teaser {
+  font-size: 0.875rem;
+  font-weight: normal;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+}
+
+.home-page main li:first-child .teaser {
+  color: currentColor;
+  font-weight: normal;
+  font-size: 1.1rem;
 }
 
 .post .date {
@@ -720,7 +733,7 @@ main div.topics {
 }
 
 .home-page main {
-  padding-top: 76px;
+  padding-top: 67px;
 }
 
 .home-page main .default {
@@ -743,14 +756,6 @@ main div.topics {
 
 .home-page main .post {
   margin: 0 20px 20px 0;
-}
-
-.home-page main li .content {
-  flex-direction: column-reverse;
-}
-
-.home-page main li .content {
-  flex-direction: column-reverse;
 }
 
 .home-page main li:first-child .post {
