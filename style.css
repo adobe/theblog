@@ -693,6 +693,8 @@ main div.topics {
   text-align: left;
   display: inline-flex;
   flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .post h2 {
