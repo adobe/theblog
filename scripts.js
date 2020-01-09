@@ -202,16 +202,34 @@ function addNavToggleListener() {
 
   function setupSearch({
     indexName = 'davidnuescheler--theblog--blog-posts',
-    hitsPerPage = 10,
+    hitsPerPage = 9,
     facetFilters = [],
     container = '.posts',
-    templates = {
-      item: '',
-      empty: '',
-    },
-    transformer = (item) => item,
+    itemTemplate = `<div class="post">
+      <div class="hero"><a href="/{{path}}" title="{{{title}}}"><img src="{{hero}}" alt="{{{title}}}"></a></div>
+        <div class="content">
+        <span class="author">
+            <a href="{{authorUrl}}" title="{{{author}}}">{{{author}}}</a>
+        </span>
+        <h2><a href="/{{path}}" title="{{{title}}}">{{{title}}}</a></h2>
+        <span class="date">{{{date}}}</span>
+      </div>
+    </a>
+    </div>
+    `,
+    emptyTemplate = 'There are no articles yet',
+    transformer = (item) => ({
+      ...item,
+      date: new Date(item.date * 1000).toLocaleDateString('en-US', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      }),
+      authorUrl: getLink(TYPE.AUTHOR, item.author),
+    }),
   }) {
     const searchClient = algoliasearch('LPQI0MG7ST', '9bf61456f606d21ddc1723f30500659e');
+    // const searchClient = algoliasearch('A8PL9E4TZT', '9e59db3654d13f71d79c4fbb4a23cc72');
     const search = instantsearch({
       indexName,
       searchClient,
@@ -226,7 +244,10 @@ function addNavToggleListener() {
     search.addWidgets([
       instantsearch.widgets.hits({
         container,
-        templates,
+        templates: {
+          item: itemTemplate,
+          empty: emptyTemplate,
+        },
         transformItems(items) {
           return items.map(item => transformer(item));
         },
@@ -249,31 +270,8 @@ function addNavToggleListener() {
     postsWrap.className = 'default latest-posts';
     getSection().parentNode.appendChild(postsWrap);
     setupSearch({
+      hitsPerPage: 13,
       container: '.latest-posts',
-      templates: {
-        item: `<div class="post">
-          <div class="hero"><a href="/{{path}}" title="{{{title}}}"><img src="{{hero}}" alt="{{{title}}}"></a></div>
-            <div class="content">
-            <span class="author">
-                <a href="{{authorUrl}}" title="{{{author}}}">{{{author}}}</a>
-            </span>
-            <h2><a href="/{{path}}" title="{{{title}}}">{{{title}}}</a></h2>
-            <span class="date">{{{date}}}</span>
-           </div>
-        </a>
-        </div>
-        `,
-        empty: 'There are no articles yet.',
-      },
-      transformer: (item) => ({
-        ...item,
-        date: new Date(item.date * 1000).toLocaleDateString('en-US', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-        }),
-        authorUrl: getLink(TYPE.AUTHOR, item.author),
-      }),
     }).start();
   }
 
@@ -469,19 +467,7 @@ function addNavToggleListener() {
           `author:${document.title}`,
         ],
       container: '.latest-posts',
-      templates: {
-        item: document.getElementById('post-template').innerHTML,
-        empty: 'This author has not posted any articles yet.',
-      },
-      transformer: (item) => ({
-        ...item,
-        date: new Date(item.date * 1000).toLocaleDateString('en-US', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-        }),
-        authorUrl: getLink(TYPE.AUTHOR, item.author),
-      }),
+      emptyTemplate: 'This author has not posted any articles yet.',
     }).start();
   }
 
