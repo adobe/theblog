@@ -762,17 +762,16 @@ main div.topics {
 
 .home-page main li:first-child .post {
   width: 100vw;
-  height: 50vh;
-  min-height:240px;
   margin: 0 0 30px 0;
   display: flex;
   font-size: 1rem;
+  flex-direction: column;
+  height: unset;
 }
 
 .home-page main li:first-child .hero img {
   height: 50vh;
-  min-height: 240px;
-  width: 60vw;
+  width: 100vw;
 }
 
 .home-page main li:first-child h2 {
@@ -781,9 +780,7 @@ main div.topics {
 
 .home-page main li:first-child .content {
   padding: 10px 30px;
-  width: 40vw;
-  height: 50vh;
-  box-sizing: border-box;
+  height: unset;
 }
 
 .home-page main li:first-child span {
@@ -957,5 +954,11 @@ main div.topics {
       margin-right: 0;
       width: unset;
       align-self: start;
-  }    
+  }
+
+  .home-page main li:first-child .post {
+    flex-direction: row;
+  }
+  
+  
 }
