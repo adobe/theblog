@@ -126,9 +126,23 @@ function addNavToggleListener() {
               }
             e.stopPropagation();
           });
-    }
-    }
-}
+        }
+      }
+  }
+
+  function wireNav() {
+    document.querySelectorAll("header div:nth-of-type(2) li").forEach((e) => {
+      if (!e.querySelector("a") && !e.querySelector("ul")) {
+        var topli=e;
+        while (topli.parentElement.parentElement.matches("li")) {
+          topli=topli.parentElement.parentElement;
+        }
+        var cat=topli.innerText.toLowerCase();
+        var tag=e.innerHTML.replace(/\s/gm, '-').toLowerCase();
+        e.innerHTML=`<a href="/${cat}/${tag}">${e.innerText}</a>`;
+      }
+    });
+  }
 
 
   /*
@@ -495,6 +509,7 @@ function addNavToggleListener() {
     removeHeaderAndFooter();
     addPageTypeAsBodyClass();
     this.addNavToggleListener();
+    this.wireNav();
     scrani.onload();
     if (isHome) {
       setupHomepage();
