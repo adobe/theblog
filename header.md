@@ -6,8 +6,8 @@
 
 ---
 
-- News
-- My Feed
+- [News](/)
+- [My Feed](/)
 - Topics
   - Creativity
     - 3D & AR
@@ -18,18 +18,92 @@
     - Photography
     - Typography
     - Video & Audio
-  - News
+  - [News](/)
   - Customer Experience
+    - Advertising
+    - Analytics
+    - Campaign Management
+    - Commerce
+    - Content Management
+    - Email Marketing
+    - Personalization
+    - Social
   - Events
+    - Adobe MAX
+    - Adobe Summit
+    - Think Tank by Adobe
   - Industries
+    - Education
+    - Financial Services
+    - Government
+    - Healthcare
+    - Manufacturing
+    - Media & Entertainment
+    - Retail
+    - Technology
+    - Telecom
+    - Travel
   - Points of View
+    - Adobe Leaders
+    - Diversity
+    - Public Policy
+    - Sustainability & Social Impact
   - Research
+    - Digital Economy Project
+    - Digital Insights
+    - Original Research
   - Technology
+    - Accessibility
+    - Adobe Sensei & AI
+    - Future Tech
+    - IoT
+    - Mobile
+    - VR & AR
   - Work
+    - Culture
+    - Digital Transformation
+    - Future of Work
+    - Leadership
+    - Productivity
 - Products
   - Adobe Experience Platform
   - Creative Cloud
+    - Adobe Aero
+    - Adobe Fresco
+    - Photoshop
+    - Lightroom
+    - Lightroom Classic
+    - Adobe Stock
+    - Premiere Pro
+    - XD
+    - InDesign
+    - After Effects
+    - Dimension
+    - Dreamweaver
+    - Animate
+    - Audition
+    - Premiere Rush
+    - Adobe Story
+    - Character Animator
+    - Creative Cloud Mobile Apps
+    - Illustrator
+    - Spark
+    - Substance by Adobe
   - Experience Cloud
+    - Marketing Cloud
+    - Experience Manager
+    - Target
+    - Campaign
+    - Marketo Engage
+    - Analytics Cloud
+    - Analytics
+    - Audience Manager
+    - Advertising Cloud
+    - Adobe Commerce Cloud
+    - Magento Commerce
   - Document Cloud
+    - Acrobat DC
+    - Adobe Scan
+    - Adobe Sign
 
 ---

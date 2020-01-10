@@ -878,6 +878,8 @@ main div.topics {
     text-align: center;
     white-space: pre;
     line-height: 16px;
+    overflow: hidden;
+    height: 30px;
   }
 
   header div:nth-of-type(2) > ul > li::first-line {
@@ -886,6 +888,11 @@ main div.topics {
 
   header div:nth-of-type(2) > ul > li::after {
     content: "\A▾";
+  }
+
+  header div:nth-of-type(2) > ul > li > a {
+    margin-top: 0;
+    padding-bottom: 10px;
   }
 
   header div:nth-of-type(2) ul  ul {
