@@ -371,8 +371,10 @@ function addNavToggleListener() {
           container = i;
         }
       });
-      if (topics) {
+      if (container) {
         container.remove();
+      }
+      if (topics) {
         const topicsWrap = document.createElement('div');
         topicsWrap.className = 'default topics';
         topics.forEach((topic) => {
@@ -404,8 +406,10 @@ function addNavToggleListener() {
           container = i;
         }
       });
-      if (products) {
+      if (container) {
         container.remove();
+      }
+      if (products) {
         const productsWrap = document.createElement('div');
         productsWrap.className = 'products';
         products.forEach((product) => {
