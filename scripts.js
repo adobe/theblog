@@ -365,7 +365,7 @@ function addNavToggleListener() {
     if (last) {
       let topics, container;
       Array.from(last.children).forEach((i) => {
-        const r = /^Topics\: (.*)$/gmi.exec(i.innerText);
+        const r = /^Topics\: ?(.*)$/gmi.exec(i.innerText);
         if (r && r.length > 0) {
           topics = r[1].split(',');
           container = i;
@@ -400,7 +400,7 @@ function addNavToggleListener() {
       insertInside.classList.add('left');
       let products, container;
       Array.from(last.children).forEach((i) => {
-        const r = /^Products\: (.*)$/gmi.exec(i.innerText);
+        const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
         if (r && r.length > 0) {
           products = r[1].split(',');
           container = i;
