@@ -363,20 +363,26 @@ function addNavToggleListener() {
   function fetchTopics() {
     const last = getSection();
     if (last) {
+      let hits = [];
       let topics, container;
       Array.from(last.children).forEach((i) => {
         const r = /^Topics\: ?(.*)$/gmi.exec(i.innerText);
         if (r && r.length > 0) {
-          topics = r[1].split(',');
+          hits = r[1].split(',');
           container = i;
         }
       });
-      if (topics) {
+      topics = hits.filter((hit) => {
+        hit = hit.trim();
+        return hit.length > 0;
+      });
+      if (container) {
         container.remove();
+      }
+      if (topics.length > 0) {
         const topicsWrap = document.createElement('div');
         topicsWrap.className = 'default topics';
         topics.forEach((topic) => {
-          topic = topic.trim();
           if (!topic) return;
           const btn = document.createElement('a');
           btn.href = getLink(TYPE.TOPIC, topic);
@@ -396,20 +402,27 @@ function addNavToggleListener() {
     const insertInside = getSection(2);
     if (insertInside) {
       insertInside.classList.add('left');
+      let hits = [];
       let products, container;
       Array.from(last.children).forEach((i) => {
         const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
         if (r && r.length > 0) {
-          products = r[1].split(',');
+          hits = r[1].split(',');
           container = i;
         }
       });
-      if (products) {
+      products = hits.filter((hit) => {
+        hit = hit.trim();
+        return hit.length > 0;
+      });
+      if (container) {
         container.remove();
+      }
+      if (products.length > 0) {
         const productsWrap = document.createElement('div');
         productsWrap.className = 'products';
         products.forEach((product) => {
-          const productRef = product.trim().replace(/\s/gm, '-').toLowerCase();
+          const productRef = product.replace(/\s/gm, '-').toLowerCase();
 
           const btn = document.createElement('a');
           btn.href = `https://www.adobe.com/${productRef}.html`;
