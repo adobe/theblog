@@ -586,14 +586,19 @@ main div.topics {
     font-weight: 600;
     letter-spacing: .02em;
     user-select: text;
+    width: 100%;
   }
 
 .products {
     margin-top: 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .products a {
     margin: 0 .125rem .5rem;
+    font-size: .75rem;
 }
 
 .products a img {
