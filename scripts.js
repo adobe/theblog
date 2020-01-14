@@ -363,18 +363,22 @@ function addNavToggleListener() {
   function fetchTopics() {
     const last = getSection();
     if (last) {
+      let hits = [];
       let topics, container;
       Array.from(last.children).forEach((i) => {
         const r = /^Topics\: ?(.*)$/gmi.exec(i.innerText);
         if (r && r.length > 0) {
-          topics = r[1].split(',');
+          hits = r[1].split(',');
           container = i;
         }
+      });
+      topics = hits.filter((hit) => {
+        return hit.trim().length > 0;
       });
       if (container) {
         container.remove();
       }
-      if (topics) {
+      if (topics.length > 0) {
         const topicsWrap = document.createElement('div');
         topicsWrap.className = 'default topics';
         topics.forEach((topic) => {
@@ -398,22 +402,28 @@ function addNavToggleListener() {
     const insertInside = getSection(2);
     if (insertInside) {
       insertInside.classList.add('left');
+      let hits = [];
       let products, container;
       Array.from(last.children).forEach((i) => {
         const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
         if (r && r.length > 0) {
-          products = r[1].split(',');
+          hits = r[1].split(',');
           container = i;
         }
+      });
+      products = hits.filter((hit) => {
+        return hit.trim().length > 0;
       });
       if (container) {
         container.remove();
       }
-      if (products) {
+      if (products.length > 0) {
         const productsWrap = document.createElement('div');
         productsWrap.className = 'products';
         products.forEach((product) => {
-          const productRef = product.trim().replace(/\s/gm, '-').toLowerCase();
+          product = product.trim();
+          if (!product) return;
+          const productRef = product.replace(/\s/gm, '-').toLowerCase();
 
           const btn = document.createElement('a');
           btn.href = `https://www.adobe.com/${productRef}.html`;
