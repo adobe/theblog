@@ -373,8 +373,7 @@ function addNavToggleListener() {
         }
       });
       topics = hits.filter((hit) => {
-        hit = hit.trim();
-        return hit.length > 0;
+        return hit.trim().length > 0;
       });
       if (container) {
         container.remove();
@@ -383,6 +382,7 @@ function addNavToggleListener() {
         const topicsWrap = document.createElement('div');
         topicsWrap.className = 'default topics';
         topics.forEach((topic) => {
+          topic = topic.trim();
           if (!topic) return;
           const btn = document.createElement('a');
           btn.href = getLink(TYPE.TOPIC, topic);
@@ -412,8 +412,7 @@ function addNavToggleListener() {
         }
       });
       products = hits.filter((hit) => {
-        hit = hit.trim();
-        return hit.length > 0;
+        return hit.trim().length > 0;
       });
       if (container) {
         container.remove();
@@ -422,6 +421,8 @@ function addNavToggleListener() {
         const productsWrap = document.createElement('div');
         productsWrap.className = 'products';
         products.forEach((product) => {
+          product = product.trim();
+          if (!product) return;
           const productRef = product.replace(/\s/gm, '-').toLowerCase();
 
           const btn = document.createElement('a');
