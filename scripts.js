@@ -217,7 +217,7 @@ function addNavToggleListener() {
 
   function setupSearch({
     indexName = 'davidnuescheler--theblog--blog-posts',
-    hitsPerPage = 9,
+    hitsPerPage = 12,
     facetFilters = [],
     container = '.posts',
     itemTemplate = `
