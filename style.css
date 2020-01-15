@@ -195,7 +195,7 @@ table th {
 
 table {
     border-collapse: collapse;
-    border-spacing: 0;    
+    border-spacing: 0;
 }
 
 header {
@@ -587,7 +587,7 @@ main div.topics {
     letter-spacing: .02em;
     user-select: text;
     width: 100%;
-  }
+}
 
 .products {
     margin-top: 1.25rem;
@@ -651,6 +651,7 @@ main div.topics {
   display: block;
   color: rgba(10,10,10, 0.8);
   margin: 0 auto 10px auto;
+  padding-left: 24px;
   text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
   font-family: "Adobe Clean",sans-serif;
@@ -659,7 +660,6 @@ main div.topics {
   font-weight: 800;
   letter-spacing: .02em;
   user-select: text;
-  width: 70vw;
 }
 
 .latest-posts {
@@ -668,8 +668,8 @@ main div.topics {
 }
 
 .latest-posts > div {
-  width: 70vw;
   margin: 0 auto;
+  padding-left: 24px;
 }
 
 .ais-Hits ol,
@@ -844,7 +844,7 @@ main div.topics {
 
   blockquote {
       font-size: 1.2rem;
-      line-height: 1.7;    
+      line-height: 1.7;
   }
 
   header div:first-of-type {
@@ -871,7 +871,7 @@ main div.topics {
     transform-origin: 0% 0%;
     transform: unset;
   }
-  
+
   header div:nth-of-type(2) > ul {
     list-style-type: none;
     margin: 0;
@@ -881,7 +881,7 @@ main div.topics {
   }
 
   header div:nth-of-type(2) > ul > li {
-    display: inline-block;   
+    display: inline-block;
     margin: 0 20px;
     color: grey;
     font-size: 0.875rem;
@@ -925,6 +925,11 @@ main div.topics {
     vertical-align: top;
   }
 
+  .latest-posts::before,
+  .latest-posts > div {
+    max-width: 1084px;
+  }
+
 }
 
 @media (min-width:900px) {
@@ -948,7 +953,7 @@ main div.topics {
   footer div:nth-of-type(1) {
       text-align: left;
   }
-  
+
   footer div:nth-of-type(2) {
       text-align: right;
   }
@@ -957,8 +962,6 @@ main div.topics {
       text-align: right;
   }
 
-
-  
   main {
       grid-template-areas: "title title title" 
                             "image image image"
@@ -978,6 +981,5 @@ main div.topics {
   .home-page main li:first-child .post {
     flex-direction: row;
   }
-  
-  
+
 }
