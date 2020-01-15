@@ -789,7 +789,7 @@ main div.topics {
 }
 
 .home-page main li:first-child .hero img {
-  height: unset;
+  height: 100%;
 }
 
 .home-page main li:first-child h2 {
