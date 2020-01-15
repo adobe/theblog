@@ -651,7 +651,7 @@ main div.topics {
   display: block;
   color: rgba(10,10,10, 0.8);
   margin: 0 auto 10px auto;
-  padding-left: 24px;
+  padding-left: 15px;
   text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
   font-family: "Adobe Clean",sans-serif;
@@ -669,7 +669,6 @@ main div.topics {
 
 .latest-posts > div {
   margin: 0 auto;
-  padding-left: 24px;
 }
 
 .ais-Hits ol,
@@ -687,7 +686,7 @@ main div.topics {
   color: rgb(10,10,10);
   width:256px;
   height: 350px;
-  margin: 0 15px 15px 0;
+  margin: 0 0 15px 15px;
   display: inline-block;
   text-align: left;
 }
