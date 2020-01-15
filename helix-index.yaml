@@ -36,3 +36,7 @@ indices:
         select: main > div:nth-child(n+4) p
         value: |
           words(textContent(el), 0, 20)
+      sourceHash:
+        select: head > meta[name=x-source-hash
+        value: |
+          attribute(el, 'content')
