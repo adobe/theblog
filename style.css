@@ -664,6 +664,7 @@ main div.topics {
 
 .latest-posts {
   margin-bottom:100px;
+  background-color: #f7f4f4;
 }
 
 .latest-posts > div {
@@ -759,6 +760,7 @@ main div.topics {
 
 .home-page .latest-posts {
   padding: 0 0 2rem 0;
+  background-color: white;
 }
 
 .home-page .latest-posts::before {
