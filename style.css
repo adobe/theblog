@@ -664,7 +664,6 @@ main div.topics {
 
 .latest-posts {
   margin-bottom:100px;
-  background-color: #f7f4f4;
 }
 
 .latest-posts > div {
@@ -754,6 +753,10 @@ main div.topics {
   padding: 0;
 }
 
+.home-page main div:first-of-type {
+  text-align: left;
+}
+
 .home-page .latest-posts {
   padding: 0 0 2rem 0;
 }
@@ -790,7 +793,9 @@ main div.topics {
 }
 
 .home-page main li:first-child .content {
-  padding: 10px 30px;
+  padding: 1.5rem 1.5rem 1.5rem 3rem;
+  width: 100vw;
+  box-sizing: border-box;
   height: unset;
 }
 
@@ -801,7 +806,7 @@ main div.topics {
 .home-page main li:first-child::after {
   content: "Latest Stories";
   display: block;
-  margin: 40px 0;
+  margin: 1rem auto;
   color: rgb(153,153,153);
   text-align: center;
   text-size-adjust: 100%;
@@ -927,6 +932,15 @@ main div.topics {
   .latest-posts::before,
   .latest-posts > div {
     max-width: 1084px;
+  }
+
+  .home-page main li:first-child .hero img {
+    width: 60vw;
+  }
+  
+  .home-page main li:first-child .content {
+    padding: 1.5rem 1.5rem 1.5rem 3rem;
+    width: 40vw;
   }
 
 }
