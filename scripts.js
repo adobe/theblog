@@ -138,7 +138,7 @@ function addNavToggleListener() {
           topli=topli.parentElement.parentElement;
         }
         var cat=topli.innerText.toLowerCase();
-        var tag=e.innerHTML.replace(/\s/gm, '-').replace(/\&amp;/gm,'').toLowerCase();
+        var tag=e.innerHTML.replace(/\s/gm, '-').toLowerCase();
         e.innerHTML=`<a href="${getLink(cat, `${tag}`)}">${e.innerText}</a>`;
       }
     });
@@ -212,7 +212,7 @@ function addNavToggleListener() {
 
   function getLink(type, name) {
     if (!type.endsWith('s')) type += 's';
-    return `${context}${type}/${name.replace(/\s/gm, '-').toLowerCase()}.html`;
+    return `${context}${type}/${name.replace(/\s/gm, '-').replace(/\&amp;/gm,'').toLowerCase()}.html`;
   }
 
   function setupSearch({
@@ -386,7 +386,7 @@ function addNavToggleListener() {
           topic = topic.trim();
           if (!topic) return;
           const btn = document.createElement('a');
-          btn.href = getLink(TYPE.TOPIC, topic.replace(/\s/gm, '-').replace(/\&amp;/gm,'').toLowerCase());
+          btn.href = getLink(TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
           btn.title = topic;
           btn.innerText = topic;
 
