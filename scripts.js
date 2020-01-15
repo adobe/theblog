@@ -243,7 +243,6 @@ function addNavToggleListener() {
         </span>
         <span class="date">{{{date}}}</span>
       </div>
-    </a>
     </div>
     `,
     emptyTemplate = 'There are no articles yet',
