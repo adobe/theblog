@@ -760,7 +760,6 @@ main div.topics {
 
 .home-page .latest-posts {
   padding: 0 0 2rem 0;
-  background-color: white;
 }
 
 .home-page .latest-posts::before {
@@ -785,9 +784,12 @@ main div.topics {
   height: unset;
 }
 
-.home-page main li:first-child .hero img {
-  height: 50vh;
+.home-page main li:first-child .hero {
   width: 100vw;
+}
+
+.home-page main li:first-child .hero img {
+  height: unset;
 }
 
 .home-page main li:first-child h2 {
@@ -936,15 +938,6 @@ main div.topics {
     max-width: 1084px;
   }
 
-  .home-page main li:first-child .hero img {
-    width: 60vw;
-  }
-  
-  .home-page main li:first-child .content {
-    padding: 1.5rem 1.5rem 1.5rem 3rem;
-    width: 40vw;
-  }
-
 }
 
 @media (min-width:900px) {
@@ -993,8 +986,21 @@ main div.topics {
       align-self: start;
   }
 
+  .home-page .latest-posts {
+    background-color: white;
+  }
+
   .home-page main li:first-child .post {
     flex-direction: row;
+  }
+
+  .home-page main li:first-child .hero {
+    width: 60vw;
+  }
+  
+  .home-page main li:first-child .content {
+    padding: 1.5rem 1.5rem 1.5rem 3rem;
+    width: 40vw;
   }
 
 }
