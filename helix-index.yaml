@@ -40,3 +40,4 @@ indices:
         select: head > meta[name=x-source-hash
         value: |
           attribute(el, 'content')
+        faceted: true
