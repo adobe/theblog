@@ -944,11 +944,6 @@ main div.topics {
     vertical-align: top;
   }
 
-  .latest-posts::before,
-  .latest-posts > div {
-    max-width: 1084px;
-  }
-
 }
 
 @media (min-width:900px) {
