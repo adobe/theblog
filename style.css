@@ -649,8 +649,8 @@ main div.topics {
 .latest-posts::before {
   content: "Latest";
   display: block;
-  margin-bottom: 10px;
   color: rgba(10,10,10, 0.8);
+  margin: 0 auto 10px auto;
   text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
   font-family: "Adobe Clean",sans-serif;
@@ -659,11 +659,18 @@ main div.topics {
   font-weight: 800;
   letter-spacing: .02em;
   user-select: text;
+  width: 70vw;
 }
 
 .latest-posts {
   margin-bottom:100px;
   background-color: #f7f4f4;
+}
+
+.latest-posts > div {
+  width: 70vw;
+  padding:0 5rem;
+  margin: 0 auto;
 }
 
 .ais-Hits ol,

@@ -506,16 +506,24 @@ function addNavToggleListener() {
     }
   }
 
-  function fetchLatestPosts() {
+  function fetchLatestPosts(type) {
+    let filter, emptyTemplate;
+    if (type === TYPE.TOPIC) {
+      filter = `topics:${document.title}`;
+      emptyTemplate = 'There are no articles in this topic yet';
+    } else {
+      filter = `author:${document.title}`;
+      emptyTemplate = 'This author has not posted any articles yet.';
+    }
     const latestWrap = document.createElement('div');
     latestWrap.className = 'default latest-posts';
     getSection().parentNode.appendChild(latestWrap);
     setupSearch({
       facetFilters: [
-          `author:${document.title}`,
+          filter,
         ],
       container: '.latest-posts',
-      emptyTemplate: 'This author has not posted any articles yet.',
+      emptyTemplate,
     }).start();
   }
 
@@ -534,9 +542,9 @@ function addNavToggleListener() {
       removeEmptySection();
     } else if (isAuthor) {
       fetchSocialLinks();
-      fetchLatestPosts();
+      fetchLatestPosts(TYPE.AUTHOR);
     } else if (isTopic) {
-      // todo
+      fetchLatestPosts(TYPE.TOPIC);
     } else if (isProduct) {
       // todo
     }
