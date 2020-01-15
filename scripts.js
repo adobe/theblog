@@ -212,7 +212,7 @@ function addNavToggleListener() {
 
   function getLink(type, name) {
     if (!type.endsWith('s')) type += 's';
-    return `${context}${type}/${name.replace(/\s/gm, '-').toLowerCase()}.html`;
+    return `${context}${type}/${name.replace(/\s/gm, '-').replace(/\&amp;/gm,'').toLowerCase()}.html`;
   }
 
   function setupSearch({
@@ -386,7 +386,7 @@ function addNavToggleListener() {
           topic = topic.trim();
           if (!topic) return;
           const btn = document.createElement('a');
-          btn.href = getLink(TYPE.TOPIC, topic);
+          btn.href = getLink(TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
           btn.title = topic;
           btn.innerText = topic;
 
