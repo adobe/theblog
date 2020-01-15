@@ -185,6 +185,16 @@ function addNavToggleListener() {
   const isTopic = pageType === TYPE.TOPIC;
   const isProduct = pageType === TYPE.PRODUCT;
 
+  const itemTransformer = (item) => ({
+    ...item,
+    hero: `${item.hero}?width=256`,
+    date: new Date(item.date * 1000).toLocaleDateString('en-US', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }),
+  });
+
   function addPageTypeAsBodyClass() {
     document.body.classList.add(`${pageType}-page`);
   }
@@ -237,15 +247,7 @@ function addNavToggleListener() {
     </div>
     `,
     emptyTemplate = 'There are no articles yet',
-    transformer = (item) => ({
-      ...item,
-      date: new Date(item.date * 1000).toLocaleDateString('en-US', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      }),
-      authorUrl: getLink(TYPE.AUTHOR, item.author),
-    }),
+    transformer = itemTransformer,
   }) {
     // const searchClient = algoliasearch('LPQI0MG7ST', '9bf61456f606d21ddc1723f30500659e');
     const searchClient = algoliasearch('A8PL9E4TZT', '9e59db3654d13f71d79c4fbb4a23cc72');
@@ -303,10 +305,17 @@ function addNavToggleListener() {
           <span class="author">
             <a href="{{authorUrl}}" title="{{{author}}}">{{{author}}}</a>
           </span>
+        </div>
       </div>
-    </a>
-    </div>
-    `,
+      `,
+      transformer: (item) => {
+        item = itemTransformer(item); 
+        if (item.__position === 1) {
+          // use larger hero image for first item
+          item.hero = item.hero.replace('?width=256', '?width=2048');
+        } 
+        return item;
+      },
     }).start();
   }
 
