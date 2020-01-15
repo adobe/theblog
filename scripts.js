@@ -138,7 +138,7 @@ function addNavToggleListener() {
           topli=topli.parentElement.parentElement;
         }
         var cat=topli.innerText.toLowerCase();
-        var tag=e.innerHTML.replace(/\s/gm, '-').toLowerCase();
+        var tag=e.innerHTML.replace(/\s/gm, '-').replace(/\&amp;/gm,'').toLowerCase();
         e.innerHTML=`<a href="${getLink(cat, `${tag}`)}">${e.innerText}</a>`;
       }
     });
@@ -386,7 +386,7 @@ function addNavToggleListener() {
           topic = topic.trim();
           if (!topic) return;
           const btn = document.createElement('a');
-          btn.href = getLink(TYPE.TOPIC, topic);
+          btn.href = getLink(TYPE.TOPIC, topic.replace(/\s/gm, '-').replace(/\&amp;/gm,'').toLowerCase());
           btn.title = topic;
           btn.innerText = topic;
 
