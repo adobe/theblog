@@ -139,7 +139,7 @@ function addNavToggleListener() {
         }
         var cat=topli.innerText.toLowerCase();
         var tag=e.innerHTML.replace(/\s/gm, '-').toLowerCase();
-        e.innerHTML=`<a href="${getLink(TYPE.TOPIC, `${tag}`)}">${e.innerText}</a>`;
+        e.innerHTML=`<a href="${getLink(cat, `${tag}`)}">${e.innerText}</a>`;
       }
     });
   }
@@ -211,7 +211,8 @@ function addNavToggleListener() {
   }
 
   function getLink(type, name) {
-    return `${context}${type}s/${name.replace(/\s/gm, '-').toLowerCase()}.html`;
+    if (!type.endsWith('s')) type += 's';
+    return `${context}${type}/${name.replace(/\s/gm, '-').toLowerCase()}.html`;
   }
 
   function setupSearch({
