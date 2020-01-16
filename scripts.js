@@ -521,7 +521,7 @@ function addNavToggleListener() {
       filter = `topics:${document.title}`;
       emptyTemplate = 'There are no articles in this topic yet';
     } else {
-      filter = `author:${document.title}`;
+      filter = `author:${document.title.split(',')[0]}`;
       emptyTemplate = 'This author has not posted any articles yet.';
     }
     const latestWrap = document.createElement('div');
