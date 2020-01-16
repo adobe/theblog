@@ -786,6 +786,7 @@ main div.topics {
 
 .home-page main li:first-child .hero {
   width: 100vw;
+  height: 30vh;
 }
 
 .home-page main li:first-child .hero img {
@@ -942,6 +943,10 @@ main div.topics {
 
   header>div {
     vertical-align: top;
+  }
+
+  .home-page main li:first-child .hero {
+    height: unset;
   }
 
 }
