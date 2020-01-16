@@ -193,6 +193,7 @@ function addNavToggleListener() {
       month: '2-digit',
       year: 'numeric',
     }),
+    authorUrl: getLink(TYPE.AUTHOR, item.author),	
   });
 
   function addPageTypeAsBodyClass() {
