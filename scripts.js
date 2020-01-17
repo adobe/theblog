@@ -193,7 +193,9 @@ function addNavToggleListener() {
       month: '2-digit',
       year: 'numeric',
     }),
-    authorUrl: getLink(TYPE.AUTHOR, item.author),	
+    authorUrl: getLink(TYPE.AUTHOR, item.author),
+    topic: item.topics.length > 0 ? item.topics[0] : '',
+    topicUrl: item.topics.length > 0 ? getLink(TYPE.TOPIC, item.topics[0]) : '',
   });
 
   function addPageTypeAsBodyClass() {
@@ -223,7 +225,7 @@ function addNavToggleListener() {
 
   function getLink(type, name) {
     if (!type.endsWith('s')) type += 's';
-    return `${context}${type}/${name.replace(/\s/gm, '-').replace(/\&amp;/gm,'').toLowerCase()}.html`;
+    return `${context}${type}/${name.replace(/\s/gm, '-').replace(/\&amp;/gm,'').replace(/\&/gm,'').toLowerCase()}.html`;
   }
 
   function setupSearch({
@@ -233,7 +235,10 @@ function addNavToggleListener() {
     container = '.posts',
     itemTemplate = `
     <div class="post">
-      <div class="hero"><a href="/{{path}}" title="{{{title}}}"><img src="{{hero}}" alt="{{{title}}}"></a></div>
+      <div class="hero">
+        <a href="/{{path}}" title="{{{title}}}"><img src="{{hero}}" alt="{{{title}}}"></a>
+        <a href="{{topicUrl}}" class="topic" title="{{{topic}}}">{{{topic}}}</a>
+      </div>
       <div class="content">
         <span class="author">
           <a href="{{authorUrl}}" title="{{{author}}}">{{{author}}}</a>
@@ -295,7 +300,10 @@ function addNavToggleListener() {
       container: '.latest-posts',
       itemTemplate: `
       <div class="post">
-        <div class="hero"><a href="/{{path}}" title="{{{title}}}"><img src="{{hero}}" alt="{{{title}}}"></a></div>
+        <div class="hero">
+          <a href="/{{path}}" title="{{{title}}}"><img src="{{hero}}" alt="{{{title}}}"></a>
+          <a href="{{topicUrl}}" class="topic" title="{{{topic}}}">{{{topic}}}</a>
+        </div>
         <div class="content">
           <span class="date">{{{date}}}</span>
           <h2><a href="/{{path}}" title="{{{title}}}">{{{title}}}</a></h2>
@@ -311,7 +319,7 @@ function addNavToggleListener() {
       transformer: (item) => {
         item = itemTransformer(item); 
         if (item.__position === 1) {
-          // use larger hero image for first item
+          // use larger hero image
           item.hero = item.hero.replace('?width=256', '?width=2048');
         } 
         return item;
