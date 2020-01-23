@@ -218,7 +218,7 @@ header div:first-of-type {
 }
 
 
-header div:first-of-type #menuToggle {
+/* header div:first-of-type #menuToggle {
   display: block;
   position: absolute;
   top: 5px;
@@ -288,7 +288,7 @@ header div:first-of-type #menuToggle input:checked ~ span:nth-of-type(2) {
 
 header div:first-of-type #menuToggle input:checked ~ span:last-of-type {
   transform: rotate(-45deg) translate(0, -1px);
-}
+} */
 
 /*
  * Make this absolute positioned
@@ -906,9 +906,9 @@ main div.topics {
       width: 200px;
   }
 
-  header div:first-of-type #menuToggle {
+  /* header div:first-of-type #menuToggle {
     display: none;
-  }
+  } */
 
   header div:nth-of-type(2) {
     display: inline-block;

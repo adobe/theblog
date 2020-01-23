@@ -548,7 +548,7 @@ function addNavToggleListener() {
   window.onload = function() {
     removeHeaderAndFooter();
     addPageTypeAsBodyClass();
-    this.addNavToggleListener();
+    //this.addNavToggleListener();
     this.wireNav();
     scrani.onload();
     if (isHome) {

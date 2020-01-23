@@ -1,8 +1,11 @@
 ---
 
 <svg><use xlink:href="/icons.svg#adobe"></use></svg> [Adobe Blog](/) 
-
-<div id="menuToggle"><input type="checkbox" /><span></span><span></span><span></span></div>
+<div>
+  <div id="feds-header"><!-- content will be injected here --></div>
+  <div id="feds-subnav"><!-- you need to provide subnav content --></div>
+</div>
+<!-- div id="menuToggle"><input type="checkbox" /><span></span><span></span><span></span></div -->
 
 ---
 
