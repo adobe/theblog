@@ -541,10 +541,6 @@ main div.topics {
   align-self: flex-end;
 }
 
-.home-page main {
-  padding-top: 67px;
-}
-
 .home-page main .default {
   width:100vw;
   padding: 0;
