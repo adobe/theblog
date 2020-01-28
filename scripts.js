@@ -90,33 +90,6 @@
 })();
 
   /*
-   * navigation
-   */
-
-  function addSubNav() {
-    const container = document.querySelector('#feds-subnav');
-    const subNav = document.querySelector('header > ul');
-    if (subNav) {
-      container.appendChild(subNav);
-      // TODO1: transform ul/li to divs with classes
-      // TODO2: wire nav items
-      /*
-      document.querySelectorAll("header div:nth-of-type(2) li").forEach((e) => {
-        if (!e.querySelector("a") && !e.querySelector("ul")) {
-          var topli=e;
-          while (topli.parentElement.parentElement.matches("li")) {
-            topli=topli.parentElement.parentElement;
-          }
-          var cat=topli.innerText.toLowerCase();
-          var tag=e.innerHTML.replace(/\s/gm, '-').toLowerCase();
-          e.innerHTML=`<a href="${getLink(cat, `${tag}`)}">${e.innerText}</a>`;
-        }
-      });
-      */
-    }
-  }
-
-  /*
    * all pages
    */
 
@@ -519,7 +492,6 @@
   window.onload = function() {
     removeHeaderAndFooter();
     addPageTypeAsBodyClass();
-    this.addSubNav();
     scrani.onload();
     if (isHome) {
       setupHomepage();
