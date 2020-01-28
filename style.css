@@ -187,7 +187,8 @@ table {
 }
 
 header,
-footer {
+footer,
+footer h5 {
   font-family: adobe-clean-ux,adobe-clean,Source Sans Pro,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;
   font-size: 14px;
 }
