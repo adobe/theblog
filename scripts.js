@@ -90,62 +90,6 @@
 })();
 
   /*
-   * navigation
-   */
-
-function addNavToggleListener() {
-    const t=document.querySelector('#menuToggle input');
-    if (t) {
-        t.addEventListener('change', function() {
-            if(this.checked) {
-                document.querySelector("header div:nth-of-type(2)").classList.add('on');
-            } else {
-                document.querySelector("header div:nth-of-type(2)").classList.remove('on');
-            }
-        });
-    const n=document.querySelector("header div:nth-of-type(2)");
-    if (n) {
-        n.addEventListener("click",function(e) {
-            if (e.target && e.target.matches("li")) {
-                const ul=e.target.querySelector("ul");
-                if (ul) {
-                    if (!ul.classList.contains("expanded")) {
-                        n.querySelectorAll("ul.expanded").forEach((e) => {
-                            e.classList.remove("expanded");
-                        })
-                        ul.classList.add("expanded");
-                        const pul=ul.parentNode.parentNode;
-                        if (pul.matches("ul")) {
-                            pul.classList.add("expanded");
-                        }
-
-                    } else {
-                        ul.classList.remove("expanded");
-                    }
-                }
-              }
-            e.stopPropagation();
-          });
-        }
-      }
-  }
-
-  function wireNav() {
-    document.querySelectorAll("header div:nth-of-type(2) li").forEach((e) => {
-      if (!e.querySelector("a") && !e.querySelector("ul")) {
-        var topli=e;
-        while (topli.parentElement.parentElement.matches("li")) {
-          topli=topli.parentElement.parentElement;
-        }
-        var cat=topli.innerText.toLowerCase();
-        var tag=e.innerHTML.replace(/\s/gm, '-').toLowerCase();
-        e.innerHTML=`<a href="${getLink(cat, `${tag}`)}">${e.innerText}</a>`;
-      }
-    });
-  }
-
-
-  /*
    * all pages
    */
 
@@ -548,8 +492,6 @@ function addNavToggleListener() {
   window.onload = function() {
     removeHeaderAndFooter();
     addPageTypeAsBodyClass();
-    this.addNavToggleListener();
-    this.wireNav();
     scrani.onload();
     if (isHome) {
       setupHomepage();

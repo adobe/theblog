@@ -2,11 +2,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 
+<script defer src="https://www.stage.adobe.com/etc.clientlibs/globalnav/clientlibs/base/polyfills.js"></script>
+<script defer src="https://www.stage.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js" id="feds-script"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/algoliasearch@3/dist/algoliasearch.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.0.0/dist/instantsearch.production.min.js" integrity="sha256-6S7q0JJs/Kx4kb/fv0oMjS855QTz5Rc2hh9AkIUjUsk=" crossorigin="anonymous"></script>
 <script defer src="/scripts.js"></script>
 
 <script>
+  window.fedsConfig = {
+    locale: 'en',
+    disableSticky: false,
+    subnav: {},
+    footer: {
+      breadcrumbs: {
+        showLogo: true,
+        links: [{"title":"Adobe Blog","url":"https://theblog.adobe.com","description":null,"target":"_self","pathType":null,"xfPath":null,"hiddenOnDesktopLayout":false,"children":null}]
+      },
+      // regionModal: function () { window.location.hash = 'languageNavigation'; }
+    },
+  };
+
   (function(d) {
     var config = {
             // Todo: pull in the kit Id from the ACF field in the admin

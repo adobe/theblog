@@ -11,519 +11,287 @@
  */
 
 body {
-    padding: 0;
-    margin: 0;
-    background-color: white;
-    font-family: adobe-clean-serif,serif;
-    font-weight: 300;
-    font-size: 1.125rem;
-    line-height: 1.8;
-    color: #0a0a0a;
+  padding: 0;
+  margin: 0;
+  background-color: white;
+  font-family: adobe-clean-serif,serif;
+  font-weight: 300;
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #0a0a0a;
 }
 
 .title {
-    overflow: hidden;
-    background-color: black;
+  overflow: hidden;
+  background-color: black;
 }
 
 .title p:first-child {
-    font-size: 1rem;
-    line-height: 1rem;
-    margin: 0;
-    padding: 0;
+  font-size: 1rem;
+  line-height: 1rem;
+  margin: 0;
+  padding: 0;
 }
 
 .title h1 {
-    color: white;
-    text-align: center;
-    text-shadow: 0px 0px 6px #000000;
-    margin-bottom: 0.1em;
+  color: white;
+  text-align: center;
+  text-shadow: 0px 0px 6px #000000;
+  margin-bottom: 0.1em;
 }
 
 .title h1+p {
-    margin-top: 0.1em;
-    text-align: center;
-    color: white;
-    font-size: 1.5rem;
-    font-weight: 300;
-    line-height: 1.1em;
-}
-
-.header {
-    position: absolute;
-    height: 100vh;
-    width: 90vw;
-    top: 0;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    padding: 0 5%;
+  margin-top: 0.1em;
+  text-align: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 1.1em;
 }
 
 .title img {
-    height: 100vh;
-    width: 100vw;
-    object-fit: cover;
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
 }
 
 .default {
-    padding: 1rem 2rem;
+  padding: 1rem 2rem;
 }
 
 .image, .post-page main div:nth-of-type(2) {
-    padding: 0;
-    margin: 0;
-    font-size: 0;
+  padding: 0;
+  margin: 0;
+  font-size: 0;
 }
 
 .image img, main div:nth-of-type(2) img {
-    width: 100vw;
+  width: 100vw;
 }
 
 /* hero caption */
 main div:nth-of-type(2) p:nth-of-type(2) {
-    text-align: right;
+  text-align: right;
 
-    width: 100%;
-    max-width: calc(100% - 60px);
-    margin-top: .625rem;
-    font-style: italic;
+  width: 100%;
+  max-width: calc(100% - 60px);
+  margin-top: .625rem;
+  font-style: italic;
 
-    font-size: 1rem;
-    line-height: 1.5;
+  font-size: 1rem;
+  line-height: 1.5;
 
 }
 
 .default img {
-    max-width: 100%;
+  max-width: 100%;
 }
 
 h1, h2, h3, h4, h5 {
-    font-family: adobe-clean-serif,serif;
+  font-family: adobe-clean-serif,serif;
 }
 
 h3, h4 {
-    font-weight: 400;
-    line-height: 1.25;
+  font-weight: 400;
+  line-height: 1.25;
 }
 
 h1, h2 {
-    font-weight: 400;
-    line-height: 1.2;
+  font-weight: 400;
+  line-height: 1.2;
 }
 
 h1 {
-    font-size: 2.0rem;
+  font-size: 2.0rem;
 }
 
 h2 {
-    font-size: 1.8rem;
+  font-size: 1.8rem;
 }
 
 
 h3 {
-    font-size: 1.6rem;
+  font-size: 1.6rem;
 }
 
 h4 {
-    font-size: 1.4rem;
+  font-size: 1.4rem;
 }
 
 main div:first-of-type h3 {
-    font-size: 0.83rem;
-    font-family: "Adobe Clean", sans-serif;
-    font-weight: 200;
-    margin-bottom: 30px;
-    max-width: 775px;
-    padding: 0 15px;
-    line-height: 1.8;
+  font-size: 0.83rem;
+  font-family: "Adobe Clean", sans-serif;
+  font-weight: 200;
+  margin-bottom: 30px;
+  max-width: 775px;
+  padding: 0 15px;
+  line-height: 1.8;
 }
 
 blockquote {
-    font-family: adobe-clean-serif,serif;
-    font-weight: 700;
-    font-size: 1.0rem;
-    line-height: 1.4;
-    padding-left: 3rem;
-    padding-right: 0rem;
-    padding-top: 2rem;
-    margin-left: -3rem;
-    margin-top: -2rem;
-    margin-right: 0;
-    text-transform: uppercase;
+  font-family: adobe-clean-serif,serif;
+  font-weight: 700;
+  font-size: 1.0rem;
+  line-height: 1.4;
+  padding-left: 3rem;
+  padding-right: 0rem;
+  padding-top: 2rem;
+  margin-left: -3rem;
+  margin-top: -2rem;
+  margin-right: 0;
+  text-transform: uppercase;
 
-    background-repeat: no-repeat;
-    background-image: 
-        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><text font-size='250' x='0' y='200' letter-spacing='-35px' fill='lightgrey'>\2018\2018</text></svg>");
+  background-repeat: no-repeat;
+  background-image: 
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><text font-size='250' x='0' y='200' letter-spacing='-35px' fill='lightgrey'>\2018\2018</text></svg>");
 }
 
 pre {
-    background-color: lightgrey;
-    padding: 1em;
-    border-radius: 1em;
-    overflow: hidden;
+  background-color: lightgrey;
+  padding: 1em;
+  border-radius: 1em;
+  overflow: hidden;
 }
 
 code {
-    font-size: 1.1em;
+  font-size: 1.1em;
 }
 
 h3 code {
-    font-size: 1em;
-    font-family: inherit;
-    background-color: lightgrey;
+  font-size: 1em;
+  font-family: inherit;
+  background-color: lightgrey;
 }
 
 p code,li code {
-    background-color: lightgrey;
-    padding: 0 2px;
+  background-color: lightgrey;
+  padding: 0 2px;
 }
 
 table th, table td {
-    border: 1px solid #dfe2e5;
-    padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+  padding: 6px 13px;
 }
 
 table tr:nth-child(2n) {
-    background-color: #f6f8fa;
+  background-color: #f6f8fa;
 }
 
 table th {
-    font-weight: 600;
+  font-weight: 600;
 }
 
 table {
-    border-collapse: collapse;
-    border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
-header {
-    position: fixed;
-    background-color: white;
-    color: black;
-    z-index: 1;
-    padding: 0px 20px;
-    width: 100vw;
-    box-sizing: border-box;
-    border-bottom: 0.5px solid lightgrey;
-    font-family: "Adobe Clean",sans-serif;
+header,
+footer,
+footer h5 {
+  font-family: adobe-clean-ux,adobe-clean,Source Sans Pro,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;
+  font-size: 14px;
 }
 
-header div:first-of-type {
-    text-align: center;
-    position: relative;
-    margin: 15px 0;
-    height: 37px;
-}
-
-
-header div:first-of-type #menuToggle {
-  display: block;
-  position: absolute;
-  top: 5px;
-  right: 0px;
-  width: 40px;
-  height: 40px;
-  
-  z-index: 1;
-  margin: 0;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-header div:first-of-type #menuToggle input {
-  display: block;
-  width: 40px;
-  height: 32px;
-  position: absolute;
-  top: -7px;
-  left: -5px;
-  
-  cursor: pointer;
-  
-  opacity: 0; 
-  z-index: 2;
-  
-  -webkit-touch-callout: none;
-}
-
-header div:first-of-type #menuToggle span {
-  display: block;
-  width: 33px;
-  height: 4px;
-  margin-bottom: 6px;
-  position: relative;
-  
-  background: #cdcdcd;
-  border-radius: 3px;
-  
-  z-index: 1;
-  
-  transform-origin: 4px 0px;
-  
-  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
-              background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
-              opacity 0.55s ease;
-}
-
-header div:first-of-type #menuToggle span:first-of-type {
-  transform-origin: 0% 0%;
-}
-
-header div:first-of-type #menuToggle span:last-of-type {
-  transform-origin: 0% 100%;
-}
-
-header div:first-of-type #menuToggle input:checked ~ span {
-  opacity: 1;
-  transform: rotate(45deg) translate(-2px, -1px);
-  background: #232323;
-}
-
-header div:first-of-type #menuToggle input:checked ~ span:nth-of-type(2) {
-  opacity: 0;
-  transform: rotate(0deg) scale(0.2, 0.2);
-}
-
-header div:first-of-type #menuToggle input:checked ~ span:last-of-type {
-  transform: rotate(-45deg) translate(0, -1px);
-}
-
-/*
- * Make this absolute positioned
- * at the top left of the screen
- */
-header div:nth-of-type(2)
-{
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
-  padding: 50px;
-  padding-top: 50px;
-  box-sizing: border-box;
-  
-  background: #ededed;
-  list-style-type: none;
-  -webkit-font-smoothing: antialiased;
-  /* to stop flickering of text in safari */
-  
-  transform-origin: 0% 0%;
-  transform: translate(-100%, 0);
-  
-  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
-}
-
-header div:nth-of-type(2) ul ul {
-    display: none;
-}
-
-header div:nth-of-type(2) ul.expanded {
-    display: block;
-}
-
-
-header div:nth-of-type(2).on {
-  transform: none;
-}
-
-
-header img {
-    height: 1em;
-    padding-right: 5px;
-    padding-left: 2
-}
-
-header p {
-    font-weight: 700;
-    font-size: 1.1rem;
-    margin: 0;
-    display: inline-block;
-    line-height: 1.5em;
-}
-
-header p:nth-child(2) {
-    display: block;
-    float: right;
-}
-
-header p:nth-child(2) a {
-    display: inline-block;
-}
-
-header a {
-  display: inline-block;
-  margin-top: 5px;
-}
-header a:any-link{
-    color: black;
-    text-decoration: none;
-}
-
-footer {
-    background-color: white;
-    padding: 20px 0px;
-    text-align: center;
-    display: grid;
-    grid-template-areas: "l a a r"
-                         "l b b r"
-                         "l c c r";
-    font-family: "Adobe Clean",sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-}
-
-footer div {
-    box-sizing: border-box;
-}
-
-footer ul {
-    margin: 0;
-    padding: 0;
-}
-
-footer ul li {
-    display: inline-block;
-}
-
-footer div:nth-of-type(1) {
-    grid-area: a;
-    text-align: center;
-}
-
-footer div:nth-of-type(2) {
-    grid-area: b;
-    text-align: center;
-}
-
-footer div:nth-of-type(2) li::before {
-    content: " / ";
-}
-
-footer div:nth-of-type(2) li:first-of-type::before {
-    content: " ";
-}
-
-footer div:nth-of-type(3) {
-    grid-area: c;
-    text-align: center;
-}
-
-footer svg {
-    fill: currentColor;
-    height: 1.5em;
-    width: 1.5em;
-    margin: 5px;
-}
-
-footer li:first-child svg {
-    fill: rgb(232, 0, 55);
-}
-
-header svg {
-  fill: rgb(232, 0, 55);
-  height: 1em;
-  width: 1em;
-  margin: 10px 6px;
-  float: left;
+header a:any-link,
+footer a:any-link {
+  text-decoration: none;
 }
 
 header:empty, footer:empty {
-    display: none;
+  display: none;
 }
 
 input {
-    width: 100%;
-    font-size: 1.5em;
-    font-family: "source-sans-pro", sans-serif;
-    padding: 2px;
+  width: 100%;
+  font-size: 1.5em;
+  font-family: "source-sans-pro", sans-serif;
+  padding: 2px;
 }
 
 button, input[type=button], input[type=submit], input[type=reset] {
-    padding: 5px 20px;
-    border-radius: 5px;
-    background-color: black;
-    font-size: 1.5em;
-    color: white;
-    font-family: "source-sans-pro", sans-serif;
+  padding: 5px 20px;
+  border-radius: 5px;
+  background-color: black;
+  font-size: 1.5em;
+  color: white;
+  font-family: "source-sans-pro", sans-serif;
 
 }
 
 .alert {
-    color: red;
-    border: 1px red solid;
-    width: 100%;
-    border-radius: 5px;
-    padding: 2px 20px;
+  color: red;
+  border: 1px red solid;
+  width: 100%;
+  border-radius: 5px;
+  padding: 2px 20px;
 }
 
 main div:first-of-type {
-    text-align: center;
+  text-align: center;
 }
 
 main div:first-of-type h1 {
-    margin-top: 2.7em;
+  margin-top: 2.7em;
 }
 
 main {
-    display: grid;
-    grid-template-areas: "title"
-                         "image"
-                         "post"
-                         "author"
-                         "topics";
+  display: grid;
+  grid-template-areas: "title"
+                       "image"
+                       "post"
+                       "author"
+                       "topics";
 }
 
 main div:first-of-type {
-    grid-area: title;
+  grid-area: title;
 }
 
 main div:nth-of-type(2) {
-    grid-area: image;
+  grid-area: image;
 }
 
 main div.left, main {
-    grid-area: author;
+  grid-area: author;
 }
 
 main div.topics {
-    grid-area: topics;
+  grid-area: topics;
 }
 
 
 .left {
-    font-family: "Adobe Clean",sans-serif;
-    font-size: .75rem;
-    text-align: center;
+  font-family: "Adobe Clean",sans-serif;
+  font-size: .75rem;
+  text-align: center;
 }
 
 .author img {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    margin: auto auto 15px auto;
-    display: block;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: auto auto 15px auto;
+  display: block;
 }
 
 .author .post-author {
-    font-weight: 600;
-    display: block;
+  font-weight: 600;
+  display: block;
 }
 
 .author .post-author a {
-    text-decoration: underline;
-    transition: color 350ms;
-    color: #007bff;
-    background-color: transparent;
+  text-decoration: underline;
+  transition: color 350ms;
+  color: #007bff;
+  background-color: transparent;
 }
 
 .author .post-date {
-    letter-spacing: .1em;
-    font-weight: 500;
-    text-transform: uppercase;
-    display: block;
+  letter-spacing: .1em;
+  font-weight: 500;
+  text-transform: uppercase;
+  display: block;
 }
 
 .topics::before {
@@ -573,40 +341,40 @@ main div.topics {
 }
 
 .products::before {
-    content: "Adobe Products in this article";
-    display: block;
-    margin-bottom: 15px;
-    color: rgb(10,10,10);
-    text-align: center;
-    text-size-adjust: 100%;
-    text-rendering: optimizeLegibility;
-    font-family: "Adobe Clean",sans-serif;
-    font-size: .75rem;
-    line-height:18px;
-    font-weight: 600;
-    letter-spacing: .02em;
-    user-select: text;
-    width: 100%;
+  content: "Adobe Products in this article";
+  display: block;
+  margin-bottom: 15px;
+  color: rgb(10,10,10);
+  text-align: center;
+  text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  font-family: "Adobe Clean",sans-serif;
+  font-size: .75rem;
+  line-height:18px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  user-select: text;
+  width: 100%;
 }
 
 .products {
-    margin-top: 1.25rem;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .products a {
-    margin: 0 .125rem .5rem;
-    font-size: .75rem;
+  margin: 0 .125rem .5rem;
+  font-size: .75rem;
 }
 
 .products a img {
-    width: 3.125rem;
-    height: 3.125rem;
-    max-width: 1.875rem;
-    max-height: 1.875rem;
-    margin: 0 .188rem;
+  width: 3.125rem;
+  height: 3.125rem;
+  max-width: 1.875rem;
+  max-height: 1.875rem;
+  margin: 0 .188rem;
 }
 
 .social::before {
@@ -774,10 +542,6 @@ main div.topics {
   align-self: flex-end;
 }
 
-.home-page main {
-  padding-top: 67px;
-}
-
 .home-page main .default {
   width:100vw;
   padding: 0;
@@ -860,122 +624,44 @@ main div.topics {
 @media (min-width:600px) {
 
   h1 {
-      font-size: 2.8rem;
+    font-size: 2.8rem;
   }
   
   .title h1+p {
-      font-size: 2rem;
-      font-weight: 300;
+    font-size: 2rem;
+    font-weight: 300;
   }
 
   main div:first-of-type h1 {
-    margin-top: 2em;
+    margin-top: 1em;
   }
 
   main div:first-of-type h3 {
     font-size: 1.4rem;
-    line-height: 1.3;
+   line-height: 1.3;
   }
 
   h2 {
-      font-size: 2.3rem;
+    font-size: 2.3rem;
   }
 
   h3 {
-      font-size: 1.8rem;
+    font-size: 1.8rem;
   }
 
 
   
   h4 {
-      font-size: 1.75rem;
+    font-size: 1.75rem;
   }
 
   body {
-      font-size: 1.25rem;
+    font-size: 1.25rem;
   }
 
   blockquote {
-      font-size: 1.2rem;
-      line-height: 1.7;
-  }
-
-  header div:first-of-type {
-      text-align: left;
-      display: inline-block;
-      width: 200px;
-  }
-
-  header div:first-of-type #menuToggle {
-    display: none;
-  }
-
-  header div:nth-of-type(2) {
-    display: inline-block;
-    position: relative;
-    width: unset;
-    height: unset;
-    padding: 0;
-    box-sizing: border-box;
-    
-    background: #ededed;
-    list-style-type: none;
-    
-    transform-origin: 0% 0%;
-    transform: unset;
-  }
-
-  header div:nth-of-type(2) > ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    background-color: white;
-    padding-top: 23px;
-  }
-
-  header div:nth-of-type(2) > ul > li {
-    display: inline-block;
-    margin: 0 20px;
-    color: grey;
-    font-size: 0.875rem;
-    font-weight: 800;
-    text-align: center;
-    white-space: pre;
-    line-height: 16px;
-    overflow: hidden;
-    height: 30px;
-  }
-
-  header div:nth-of-type(2) > ul > li::first-line {
-    color: black;
-  }
-
-  header div:nth-of-type(2) > ul > li::after {
-    content: "\A▾";
-  }
-
-  header div:nth-of-type(2) > ul > li > a {
-    margin-top: 0;
-    padding-bottom: 10px;
-  }
-
-  header div:nth-of-type(2) ul  ul {
-    position: absolute;
-    background-color: white;
-    width: 220px;
-    box-shadow: 10px 10px 20px 0px rgba(0,0,0,0.5);
-    list-style: none;
-    margin: 4px 0 0 -20px;
-    padding: 20px;
-    font-family: adobe-clean-serif,serif,serif;
-    color: #000;
-    font-size: 1.1rem;
-    transition: all .2s;
-    text-align: left;
-  }
-
-  header>div {
-    vertical-align: top;
+    font-size: 1.2rem;
+    line-height: 1.7;
   }
 
   .home-page main li:first-child .hero {
@@ -986,48 +672,29 @@ main div.topics {
 
 @media (min-width:900px) {
   .default {
-      margin: auto;
-      width: 700px;
-      box-sizing: border-box;
+    margin: auto;
+    width: 700px;
+    box-sizing: border-box;
   }
 
-  div:nth-of-type(2) {
+  main div:nth-of-type(2) {
     width: 100%
   }
 
-  footer {
-      grid-template-columns: auto 300px 500px auto;
-      grid-template-rows: 50px 50px;
-      grid-template-areas: "l a b r"
-      "l c c r";
-  }
-
-  footer div:nth-of-type(1) {
-      text-align: left;
-  }
-
-  footer div:nth-of-type(2) {
-      text-align: right;
-  }
-
-  footer div:nth-of-type(3) {
-      text-align: right;
-  }
-
   main {
-      grid-template-areas: "title title title" 
-                            "image image image"
-                            "author post ."
-                            "topics topics topics";
+    grid-template-areas: "title title title" 
+                          "image image image"
+                          "author post ."
+                          "topics topics topics";
 
-      grid-template-columns: 20% 60% 20%;
+    grid-template-columns: 20% 60% 20%;
   }
 
   div.default.left {
-      margin-top: 30px;
-      margin-right: 0;
-      width: unset;
-      align-self: start;
+    margin-top: 30px;
+    margin-right: 0;
+    width: unset;
+    align-self: start;
   }
 
   .home-page .latest-posts {
