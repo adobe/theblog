@@ -172,6 +172,12 @@
     return `${context}${type}/${name.replace(/\s/gm, '-').replace(/\&amp;/gm,'').replace(/\&/gm,'').toLowerCase()}.html`;
   }
 
+  function checkConsent() {
+    if (window.feds.privacy && !window.feds.privacy.hasUserProvidedConsent) {
+      window.feds.privacy.showConsentPopup();
+    }
+  }
+
   function setupSearch({
     indexName = 'davidnuescheler--theblog--blog-posts',
     hitsPerPage = 12,
@@ -492,6 +498,7 @@
   window.onload = function() {
     removeHeaderAndFooter();
     addPageTypeAsBodyClass();
+    checkConsent();
     scrani.onload();
     if (isHome) {
       setupHomepage();

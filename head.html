@@ -12,7 +12,19 @@
   window.fedsConfig = {
     locale: 'en',
     disableSticky: false,
-    subnav: {},
+    profile: {
+      localMenu: {
+        title: 'Settings',
+        links: [
+          {
+            title: 'My Subscriptions',
+            action: 'https://theblog.adobe.com/subscriptions.html',
+            description: 'Manage your subscriptions',
+            analyticsID: 'profile-my-subscriptions'
+          },
+        ],
+      }
+    },
     footer: {
       breadcrumbs: {
         showLogo: true,
