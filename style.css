@@ -10,7 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
-body {
+ *,
+ *:before, 
+ *:after {
+   box-sizing: border-box;
+}
+ 
+ body {
   padding: 0;
   margin: 0;
   background-color: white;
