@@ -1,11 +1,10 @@
 <!DOCTYPE html><html>
 
 <head>
-    <title>the blog - tagger</title>
-    
+    <title>the blog - tagger</title>    
     <link rel="stylesheet" href="/style.css"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 <style>
     #tags-data {
         display: none;
@@ -18,6 +17,10 @@
     main>div>span {
         white-space: nowrap;
         margin: 10px;
+    }
+
+    main {
+        padding: 20px;
     }
     
     span.tag {
@@ -32,18 +35,11 @@
         background-color: #2E74D1;
     }
 
-    .active .tag::after {
-        content: " +"
-    }
 
     #selected .active .tag {
         background-color: #F25749;    
         color: white;
         font-weight: 700;
-    }
-
-    #selected .active .tag::after {
-        content: " -"
     }
 
     span.tag .highlight {
@@ -58,13 +54,49 @@
         font-size: 10px;
     }
 
-    main {
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
+    #selected {
+        position: fixed;
+        bottom: 0;
+        background-color:lightsalmon;
+        padding-bottom: 20px;
+        width: 100%;
+        box-sizing: border-box;
+        left: 0;
     }
+
+    #selected button:disabled {
+        background-color: #ccc;
+        color: grey;
+    }
+
+    #selected button {
+        background-color: #F25749;    
+        color: white;
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        border: 1px solid white;
+        font-size: 13px;       
+    }
+
+    .hidden {
+        display: none;
+    }
+
 </style>
 <script>
+  (function(d) {
+    var config = {
+            // Todo: pull in the kit Id from the ACF field in the admin
+            kitId: 'lkg3fdt',
+            scriptTimeout: 3000,
+            async: true
+        },
+        h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+})(document);
+
+
+
     var selected=[];
     function generateTagIDs() {
         document.querySelectorAll("#tags-data li").forEach((e, i) => {
@@ -84,14 +116,45 @@
         displaySelected();
     }
 
+    function copy(button) {
+
+        var copyText = document.getElementById("copybuffer");
+
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); 
+
+        document.execCommand("copy");
+
+        button.disabled=true;
+
+    }
+    
+
     function displaySelected() {
         var html="";
+        var products="";
+        var topics="";
+
         selected.forEach((e) => {
             tagInfo=fetchTag(e);
             html+=`<span data-target="${e}" onclick="remove(this)" class="path active">${tagInfo.path}<span class="tag">${tagInfo.tag}</span></span> `;
+            if (tagInfo.path.toLowerCase().indexOf("products")==0) products+=tagInfo.tag+", ";
+            else topics+=tagInfo.tag+", ";
         });
 
-        document.getElementById("selected").innerHTML=html;
+        var selEl=document.getElementById("selected");
+
+        var button='<button onclick="copy(this)">Copy</button>';
+        selEl.innerHTML=html+button;
+
+        if (selected.length==0) {
+            selEl.classList.add("hidden");
+        } else {
+            selEl.classList.remove("hidden");
+        }
+
+        var copybuffer=document.getElementById("copybuffer");
+        copybuffer.value=`---\r\n\r\nProducts: ${products}\r\nTopics: ${topics}\r\n\r\n---\r\n`
 
         document.querySelectorAll("#results>span").forEach((e) => { 
             if (selected.indexOf(e.getAttribute("data-target"))<0) {
@@ -970,10 +1033,12 @@
             </ul>            
     </div>
     <main>
-    <div class="filter"><input id="search" onkeydown="filter()" onkeyup="filter()"></div>
+    <div class="filter"><input autocomplete="off" placeholder="Type to filter" id="search" onkeydown="filter()" onkeyup="filter()"></div>
     <div id="results"></div>
-    <div id="selected">test</div>
+    <div id="selected" class="hidden">test</div>
     </main>
+    <textarea class="hidden" id="copybuffer"></textarea>
+
     <script>
     /*
     fetch('/tools/tagger/tags.plain.html').then((response) => {
