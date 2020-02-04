@@ -28,8 +28,22 @@
         font-size: 16px;
     }
 
-    .selected .tag {
+    .active .tag {
         background-color: #2E74D1;
+    }
+
+    .active .tag::after {
+        content: " +"
+    }
+
+    #selected .active .tag {
+        background-color: #F25749;    
+        color: white;
+        font-weight: 700;
+    }
+
+    #selected .active .tag::after {
+        content: " -"
     }
 
     span.tag .highlight {
@@ -52,26 +66,48 @@
 </style>
 <script>
     var selected=[];
-    function toggle(e) {
-        e.classList.toggle("selected");
-        if (e.classList.contains("selected")) {
-            selected.push(e.innerHTML);
-        } else {
-            selected.splice(selected.indexOf(e.innerHTML),1);
-        }
-        var html="";
-        selected.forEach((e) => {
-            html+=`<span class="path selected" onclick="remove()">${e}</span> `;
+    function generateTagIDs() {
+        document.querySelectorAll("#tags-data li").forEach((e, i) => {
+            e.setAttribute("id","tag-"+i);
         });
-        document.getElementById("selected").innerHTML=html;
     }
 
-    function filter() {
+    function remove(e) {
+        var target=e.getAttribute("data-target");
+        selected.splice(selected.indexOf(target),1);
+        displaySelected();
+    }
+
+    function add(e) {
+        var target=e.getAttribute("data-target");
+        selected.push(target);
+        displaySelected();
+    }
+
+    function displaySelected() {
         var html="";
-        var searchTerm=document.getElementById("search").value.toLowerCase();
-        console.log(searchTerm);
-        document.querySelectorAll("#tags-data li").forEach((e) => {
-            if (e.firstChild && e.firstChild.nodeValue) {
+        selected.forEach((e) => {
+            tagInfo=fetchTag(e);
+            html+=`<span data-target="${e}" onclick="remove(this)" class="path active">${tagInfo.path}<span class="tag">${tagInfo.tag}</span></span> `;
+        });
+
+        document.getElementById("selected").innerHTML=html;
+
+        document.querySelectorAll("#results>span").forEach((e) => { 
+            if (selected.indexOf(e.getAttribute("data-target"))<0) {
+                e.classList.add("active");
+                e.setAttribute("onclick",'add(this)');
+            } else {
+                e.classList.remove("active");
+                e.setAttribute("onclick",'');
+            }
+        });  
+    }
+
+    function fetchTag(id) {
+        var tagInfo;
+        var e=document.getElementById(id);
+        if (e.firstChild && e.firstChild.nodeValue) {
                 var tag=e.firstChild.nodeValue;
                 var path="";
                 var parent=e.parentNode.parentNode;
@@ -79,20 +115,33 @@
                     path = parent.firstChild.nodeValue+(path?" / ":" ")+path;
                     parent=parent.parentNode.parentNode;
                 }
+        tagInfo={tag: tag, path: path};
+        }
+    return tagInfo;
+    }
+
+    function filter() {
+        var html="";
+        var searchTerm=document.getElementById("search").value.toLowerCase();
+        console.log(searchTerm);
+        document.querySelectorAll("#tags-data li").forEach((e) => {
+            var tagInfo=fetchTag(e.id);
+            if (tagInfo) {
+                var tag=tagInfo.tag;
                 var offset=tag.toLowerCase().indexOf(searchTerm);
+
                 if (offset>=0) {
 
                     before=tag.substr(0, offset);
                     term=tag.substr(offset, searchTerm.length);
                     after=tag.substr(offset+searchTerm.length);
 
-                    html+=`<span onclick="toggle(this)" class="path">${path}<span class="tag">${before}<span class="highlight">${term}</span>${after}</span></span> `;
-                }
+                    html+=`<span data-target="${e.id}" onclick="add(this)" class="path active">${tagInfo.path}<span class="tag">${before}<span class="highlight">${term}</span>${after}</span></span> `;
+                }                
             }
         })
         var results=document.getElementById("results");
         results.innerHTML=html;
-
     }
 </script>
 </head>
@@ -933,6 +982,7 @@
      })
     });
     */
+    generateTagIDs();
     filter();
     </script>
 
