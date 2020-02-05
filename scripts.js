@@ -193,7 +193,7 @@
     itemTemplate = `
     <div class="post">
       <div class="hero">
-        <a href="/{{path}}" title="{{{title}}}"><img src="{{hero}}" alt="{{{title}}}"></a>
+        <a href="/{{path}}" title="{{{title}}}"><img class="lazyload" data-src="{{hero}}" alt="{{{title}}}"></a>
         <a href="{{topicUrl}}" class="topic" title="{{{topic}}}">{{{topic}}}</a>
       </div>
       <div class="content">
@@ -258,7 +258,7 @@
       itemTemplate: `
       <div class="post">
         <div class="hero">
-          <a href="/{{path}}" title="{{{title}}}"><img src="{{hero}}" alt="{{{title}}}"></a>
+          <a href="/{{path}}" title="{{{title}}}"><img class="lazyload" data-src="{{hero}}" alt="{{{title}}}"></a>
           <a href="{{topicUrl}}" class="topic" title="{{{topic}}}">{{{topic}}}</a>
         </div>
         <div class="content">
