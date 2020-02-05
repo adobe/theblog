@@ -173,7 +173,7 @@
   }
 
   function checkConsent() {
-    if (window.feds.privacy && !window.feds.privacy.hasUserProvidedConsent) {
+    if (window.feds && window.feds.privacy && !window.feds.privacy.hasUserProvidedConsent) {
       window.feds.privacy.showConsentPopup();
     }
   }
