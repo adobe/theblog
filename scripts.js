@@ -232,7 +232,12 @@
           empty: emptyTemplate,
         },
         transformItems(items) {
-          return items.map(item => transformer(item));
+          return items
+            .filter((item) => {
+              // hide articles with future dates
+              return item.date * 1000 < Date.now();
+            })
+            .map((item, index) => transformer(item, index));
         },
       }),
     ]);
@@ -273,10 +278,10 @@
         </div>
       </div>
       `,
-      transformer: (item) => {
+      transformer: (item, index) => {
         item = itemTransformer(item); 
-        if (item.__position === 1) {
-          // use larger hero image
+        if (index === 0) {
+          // use larger hero image on first article
           item.hero = item.hero.replace('?width=256', '?width=2048');
         } 
         return item;
