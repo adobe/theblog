@@ -211,7 +211,6 @@
     emptyTemplate = 'There are no articles yet',
     transformer = itemTransformer,
   }) {
-    // const searchClient = algoliasearch('LPQI0MG7ST', '9bf61456f606d21ddc1723f30500659e');
     const searchClient = algoliasearch('A8PL9E4TZT', '9e59db3654d13f71d79c4fbb4a23cc72');
     const search = instantsearch({
       indexName,
@@ -222,6 +221,9 @@
       instantsearch.widgets.configure({
         hitsPerPage,
         facetFilters,
+        numericFilters: [
+          `date < ${Date.now()/1000}`, // hide articles with future dates
+         ]
       }),
     ]);
     search.addWidgets([
@@ -232,12 +234,7 @@
           empty: emptyTemplate,
         },
         transformItems(items) {
-          return items
-            .filter((item) => {
-              // hide articles with future dates
-              return item.date * 1000 < Date.now();
-            })
-            .map((item, index) => transformer(item, index));
+          return items.map((item, index) => transformer(item, index));
         },
       }),
     ]);
