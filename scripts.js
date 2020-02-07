@@ -162,7 +162,7 @@
     language,
     pageType,
   } = getPageInfo();
-  
+
   const isHome = pageType == TYPE.HOME;
   const isPost = pageType === TYPE.POST;
   const isAuthor = pageType === TYPE.AUTHOR;
@@ -344,6 +344,7 @@
           if (xhr.status != 200 || xhr.status != 304) {
             // try to get <main> elements and find author image
             const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText);
+            if (!groups) return;
             let main = groups.length > 2 ? groups[2] : null;
             if (main) {
               main = main.replace(fileName, '../authors/' + fileName);
