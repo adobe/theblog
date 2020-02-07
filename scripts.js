@@ -150,16 +150,26 @@
     return { context, language, pageType };
   }
 
+  function loadDict(lang) {
+    const dict = document.createElement('link');
+    dict.rel = 'stylesheet';
+    dict.href = `/dict.${lang}.css`;
+    document.head.appendChild(dict);
+  }
+
   const {
     context,
     language,
     pageType,
-   } = getPageInfo();
+  } = getPageInfo();
+  
   const isHome = pageType == TYPE.HOME;
   const isPost = pageType === TYPE.POST;
   const isAuthor = pageType === TYPE.AUTHOR;
   const isTopic = pageType === TYPE.TOPIC;
   const isProduct = pageType === TYPE.PRODUCT;
+
+  loadDict(language);
 
   const itemTransformer = (item) => ({
     ...item,
