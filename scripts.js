@@ -160,42 +160,6 @@
   const isAuthor = pageType === TYPE.AUTHOR;
   const isTopic = pageType === TYPE.TOPIC;
   const isProduct = pageType === TYPE.PRODUCT;
-  const locale = language || 'en_US';
-
-  window.fedsConfig = {
-    locale,
-    disableSticky: false,
-    profile: {
-      localMenu: {
-        title: 'Settings',
-        links: [
-          {
-            title: 'My Subscriptions',
-            action: 'https://theblog.adobe.com/subscriptions.html',
-            description: 'Manage your subscriptions',
-            analyticsID: 'profile-my-subscriptions'
-          },
-        ],
-      }
-    },
-    footer: {
-      breadcrumbs: {
-        showLogo: true,
-        links: [{
-          title: 'Adobe Blog',
-          url: '/',
-          target: '_self',
-        }]
-      },
-      // regionModal: function () { window.location.hash = 'languageNavigation'; }
-    },
-  };
-
-  window.adobeid = {
-    client_id: 'theblog-helix',
-    scope: 'AdobeID,openid',
-    locale,
-  };
 
   const itemTransformer = (item) => ({
     ...item,

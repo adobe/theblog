@@ -12,6 +12,41 @@
 
 <script>
 
+window.fedsConfig = {
+    locale,
+    disableSticky: false,
+    profile: {
+      localMenu: {
+        title: 'Settings',
+        links: [
+          {
+            title: 'My Subscriptions',
+            action: 'https://theblog.adobe.com/subscriptions.html',
+            description: 'Manage your subscriptions',
+            analyticsID: 'profile-my-subscriptions'
+          },
+        ],
+      }
+    },
+    footer: {
+      breadcrumbs: {
+        showLogo: true,
+        links: [{
+          title: 'Adobe Blog',
+          url: '/',
+          target: '_self',
+        }]
+      },
+      // regionModal: function () { window.location.hash = 'languageNavigation'; }
+    },
+  };
+
+  window.adobeid = {
+    client_id: 'theblog-helix',
+    scope: 'AdobeID,openid',
+    locale,
+  };
+
   (function(d) {
     var config = {
             // Todo: pull in the kit Id from the ACF field in the admin
