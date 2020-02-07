@@ -216,7 +216,6 @@
     emptyTemplate = 'There are no articles yet',
     transformer = itemTransformer,
   }) {
-    // const searchClient = algoliasearch('LPQI0MG7ST', '9bf61456f606d21ddc1723f30500659e');
     const searchClient = algoliasearch('A8PL9E4TZT', '9e59db3654d13f71d79c4fbb4a23cc72');
     const search = instantsearch({
       indexName,
@@ -227,6 +226,9 @@
       instantsearch.widgets.configure({
         hitsPerPage,
         facetFilters,
+        numericFilters: [
+          `date < ${Date.now()/1000}`, // hide articles with future dates
+         ]
       }),
     ]);
     search.addWidgets([
@@ -237,7 +239,7 @@
           empty: emptyTemplate,
         },
         transformItems(items) {
-          return items.map(item => transformer(item));
+          return items.map((item, index) => transformer(item, index));
         },
       }),
     ]);
@@ -278,10 +280,10 @@
         </div>
       </div>
       `,
-      transformer: (item) => {
+      transformer: (item, index) => {
         item = itemTransformer(item); 
-        if (item.__position === 1) {
-          // use larger hero image
+        if (index === 0) {
+          // use larger hero image on first article
           item.hero = item.hero.replace('?width=256', '?width=2048');
         } 
         return item;
