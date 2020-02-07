@@ -108,21 +108,41 @@
     PRODUCT: 'product',
   }
 
+  const LANG = {
+    EN: 'en',
+    DE: 'de',
+    FR: 'fr',
+  }
+
   function getPageInfo() {
     let context = '/ms/';
-    let language = 'en';
+    let language = LANG.EN;
     let pageType = TYPE.HOME;
-    const info = /^\/(ms|g)\/([a-z-_]*)\/([a-z]*)\//gi.exec(window.location.pathname);
-    if (info && info.length === 4) {
-      context = `/${info[1]}/`;
-      language = info[2];
-      if (info[3] === 'archive') {
-        pageType = TYPE.POST;
-      } else {
-        for (let [key, value] of Object.entries(TYPE)) {
-          if (info[3].startsWith(value)) {
-            pageType = value;
+    const segs = window.location.pathname
+      .split('/')
+      .filter(seg => seg !== '');
+    if (segs.length > 0) {
+      // context
+      context = /(ms|g)/.test(segs[0]) ? `/${segs[0]}/` : context;
+      if (segs.length >= 2) {
+        // language
+        for (let [key, value] of Object.entries(LANG)) {
+          if (value === segs[1]) {
+            language = value;
             break;
+          }
+        }
+      }
+      if (segs.length >= 3) {
+        // page type
+        if (segs[2] === 'archive') {
+          pageType = TYPE.POST;
+        } else {
+          for (let [key, value] of Object.entries(TYPE)) {
+            if (segs[2].startsWith(value)) {
+              pageType = value;
+              break;
+            }
           }
         }
       }
@@ -222,6 +242,7 @@
       searchClient,
       routing: true,
     });
+    facetFilters.push(`parents:${context}${language}`);
     search.addWidgets([
       instantsearch.widgets.configure({
         hitsPerPage,
