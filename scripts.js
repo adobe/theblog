@@ -108,28 +108,33 @@
     PRODUCT: 'product',
   }
 
-  function getPageType() {
-    const type = /^\/(ms|g)\/(archive\/)?([a-z]*)s\//.exec(window.location.pathname);
-    if (type && type.length === 4) {
-      for (let [key, value] of Object.entries(TYPE)) {
-        if (type[3].indexOf(value) !== -1) {
-          return value;
+  function getPageInfo() {
+    let context = '/ms/';
+    let language = 'en';
+    let pageType = TYPE.HOME;
+    const info = /^\/(ms|g)\/([a-z-_]*)\/([a-z]*)\//gi.exec(window.location.pathname);
+    if (info && info.length === 4) {
+      context = `/${info[1]}/`;
+      language = info[2];
+      if (info[3] === 'archive') {
+        pageType = TYPE.POST;
+      } else {
+        for (let [key, value] of Object.entries(TYPE)) {
+          if (info[3].startsWith(value)) {
+            pageType = value;
+            break;
+          }
         }
       }
     }
-    return TYPE.HOME; // fall back to homepage
+    return { context, language, pageType };
   }
 
-  function getContext() {
-    const ctx = /^\/(ms|g)?/.exec(window.location.pathname);
-    if (ctx && ctx.length === 2 && ctx[1]) {
-      return `/${ctx[1]}/`;
-    }
-    return '/ms/';
-  }
-
-  const pageType = getPageType();
-  const context = getContext();
+  const {
+    context,
+    language,
+    pageType,
+   } = getPageInfo();
   const isHome = pageType == TYPE.HOME;
   const isPost = pageType === TYPE.POST;
   const isAuthor = pageType === TYPE.AUTHOR;
@@ -176,7 +181,7 @@
 
   function getLink(type, name) {
     if (!type.endsWith('s')) type += 's';
-    return `${context}${type}/${name.replace(/\s/gm, '-').replace(/\&amp;/gm,'').replace(/\&/gm,'').toLowerCase()}.html`;
+    return `${context}${language}/${type}/${name.replace(/\s/gm, '-').replace(/\&amp;/gm,'').replace(/\&/gm,'').toLowerCase()}.html`;
   }
 
   function checkConsent() {
