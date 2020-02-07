@@ -237,10 +237,6 @@ main div:first-of-type {
   text-align: center;
 }
 
-main div:first-of-type h1 {
-  margin-top: 2.7em;
-}
-
 main {
   display: grid;
   grid-template-areas: "title"
