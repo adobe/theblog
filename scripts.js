@@ -100,41 +100,15 @@
    * all pages
    */
 
-  const TYPE = {
-    HOME: 'home',
-    POST: 'post',
-    AUTHOR: 'author',
-    TOPIC: 'topic',
-    PRODUCT: 'product',
-  }
+  // load language specific css overlays
+  ((lang) => {
+    if (lang === LANG.EN) return; // skip for en
+    const dict = document.createElement('link');
+    dict.rel = 'stylesheet';
+    dict.href = `/dict.${lang}.css`;
+    document.head.appendChild(dict);
+  })(language);
 
-  function getPageInfo() {
-    let context = '/ms/';
-    let language = 'en';
-    let pageType = TYPE.HOME;
-    const info = /^\/(ms|g)\/([a-z-_]*)\/([a-z]*)\//gi.exec(window.location.pathname);
-    if (info && info.length === 4) {
-      context = `/${info[1]}/`;
-      language = info[2];
-      if (info[3] === 'archive') {
-        pageType = TYPE.POST;
-      } else {
-        for (let [key, value] of Object.entries(TYPE)) {
-          if (info[3].startsWith(value)) {
-            pageType = value;
-            break;
-          }
-        }
-      }
-    }
-    return { context, language, pageType };
-  }
-
-  const {
-    context,
-    language,
-    pageType,
-   } = getPageInfo();
   const isHome = pageType == TYPE.HOME;
   const isPost = pageType === TYPE.POST;
   const isAuthor = pageType === TYPE.AUTHOR;
@@ -222,6 +196,7 @@
       searchClient,
       routing: true,
     });
+    facetFilters.push(`parents:${context}${language}`);
     search.addWidgets([
       instantsearch.widgets.configure({
         hitsPerPage,
@@ -313,6 +288,7 @@
           if (xhr.status != 200 || xhr.status != 304) {
             // try to get <main> elements and find author image
             const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText);
+            if (!groups) return;
             let main = groups.length > 2 ? groups[2] : null;
             if (main) {
               main = main.replace(fileName, '../authors/' + fileName);

@@ -12,9 +12,63 @@
 <script defer src="/scripts.js"></script>
 
 <script>
-  const locale = 'en_US';
-  window.fedsConfig = {
-    locale,
+
+const TYPE = {
+  HOME: 'home',
+  POST: 'post',
+  AUTHOR: 'author',
+  TOPIC: 'topic',
+  PRODUCT: 'product',
+}
+
+const LANG = {
+  EN: 'en',
+  DE: 'de',
+  FR: 'fr',
+}
+
+const {
+  context,
+  language,
+  pageType,
+} = (() => {
+  let context = '/ms/';
+  let language = LANG.EN;
+  let pageType = TYPE.HOME;
+  const segs = window.location.pathname
+    .split('/')
+    .filter(seg => seg !== '');
+  if (segs.length > 0) {
+    // context
+    context = /(ms|g)/.test(segs[0]) ? `/${segs[0]}/` : context;
+    if (segs.length >= 2) {
+      // language
+      for (let [key, value] of Object.entries(LANG)) {
+        if (value === segs[1]) {
+          language = value;
+          break;
+        }
+      }
+    }
+    if (segs.length >= 3) {
+      // page type
+      if (segs[2] === 'archive') {
+        pageType = TYPE.POST;
+      } else {
+        for (let [key, value] of Object.entries(TYPE)) {
+          if (segs[2].startsWith(value)) {
+            pageType = value;
+            break;
+          }
+        }
+      }
+    }
+  }
+  return { context, language, pageType };
+})();
+
+window.fedsConfig = {
+    locale: language,
     disableSticky: false,
     profile: {
       localMenu: {
@@ -45,7 +99,7 @@
   window.adobeid = {
     client_id: 'theblog-helix',
     scope: 'AdobeID,openid',
-    locale,
+    locale: language,
   };
 
   // prep images for lazy loading and use adequate sizes
