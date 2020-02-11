@@ -100,6 +100,7 @@
    * all pages
    */
 
+  // load language specific css overlays
   ((lang) => {
     if (lang === LANG.EN) return; // skip for en
     const dict = document.createElement('link');

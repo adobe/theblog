@@ -27,7 +27,11 @@ const LANG = {
   FR: 'fr',
 }
 
-function getPageInfo() {
+const {
+  context,
+  language,
+  pageType,
+} = (() => {
   let context = '/ms/';
   let language = LANG.EN;
   let pageType = TYPE.HOME;
@@ -61,13 +65,7 @@ function getPageInfo() {
     }
   }
   return { context, language, pageType };
-}
-
-const {
-  context,
-  language,
-  pageType,
-} = getPageInfo();
+})();
 
 window.fedsConfig = {
     locale: language,
