@@ -590,19 +590,6 @@
       const socialLinks = author.querySelectorAll('ul>li>a');
       [...socialLinks].forEach((link) => link.setAttribute('itemprop', 'sameAs'));
     }
-    
-    const articles = getSection(1);
-    if (articles) {
-      articles.setAttribute('itemprop', 'hasOfferCatalog');
-      articles.setAttribute('itemscope', '');
-      articles.setAttribute('itemtype', 'http://schema.org/OfferCatalog');
-      
-      [...articles.querySelectorAll('.ais-Hits-item')].forEach((article) => {
-        article.setAttribute('itemprop', 'itemListElement');
-        article.setAttribute('itemscope', '');
-        article.setAttribute('itemtype', 'http://schema.org/Offer');
-      });
-    }
   }
 
   window.onload = function() {
