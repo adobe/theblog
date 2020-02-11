@@ -262,8 +262,6 @@
 
     const postsWrap = document.createElement('div');
     postsWrap.className = 'default latest-posts';
-    postsWrap.setAttribute('itemscope', '');
-    postsWrap.setAttribute('itemtype', 'http://schema.org/Collection');
     getSection().parentNode.appendChild(postsWrap);
     setupSearch({
       hitsPerPage: 13,
@@ -589,6 +587,9 @@
     }
   }
 
+  /**
+   * Adding Person microdata schema for the author.
+   */
   function addAuthorSchema() {
     const main = document.querySelector('main');
     main.setAttribute('itemscope', '');
@@ -613,6 +614,9 @@
     }
   }
 
+  /**
+   * Adding Collection microdata schema around the latests posts.
+   */
   function addLatestPostsSchema() {
     const posts = getSection();
     posts.setAttribute('itemscope', '');
@@ -626,6 +630,7 @@
     scrani.onload();
     if (isHome) {
       setupHomepage();
+      addLatestPostsSchema();
     } else if (isPost) {
       fetchAuthor();
       fetchTopics();
