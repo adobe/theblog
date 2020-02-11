@@ -134,6 +134,11 @@ main div:first-of-type h3 {
   line-height: 1.8;
 }
 
+a {
+  color: #2c6d9f;
+  text-decoration: underline;
+}
+
 blockquote {
   font-family: adobe-clean-serif,serif;
   font-weight: 700;

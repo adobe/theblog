@@ -2,10 +2,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="robots" content="noindex, nofollow">
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+<link rel="stylesheet" href="/hlx_fonts/pnv6nym.css"/>
 
 <script defer src="https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/polyfills.js"></script>
 <script defer src="https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js" id="feds-script"></script>
-<script defer src="https://static.adobelogin.com/imslib/dev1/imslib.min.js"></script>
+<script defer src="https://static.adobelogin.com/imslib/imslib.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/algoliasearch@3/dist/algoliasearch.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.0.0/dist/instantsearch.production.min.js" integrity="sha256-6S7q0JJs/Kx4kb/fv0oMjS855QTz5Rc2hh9AkIUjUsk=" crossorigin="anonymous"></script>
 <script defer src="/scripts.js"></script>
@@ -102,16 +103,6 @@ window.fedsConfig = {
     scope: 'AdobeID,openid',
     locale: language,
   };
-
-  (function(d) {
-    var config = {
-            // Todo: pull in the kit Id from the ACF field in the admin
-            kitId: 'lkg3fdt',
-            scriptTimeout: 3000,
-            async: true
-        },
-        h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
-  })(document);
 
   // prep images for lazy loading and use adequate sizes
   const imgWidth = window.innerWidth === 375 ? 750 : // double size for retina
