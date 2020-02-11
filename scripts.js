@@ -149,6 +149,7 @@
       month: '2-digit',
       year: 'numeric',
     }),
+    dateISO: new Date(item.date * 1000).toISOString(),
     authorUrl: getLink(TYPE.AUTHOR, item.author),
     topic: item.topics.length > 0 ? item.topics[0] : '',
     topicUrl: item.topics.length > 0 ? getLink(TYPE.TOPIC, item.topics[0]) : '',
@@ -176,7 +177,7 @@
 
   function getSection(index) {
     const nodes = document.querySelectorAll("main > div");
-    return index && nodes.length > index ? nodes[index] : nodes[nodes.length - 1];
+    return !isNaN(index) && nodes.length > index ? nodes[index] : nodes[nodes.length - 1];
   }
 
   function getLink(type, name) {
@@ -196,20 +197,20 @@
     facetFilters = [],
     container = '.posts',
     itemTemplate = `
-    <div class="post">
+    <div class="post" itemscope itemtype="http://schema.org/BlogPosting">
       <div class="hero">
-        <a href="/{{path}}" title="{{{title}}}"><img class="lazyload" data-src="{{hero}}" alt="{{{title}}}"></a>
-        <a href="{{topicUrl}}" class="topic" title="{{{topic}}}">{{{topic}}}</a>
+        <a href="/{{path}}" title="{{{title}}}"><img class="lazyload" itemprop="image" content="{{hero}}" data-src="{{hero}}" alt="{{{title}}}"></a>
+        <a class="topic" itemprop="genre" href="{{topicUrl}}" title="{{{topic}}}">{{{topic}}}</a>
       </div>
       <div class="content">
-        <span class="author">
-          <a href="{{authorUrl}}" title="{{{author}}}">{{{author}}}</a>
+        <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <a itemprop="url" href="{{authorUrl}}" title="{{{author}}}"><span itemprop="name">{{{author}}}</span></a>
         </span>
-        <h2><a href="/{{path}}" title="{{{title}}}">{{{title}}}</a></h2>
-        <span class="teaser">
-          <a href="/{{path}}" title="{{{teaser}}}…">{{{teaser}}}…</a>
+        <h2 itemprop="headline"><a href="/{{path}}" title="{{{title}}}">{{{title}}}</a></h2>
+        <span class="teaser" itemprop="abstract">
+          <a itemprop="url" href="/{{path}}" title="{{{teaser}}}…">{{{teaser}}}…</a>
         </span>
-        <span class="date">{{{date}}}</span>
+        <span class="date" itemprop="datePublished" content="{{{dateISO}}}">{{{date}}}</span>
       </div>
     </div>
     `,
@@ -258,24 +259,26 @@
 
     const postsWrap = document.createElement('div');
     postsWrap.className = 'default latest-posts';
+    postsWrap.setAttribute('itemscope', '');
+    postsWrap.setAttribute('itemtype', 'http://schema.org/Collection');
     getSection().parentNode.appendChild(postsWrap);
     setupSearch({
       hitsPerPage: 13,
       container: '.latest-posts',
       itemTemplate: `
-      <div class="post">
+      <div class="post" itemscope itemtype="http://schema.org/BlogPosting">
         <div class="hero">
-          <a href="/{{path}}" title="{{{title}}}"><img class="lazyload" data-src="{{hero}}" alt="{{{title}}}"></a>
-          <a href="{{topicUrl}}" class="topic" title="{{{topic}}}">{{{topic}}}</a>
+          <a href="/{{path}}" title="{{{title}}}"><img class="lazyload" itemprop="image" content="{{hero}}" data-src="{{hero}}" alt="{{{title}}}"></a>
+          <a itemprop="genre" href="{{topicUrl}}" title="{{{topic}}}">{{{topic}}}</a>
         </div>
         <div class="content">
-          <span class="date">{{{date}}}</span>
-          <h2><a href="/{{path}}" title="{{{title}}}">{{{title}}}</a></h2>
-          <span class="teaser">
-            <a href="/{{path}}" title="{{{teaser}}}…">{{{teaser}}}…</a>
+          <span class="date" itemprop="datePublished" content="{{{dateISO}}}">{{{date}}}</span>
+          <h2 itemprop="headline"><a href="/{{path}}" title="{{{title}}}">{{{title}}}</a></h2>
+          <span class="teaser" itemprop="abstract">
+            <a itemprop="url" href="/{{path}}" title="{{{teaser}}}…">{{{teaser}}}…</a>
           </span>
-          <span class="author">
-            <a href="{{authorUrl}}" title="{{{author}}}">{{{author}}}</a>
+          <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <a itemprop="url" href="{{authorUrl}}" title="{{{author}}}"><span itemprop="name">{{{author}}}</span></a>
           </span>
         </div>
       </div>
@@ -302,6 +305,7 @@
       const r = /^By (.*)\n*(.*)$/gmi.exec(insertInside.innerText);
       const author = r && r.length > 0 ? r[1] : null;
       const date = r && r.length > 1 ? r[2] : ''
+      const dateISO = new Date(date).toISOString();
       if (author) {
         // clear the content of the div and replace by avatar and text
         insertInside.innerHTML = '';
@@ -319,10 +323,12 @@
 
               const avatarURL = /<img src="(.*?)">/.exec(main)[1];
               const authorDiv = document.createElement('div');
-              authorDiv.innerHTML = '<img class="lazyload" data-src="' + avatarURL + '?width=120"> \
-                <span class="post-author">by <a href="' + pageURL + '">' + author + '</a></span> \
-                <span class="post-date">' + date + '</span> \
-                ';
+              authorDiv.innerHTML =
+                `<div itemprop="author" itemscope itemtype="http://schema.org/Person">
+                  <img class="lazyload" itemprop="image" content="${avatarURL}" data-src="${avatarURL}?width=120">
+                  <span class="post-author">by <a itemprop="url" href="${pageURL}"><span itemprop="name">${author}</span></a></span>
+                </div>
+                <span class="post-date" itemprop="datePublished" content="${dateISO}">${date}</span>`;
               authorDiv.classList.add('author');
               // try to get the author's social links
               const socialLinks = /<p>(Social\: .*)<\/p>/gi.exec(xhr.responseText);
@@ -367,6 +373,7 @@
           topic = topic.trim();
           if (!topic) return;
           const btn = document.createElement('a');
+          btn.setAttribute('itemprop', 'genre');
           btn.href = getLink(TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
           btn.title = topic;
           btn.innerText = topic;
@@ -499,6 +506,8 @@
     }
     const latestWrap = document.createElement('div');
     latestWrap.className = 'default latest-posts';
+    latestWrap.setAttribute('itemscope', '');
+    latestWrap.setAttribute('itemtype', 'http://schema.org/Collection');
     getSection().parentNode.appendChild(latestWrap);
     setupSearch({
       facetFilters: [
@@ -507,6 +516,34 @@
       container: '.latest-posts',
       emptyTemplate,
     }).start();
+  }
+
+  function annotateSchema() {
+    const main = document.querySelector('main');
+    main.setAttribute('itemscope', '');
+    main.setAttribute('itemtype', 'http://schema.org/BlogPosting');
+
+    const header = getSection(0);
+    if (header) {
+      const headline = header.querySelector('h1');
+      headline && headline.setAttribute('itemprop', 'headline');
+    }
+    
+    const hero = getSection(1);
+    if (hero) {
+      const image = hero.querySelector('p > img');
+      if (image) {
+        image.setAttribute('itemprop', 'image');
+        image.setAttribute('content', image.src.replace(/\?.*/, ''));
+      }
+      const subtitle = hero.querySelector('p + p');
+      subtitle && subtitle.setAttribute('itemprop', 'abstract');
+    }
+    
+    const content = getSection(3);
+    if (content) {
+      content.setAttribute('itemprop', 'text');
+    }
   }
 
   window.onload = function() {
@@ -521,6 +558,7 @@
       fetchTopics();
       fetchProducts();
       removeEmptySection();
+      annotateSchema();
     } else if (isAuthor) {
       fetchSocialLinks();
       fetchLatestPosts(TYPE.AUTHOR);
