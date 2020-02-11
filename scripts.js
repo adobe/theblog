@@ -382,7 +382,6 @@
           topic = topic.trim();
           if (!topic) return;
           const btn = document.createElement('a');
-          btn.setAttribute('itemprop', 'genre');
           btn.href = getLink(TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
           btn.title = topic;
           btn.innerText = topic;
@@ -424,24 +423,13 @@
           const productRef = product.replace(/\s/gm, '-').toLowerCase();
 
           const span = document.createElement('span');
-          span.setAttribute('itemprop', 'offers');
-          span.setAttribute('itemscope', '');
-          span.setAttribute('itemtype', 'http://schema.org/Offer');
-          span.setAttribute('additionalType', 'http://schema.org/Product');
-          
-          const meta = document.createElement('meta');
-          meta.setAttribute('itemprop', 'name');
-          meta.setAttribute('content', product);
-          span.appendChild(meta);
 
           const btn = document.createElement('a');
-          btn.setAttribute('itemprop', 'url');
           btn.href = `https://www.adobe.com/${productRef}.html`;
           btn.title = product;
           span.appendChild(btn);
 
           const img = document.createElement('img');
-          img.setAttribute('itemprop', 'image');
           img.src = `/icons/${productRef}.svg`;
           img.alt = product;
           btn.appendChild(img);
@@ -528,8 +516,6 @@
     }
     const latestWrap = document.createElement('div');
     latestWrap.className = 'default latest-posts';
-    latestWrap.setAttribute('itemscope', '');
-    latestWrap.setAttribute('itemtype', 'http://schema.org/Collection');
     getSection().parentNode.appendChild(latestWrap);
     setupSearch({
       facetFilters: [
@@ -540,17 +526,22 @@
     }).start();
   }
 
+  /**
+   * Adding BlogPosting microdata schema, and related.
+   */
   function addBlogSchema() {
     const main = document.querySelector('main');
     main.setAttribute('itemscope', '');
     main.setAttribute('itemtype', 'http://schema.org/BlogPosting');
 
+    // The header section
     const header = getSection(0);
     if (header) {
       const headline = header.querySelector('h1');
       headline && headline.setAttribute('itemprop', 'headline');
     }
     
+    // The hero section
     const hero = getSection(1);
     if (hero) {
       const image = hero.querySelector('img');
@@ -562,9 +553,39 @@
       subtitle && subtitle.setAttribute('itemprop', 'abstract');
     }
     
+    // The author section
+    const author = getSection(2);
+    if (author) {
+      const products = author.querySelector('.products');
+      [...author.querySelectorAll('.products>span')].forEach((product) => {
+        product.setAttribute('itemprop', 'offers');
+        product.setAttribute('itemscope', '');
+        product.setAttribute('itemtype', 'http://schema.org/Offer');
+        product.setAttribute('additionalType', 'http://schema.org/Product');
+
+        const btn = product.querySelector('a');
+        btn.setAttribute('itemprop', 'url');
+
+        const img = product.querySelector('img');
+        img.setAttribute('itemprop', 'image');
+
+        const meta = document.createElement('meta');
+        meta.setAttribute('itemprop', 'name');
+        meta.setAttribute('content', btn.title);
+        product.prepend(meta);
+      });
+    }
+
+    // The content section
     const content = getSection(3);
     if (content) {
       content.setAttribute('itemprop', 'text');
+    }
+
+    // The topics section
+    const topics = getSection();
+    if (topics) {
+      [...topics.querySelectorAll('a')].forEach((a) => a.setAttribute('itemprop', 'genre'));
     }
   }
 
@@ -592,6 +613,12 @@
     }
   }
 
+  function addLatestPostsSchema() {
+    const posts = getSection();
+    posts.setAttribute('itemscope', '');
+    posts.setAttribute('itemtype', 'http://schema.org/Collection');
+  }
+
   window.onload = function() {
     removeHeaderAndFooter();
     addPageTypeAsBodyClass();
@@ -609,8 +636,10 @@
       fetchSocialLinks();
       fetchLatestPosts(TYPE.AUTHOR);
       addAuthorSchema();
+      addLatestPostsSchema();
     } else if (isTopic) {
       fetchLatestPosts(TYPE.TOPIC);
+      addLatestPostsSchema();
     } else if (isProduct) {
       // todo
     }
