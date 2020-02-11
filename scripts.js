@@ -100,76 +100,19 @@
    * all pages
    */
 
-  const TYPE = {
-    HOME: 'home',
-    POST: 'post',
-    AUTHOR: 'author',
-    TOPIC: 'topic',
-    PRODUCT: 'product',
-  }
-
-  const LANG = {
-    EN: 'en',
-    DE: 'de',
-    FR: 'fr',
-  }
-
-  function getPageInfo() {
-    let context = '/ms/';
-    let language = LANG.EN;
-    let pageType = TYPE.HOME;
-    const segs = window.location.pathname
-      .split('/')
-      .filter(seg => seg !== '');
-    if (segs.length > 0) {
-      // context
-      context = /(ms|g)/.test(segs[0]) ? `/${segs[0]}/` : context;
-      if (segs.length >= 2) {
-        // language
-        for (let [key, value] of Object.entries(LANG)) {
-          if (value === segs[1]) {
-            language = value;
-            break;
-          }
-        }
-      }
-      if (segs.length >= 3) {
-        // page type
-        if (segs[2] === 'archive') {
-          pageType = TYPE.POST;
-        } else {
-          for (let [key, value] of Object.entries(TYPE)) {
-            if (segs[2].startsWith(value)) {
-              pageType = value;
-              break;
-            }
-          }
-        }
-      }
-    }
-    return { context, language, pageType };
-  }
-
-  function loadDict(lang) {
+  ((lang) => {
+    if (lang === LANG.EN) return; // skip for en
     const dict = document.createElement('link');
     dict.rel = 'stylesheet';
     dict.href = `/dict.${lang}.css`;
     document.head.appendChild(dict);
-  }
-
-  const {
-    context,
-    language,
-    pageType,
-  } = getPageInfo();
+  })(language);
 
   const isHome = pageType == TYPE.HOME;
   const isPost = pageType === TYPE.POST;
   const isAuthor = pageType === TYPE.AUTHOR;
   const isTopic = pageType === TYPE.TOPIC;
   const isProduct = pageType === TYPE.PRODUCT;
-
-  loadDict(language);
 
   const itemTransformer = (item) => ({
     ...item,
