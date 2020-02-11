@@ -212,6 +212,9 @@
         </span>
         <span class="date" itemprop="datePublished" content="{{{dateISO}}}">{{{date}}}</span>
       </div>
+      <div itemprop="publisher" itemscope itemtype="http://schema.org/Organization" style="display:none">
+        <span itemprop="name">Adobe Inc.</span>
+      </div>
     </div>
     `,
     emptyTemplate = 'There are no articles yet',
@@ -281,6 +284,9 @@
             <a itemprop="url" href="{{authorUrl}}" title="{{{author}}}"><span itemprop="name">{{{author}}}</span></a>
           </span>
         </div>
+        <div itemprop="publisher" itemscope itemtype="http://schema.org/Organization" style="display:none">
+          <span itemprop="name">Adobe Inc.</span>
+        </div>
       </div>
       `,
       transformer: (item, index) => {
@@ -328,7 +334,10 @@
                   <img class="lazyload" itemprop="image" content="${avatarURL}" data-src="${avatarURL}?width=120">
                   <span class="post-author">by <a itemprop="url" href="${pageURL}"><span itemprop="name">${author}</span></a></span>
                 </div>
-                <span class="post-date" itemprop="datePublished" content="${dateISO}">${date}</span>`;
+                <span class="post-date" itemprop="datePublished" content="${dateISO}">${date}</span>
+                <div itemprop="publisher" itemscope itemtype="http://schema.org/Organization" style="display:none">
+                  <span itemprop="name">Adobe Inc.</span>
+                </div>`;
               authorDiv.classList.add('author');
               // try to get the author's social links
               const socialLinks = /<p>(Social\: .*)<\/p>/gi.exec(xhr.responseText);
@@ -414,17 +423,30 @@
           if (!product) return;
           const productRef = product.replace(/\s/gm, '-').toLowerCase();
 
+          const span = document.createElement('span');
+          span.setAttribute('itemprop', 'offers');
+          span.setAttribute('itemscope', '');
+          span.setAttribute('itemtype', 'http://schema.org/Offer');
+          span.setAttribute('additionalType', 'http://schema.org/Product');
+          
+          const meta = document.createElement('meta');
+          meta.setAttribute('itemprop', 'name');
+          meta.setAttribute('content', product);
+          span.appendChild(meta);
+
           const btn = document.createElement('a');
+          btn.setAttribute('itemprop', 'url');
           btn.href = `https://www.adobe.com/${productRef}.html`;
           btn.title = product;
+          span.appendChild(btn);
 
           const img = document.createElement('img');
+          img.setAttribute('itemprop', 'image');
           img.src = `/icons/${productRef}.svg`;
           img.alt = product;
-
           btn.appendChild(img);
 
-          productsWrap.appendChild(btn);
+          productsWrap.appendChild(span);
         });
         insertInside.appendChild(productsWrap);
       }
@@ -518,7 +540,7 @@
     }).start();
   }
 
-  function annotateSchema() {
+  function addBlogSchema() {
     const main = document.querySelector('main');
     main.setAttribute('itemscope', '');
     main.setAttribute('itemtype', 'http://schema.org/BlogPosting');
@@ -531,7 +553,7 @@
     
     const hero = getSection(1);
     if (hero) {
-      const image = hero.querySelector('p > img');
+      const image = hero.querySelector('img');
       if (image) {
         image.setAttribute('itemprop', 'image');
         image.setAttribute('content', image.src.replace(/\?.*/, ''));
@@ -543,6 +565,43 @@
     const content = getSection(3);
     if (content) {
       content.setAttribute('itemprop', 'text');
+    }
+  }
+
+  function addAuthorSchema() {
+    const main = document.querySelector('main');
+    main.setAttribute('itemscope', '');
+    main.setAttribute('itemtype', 'http://schema.org/Person');
+
+    const author = getSection(0);
+    if (author) {
+      const image = author.querySelector('p>img');
+      if (image) {
+        image.setAttribute('itemprop', 'image');
+        image.setAttribute('content', image.src.replace(/\?.*/, ''));
+      }
+
+      const name = author.querySelector('h2');
+      name && name.setAttribute('itemprop', 'name');
+
+      const bio = author.querySelector('p:nth-of-type(2)');
+      bio && bio.setAttribute('itemprop', 'description');
+
+      const socialLinks = author.querySelectorAll('ul>li>a');
+      [...socialLinks].forEach((link) => link.setAttribute('itemprop', 'sameAs'));
+    }
+    
+    const articles = getSection(1);
+    if (articles) {
+      articles.setAttribute('itemprop', 'hasOfferCatalog');
+      articles.setAttribute('itemscope', '');
+      articles.setAttribute('itemtype', 'http://schema.org/OfferCatalog');
+      
+      [...articles.querySelectorAll('.ais-Hits-item')].forEach((article) => {
+        article.setAttribute('itemprop', 'itemListElement');
+        article.setAttribute('itemscope', '');
+        article.setAttribute('itemtype', 'http://schema.org/Offer');
+      });
     }
   }
 
@@ -558,10 +617,11 @@
       fetchTopics();
       fetchProducts();
       removeEmptySection();
-      annotateSchema();
+      addBlogSchema();
     } else if (isAuthor) {
       fetchSocialLinks();
       fetchLatestPosts(TYPE.AUTHOR);
+      addAuthorSchema();
     } else if (isTopic) {
       fetchLatestPosts(TYPE.TOPIC);
     } else if (isProduct) {
