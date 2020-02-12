@@ -117,7 +117,7 @@
 
   const itemTransformer = (item) => ({
     ...item,
-    hero: `${item.hero}?width=256`,
+    hero: `${item.hero}?width=256&auto=webp`,
     date: new Date(item.date * 1000).toLocaleDateString('en-US', {
       day: '2-digit',
       month: '2-digit',
@@ -295,7 +295,7 @@
 
               const avatarURL = /<img src="(.*?)">/.exec(main)[1];
               const authorDiv = document.createElement('div');
-              authorDiv.innerHTML = '<img class="lazyload" data-src="' + avatarURL + '?width=120"> \
+              authorDiv.innerHTML = '<img class="lazyload" data-src="' + avatarURL + '?width=120&auto=webp"> \
                 <span class="post-author">by <a href="' + pageURL + '">' + author + '</a></span> \
                 <span class="post-date">' + date + '</span> \
                 ';
