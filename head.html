@@ -7,8 +7,7 @@
 <script defer src="https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/polyfills.js"></script>
 <script defer src="https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js" id="feds-script"></script>
 <script defer src="https://static.adobelogin.com/imslib/imslib.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/algoliasearch@3/dist/algoliasearch.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/instantsearch.js@4.0.0/dist/instantsearch.production.min.js" integrity="sha256-6S7q0JJs/Kx4kb/fv0oMjS855QTz5Rc2hh9AkIUjUsk=" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
 <script defer src="/scripts.js"></script>
 
 <script async src="//assets.adobedtm.com/faa4be0eccc5/eb6d7e040b1b/launch-1e5aae35cdd5-development.min.js"></script>
@@ -105,7 +104,7 @@ window.fedsConfig = {
 
   // prep images for lazy loading and use adequate sizes
   const imgWidth = window.innerWidth === 375 ? 750 : // double size for retina
-                window.innerWidth < 900 ? 900 : 2048; 
+                window.innerWidth < 900 ? 900 : 2048;
   let imgCount = 0;
 
   const observer = new MutationObserver(mutations => {
@@ -131,3 +130,33 @@ window.fedsConfig = {
   });
   observer.observe(document, { childList: true, subtree: true });
 </script>
+
+<template id="post-card">
+    <div class="post">
+        <div class="hero">
+            <a href="/{{path}}" title="{{title}}"><img class="lazyload" data-src="{{hero}}" alt="{{title}}"></a>
+            <a href="{{topicUrl}}" class="topic" title="{{topic}}">{{topic}}</a>
+        </div>
+        <div class="content">
+            <span class="author"><a href="{{authorUrl}}" title="{{author}}">{{author}}</a></span>
+            <h2><a href="/{{path}}" title="{{title}}">{{title}}</a></h2>
+            <span class="teaser"><a href="/{{path}}" title="{{teaser}}…">{{teaser}}…</a></span>
+            <span class="date">{{date}}</span>
+        </div>
+    </div>
+</template>
+
+<template id="homepage-card">
+    <div class="post">
+        <div class="hero">
+            <a href="/{{path}}" title="{{title}}"><img class="lazyload" data-src="{{hero}}" alt="{{title}}"></a>
+            <a href="{{topicUrl}}" class="topic" title="{{topic}}">{{topic}}</a>
+        </div>
+        <div class="content">
+            <span class="date">{{date}}</span>
+            <h2><a href="/{{path}}" title="{{title}}">{{title}}</a></h2>
+            <span class="teaser"><a href="/{{path}}" title="{{teaser}}…">{{teaser}}…</a></span>
+            <span class="author"><a href="{{authorUrl}}" title="{{author}}">{{author}}</a></span>
+        </div>
+    </div>
+</template>
