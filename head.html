@@ -53,7 +53,7 @@ const {
     }
     if (segs.length >= 3) {
       // page type
-      if (segs[2] === 'archive') {
+      if (segs[2] === 'archive' || segs[2] === 'review') {
         pageType = TYPE.POST;
       } else {
         for (let [key, value] of Object.entries(TYPE)) {
