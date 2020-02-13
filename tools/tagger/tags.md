@@ -15,6 +15,8 @@
         - Download error
         - Installation error
   - MAX 2019
+  - MAX 2020
+  - SUMMIT 2020
   - Rocket
 - serp
   - content-type
