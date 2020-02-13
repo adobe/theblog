@@ -45,8 +45,9 @@
             
             // lazyload images
             if (progress > 0) {
-              el.querySelectorAll('img.lazyload').forEach(img => lazyload(img));
-            }
+              setTimeout(() => {
+                el.querySelectorAll('img.lazyload').forEach(img => lazyload(img));
+            }, 1000);
 
             if (animation == "eager-appear") {
                 const transY=100-progress*100;
