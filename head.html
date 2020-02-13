@@ -19,18 +19,16 @@ const TYPE = {
   TOPIC: 'topic',
   PRODUCT: 'product',
 }
+window.TYPE = TYPE;
 
 const LANG = {
   EN: 'en',
   DE: 'de',
   FR: 'fr',
 }
+window.LANG = LANG;
 
-const {
-  context,
-  language,
-  pageType,
-} = (() => {
+const helixGlobals = () => {
   let context = '/ms/';
   let language = LANG.EN;
   let pageType = TYPE.HOME;
@@ -64,10 +62,11 @@ const {
     }
   }
   return { context, language, pageType };
-})();
+};
+window.helix = helixGlobals();
 
 window.fedsConfig = {
-    locale: language,
+    locale: window.helix.language,
     disableSticky: false,
     profile: {
       localMenu: {
@@ -98,7 +97,7 @@ window.fedsConfig = {
   window.adobeid = {
     client_id: 'theblog-helix',
     scope: 'AdobeID,openid',
-    locale: language,
+    locale: window.helix.language,
   };
 
   // prep images for lazy loading and use adequate sizes
