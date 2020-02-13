@@ -133,55 +133,35 @@ window.fedsConfig = {
 <template id="post-card">
   <div class="post" itemscope itemtype="http://schema.org/BlogPosting">
     <div class="hero">
-      <a href="/{{path}}" title="{{title}}">
-        <img class="lazyload" itemprop="image" content="{{hero}}" data-src="{{hero}}" alt="{{title}}">
-      </a>
+      <a href="/{{path}}" title="{{title}}"><img class="lazyload" itemprop="image" content="{{hero}}" data-src="{{hero}}" alt="{{title}}"></a>
       <a class="topic" itemprop="genre" href="{{topicUrl}}" title="{{topic}}">{{topic}}</a>
     </div>
     <div class="content">
       <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <a itemprop="url" href="{{authorUrl}}" title="{{author}}">
-          <span itemprop="name">{{author}}</span>
-        </a>
+        <a itemprop="url" href="{{authorUrl}}" title="{{author}}"><span itemprop="name">{{author}}</span></a>
       </span>
-      <h2 itemprop="headline">
-        <a itemprop="url" href="/{{path}}" title="{{title}}">{{title}}</a>
-      </h2>
-      <span class="teaser" itemprop="abstract">
-        <a href="/{{path}}" title="{{teaser}}&hellip;">{{teaser}}&hellip;</a>
-      </span>
-      <span class="date" itemprop="datePublished" content="{{{dateISO}}}">{{date}}</span>
+      <h2 itemprop="headline"><a itemprop="url" href="/{{path}}" title="{{title}}">{{title}}</a></h2>
+      <span class="teaser" itemprop="abstract"><a href="/{{path}}" title="{{teaser}}&hellip;">{{teaser}}&hellip;</a></span>
+      <span class="date" itemprop="datePublished" content="{{dateISO}}">{{date}}</span>
     </div>
-    <div itemprop="publisher" itemscope itemtype="http://schema.org/Organization" style="display:none">
-      <span itemprop="name">Adobe Inc.</span>
-    </div>
+    <div itemprop="publisher" itemscope itemtype="http://schema.org/Organization" style="display:none"><span itemprop="name">Adobe Inc.</span></div>
   </div>
 </template>
 
 <template id="homepage-card">
   <div class="post" itemscope itemtype="http://schema.org/BlogPosting">
     <div class="hero">
-      <a href="/{{path}}" title="{{{title}}}">
-        <img class="lazyload" itemprop="image" content="{{hero}}" data-src="{{hero}}" alt="{{{title}}}">
-      </a>
-      <a itemprop="genre" href="{{topicUrl}}" title="{{{topic}}}">{{{topic}}}</a>
+      <a href="/{{path}}" title="{{title}}"><img class="lazyload" itemprop="image" content="{{hero}}" data-src="{{hero}}" alt="{{title}}"></a>
+      <a itemprop="genre" href="{{topicUrl}}" title="{{topic}}">{{topic}}</a>
     </div>
     <div class="content">
-      <span class="date" itemprop="datePublished" content="{{{dateISO}}}">{{{date}}}</span>
-      <h2 itemprop="headline">
-        <a itemprop="url" href="/{{path}}" title="{{{title}}}">{{{title}}}</a>
-      </h2>
-      <span class="teaser" itemprop="abstract">
-        <a href="/{{path}}" title="{{{teaser}}}&hellip;">{{{teaser}}}&hellip;</a>
-      </span>
+      <span class="date" itemprop="datePublished" content="{{dateISO}}">{{date}}</span>
+      <h2 itemprop="headline"><a itemprop="url" href="/{{path}}" title="{{title}}">{{title}}</a></h2>
+      <span class="teaser" itemprop="abstract"><a href="/{{path}}" title="{{teaser}}&hellip;">{{teaser}}&hellip;</a></span>
       <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-        <a itemprop="url" href="{{authorUrl}}" title="{{{author}}}">
-          <span itemprop="name">{{{author}}}</span>
-        </a>
+        <a itemprop="url" href="{{authorUrl}}" title="{{author}}"><span itemprop="name">{{author}}</span></a>
       </span>
     </div>
-    <div itemprop="publisher" itemscope itemtype="http://schema.org/Organization" style="display:none">
-      <span itemprop="name">Adobe Inc.</span>
-    </div>
+    <div itemprop="publisher" itemscope itemtype="http://schema.org/Organization" style="display:none"><span itemprop="name">Adobe Inc.</span></div>
   </div>
 </template>
