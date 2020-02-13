@@ -1,6 +1,7 @@
 .hlx/
 .cache/
 .DS_Store
+.history/
 node_modules/
 pipeline.log
 logs

@@ -27,7 +27,7 @@
         // setup
         scrani.setup = () => {
             for (let i=0; i<scrani.animations.length; i++) {
-                a = scrani.animations[i];
+                const a = scrani.animations[i];
                 a.elems=document.querySelectorAll(a.selector);
             }
         }
@@ -101,13 +101,18 @@
    */
 
   // load language specific css overlays
-  ((lang) => {
-    if (lang === LANG.EN) return; // skip for en
-    const dict = document.createElement('link');
-    dict.rel = 'stylesheet';
-    dict.href = `/dict.${lang}.css`;
-    document.head.appendChild(dict);
-  })(language);
+
+  const loadCssFile = (path) => {
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('type', 'text/css');
+    link.setAttribute('href', path);
+    document.head.appendChild(link);
+  };
+
+  if (language !== LANG.EN) { // skip for en
+    loadCssFile(`/dict.${language}.css`);
+  }
 
   const isHome = pageType == TYPE.HOME;
   const isPost = pageType === TYPE.POST;
@@ -501,11 +506,56 @@
     }
   };
 
-  window.onhashchange = function() {
-    if (window.location.hash === "#menu") {
-      document.querySelector("header div:nth-child(2)").style="display:block";
-    } else {
-      document.querySelector("header div:nth-child(2)").style="";
-    }
-  };
+  (function regionPicker () {
+    let regionPickerLoaded = false;
+    let modal;
 
+    const insertRegionPickerHtml = (html) => {
+      const mainEl = document.querySelector('main');
+      mainEl.insertAdjacentHTML('afterend', html);
+      const langNavModal = document.querySelector('#languageNavigation')
+      const modalContainer = langNavModal.closest('.modalContainer');
+      modalContainer.classList.remove('hide-all');
+      return langNavModal;
+    };
+
+    const loadRegionPicker = async () => {
+      if (regionPickerLoaded) {
+        modal.open();
+        return;
+      };
+
+      const regionPickerHtml = fetch(
+        '/partials/regionPicker/regionPicker.html',
+        { credentials: 'same-origin' },
+      );
+
+      const modalJs = import('/partials/modal/modal.js');
+
+      const [response, ModalModule] = await Promise.all([regionPickerHtml, modalJs]);
+      if (!response.ok) return;
+
+      const html = await response.text();
+      const langNavModal = insertRegionPickerHtml(html);
+      modal = new ModalModule.Modal(langNavModal);
+
+      loadCssFile('/partials/regionPicker/regionPicker.css');
+
+      if (language !== LANG.EN) {
+          loadCssFile(`/partials/regionPicker/dict.${language}.css`);
+      }
+
+      regionPickerLoaded = true;
+    };
+
+    const checkHash = () => {
+      if (window.location.hash === '#languageNavigation') {
+        loadRegionPicker();
+      }
+    };
+    checkHash();
+
+    window.addEventListener('hashchange', () => {
+      checkHash();
+    });
+  })();
