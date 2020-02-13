@@ -1,15 +1,14 @@
-
   /*
    * scrani.js
    */
 
   (() => {
     const scrani = (() => {
-    
-        const scrani = { 
-            
+
+        const scrani = {
+
             // config
-            animations: [            
+            animations: [
                 {selector: "body>main>div", animation:"eager-appear"},
                 {selector: "body>main>div>p>img", animation:"wipe"}
             ],
@@ -21,7 +20,7 @@
         // setup
         scrani.setup = () => {
             for (let i=0; i<scrani.animations.length; i++) {
-                a = scrani.animations[i];
+                const a = scrani.animations[i];
                 a.elems=document.querySelectorAll(a.selector);
             }
         }
@@ -53,7 +52,7 @@
             if (animation == "eager-appear") {
                 const transY=100-progress*100;
                 const opacity=progress;
-                el.style=`opacity: ${opacity}; transform: translateY(${transY}px)`;    
+                el.style=`opacity: ${opacity}; transform: translateY(${transY}px)`;
             }
 
             if (animation == "wipe") {
@@ -64,7 +63,7 @@
 
         // update to get called by requestAnimationFrame
         scrani.update = (scrollY) => {
-            
+
             if (scrollY == scrani.scrollY) return;
 
             scrani.scrollY = scrollY;
@@ -80,20 +79,20 @@
 
         //to be called onload
         scrani.onload = () => {
-            
+
             scrani.setup();
             const repaint = () => {
                 scrani.update(window.scrollY)
                 window.requestAnimationFrame(repaint)
             }
             window.requestAnimationFrame(repaint);
-  
+
         }
 
         return (scrani)
     })();
 
-    window.scrani = scrani; 
+    window.scrani = scrani;
 
 })();
 
@@ -102,13 +101,18 @@
    */
 
   // load language specific css overlays
-  ((lang) => {
-    if (lang === LANG.EN) return; // skip for en
-    const dict = document.createElement('link');
-    dict.rel = 'stylesheet';
-    dict.href = `/dict.${lang}.css`;
-    document.head.appendChild(dict);
-  })(language);
+
+  const loadCssFile = (path) => {
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('type', 'text/css');
+    link.setAttribute('href', path);
+    document.head.appendChild(link);
+  };
+
+  if (language !== LANG.EN) { // skip for en
+    loadCssFile(`/dict.${language}.css`);
+  }
 
   const isHome = pageType == TYPE.HOME;
   const isPost = pageType === TYPE.POST;
@@ -165,61 +169,72 @@
     }
   }
 
+  function fillData(elem, data) {
+    const TOKEN_REGEXP = /{{(.+)}}/;
+    for (let i = 0; i < elem.attributes.length; i++) {
+      const attr = elem.attributes[i];
+      const match = TOKEN_REGEXP.exec(attr.value);
+      if (match) {
+        attr.value = attr.value.replace(TOKEN_REGEXP, data[match[1]] || '');
+      }
+    }
+    let node = elem.firstChild;
+    while (node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const match = TOKEN_REGEXP.exec(node.textContent);
+        if (match) {
+          node.textContent = node.textContent.replace(TOKEN_REGEXP, data[match[1]] || '');
+        }
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        fillData(node, data);
+      }
+      node = node.nextSibling;
+    }
+    return elem;
+  }
+
   function setupSearch({
     indexName = 'davidnuescheler--theblog--blog-posts',
     hitsPerPage = 12,
     facetFilters = [],
     container = '.posts',
-    itemTemplate = `
-    <div class="post">
-      <div class="hero">
-        <a href="/{{path}}" title="{{{title}}}"><img src="{{hero}}" alt="{{{title}}}"></a>
-        <a href="{{topicUrl}}" class="topic" title="{{{topic}}}">{{{topic}}}</a>
-      </div>
-      <div class="content">
-        <span class="author">
-          <a href="{{authorUrl}}" title="{{{author}}}">{{{author}}}</a>
-        </span>
-        <h2><a href="/{{path}}" title="{{{title}}}">{{{title}}}</a></h2>
-        <span class="teaser">
-          <a href="/{{path}}" title="{{{teaser}}}…">{{{teaser}}}…</a>
-        </span>
-        <span class="date">{{{date}}}</span>
-      </div>
-    </div>
-    `,
+    itemTemplate = document.getElementById('post-card'),
     emptyTemplate = 'There are no articles yet',
     transformer = itemTransformer,
   }) {
     const searchClient = algoliasearch('A8PL9E4TZT', '9e59db3654d13f71d79c4fbb4a23cc72');
-    const search = instantsearch({
-      indexName,
-      searchClient,
-      routing: true,
+    const index = searchClient.initIndex(indexName);
+    const filters = Array.from(facetFilters);
+    filters.push(`parents:${context}${language}`);
+    index.search('*', {
+      filters: filters.join(' AND '),
+      numericFilters: `date < ${Date.now()/1000}`, // hide articles with future dates
+      hitsPerPage,
+    }).then(({hits}) => {
+      const $hits = document.createElement('div');
+      $hits.classList.add('ais-Hits');
+      if (hits.length === 0) {
+        const $empty = document.createElement('div');
+        $empty.textContent = emptyTemplate;
+        $hits.appendChild($empty);
+      } else {
+        const $list = document.createElement('ol');
+        $list.classList.add('ais-Hits-list');
+        $hits.appendChild($list);
+        hits
+          .map(transformer)
+          .forEach((hit) => {
+            const $item = itemTemplate.content.cloneNode(true).firstElementChild;
+            fillData($item, hit);
+            const $hit = document.createElement('li');
+            $hit.classList.add('ais-Hits-item');
+            $hit.appendChild($item);
+            $list.appendChild($hit);
+          });
+      }
+      const $el = document.querySelector(container);
+      $el.appendChild($hits);
     });
-    facetFilters.push(`parents:${context}${language}`);
-    search.addWidgets([
-      instantsearch.widgets.configure({
-        hitsPerPage,
-        facetFilters,
-        numericFilters: [
-          `date < ${Date.now()/1000}`, // hide articles with future dates
-         ]
-      }),
-    ]);
-    search.addWidgets([
-      instantsearch.widgets.hits({
-        container,
-        templates: {
-          item: itemTemplate,
-          empty: emptyTemplate,
-        },
-        transformItems(items) {
-          return items.map((item, index) => transformer(item, index));
-        },
-      }),
-    ]);
-    return search;
   }
 
   /*
@@ -238,33 +253,16 @@
     setupSearch({
       hitsPerPage: 13,
       container: '.latest-posts',
-      itemTemplate: `
-      <div class="post">
-        <div class="hero">
-          <a href="/{{path}}" title="{{{title}}}"><img src="{{hero}}" alt="{{{title}}}"></a>
-          <a href="{{topicUrl}}" class="topic" title="{{{topic}}}">{{{topic}}}</a>
-        </div>
-        <div class="content">
-          <span class="date">{{{date}}}</span>
-          <h2><a href="/{{path}}" title="{{{title}}}">{{{title}}}</a></h2>
-          <span class="teaser">
-            <a href="/{{path}}" title="{{{teaser}}}…">{{{teaser}}}…</a>
-          </span>
-          <span class="author">
-            <a href="{{authorUrl}}" title="{{{author}}}">{{{author}}}</a>
-          </span>
-        </div>
-      </div>
-      `,
+      itemTemplate: document.getElementById('homepage-card'),
       transformer: (item, index) => {
         item = itemTransformer(item);
         if (index === 0) {
           // use larger hero image on first article and skip lazyloading
           item.hero = item.hero.replace('?width=256', `?width=${window.innerWidth <= 900 ? 900 : 2048}`);
-        } 
+        }
         return item;
       },
-    }).start();
+    });
   }
 
   /*
@@ -428,7 +426,7 @@
     });
     if (!title) title = 'Unknown';
     const type = title.toLowerCase();
-    return { 
+    return {
       title,
       type,
       className: `social-${type}`,
@@ -483,7 +481,7 @@
         ],
       container: '.latest-posts',
       emptyTemplate,
-    }).start();
+    });
   }
 
   window.onload = function() {
@@ -506,13 +504,58 @@
     } else if (isProduct) {
       // todo
     }
-  }
+  };
 
-  window.onhashchange = function() {
-    if (window.location.hash === "#menu") {
-      document.querySelector("header div:nth-child(2)").style="display:block";
-    } else {
-      document.querySelector("header div:nth-child(2)").style="";
-    }
-  }
+  (function regionPicker () {
+    let regionPickerLoaded = false;
+    let modal;
 
+    const insertRegionPickerHtml = (html) => {
+      const mainEl = document.querySelector('main');
+      mainEl.insertAdjacentHTML('afterend', html);
+      const langNavModal = document.querySelector('#languageNavigation')
+      const modalContainer = langNavModal.closest('.modalContainer');
+      modalContainer.classList.remove('hide-all');
+      return langNavModal;
+    };
+
+    const loadRegionPicker = async () => {
+      if (regionPickerLoaded) {
+        modal.open();
+        return;
+      };
+
+      const regionPickerHtml = fetch(
+        '/partials/regionPicker/regionPicker.html',
+        { credentials: 'same-origin' },
+      );
+
+      const modalJs = import('/partials/modal/modal.js');
+
+      const [response, ModalModule] = await Promise.all([regionPickerHtml, modalJs]);
+      if (!response.ok) return;
+
+      const html = await response.text();
+      const langNavModal = insertRegionPickerHtml(html);
+      modal = new ModalModule.Modal(langNavModal);
+
+      loadCssFile('/partials/regionPicker/regionPicker.css');
+
+      if (language !== LANG.EN) {
+          loadCssFile(`/partials/regionPicker/dict.${language}.css`);
+      }
+
+      regionPickerLoaded = true;
+    };
+
+    const checkHash = () => {
+      if (window.location.hash === '#languageNavigation') {
+        loadRegionPicker();
+      }
+    };
+    checkHash();
+
+    window.addEventListener('hashchange', () => {
+      checkHash();
+    });
+  })();

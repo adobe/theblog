@@ -11,11 +11,11 @@
  */
 
  *,
- *:before, 
+ *:before,
  *:after {
    box-sizing: border-box;
 }
- 
+
  body {
   padding: 0;
   margin: 0;
@@ -157,7 +157,7 @@ blockquote {
   text-transform: uppercase;
 
   background-repeat: no-repeat;
-  background-image: 
+  background-image:
       url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><text font-size='250' x='0' y='200' letter-spacing='-35px' fill='lightgrey'>\2018\2018</text></svg>");
 }
 
@@ -631,13 +631,16 @@ main div.topics {
   user-select: text;
 }
 
+.hide-all {
+  display: none;
+}
 
 @media (min-width:600px) {
 
   h1 {
     font-size: 2.8rem;
   }
-  
+
   .title h1+p {
     font-size: 2rem;
     font-weight: 300;
@@ -661,7 +664,7 @@ main div.topics {
   }
 
 
-  
+
   h4 {
     font-size: 1.75rem;
   }
@@ -693,7 +696,7 @@ main div.topics {
   }
 
   main {
-    grid-template-areas: "title title title" 
+    grid-template-areas: "title title title"
                           "image image image"
                           "author post ."
                           "topics topics topics";
@@ -719,7 +722,7 @@ main div.topics {
   .home-page main li:first-child .hero {
     width: 60vw;
   }
-  
+
   .home-page main li:first-child .content {
     padding: 1.5rem 1.5rem 1.5rem 3rem;
     width: 40vw;
