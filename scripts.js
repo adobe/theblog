@@ -194,6 +194,32 @@
     return elem;
   }
 
+  function helixQuery(appId, key) {
+    return async (opts) => {
+      const url = new URL(`https://${appId}-dsn.algolia.net/1/indexes/${opts.indexName}`);
+      const sp = url.searchParams;
+      Object.entries(opts).forEach(([key, value]) => {
+        if (key === 'indexName') {
+          return;
+        }
+        if (Array.isArray(value)) {
+          value.forEach((v) => {
+            sp.append(key, v);
+          });
+        } else {
+          sp.append(key, value);
+        }
+      });
+      const res = await fetch(url,{
+        headers: {
+          'X-Algolia-API-Key': key,
+          'X-Algolia-Application-Id': appId,
+        }
+      });
+      return res.json();
+    }
+  }
+
   function setupSearch({
     indexName = 'davidnuescheler--theblog--blog-posts',
     hitsPerPage = 12,
@@ -203,12 +229,12 @@
     emptyTemplate = 'There are no articles yet',
     transformer = itemTransformer,
   }) {
-    const searchClient = algoliasearch('A8PL9E4TZT', '9e59db3654d13f71d79c4fbb4a23cc72');
-    const index = searchClient.initIndex(indexName);
+    const query = helixQuery('A8PL9E4TZT', '9e59db3654d13f71d79c4fbb4a23cc72');
     const filters = Array.from(facetFilters);
     filters.push(`parents:${window.helix.context}${window.helix.language}`);
-    index.search('*', {
-      filters: filters.join(' AND '),
+    query({
+      indexName,
+      filters,
       numericFilters: `date < ${Date.now()/1000}`, // hide articles with future dates
       hitsPerPage,
     }).then(({hits}) => {
