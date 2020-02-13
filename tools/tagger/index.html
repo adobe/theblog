@@ -1,7 +1,7 @@
 <!DOCTYPE html><html>
 
 <head>
-    <title>the blog - tagger</title>    
+    <title>the blog - tagger</title>
     <link rel="stylesheet" href="/style.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
@@ -12,6 +12,7 @@
 
     #results {
         overflow: scroll;
+        user-select: none;
     }
 
     main>div>span {
@@ -22,7 +23,7 @@
     main {
         padding: 20px;
     }
-    
+
     span.tag {
         background-color: #888888;
         color: lightgrey;
@@ -33,11 +34,12 @@
 
     .active .tag {
         background-color: #2E74D1;
+        cursor: pointer;
     }
 
 
     #selected .active .tag {
-        background-color: #F25749;    
+        background-color: #F25749;
         color: white;
         font-weight: 700;
     }
@@ -62,6 +64,7 @@
         width: 100%;
         box-sizing: border-box;
         left: 0;
+        user-select: none;
     }
 
     #selected button:disabled {
@@ -70,13 +73,13 @@
     }
 
     #selected button {
-        background-color: #F25749;    
+        background-color: #F25749;
         color: white;
         position: absolute;
         right: 10px;
         bottom: 10px;
         border: 1px solid white;
-        font-size: 13px;       
+        font-size: 13px;
     }
 
     .hidden {
@@ -126,14 +129,14 @@
         var copyText = document.getElementById("copybuffer");
 
         copyText.select();
-        copyText.setSelectionRange(0, 99999); 
+        copyText.setSelectionRange(0, 99999);
 
         document.execCommand("copy");
 
         button.disabled=true;
 
     }
-    
+
 
     function displaySelected() {
         var html="";
@@ -159,9 +162,9 @@
         }
 
         var copybuffer=document.getElementById("copybuffer");
-        copybuffer.value=`---\r\n\r\nProducts: ${products}\r\nTopics: ${topics}\r\n\r\n---\r\n`
+        copybuffer.value=`---\r\n\r\nProducts: ${products}\r\nTopics: ${topics}\r\n\r\n`
 
-        document.querySelectorAll("#results>span").forEach((e) => { 
+        document.querySelectorAll("#results>span").forEach((e) => {
             if (selected.indexOf(e.getAttribute("data-target"))<0) {
                 e.classList.add("active");
                 e.setAttribute("onclick",'add(this)');
@@ -169,7 +172,7 @@
                 e.classList.remove("active");
                 e.setAttribute("onclick",'');
             }
-        });  
+        });
     }
 
     function fetchTag(id) {
@@ -205,7 +208,7 @@
                     after=tag.substr(offset+searchTerm.length);
 
                     html+=`<span data-target="${e.id}" onclick="add(this)" class="path active">${tagInfo.path}<span class="tag">${before}<span class="highlight">${term}</span>${after}</span></span> `;
-                }                
+                }
             }
         })
         var results=document.getElementById("results");
@@ -1035,7 +1038,7 @@
             </ul></li>
             </ul></li>
             <li>Facebook</li>
-            </ul>            
+            </ul>
     </div>
     <main>
     <div class="filter"><input autocomplete="off" placeholder="Type to filter" id="search" onkeydown="filter()" onkeyup="filter()"></div>
