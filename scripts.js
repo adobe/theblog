@@ -8,7 +8,6 @@
   /*
    * scrani.js
    */
-
   (() => {
     const scrani = (() => {
 
@@ -110,31 +109,33 @@
     document.head.appendChild(link);
   };
 
-  if (language !== LANG.EN) { // skip for en
-    loadCssFile(`/dict.${language}.css`);
+  if (window.helix.language !== window.LANG.EN) { // skip for en
+    loadCssFile(`/dict.${window.helix.language}.css`);
   }
 
-  const isHome = pageType == TYPE.HOME;
-  const isPost = pageType === TYPE.POST;
-  const isAuthor = pageType === TYPE.AUTHOR;
-  const isTopic = pageType === TYPE.TOPIC;
-  const isProduct = pageType === TYPE.PRODUCT;
+  const isHome = window.helix.pageType === window.TYPE.HOME;
+  const isPost = window.helix.pageType === window.TYPE.POST;
+  const isAuthor = window.helix.pageType === window.TYPE.AUTHOR;
+  const isTopic = window.helix.pageType === window.TYPE.TOPIC;
+  const isProduct = window.helix.pageType === window.TYPE.PRODUCT;
 
-  const itemTransformer = (item) => ({
-    ...item,
-    hero: `${item.hero}?width=256&auto=webp`,
-    date: new Date(item.date * 1000).toLocaleDateString('en-US', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }),
-    authorUrl: getLink(TYPE.AUTHOR, item.author),
-    topic: item.topics.length > 0 ? item.topics[0] : '',
-    topicUrl: item.topics.length > 0 ? getLink(TYPE.TOPIC, item.topics[0]) : '',
-  });
+  const itemTransformer = (item) => {
+    const itemParams = {
+      hero: `${item.hero}?width=256&auto=webp`,
+      date: new Date(item.date * 1000).toLocaleDateString('en-US', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      }),
+      authorUrl: getLink(window.TYPE.AUTHOR, item.author),
+      topic: item.topics.length > 0 ? item.topics[0] : '',
+      topicUrl: item.topics.length > 0 ? getLink(window.TYPE.TOPIC, item.topics[0]) : '',
+    }
+    return Object.assign({}, item, itemParams);
+  };
 
   function addPageTypeAsBodyClass() {
-    document.body.classList.add(`${pageType}-page`);
+    document.body.classList.add(`${window.helix.pageType}-page`);
   }
 
   function createSVG(id) {
@@ -160,7 +161,7 @@
 
   function getLink(type, name) {
     if (!type.endsWith('s')) type += 's';
-    return `${context}${language}/${type}/${name.replace(/\s/gm, '-').replace(/\&amp;/gm,'').replace(/\&/gm,'').toLowerCase()}.html`;
+    return `${window.helix.context}${window.helix.language}/${type}/${name.replace(/\s/gm, '-').replace(/\&amp;/gm,'').replace(/\&/gm,'').toLowerCase()}.html`;
   }
 
   function checkConsent() {
@@ -205,7 +206,7 @@
     const searchClient = algoliasearch('A8PL9E4TZT', '9e59db3654d13f71d79c4fbb4a23cc72');
     const index = searchClient.initIndex(indexName);
     const filters = Array.from(facetFilters);
-    filters.push(`parents:${context}${language}`);
+    filters.push(`parents:${window.helix.context}${window.helix.language}`);
     index.search('*', {
       filters: filters.join(' AND '),
       numericFilters: `date < ${Date.now()/1000}`, // hide articles with future dates
@@ -281,7 +282,7 @@
         insertInside.innerHTML = '';
         const xhr = new XMLHttpRequest();
         const fileName = author.replace(/\s/gm, '-').toLowerCase();
-        const pageURL = getLink(TYPE.AUTHOR, author);
+        const pageURL = getLink(window.TYPE.AUTHOR, author);
         xhr.open('GET', pageURL);
         xhr.onload = function() {
           if (xhr.status != 200 || xhr.status != 304) {
@@ -342,7 +343,7 @@
           topic = topic.trim();
           if (!topic) return;
           const btn = document.createElement('a');
-          btn.href = getLink(TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
+          btn.href = getLink(window.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
           btn.title = topic;
           btn.innerText = topic;
 
@@ -465,7 +466,7 @@
 
   function fetchLatestPosts(type) {
     let filter, emptyTemplate;
-    if (type === TYPE.TOPIC) {
+    if (type === window.TYPE.TOPIC) {
       filter = `topics:${document.title}`;
       emptyTemplate = 'There are no articles in this topic yet';
     } else {
@@ -498,9 +499,9 @@
       removeEmptySection();
     } else if (isAuthor) {
       fetchSocialLinks();
-      fetchLatestPosts(TYPE.AUTHOR);
+      fetchLatestPosts(window.TYPE.AUTHOR);
     } else if (isTopic) {
-      fetchLatestPosts(TYPE.TOPIC);
+      fetchLatestPosts(window.TYPE.TOPIC);
     } else if (isProduct) {
       // todo
     }
@@ -541,8 +542,8 @@
 
       loadCssFile('/partials/regionPicker/regionPicker.css');
 
-      if (language !== LANG.EN) {
-          loadCssFile(`/partials/regionPicker/dict.${language}.css`);
+      if (window.helix.language !== window.LANG.EN) {
+          loadCssFile(`/partials/regionPicker/dict.${window.helix.language}.css`);
       }
 
       regionPickerLoaded = true;
