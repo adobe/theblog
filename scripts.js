@@ -1,5 +1,5 @@
   /*
-   * lazysizes - v5.2.0 
+   * lazysizes - v5.2.0
    * The MIT License (MIT)
    * Copyright (c) 2015 Alexander Farkas
    */
@@ -11,11 +11,11 @@
 
   (() => {
     const scrani = (() => {
-    
-        const scrani = { 
-            
+
+        const scrani = {
+
             // config
-            animations: [            
+            animations: [
                 {selector: "body>main>div", animation:"eager-appear"},
                 {selector: "body>main>div>p>img", animation:"wipe"}
             ],
@@ -27,7 +27,7 @@
         // setup
         scrani.setup = () => {
             for (let i=0; i<scrani.animations.length; i++) {
-                a = scrani.animations[i];
+                const a = scrani.animations[i];
                 a.elems=document.querySelectorAll(a.selector);
             }
         }
@@ -48,11 +48,11 @@
             // HACK: manually specified animation
             progress=progress*2;
             if (progress>1) progress=1;
-            
+
             if (animation == "eager-appear") {
                 const transY=100-progress*100;
                 const opacity=progress;
-                el.style=`opacity: ${opacity}; transform: translateY(${transY}px)`;    
+                el.style=`opacity: ${opacity}; transform: translateY(${transY}px)`;
             }
 
             if (animation == "wipe") {
@@ -63,7 +63,7 @@
 
         // update to get called by requestAnimationFrame
         scrani.update = (scrollY) => {
-            
+
             if (scrollY == scrani.scrollY) return;
 
             scrani.scrollY = scrollY;
@@ -79,20 +79,20 @@
 
         //to be called onload
         scrani.onload = () => {
-            
+
             scrani.setup();
             const repaint = () => {
                 scrani.update(window.scrollY)
                 window.requestAnimationFrame(repaint)
             }
             window.requestAnimationFrame(repaint);
-  
+
         }
 
         return (scrani)
     })();
 
-    window.scrani = scrani; 
+    window.scrani = scrani;
 
 })();
 
@@ -100,41 +100,20 @@
    * all pages
    */
 
-  const TYPE = {
-    HOME: 'home',
-    POST: 'post',
-    AUTHOR: 'author',
-    TOPIC: 'topic',
-    PRODUCT: 'product',
+  // load language specific css overlays
+
+  const loadCssFile = (path) => {
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('type', 'text/css');
+    link.setAttribute('href', path);
+    document.head.appendChild(link);
+  };
+
+  if (language !== LANG.EN) { // skip for en
+    loadCssFile(`/dict.${language}.css`);
   }
 
-  function getPageInfo() {
-    let context = '/ms/';
-    let language = 'en';
-    let pageType = TYPE.HOME;
-    const info = /^\/(ms|g)\/([a-z-_]*)\/([a-z]*)\//gi.exec(window.location.pathname);
-    if (info && info.length === 4) {
-      context = `/${info[1]}/`;
-      language = info[2];
-      if (info[3] === 'archive') {
-        pageType = TYPE.POST;
-      } else {
-        for (let [key, value] of Object.entries(TYPE)) {
-          if (info[3].startsWith(value)) {
-            pageType = value;
-            break;
-          }
-        }
-      }
-    }
-    return { context, language, pageType };
-  }
-
-  const {
-    context,
-    language,
-    pageType,
-   } = getPageInfo();
   const isHome = pageType == TYPE.HOME;
   const isPost = pageType === TYPE.POST;
   const isAuthor = pageType === TYPE.AUTHOR;
@@ -143,7 +122,7 @@
 
   const itemTransformer = (item) => ({
     ...item,
-    hero: `${item.hero}?width=256`,
+    hero: `${item.hero}?width=256&auto=webp`,
     date: new Date(item.date * 1000).toLocaleDateString('en-US', {
       day: '2-digit',
       month: '2-digit',
@@ -191,63 +170,72 @@
     }
   }
 
+  function fillData(elem, data) {
+    const TOKEN_REGEXP = /{{(.+)}}/;
+    for (let i = 0; i < elem.attributes.length; i++) {
+      const attr = elem.attributes[i];
+      const match = TOKEN_REGEXP.exec(attr.value);
+      if (match) {
+        attr.value = attr.value.replace(TOKEN_REGEXP, data[match[1]] || '');
+      }
+    }
+    let node = elem.firstChild;
+    while (node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const match = TOKEN_REGEXP.exec(node.textContent);
+        if (match) {
+          node.textContent = node.textContent.replace(TOKEN_REGEXP, data[match[1]] || '');
+        }
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        fillData(node, data);
+      }
+      node = node.nextSibling;
+    }
+    return elem;
+  }
+
   function setupSearch({
     indexName = 'davidnuescheler--theblog--blog-posts',
     hitsPerPage = 12,
     facetFilters = [],
     container = '.posts',
-    itemTemplate = `
-    <div class="post" itemscope itemtype="http://schema.org/BlogPosting">
-      <div class="hero">
-        <a href="/{{path}}" title="{{{title}}}"><img class="lazyload" itemprop="image" content="{{hero}}" data-src="{{hero}}" alt="{{{title}}}"></a>
-        <a class="topic" itemprop="genre" href="{{topicUrl}}" title="{{{topic}}}">{{{topic}}}</a>
-      </div>
-      <div class="content">
-        <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <a itemprop="url" href="{{authorUrl}}" title="{{{author}}}"><span itemprop="name">{{{author}}}</span></a>
-        </span>
-        <h2 itemprop="headline"><a href="/{{path}}" title="{{{title}}}">{{{title}}}</a></h2>
-        <span class="teaser" itemprop="abstract">
-          <a itemprop="url" href="/{{path}}" title="{{{teaser}}}…">{{{teaser}}}…</a>
-        </span>
-        <span class="date" itemprop="datePublished" content="{{{dateISO}}}">{{{date}}}</span>
-      </div>
-      <div itemprop="publisher" itemscope itemtype="http://schema.org/Organization" style="display:none">
-        <span itemprop="name">Adobe Inc.</span>
-      </div>
-    </div>
-    `,
+    itemTemplate = document.getElementById('post-card'),
     emptyTemplate = 'There are no articles yet',
     transformer = itemTransformer,
   }) {
     const searchClient = algoliasearch('A8PL9E4TZT', '9e59db3654d13f71d79c4fbb4a23cc72');
-    const search = instantsearch({
-      indexName,
-      searchClient,
-      routing: true,
+    const index = searchClient.initIndex(indexName);
+    const filters = Array.from(facetFilters);
+    filters.push(`parents:${context}${language}`);
+    index.search('*', {
+      filters: filters.join(' AND '),
+      numericFilters: `date < ${Date.now()/1000}`, // hide articles with future dates
+      hitsPerPage,
+    }).then(({hits}) => {
+      const $hits = document.createElement('div');
+      $hits.classList.add('ais-Hits');
+      if (hits.length === 0) {
+        const $empty = document.createElement('div');
+        $empty.textContent = emptyTemplate;
+        $hits.appendChild($empty);
+      } else {
+        const $list = document.createElement('ol');
+        $list.classList.add('ais-Hits-list');
+        $hits.appendChild($list);
+        hits
+          .map(transformer)
+          .forEach((hit) => {
+            const $item = itemTemplate.content.cloneNode(true).firstElementChild;
+            fillData($item, hit);
+            const $hit = document.createElement('li');
+            $hit.classList.add('ais-Hits-item');
+            $hit.appendChild($item);
+            $list.appendChild($hit);
+          });
+      }
+      const $el = document.querySelector(container);
+      $el.appendChild($hits);
     });
-    search.addWidgets([
-      instantsearch.widgets.configure({
-        hitsPerPage,
-        facetFilters,
-        numericFilters: [
-          `date < ${Date.now()/1000}`, // hide articles with future dates
-         ]
-      }),
-    ]);
-    search.addWidgets([
-      instantsearch.widgets.hits({
-        container,
-        templates: {
-          item: itemTemplate,
-          empty: emptyTemplate,
-        },
-        transformItems(items) {
-          return items.map((item, index) => transformer(item, index));
-        },
-      }),
-    ]);
-    return search;
   }
 
   /*
@@ -266,36 +254,16 @@
     setupSearch({
       hitsPerPage: 13,
       container: '.latest-posts',
-      itemTemplate: `
-      <div class="post" itemscope itemtype="http://schema.org/BlogPosting">
-        <div class="hero">
-          <a href="/{{path}}" title="{{{title}}}"><img class="lazyload" itemprop="image" content="{{hero}}" data-src="{{hero}}" alt="{{{title}}}"></a>
-          <a itemprop="genre" href="{{topicUrl}}" title="{{{topic}}}">{{{topic}}}</a>
-        </div>
-        <div class="content">
-          <span class="date" itemprop="datePublished" content="{{{dateISO}}}">{{{date}}}</span>
-          <h2 itemprop="headline"><a href="/{{path}}" title="{{{title}}}">{{{title}}}</a></h2>
-          <span class="teaser" itemprop="abstract">
-            <a itemprop="url" href="/{{path}}" title="{{{teaser}}}…">{{{teaser}}}…</a>
-          </span>
-          <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
-            <a itemprop="url" href="{{authorUrl}}" title="{{{author}}}"><span itemprop="name">{{{author}}}</span></a>
-          </span>
-        </div>
-        <div itemprop="publisher" itemscope itemtype="http://schema.org/Organization" style="display:none">
-          <span itemprop="name">Adobe Inc.</span>
-        </div>
-      </div>
-      `,
+      itemTemplate: document.getElementById('homepage-card'),
       transformer: (item, index) => {
-        item = itemTransformer(item); 
+        item = itemTransformer(item);
         if (index === 0) {
           // use larger hero image on first article
-          item.hero = item.hero.replace('?width=256', '?width=2048');
-        } 
+          item.hero = item.hero.replace('?width=256', `?width=${window.innerWidth <= 900 ? 900 : 2048}`);
+        }
         return item;
       },
-    }).start();
+    });
   }
 
   /*
@@ -321,6 +289,7 @@
           if (xhr.status != 200 || xhr.status != 304) {
             // try to get <main> elements and find author image
             const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText);
+            if (!groups) return;
             let main = groups.length > 2 ? groups[2] : null;
             if (main) {
               main = main.replace(fileName, '../authors/' + fileName);
@@ -329,7 +298,7 @@
               const authorDiv = document.createElement('div');
               authorDiv.innerHTML =
                 `<div itemprop="author" itemscope itemtype="http://schema.org/Person">
-                  <img class="lazyload" itemprop="image" content="${avatarURL}" data-src="${avatarURL}?width=120">
+                  <img class="lazyload" itemprop="image" content="${avatarURL}" data-src="${avatarURL}?width=120&auto=webp">
                   <span class="post-author">by <a itemprop="url" href="${pageURL}"><span itemprop="name">${author}</span></a></span>
                 </div>
                 <span class="post-date" itemprop="datePublished" content="${dateISO}">${date}</span>
@@ -466,7 +435,7 @@
     });
     if (!title) title = 'Unknown';
     const type = title.toLowerCase();
-    return { 
+    return {
       title,
       type,
       className: `social-${type}`,
@@ -521,7 +490,7 @@
         ],
       container: '.latest-posts',
       emptyTemplate,
-    }).start();
+    });
   }
 
   /**
@@ -648,13 +617,58 @@
     } else if (isProduct) {
       // todo
     }
-  }
+  };
 
-  window.onhashchange = function() {
-    if (window.location.hash === "#menu") {
-      document.querySelector("header div:nth-child(2)").style="display:block";
-    } else {
-      document.querySelector("header div:nth-child(2)").style="";
-    }
-  }
+  (function regionPicker () {
+    let regionPickerLoaded = false;
+    let modal;
 
+    const insertRegionPickerHtml = (html) => {
+      const mainEl = document.querySelector('main');
+      mainEl.insertAdjacentHTML('afterend', html);
+      const langNavModal = document.querySelector('#languageNavigation')
+      const modalContainer = langNavModal.closest('.modalContainer');
+      modalContainer.classList.remove('hide-all');
+      return langNavModal;
+    };
+
+    const loadRegionPicker = async () => {
+      if (regionPickerLoaded) {
+        modal.open();
+        return;
+      };
+
+      const regionPickerHtml = fetch(
+        '/partials/regionPicker/regionPicker.html',
+        { credentials: 'same-origin' },
+      );
+
+      const modalJs = import('/partials/modal/modal.js');
+
+      const [response, ModalModule] = await Promise.all([regionPickerHtml, modalJs]);
+      if (!response.ok) return;
+
+      const html = await response.text();
+      const langNavModal = insertRegionPickerHtml(html);
+      modal = new ModalModule.Modal(langNavModal);
+
+      loadCssFile('/partials/regionPicker/regionPicker.css');
+
+      if (language !== LANG.EN) {
+          loadCssFile(`/partials/regionPicker/dict.${language}.css`);
+      }
+
+      regionPickerLoaded = true;
+    };
+
+    const checkHash = () => {
+      if (window.location.hash === '#languageNavigation') {
+        loadRegionPicker();
+      }
+    };
+    checkHash();
+
+    window.addEventListener('hashchange', () => {
+      checkHash();
+    });
+  })();
