@@ -232,10 +232,10 @@
     const query = helixQuery('A8PL9E4TZT', '9e59db3654d13f71d79c4fbb4a23cc72');
     const filters = Array.from(facetFilters);
     filters.push(`parents:${window.helix.context}${window.helix.language}`);
+    filters.push(`date < ${Date.now()/1000}`); // hide articles with future dates
     query({
       indexName,
       filters,
-      numericFilters: `date < ${Date.now()/1000}`, // hide articles with future dates
       hitsPerPage,
     }).then(({hits}) => {
       const $hits = document.createElement('div');
