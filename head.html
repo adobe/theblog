@@ -104,7 +104,7 @@ window.fedsConfig = {
   };
 
   function lazyload(img) {
-    console.log('lazyload', img.getAttribute('data-lazyload'));
+    if (!img.classList.contains('lazyload')) return;
     img.setAttribute('src', img.getAttribute('data-lazyload'));
     img.removeAttribute('data-lazyload');
     img.classList.remove('lazyload');
