@@ -41,3 +41,36 @@ indices:
         value: |
           attribute(el, 'content')
         faceted: true
+    queries:
+      recent:
+        query: "*"
+        hitsPerPage: 12
+        parameters:
+          - language
+          - context
+          - date
+        filters: |
+          parents:"${context}${language}" AND date < ${date}
+        cache: 600
+      recent-by-author:
+        query: "*"
+        hitsPerPage: 12
+        parameters:
+          - language
+          - context
+          - date
+          - author
+        filters: |
+          parents:"${context}${language}" AND date < ${date} AND author:"${author}"
+        cache: 600
+      recent-by-topic:
+        query: "*"
+        hitsPerPage: 12
+        parameters:
+          - language
+          - context
+          - date
+          - topic
+        filters: |
+          parents:"${context}${language}" AND date < ${date} AND topics:"${topic}"
+        cache: 600
