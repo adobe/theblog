@@ -240,11 +240,11 @@
     }).then(({hits}) => {
       const $hits = document.createElement('div');
       $hits.classList.add('ais-Hits');
-      if (hits.length === 0) {
+      if (!hits || hits.length === 0) {
         const $empty = document.createElement('div');
         $empty.textContent = emptyTemplate;
         $hits.appendChild($empty);
-      } else {
+      } else if (hits) {
         const $list = document.createElement('ol');
         $list.classList.add('ais-Hits-list');
         $hits.appendChild($list);
