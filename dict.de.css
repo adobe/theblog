@@ -10,6 +10,14 @@
  * governing permissions and limitations under the License.
  */
 
+.post-author::before {
+  content: "von ";
+}
+
+.post-date::before {
+  content: "Publiziert am ";
+}
+
 .topics::before {
   content: "Themen in diesem Artikel";
 }

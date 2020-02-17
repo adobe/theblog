@@ -287,6 +287,22 @@ main div.topics {
   display: block;
 }
 
+.post-date::before {
+  content: "by ";
+  display: inline;
+  color: rgb(10,10,10);
+  text-align: center;
+  text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  font-family: "Adobe Clean",sans-serif;
+  font-size: .75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  line-height:18px;
+  letter-spacing: .02em;
+  user-select: text;
+}
+
 .author .post-author a {
   text-decoration: underline;
   transition: color 350ms;
@@ -299,6 +315,22 @@ main div.topics {
   font-weight: 500;
   text-transform: uppercase;
   display: block;
+}
+
+.post-date::before {
+  content: "Published on ";
+  display: inline;
+  color: rgb(10,10,10);
+  text-align: center;
+  text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  font-family: "Adobe Clean",sans-serif;
+  font-size: .75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  line-height:18px;
+  letter-spacing: .1em;
+  user-select: text;
 }
 
 .topics::before {
