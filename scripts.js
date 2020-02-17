@@ -302,7 +302,8 @@
       insertInside.classList.add('left');
       const r = /^By (.*)\n*(.*)$/gmi.exec(insertInside.innerText);
       const author = r && r.length > 0 ? r[1] : null;
-      const date = r && r.length > 1 ? r[2] : ''
+      const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
+      const date = d && d.length > 0 ? d[0] : '';
       if (author) {
         // clear the content of the div and replace by avatar and text
         insertInside.innerHTML = '';
@@ -322,7 +323,7 @@
               const avatarURL = /<img src="(.*?)">/.exec(main)[1];
               const authorDiv = document.createElement('div');
               authorDiv.innerHTML = '<img class="lazyload" data-src="' + avatarURL + '?width=120&auto=webp"> \
-                <span class="post-author">by <a href="' + pageURL + '">' + author + '</a></span> \
+                <span class="post-author"><a href="' + pageURL + '">' + author + '</a></span> \
                 <span class="post-date">' + date + '</span> \
                 ';
               authorDiv.classList.add('author');
