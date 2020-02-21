@@ -126,6 +126,7 @@
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
+        timeZone: 'UTC',
       }),
       authorUrl: getLink(window.TYPE.AUTHOR, item.author),
       topic: item.topics.length > 0 ? item.topics[0] : '',
