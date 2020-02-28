@@ -1,4 +1,4 @@
 mountpoints:
-  - /ms: https://adobe.sharepoint.com/sites/TheBlog/Shared%20Documents/theblog
-  - /g:  https://drive.google.com/drive/u/0/folders/1y0EEk2QxbkM4A5InGqwHheGJ6LNCSKvn
-    
+  /ms: https://adobe.sharepoint.com/sites/TheBlog/Shared%20Documents/theblog
+  /g:  https://drive.google.com/drive/u/0/folders/1y0EEk2QxbkM4A5InGqwHheGJ6LNCSKvn
+
