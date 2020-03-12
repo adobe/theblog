@@ -632,7 +632,7 @@ main div.topics {
   height: 100%;
 }
 
-.home-page main li:first-child .hero img[src=""] {
+.home-page main li:first-child .hero img[src="#"] {
   visibility: hidden;
 }
 
