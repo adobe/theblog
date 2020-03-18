@@ -769,3 +769,11 @@ main div.topics {
   }
 
 }
+
+/*
+ * Workaround to hide duplicate AdChoices link.
+ * See https://github.com/adobe/theblog/issues/141
+ */
+div.evidon-notice-link {
+  display:none;
+}
