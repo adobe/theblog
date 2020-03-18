@@ -122,7 +122,7 @@
   const itemTransformer = (item) => {
     const itemParams = {
       hero: item.hero ? `${item.hero}?width=256&auto=webp` : '#',
-      date: new Date(item.date * 1000).toLocaleDateString('en-US', {
+      date: item.originalDate || new Date(item.date * 1000).toLocaleDateString('en-US', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
