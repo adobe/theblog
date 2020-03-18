@@ -18,6 +18,10 @@ indices:
         select: main > div:nth-of-type(3)
         value: |
           parseTimestamp(el, '[POSTED ON] MM-DD-YYYY')
+      originalDate:
+        select: main > div:nth-of-type(3)
+        value: |
+          match(el, '\d{2}-\d{2}-\d{4}')
       topics:
         select: main > div:last-of-type > p:first-of-type
         values: |
