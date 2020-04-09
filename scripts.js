@@ -239,16 +239,26 @@
       filters,
       hitsPerPage,
     }).then(({hits}) => {
-      const $hits = document.createElement('div');
-      $hits.classList.add('ais-Hits');
-      if (!hits || hits.length === 0) {
-        const $empty = document.createElement('div');
-        $empty.textContent = emptyTemplate;
-        $hits.appendChild($empty);
-      } else if (hits) {
-        const $list = document.createElement('ol');
+      const $el = document.querySelector(container);
+      let $hits, $list;
+      if ($el.querySelector('.ais-Hits')) {
+        $hits=$el.querySelector('.ais-Hits');
+        $list=$el.querySelector('.ais-Hits-list');
+      } else {
+        $hits=document.createElement('div');
+        $hits.classList.add('ais-Hits');
+        $el.appendChild($hits);
+        if (!hits || hits.length === 0) {
+          const $empty = document.createElement('div');
+          $empty.textContent = emptyTemplate;
+          $hits.appendChild($empty);
+        } else {
+        $list = document.createElement('ol');
         $list.classList.add('ais-Hits-list');
         $hits.appendChild($list);
+        }  
+      } 
+      if (hits) {
         hits
           .map(transformer)
           .forEach((hit) => {
@@ -259,11 +269,45 @@
             $hit.appendChild($item);
             $list.appendChild($hit);
           });
+        featurePosts();
       }
-      const $el = document.querySelector(container);
-      $el.appendChild($hits);
     });
   }
+
+  function getFeaturedPostsPaths() {
+    let featured=[];
+    const $featured=document.getElementById('featured-posts');
+    if ($featured) {
+      $featured.parentNode.querySelectorAll('a').forEach((e) => {
+        const url=new URL(e.getAttribute('href'));
+        featured.push(url.pathname);
+        
+      })
+    }
+    return featured;
+  }
+
+  function featurePosts() {
+    const featured=getFeaturedPostsPaths();
+    const $list=document.querySelector('.ais-Hits-list');
+    const $hits=$list.children;
+    let $newhits;
+    const allHrefs=[];
+    $list.querySelectorAll('.ais-Hits-item .hero a:first-of-type').forEach((e) => allHrefs.push(e.getAttribute('href')));
+
+    $newhits=featured.map((e) => {
+      const i=allHrefs.indexOf(e);
+      return ($hits[i].cloneNode(true));
+    });
+    allHrefs.forEach((e, i) => {
+      if (featured.indexOf(e)<0) {
+        $newhits.push($hits[i].cloneNode(true));
+      }
+    })
+    $list.innerHTML='';
+    $newhits.forEach((e) => $list.appendChild(e));
+  }
+
 
   /*
    * homepage
@@ -273,24 +317,34 @@
     if (!document.title) {
       document.title = 'The Blog | Welcome to the Adobe Blog';
     }
-    document.querySelectorAll('main div')[0].remove();
+    document.querySelectorAll('main div')[0].classList.add('hidden');
 
     const postsWrap = document.createElement('div');
     postsWrap.className = 'default latest-posts';
     getSection().parentNode.appendChild(postsWrap);
+
+
+    const featured=getFeaturedPostsPaths();
+    let filter="";
+    featured.forEach((e, i) => {
+      filter+=(`${i?" OR ":""}path:${e.substr(1)}`);
+    });    
+    
+    setupSearch({
+      facetFilters: [
+          filter,
+        ],
+      container: '.latest-posts',
+      itemTemplate: document.getElementById('homepage-card'),
+    });
+
+
     setupSearch({
       hitsPerPage: 13,
       container: '.latest-posts',
       itemTemplate: document.getElementById('homepage-card'),
-      transformer: (item, index) => {
-        item = itemTransformer(item);
-        if (index === 0) {
-          // use larger hero image on first article
-          item.hero = item.hero ? item.hero.replace('?width=256', `?width=${window.innerWidth <= 900 ? 900 : 2048}`) : '#';
-        }
-        return item;
-      },
     });
+    
   }
 
   /*

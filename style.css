@@ -724,6 +724,10 @@ main div.topics {
 
 }
 
+.hidden {
+  display: none;
+}
+
 @media (min-width:900px) {
   .default {
     margin: auto;
