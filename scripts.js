@@ -165,12 +165,6 @@
     return `${window.helix.context}${window.helix.language}/${type}/${name.replace(/\s/gm, '-').replace(/\&amp;/gm,'').replace(/\&/gm,'').toLowerCase()}.html`;
   }
 
-  function checkConsent() {
-    if (window.feds && window.feds.privacy && !window.feds.privacy.hasUserProvidedConsent) {
-      window.feds.privacy.showConsentPopup();
-    }
-  }
-
   function fillData(elem, data) {
     const TOKEN_REGEXP = /{{(.+)}}/;
     for (let i = 0; i < elem.attributes.length; i++) {
@@ -516,7 +510,6 @@
   window.onload = function() {
     removeHeaderAndFooter();
     addPageTypeAsBodyClass();
-    checkConsent();
     scrani.onload();
     if (isHome) {
       setupHomepage();
