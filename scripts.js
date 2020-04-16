@@ -232,8 +232,15 @@
   }) {
     const query = helixQuery('A8PL9E4TZT', '49f861a069d3c1cdb2c15f6db7929199');
     const filters = Array.from(facetFilters);
-    filters.push(`parents:${window.helix.context}${window.helix.language}`);
-    filters.push(`date < ${Date.now()/1000}`); // hide articles with future dates
+    const featured = getFeaturedPostsPaths();
+    let filter = '';
+    featured.forEach((e, i) => {
+      filter += `${i ? ' OR ' : ''}path:${e.substr(1)}`;
+    });
+    if (filter) filter += ' OR ';
+    filter += `parents:${window.helix.context}${window.helix.language}`;
+    filter = `(${filter}) AND date < ${Math.round(Date.now()/1000)}`; // hide articles with future dates
+    filters.push(filter);
     query({
       indexName,
       filters,
@@ -261,6 +268,23 @@
       if (hits) {
         hits
           .map(transformer)
+          .sort((hit1, hit2) => {
+            const i1 = featured.indexOf(hit1.path);
+            if (i1 !== -1) {
+              // hit1 is a featured post, now check hit2
+              const i2 = featured.indexOf(hit2.path);
+              if (i2 !== -1) {
+                // hit2 is also a featured post:
+                //   move hit1 up if i2 is greater than i1
+                //   move hit2 up if i1 is greater than i2
+                return (i1 > i2) ? 1 : -1;
+              }
+              // move hit1 up
+              return -1;
+            }
+            // leave as is
+            return 0;
+          })
           .forEach((hit) => {
             const $item = itemTemplate.content.cloneNode(true).firstElementChild;
             fillData($item, hit);
@@ -269,20 +293,19 @@
             $hit.appendChild($item);
             $list.appendChild($hit);
           });
-        featurePosts();
+        // featurePosts();
       }
     });
   }
 
   function getFeaturedPostsPaths() {
-    let featured=[];
+    const featured=[];
     const $featured=document.getElementById('featured-posts');
     if ($featured) {
       $featured.parentNode.querySelectorAll('a').forEach((e) => {
         const url=new URL(e.getAttribute('href'));
         featured.push(url.pathname);
-        
-      })
+      });
     }
     return featured;
   }
@@ -322,22 +345,6 @@
     const postsWrap = document.createElement('div');
     postsWrap.className = 'default latest-posts';
     getSection().parentNode.appendChild(postsWrap);
-
-
-    const featured=getFeaturedPostsPaths();
-    let filter="";
-    featured.forEach((e, i) => {
-      filter+=(`${i?" OR ":""}path:${e.substr(1)}`);
-    });    
-    
-    setupSearch({
-      facetFilters: [
-          filter,
-        ],
-      container: '.latest-posts',
-      itemTemplate: document.getElementById('homepage-card'),
-    });
-
 
     setupSearch({
       hitsPerPage: 13,
