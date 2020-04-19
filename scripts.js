@@ -221,6 +221,44 @@
     }
   }
 
+  function helixMultipleQueries(appId, key) {
+    return async (queries, hitsPerPage) => {
+      const url = new URL(`https://${appId}-dsn.algolia.net/1/indexes/*/queries`);
+      const serializeQueryParameters = (q) => {
+        const sp = new URLSearchParams();
+        Object.entries(q)
+          .filter(([key]) => key !== 'indexName')
+          .forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+              value.forEach((v) => {
+                sp.append(key, v);
+              });
+            } else {
+              sp.append(key, value);
+            }
+          });
+        return sp.toString();
+      };
+      const requests = queries.map(q => {
+        return {
+          indexName: q.indexName,
+          params: serializeQueryParameters({ ...q, hitsPerPage }),
+        };
+      });
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-Algolia-API-Key': key,
+          'X-Algolia-Application-Id': appId,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify({ requests }),
+      });
+      const { results: [{ hits: featured }, { hits: newest }] } = await res.json();
+      return { hits: featured.concat(newest).slice(0, hitsPerPage) };
+    }
+  }
+
   function setupSearch({
     indexName = 'davidnuescheler--theblog--blog-posts',
     hitsPerPage = 12,
@@ -230,22 +268,20 @@
     emptyTemplate = 'There are no articles yet',
     transformer = itemTransformer,
   }) {
-    const query = helixQuery('A8PL9E4TZT', '49f861a069d3c1cdb2c15f6db7929199');
+    const multiquery = helixMultipleQueries('A8PL9E4TZT', '49f861a069d3c1cdb2c15f6db7929199');
     const filters = Array.from(facetFilters);
     const featured = getFeaturedPostsPaths();
-    let filter = '';
-    featured.forEach((e, i) => {
-      filter += `${i ? ' OR ' : ''}path:${e.substr(1)}`;
-    });
-    if (filter) filter += ' OR ';
-    filter += `parents:${window.helix.context}${window.helix.language}`;
-    filter = `(${filter}) AND date < ${Math.round(Date.now()/1000)}`; // hide articles with future dates
-    filters.push(filter);
-    query({
+
+    filters.push(`parents:${window.helix.context}${window.helix.language}`);
+    filters.push(`date < ${Math.round(Date.now()/1000)}`); // hide articles with future dates
+
+    multiquery([{
       indexName,
-      filters,
-      hitsPerPage,
-    }).then(({hits}) => {
+      filters: featured.map(p => `path:${p.substr(1)}`).join(' OR '),
+    }, {
+      indexName,
+      filters: filters.join(' AND '),
+    }], hitsPerPage).then(({ hits }) => {
       const $el = document.querySelector(container);
       let $hits, $list;
       if ($el.querySelector('.ais-Hits')) {
@@ -263,8 +299,8 @@
         $list = document.createElement('ol');
         $list.classList.add('ais-Hits-list');
         $hits.appendChild($list);
-        }  
-      } 
+        }
+      }
       if (hits) {
         hits
           .map(transformer)
@@ -351,7 +387,7 @@
       container: '.latest-posts',
       itemTemplate: document.getElementById('homepage-card'),
     });
-    
+
   }
 
   /*
