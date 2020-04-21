@@ -29,14 +29,14 @@
 }
 
 main {
-  display:none;
+  visibility: hidden;
 }
 
 .home-page main,
 .post-page main,
 .topic-page main,
 .author-page main {
-  display: block;
+  visibility: visible;
 }
 
 .title {
