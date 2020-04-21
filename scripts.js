@@ -254,11 +254,17 @@
         },
         body: JSON.stringify({ requests }),
       });
-      const { results: [{ hits: featured }, { hits: latest }] } = await res.json();
-      const hits = featured.concat(latest).reduce((unique, hit) => {
-        return unique.find((item) => item.objectID === hit.objectID)
-          ? unique : [...unique, hit];
-      }, []);
+      const { results } = await res.json();
+      const hits = results
+        .reduce((a, result) => {
+          // concat all hits in all results
+          a.push(...result.hits);
+          return a;
+        }, [])
+        .reduce((unique, hit) => {
+          return unique.find((item) => item.objectID === hit.objectID)
+            ? unique : [...unique, hit];
+        }, []);
       return { hits: hits.slice(0, hitsPerPage) };
     }
   }
@@ -279,13 +285,18 @@
     filters.push(`parents:${window.helix.context}${window.helix.language}`);
     filters.push(`date < ${Math.round(Date.now()/1000)}`); // hide articles with future dates
 
-    multiquery([{
-      indexName,
-      filters: featured.map(p => `path:${p.substr(1)}`).join(' OR '),
-    }, {
+    const queries = [{
       indexName,
       filters: filters.join(' AND '),
-    }], hitsPerPage).then(({ hits }) => {
+    }];
+    if (featured.length) {
+      queries.unshift({
+        indexName,
+        filters: featured.map(p => `path:${p.substr(1)}`).join(' OR '),
+      })
+    }
+
+    multiquery(queries, hitsPerPage).then(({ hits }) => {
       const $el = document.querySelector(container);
       let $hits, $list;
       if ($el.querySelector('.ais-Hits')) {
