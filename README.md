@@ -20,7 +20,7 @@ Outer CDN (cached):
 
 Install [helix-cli](https://github.com/adobe/helix-cli)
 
-Clone repo locally using `git clone https://github.com/adobe/theblog` 
+Clone repo locally using `git clone https://github.com/adobe/theblog.git` 
 
 In the respective directory, run `hlx up`, which should open your browser at `localhost:3000`
 
