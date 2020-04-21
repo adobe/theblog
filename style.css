@@ -26,13 +26,16 @@
   font-size: 1.125rem;
   line-height: 1.8;
   color: #0a0a0a;
+}
+
+main {
   display:none;
 }
 
-body.home-page,
-body.post-page,
-body.topic-page,
-body.author-page {
+.home-page main,
+.post-page main,
+.topic-page main,
+.author-page main {
   display: block;
 }
 
