@@ -305,10 +305,10 @@
         hits
           .map(transformer)
           .sort((hit1, hit2) => {
-            const i1 = featured.indexOf(hit1.path);
+            const i1 = featured.indexOf(`/${hit1.path}`);
             if (i1 !== -1) {
               // hit1 is a featured post, now check hit2
-              const i2 = featured.indexOf(hit2.path);
+              const i2 = featured.indexOf(`/${hit2.path}`);
               if (i2 !== -1) {
                 // hit2 is also a featured post:
                 //   move hit1 up if i2 is greater than i1
@@ -329,7 +329,6 @@
             $hit.appendChild($item);
             $list.appendChild($hit);
           });
-        // featurePosts();
       }
     });
   }
@@ -345,28 +344,6 @@
     }
     return featured;
   }
-
-  function featurePosts() {
-    const featured=getFeaturedPostsPaths();
-    const $list=document.querySelector('.ais-Hits-list');
-    const $hits=$list.children;
-    let $newhits;
-    const allHrefs=[];
-    $list.querySelectorAll('.ais-Hits-item .hero a:first-of-type').forEach((e) => allHrefs.push(e.getAttribute('href')));
-
-    $newhits=featured.map((e) => {
-      const i=allHrefs.indexOf(e);
-      return ($hits[i].cloneNode(true));
-    });
-    allHrefs.forEach((e, i) => {
-      if (featured.indexOf(e)<0) {
-        $newhits.push($hits[i].cloneNode(true));
-      }
-    })
-    $list.innerHTML='';
-    $newhits.forEach((e) => $list.appendChild(e));
-  }
-
 
   /*
    * homepage
