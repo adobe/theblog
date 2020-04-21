@@ -382,13 +382,13 @@
       hitsPerPage: 13,
       container: '.latest-posts',
       itemTemplate: document.getElementById('homepage-card'),
-      transformer: (item, index) => {	
-        item = itemTransformer(item);	
-        if (index === 0) {	
+      transformer: (item, index) => {
+        item = itemTransformer(item);
+        if (index === 0) {
           // use larger hero image on first article	
-          item.hero = item.hero ? item.hero.replace('?width=256', `?width=${window.innerWidth <= 900 ? 900 : 2048}`) : '#';	
-        }	
-        return item;	
+          item.hero = item.hero ? item.hero.replace('?width=256', `?width=${window.innerWidth <= 900 ? 900 : 2048}`) : '#';
+        }
+        return item;
       },
     });
   }
