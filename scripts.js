@@ -318,7 +318,6 @@
       }
       if (hits) {
         hits
-          .map(transformer)
           .sort((hit1, hit2) => {
             const i1 = featured.indexOf(`/${hit1.path}`);
             if (i1 !== -1) {
@@ -336,6 +335,7 @@
             // leave as is
             return 0;
           })
+          .map(transformer)
           .forEach((hit) => {
             const $item = itemTemplate.content.cloneNode(true).firstElementChild;
             fillData($item, hit);
