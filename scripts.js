@@ -254,8 +254,12 @@
         },
         body: JSON.stringify({ requests }),
       });
-      const { results: [{ hits: featured }, { hits: newest }] } = await res.json();
-      return { hits: featured.concat(newest).slice(0, hitsPerPage) };
+      const { results: [{ hits: featured }, { hits: latest }] } = await res.json();
+      const hits = featured.concat(latest).reduce((unique, hit) => {
+        return unique.find((item) => item.objectID === hit.objectID)
+          ? unique : [...unique, hit];
+      }, []);
+      return { hits: hits.slice(0, hitsPerPage) };
     }
   }
 
