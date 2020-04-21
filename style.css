@@ -26,6 +26,14 @@
   font-size: 1.125rem;
   line-height: 1.8;
   color: #0a0a0a;
+  display:none;
+}
+
+body.home-page,
+body.post-page,
+body.topic-page,
+body.author-page {
+  display: block;
 }
 
 .title {
@@ -722,10 +730,6 @@ main div.topics {
     height: unset;
   }
 
-}
-
-.hidden {
-  display: none;
 }
 
 @media (min-width:900px) {

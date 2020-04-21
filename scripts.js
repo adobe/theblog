@@ -157,7 +157,7 @@
 
   function getSection(index) {
     const nodes = document.querySelectorAll("main > div");
-    return index && nodes.length > index ? nodes[index] : nodes[nodes.length - 1];
+    return index !== undefined && nodes.length > index ? nodes[index] : nodes[nodes.length - 1];
   }
 
   function getLink(type, name) {
@@ -345,6 +345,7 @@
         const url=new URL(e.getAttribute('href'));
         featured.push(url.pathname);
       });
+      $featured.parentNode.remove();
     }
     return featured;
   }
@@ -357,18 +358,20 @@
     if (!document.title) {
       document.title = 'The Blog | Welcome to the Adobe Blog';
     }
-    document.querySelectorAll('main div')[0].classList.add('hidden');
+    const titleSection = getSection(0);
+    if (titleSection.innerText === document.title) {
+      titleSection.remove();
+    }
 
     const postsWrap = document.createElement('div');
     postsWrap.className = 'default latest-posts';
-    getSection().parentNode.appendChild(postsWrap);
+    document.querySelector('main').appendChild(postsWrap);
 
     setupSearch({
       hitsPerPage: 13,
       container: '.latest-posts',
       itemTemplate: document.getElementById('homepage-card'),
     });
-
   }
 
   /*
