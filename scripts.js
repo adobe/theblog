@@ -227,7 +227,7 @@
       const serializeQueryParameters = (q) => {
         const sp = new URLSearchParams();
         Object.entries(q)
-          .filter(([key]) => key !== 'indexName')
+          .filter(([key]) => key !== 'indexName' && key !== 'customSort')
           .forEach(([key, value]) => {
             if (Array.isArray(value)) {
               value.forEach((v) => {
@@ -255,6 +255,12 @@
         body: JSON.stringify({ requests }),
       });
       const { results } = await res.json();
+      results.forEach((result, i) => {
+        const { customSort } = queries[i];
+        if (customSort) {
+          result.hits.sort(customSort);
+        }
+      });
       const hits = results
         .reduce((a, result) => {
           // concat all hits in all results
@@ -293,6 +299,7 @@
       queries.unshift({
         indexName,
         filters: featured.map(p => `path:${p.substr(1)}`).join(' OR '),
+        customSort: (hit1, hit2) => featured.indexOf(`/${hit1.path}`) - featured.indexOf(`/${hit2.path}`),
       })
     }
 
@@ -319,23 +326,6 @@
       if (hits) {
         hits
           .map(transformer)
-          .sort((hit1, hit2) => {
-            const i1 = featured.indexOf(`/${hit1.path}`);
-            if (i1 !== -1) {
-              // hit1 is a featured post, now check hit2
-              const i2 = featured.indexOf(`/${hit2.path}`);
-              if (i2 !== -1) {
-                // hit2 is also a featured post:
-                //   move hit1 up if i2 is greater than i1
-                //   move hit2 up if i1 is greater than i2
-                return (i1 > i2) ? 1 : -1;
-              }
-              // move hit1 up
-              return -1;
-            }
-            // leave as is
-            return 0;
-          })
           .forEach((hit) => {
             const $item = itemTemplate.content.cloneNode(true).firstElementChild;
             fillData($item, hit);
@@ -382,13 +372,13 @@
       hitsPerPage: 13,
       container: '.latest-posts',
       itemTemplate: document.getElementById('homepage-card'),
-      transformer: (item, index) => {	
-        item = itemTransformer(item);	
-        if (index === 0) {	
-          // use larger hero image on first article	
-          item.hero = item.hero ? item.hero.replace('?width=256', `?width=${window.innerWidth <= 900 ? 900 : 2048}`) : '#';	
-        }	
-        return item;	
+      transformer: (item, index) => {
+        item = itemTransformer(item);
+        if (index === 0) {
+          // use larger hero image on first article
+          item.hero = item.hero ? item.hero.replace('?width=256', `?width=${window.innerWidth <= 900 ? 900 : 2048}`) : '#';
+        }
+        return item;
       },
     });
   }
