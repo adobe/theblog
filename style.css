@@ -28,6 +28,17 @@
   color: #0a0a0a;
 }
 
+main {
+  visibility: hidden;
+}
+
+.home-page main,
+.post-page main,
+.topic-page main,
+.author-page main {
+  visibility: visible;
+}
+
 .title {
   overflow: hidden;
   background-color: black;

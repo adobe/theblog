@@ -157,7 +157,7 @@
 
   function getSection(index) {
     const nodes = document.querySelectorAll("main > div");
-    return index && nodes.length > index ? nodes[index] : nodes[nodes.length - 1];
+    return index !== undefined && nodes.length > index ? nodes[index] : nodes[nodes.length - 1];
   }
 
   function getLink(type, name) {
@@ -215,6 +215,54 @@
     }
   }
 
+  function helixMultipleQueries(appId, key) {
+    return async (queries, hitsPerPage) => {
+      const url = new URL(`https://${appId}-dsn.algolia.net/1/indexes/*/queries`);
+      const serializeQueryParameters = (q) => {
+        const sp = new URLSearchParams();
+        Object.entries(q)
+          .filter(([key]) => key !== 'indexName')
+          .forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+              value.forEach((v) => {
+                sp.append(key, v);
+              });
+            } else {
+              sp.append(key, value);
+            }
+          });
+        return sp.toString();
+      };
+      const requests = queries.map(q => {
+        return {
+          indexName: q.indexName,
+          params: serializeQueryParameters({ ...q, hitsPerPage }),
+        };
+      });
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-Algolia-API-Key': key,
+          'X-Algolia-Application-Id': appId,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify({ requests }),
+      });
+      const { results } = await res.json();
+      const hits = results
+        .reduce((a, result) => {
+          // concat all hits in all results
+          a.push(...result.hits);
+          return a;
+        }, [])
+        .reduce((unique, hit) => {
+          return unique.find((item) => item.objectID === hit.objectID)
+            ? unique : [...unique, hit];
+        }, []);
+      return { hits: hits.slice(0, hitsPerPage) };
+    }
+  }
+
   function setupSearch({
     indexName = 'davidnuescheler--theblog--blog-posts',
     hitsPerPage = 12,
@@ -224,27 +272,64 @@
     emptyTemplate = 'There are no articles yet',
     transformer = itemTransformer,
   }) {
-    const query = helixQuery('A8PL9E4TZT', '49f861a069d3c1cdb2c15f6db7929199');
+    const multiquery = helixMultipleQueries('A8PL9E4TZT', '49f861a069d3c1cdb2c15f6db7929199');
     const filters = Array.from(facetFilters);
+    const featured = getFeaturedPostsPaths();
+
     filters.push(`parents:${window.helix.context}${window.helix.language}`);
-    filters.push(`date < ${Date.now()/1000}`); // hide articles with future dates
-    query({
+    filters.push(`date < ${Math.round(Date.now()/1000)}`); // hide articles with future dates
+
+    const queries = [{
       indexName,
-      filters,
-      hitsPerPage,
-    }).then(({hits}) => {
-      const $hits = document.createElement('div');
-      $hits.classList.add('ais-Hits');
-      if (!hits || hits.length === 0) {
-        const $empty = document.createElement('div');
-        $empty.textContent = emptyTemplate;
-        $hits.appendChild($empty);
-      } else if (hits) {
-        const $list = document.createElement('ol');
+      filters: filters.join(' AND '),
+    }];
+    if (featured.length) {
+      queries.unshift({
+        indexName,
+        filters: featured.map(p => `path:${p.substr(1)}`).join(' OR '),
+      })
+    }
+
+    multiquery(queries, hitsPerPage).then(({ hits }) => {
+      const $el = document.querySelector(container);
+      let $hits, $list;
+      if ($el.querySelector('.ais-Hits')) {
+        $hits=$el.querySelector('.ais-Hits');
+        $list=$el.querySelector('.ais-Hits-list');
+      } else {
+        $hits=document.createElement('div');
+        $hits.classList.add('ais-Hits');
+        $el.appendChild($hits);
+        if (!hits || hits.length === 0) {
+          const $empty = document.createElement('div');
+          $empty.textContent = emptyTemplate;
+          $hits.appendChild($empty);
+        } else {
+        $list = document.createElement('ol');
         $list.classList.add('ais-Hits-list');
         $hits.appendChild($list);
+        }
+      }
+      if (hits) {
         hits
           .map(transformer)
+          .sort((hit1, hit2) => {
+            const i1 = featured.indexOf(`/${hit1.path}`);
+            if (i1 !== -1) {
+              // hit1 is a featured post, now check hit2
+              const i2 = featured.indexOf(`/${hit2.path}`);
+              if (i2 !== -1) {
+                // hit2 is also a featured post:
+                //   move hit1 up if i2 is greater than i1
+                //   move hit2 up if i1 is greater than i2
+                return (i1 > i2) ? 1 : -1;
+              }
+              // move hit1 up
+              return -1;
+            }
+            // leave as is
+            return 0;
+          })
           .forEach((hit) => {
             const $item = itemTemplate.content.cloneNode(true).firstElementChild;
             fillData($item, hit);
@@ -254,9 +339,20 @@
             $list.appendChild($hit);
           });
       }
-      const $el = document.querySelector(container);
-      $el.appendChild($hits);
     });
+  }
+
+  function getFeaturedPostsPaths() {
+    const featured=[];
+    const $featured=document.getElementById('featured-posts');
+    if ($featured) {
+      $featured.parentNode.querySelectorAll('a').forEach((e) => {
+        const url=new URL(e.getAttribute('href'));
+        featured.push(url.pathname);
+      });
+      $featured.parentNode.remove();
+    }
+    return featured;
   }
 
   /*
@@ -267,23 +363,19 @@
     if (!document.title) {
       document.title = 'The Blog | Welcome to the Adobe Blog';
     }
-    document.querySelectorAll('main div')[0].remove();
+    const titleSection = getSection(0);
+    if (titleSection.innerText === document.title) {
+      titleSection.remove();
+    }
 
     const postsWrap = document.createElement('div');
     postsWrap.className = 'default latest-posts';
-    getSection().parentNode.appendChild(postsWrap);
+    document.querySelector('main').appendChild(postsWrap);
+
     setupSearch({
       hitsPerPage: 13,
       container: '.latest-posts',
       itemTemplate: document.getElementById('homepage-card'),
-      transformer: (item, index) => {
-        item = itemTransformer(item);
-        if (index === 0) {
-          // use larger hero image on first article
-          item.hero = item.hero ? item.hero.replace('?width=256', `?width=${window.innerWidth <= 900 ? 900 : 2048}`) : '#';
-        }
-        return item;
-      },
     });
   }
 
