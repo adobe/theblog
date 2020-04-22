@@ -15,7 +15,7 @@
 <script>
 const TYPE = {
   HOME: 'home',
-  POST: 'publish',
+  POST: 'post',
   AUTHOR: 'author',
   TOPIC: 'topic',
   PRODUCT: 'product',
@@ -47,8 +47,8 @@ const helixGlobals = () => {
       }
     }
     if (segs.length >= 2) {
-      // post pages not in publish
-      if (segs[1] === 'drafts' || /\d{4}\/\d{2}\/\d{2}/.test(segs[1])) {
+      // post pages
+      if (segs[1] === 'drafts' || segs[1] === 'publish' || /\d{4}\/\d{2}\/\d{2}/.test(segs)) {
         pageType = TYPE.POST;
       } else {
         for (let [key, value] of Object.entries(TYPE)) {
