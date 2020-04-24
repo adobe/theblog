@@ -270,7 +270,7 @@
   }
 
   function setupSearch({
-    indexName = 'davidnuescheler--theblog--blog-posts',
+    indexName = 'adobe--theblog--blog-posts',
     hitsPerPage = 12,
     facetFilters = [],
     container = '.posts',
