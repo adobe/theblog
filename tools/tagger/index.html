@@ -2,13 +2,35 @@
 
 <head>
     <title>the blog - tagger</title>
-    <link rel="stylesheet" href="/style.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
 <style>
-    main {
-        visibility: unset;
+    body {
+        font-family: 'Adobe Clean';
     }
+
+    main input {
+        width: 100%;
+        font-size: 2rem;
+        font-family: 'Adobe Clean';
+        border: none;
+        border-bottom: solid 1px grey;
+        padding-top: 5px;
+    }
+
+    main .filter {
+        padding: 0px 10px 20px 10px;
+    }
+
+    main #selected {
+        padding: 30px;
+    }
+
+    main #selected button {
+        border-radius: 1em;
+        padding: 5px 20px;
+    }
+
 
     #tags-data {
         display: none;
@@ -26,6 +48,8 @@
 
     main {
         padding: 20px;
+        font-size: 1.3rem;
+        line-height: 1.2em;
     }
 
     span.tag {
@@ -39,11 +63,11 @@
     .active .tag {
         background-color: #0d66d0;
         cursor: pointer;
+        padding-top: 5px;
     }
 
     .active .tag.non-user{
         background-color: #12805c;
-        cursor: pointer;
     }
 
 
@@ -61,7 +85,7 @@
     span.path {
         border-radius: 10px;
         border: 1px dashed black;
-        padding: 2px 0px 2px 20px;
+        padding: 4px 0px 2px 20px;
         font-size: 10px;
     }
 
