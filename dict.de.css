@@ -37,3 +37,11 @@
 .home-page main li:first-child::after {
   content: "Neueste Geschichten";
 }
+
+.language-Navigation_heading::before {
+  content: "Region wählen";
+}
+
+.language-Navigation_subheading::before {
+  content: "Durch das Auswählen einer Region werden Sprache und/oder Inhalt der Website von Adobe geändert.";
+}
