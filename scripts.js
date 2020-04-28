@@ -190,32 +190,6 @@
   }
 
   function helixQuery(appId, key) {
-    return async (opts) => {
-      const url = new URL(`https://${appId}-dsn.algolia.net/1/indexes/${opts.indexName}`);
-      const sp = url.searchParams;
-      Object.entries(opts).forEach(([key, value]) => {
-        if (key === 'indexName') {
-          return;
-        }
-        if (Array.isArray(value)) {
-          value.forEach((v) => {
-            sp.append(key, v);
-          });
-        } else {
-          sp.append(key, value);
-        }
-      });
-      const res = await fetch(url,{
-        headers: {
-          'X-Algolia-API-Key': key,
-          'X-Algolia-Application-Id': appId,
-        }
-      });
-      return res.json();
-    }
-  }
-
-  function helixMultipleQueries(appId, key) {
     return async (queries, hitsPerPage) => {
       const url = new URL(`https://${appId}-dsn.algolia.net/1/indexes/*/queries`);
       const serializeQueryParameters = (q) => {
@@ -278,7 +252,7 @@
     emptyTemplate = 'There are no articles yet',
     transformer = itemTransformer,
   }) {
-    const multiquery = helixMultipleQueries('A8PL9E4TZT', '49f861a069d3c1cdb2c15f6db7929199');
+    const query = helixQuery('A8PL9E4TZT', '49f861a069d3c1cdb2c15f6db7929199');
     const filters = Array.from(facetFilters);
     const featured = getFeaturedPostsPaths();
 
@@ -297,7 +271,7 @@
       })
     }
 
-    multiquery(queries, hitsPerPage).then(({ hits }) => {
+    query(queries, hitsPerPage).then(({ hits }) => {
       const $el = document.querySelector(container);
       let $hits, $list;
       if ($el.querySelector('.ais-Hits')) {
