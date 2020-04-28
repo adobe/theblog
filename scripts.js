@@ -345,6 +345,112 @@
     return featured;
   }
 
+  function createTag(name, attrs) {
+    const el = document.createElement(name);
+    if (typeof attrs === 'object') {
+      for (let [key, value] of Object.entries(attrs)) {
+        el.setAttribute(key, value);
+      }
+    }
+    return el;
+  }
+
+  function handleMetadata() {
+    // store author and date
+    const r = /^By (.*)\n*(.*)$/gmi.exec(getSection(2).innerText);
+    window.helix.author = r && r.length > 0 ? r[1] : '';
+    const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
+    window.helix.date = d && d.length > 0 ? d[0] : '';
+    // store topics
+    const last = getSection();
+    let topics, topicContainer;
+    Array.from(last.children).forEach((i) => {
+      const r = /^Topics\: ?(.*)$/gmi.exec(i.innerText);
+      if (r && r.length > 0) {
+        topics = r[1].split(',');
+        topicContainer = i;
+      }
+    });
+    window.helix.topics = topics.filter((topic) => {
+      return topic.trim().length > 0;
+    });
+    if (topicContainer) {
+      topicContainer.remove();
+    }
+    // store products
+    let products, productContainer;
+    Array.from(last.children).forEach((i) => {
+      const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
+      if (r && r.length > 0) {
+        products = r[1].split(',');
+        productContainer = i;
+      }
+    });
+    window.helix.products = products.filter((product) => {
+      return product.trim().length > 0;
+    });
+    if (productContainer) {
+      productContainer.remove();
+    }
+    last.remove();
+
+    const hero = getSection(1).querySelector('img');
+    const copy = getSection(3).innerText;
+    const md = {
+      title: document.title,
+      desc: `${copy.substring(0, 171)}...`,
+      url: window.location.href,
+      publishedDate: window.helix.date ? new Date(window.helix.date).toISOString() : '',
+      locale: window.helix.language,
+      tags: [
+        ...topics,
+        ...products,
+      ],
+      imgSrc: hero ? hero.src : '',
+      imgAlt: hero ? hero.alt : '',
+      // static values
+      publisher: 'https://www.facebook.com/Adobe',
+      twitterID: '@Adobe',
+      siteName: 'Adobe Blog',
+      // imgWidth: 1600,
+      // imgHeight: 700,
+      // modifiedDate: '',
+    }
+
+    const frag = document.createDocumentFragment();
+    // generic
+    frag.appendChild(createTag('meta', { name: 'title', content: md.title }));
+    frag.appendChild(createTag('meta', { name: 'description', content: md.desc }));
+    frag.appendChild(createTag('link', { rel: 'canonical', href: md.url }));
+    frag.appendChild(createTag('link', { rel: 'publisher', href: md.publisher }));
+    // open graph
+    frag.appendChild(createTag('meta', { property: 'og:locale', content: md.locale }));
+    frag.appendChild(createTag('meta', { property: 'og:title', content: md.title }));
+    frag.appendChild(createTag('meta', { property: 'og:description', content: md.desc }));
+    frag.appendChild(createTag('meta', { property: 'og:url', content: md.url }));
+    frag.appendChild(createTag('meta', { property: 'og:site_name', content: md.siteName }));
+    frag.appendChild(createTag('meta', { property: 'og:image', content: md.imgSrc }));
+    frag.appendChild(createTag('meta', { property: 'og:image:secure_url', content: md.imgSrc }));
+    frag.appendChild(createTag('meta', { property: 'og:image:alt', content: md.imgAlt }));
+    // frag.appendChild(createTag('meta', { property: 'og:image:width', content: md.imgWidth }));
+    // frag.appendChild(createTag('meta', { property: 'og:image:height', content: md.imgHeight }));
+    // frag.appendChild(createTag('meta', { property: 'og:updated_time', content: md.modifiedDate }));
+    frag.appendChild(createTag('meta', { property: 'article:publisher', content: md.publisher }));
+    frag.appendChild(createTag('meta', { property: 'article:published_time', content: md.publishedDate }));
+    // frag.appendChild(createTag('meta', { property: 'article:modified_time', content: md.modifiedDate }));
+    md.tags.forEach((tag, index) => {
+      frag.appendChild(createTag('meta', { property: `article:${index === 0 ? 'section' : 'tag'}`, content: tag }));
+    })
+    // twitter
+    frag.appendChild(createTag('meta', { name: 'twitter:title', content: md.title }));
+    frag.appendChild(createTag('meta', { name: 'twitter:description', content: md.desc }));
+    frag.appendChild(createTag('meta', { name: 'twitter:image', content: md.imgSrc }));
+    frag.appendChild(createTag('meta', { name: 'twitter:card', content: 'summary_card_large' }));
+    frag.appendChild(createTag('meta', { name: 'twitter:site', content: md.twitterID }));
+    frag.appendChild(createTag('meta', { name: 'twitter:creator', content: md.twitterID }));
+    document.head.append(frag);
+  }
+
   /*
    * homepage
    */
@@ -381,20 +487,16 @@
    * post page
    */
 
-  function fetchAuthor() {
+  function addAuthor() {
     const insertInside = getSection(2);
     if (insertInside) {
       insertInside.classList.add('left');
-      const r = /^By (.*)\n*(.*)$/gmi.exec(insertInside.innerText);
-      const author = r && r.length > 0 ? r[1] : null;
-      const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
-      const date = d && d.length > 0 ? d[0] : '';
-      if (author) {
+      if (window.helix.author) {
         // clear the content of the div and replace by avatar and text
         insertInside.innerHTML = '';
         const xhr = new XMLHttpRequest();
-        const fileName = author.replace(/\s/gm, '-').toLowerCase();
-        const pageURL = getLink(window.TYPE.AUTHOR, author);
+        const fileName = window.helix.author.replace(/\s/gm, '-').toLowerCase();
+        const pageURL = getLink(window.TYPE.AUTHOR, window.helix.author);
         xhr.open('GET', pageURL);
         xhr.onload = function() {
           if (xhr.status != 200 || xhr.status != 304) {
@@ -408,8 +510,8 @@
               const avatarURL = /<img src="(.*?)">/.exec(main)[1];
               const authorDiv = document.createElement('div');
               authorDiv.innerHTML = '<img class="lazyload" data-src="' + avatarURL + '?width=120&auto=webp"> \
-                <span class="post-author"><a href="' + pageURL + '">' + author + '</a></span> \
-                <span class="post-date">' + date + '</span> \
+                <span class="post-author"><a href="' + pageURL + '">' + window.helix.author + '</a></span> \
+                <span class="post-date">' + window.helix.date + '</span> \
                 ';
               authorDiv.classList.add('author');
               // try to get the author's social links
@@ -430,85 +532,48 @@
     }
   }
 
-  function fetchTopics() {
-    const last = getSection();
-    if (last) {
-      let hits = [];
-      let topics, container;
-      Array.from(last.children).forEach((i) => {
-        const r = /^Topics\: ?(.*)$/gmi.exec(i.innerText);
-        if (r && r.length > 0) {
-          hits = r[1].split(',');
-          container = i;
-        }
-      });
-      topics = hits.filter((hit) => {
-        return hit.trim().length > 0;
-      });
-      if (container) {
-        container.remove();
-      }
-      if (topics.length > 0) {
-        const topicsWrap = document.createElement('div');
-        topicsWrap.className = 'default topics';
-        topics.forEach((topic) => {
-          topic = topic.trim();
-          if (!topic) return;
-          const btn = document.createElement('a');
-          btn.href = getLink(window.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
-          btn.title = topic;
-          btn.innerText = topic;
+  function addTopics() {
+    if (!window.helix.topics) return;
+    const topicsWrap = document.createElement('div');
+    topicsWrap.className = 'default topics';
+    window.helix.topics.forEach((topic) => {
+      topic = topic.trim();
+      if (!topic) return;
+      const btn = document.createElement('a');
+      btn.href = getLink(window.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
+      btn.title = topic;
+      btn.innerText = topic;
 
-          topicsWrap.appendChild(btn);
-        });
-        // topicsWrap.appendChild(btnWrap);
-        last.parentNode.insertBefore(topicsWrap, last);
-      }
-    }
+      topicsWrap.appendChild(btn);
+    });
+    document.querySelector('main').appendChild(topicsWrap);
   }
 
-  function fetchProducts() {
-    const last = getSection();
+  function addProducts() {
+    if (!window.helix.products) return;
     const insertInside = getSection(2);
     if (insertInside) {
       insertInside.classList.add('left');
-      let hits = [];
-      let products, container;
-      Array.from(last.children).forEach((i) => {
-        const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
-        if (r && r.length > 0) {
-          hits = r[1].split(',');
-          container = i;
-        }
+      const productsWrap = document.createElement('div');
+      productsWrap.className = 'products';
+      window.helix.products.forEach((product) => {
+        product = product.trim();
+        if (!product) return;
+        const productRef = product.replace(/\s/gm, '-').toLowerCase();
+
+        const btn = document.createElement('a');
+        btn.href = `https://www.adobe.com/${productRef}.html`;
+        btn.title = product;
+
+        const img = document.createElement('img');
+        img.src = `/icons/${productRef}.svg`;
+        img.alt = product;
+
+        btn.appendChild(img);
+
+        productsWrap.appendChild(btn);
       });
-      products = hits.filter((hit) => {
-        return hit.trim().length > 0;
-      });
-      if (container) {
-        container.remove();
-      }
-      if (products.length > 0) {
-        const productsWrap = document.createElement('div');
-        productsWrap.className = 'products';
-        products.forEach((product) => {
-          product = product.trim();
-          if (!product) return;
-          const productRef = product.replace(/\s/gm, '-').toLowerCase();
-
-          const btn = document.createElement('a');
-          btn.href = `https://www.adobe.com/${productRef}.html`;
-          btn.title = product;
-
-          const img = document.createElement('img');
-          img.src = `/icons/${productRef}.svg`;
-          img.alt = product;
-
-          btn.appendChild(img);
-
-          productsWrap.appendChild(btn);
-        });
-        insertInside.appendChild(productsWrap);
-      }
+      insertInside.appendChild(productsWrap);
     }
   }
 
@@ -604,9 +669,10 @@
     if (isHome) {
       setupHomepage();
     } else if (isPost) {
-      fetchAuthor();
-      fetchTopics();
-      fetchProducts();
+      handleMetadata();
+      addAuthor();
+      addTopics();
+      addProducts();
       removeEmptySection();
     } else if (isAuthor) {
       fetchSocialLinks();
