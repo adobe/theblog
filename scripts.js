@@ -406,7 +406,7 @@
         ...topics,
         ...products,
       ],
-      imgSrc: hero ? hero.src : '',
+      imgSrc: hero ? hero.src.replace('?width=2048', '?width=256') : '',
       imgAlt: hero ? hero.alt : '',
       // static values
       publisher: 'https://www.facebook.com/Adobe',
