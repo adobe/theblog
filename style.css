@@ -250,43 +250,56 @@ button, input[type=button], input[type=submit], input[type=reset] {
   padding: 2px 20px;
 }
 
-main div:first-of-type {
+.post-page main div:first-of-type {
   text-align: center;
 }
 
-main {
+.post-page main {
   display: grid;
-  grid-template-areas: "title"
-                       "image"
-                       "post"
+  grid-template-areas: "image"
+                       "category"
+                       "title"
                        "author"
+                       "products"
+                       "post"
                        "topics";
 }
 
-main div:first-of-type {
+.post-page main>div:first-of-type {
   grid-area: title;
 }
 
-main div:nth-of-type(2) {
+.post-page main>div:nth-of-type(2) {
   grid-area: image;
 }
 
-main div.left, main {
+.post-page main>div:nth-of-type(3) {
   grid-area: author;
 }
 
-main div.topics {
+.post-page main>div:nth-of-type(4) {
+  grid-area: post;
+}
+
+.post-page main>div.topics {
   grid-area: topics;
 }
 
+.post-page main>div.products {
+  grid-area: products;
+}
 
-.left {
+.post-page main>div.category {
+  grid-area: category;
+}
+
+.post-page .left {
   font-family: "Adobe Clean",sans-serif;
   font-size: .75rem;
   text-align: center;
 }
 
-.author img {
+.post-page .author img {
   width: 120px;
   height: 120px;
   border-radius: 50%;
@@ -294,12 +307,12 @@ main div.topics {
   display: block;
 }
 
-.author .post-author {
+.post-page .author .post-author {
   font-weight: 600;
   display: block;
 }
 
-.post-date::before {
+.post-page .post-date::before {
   content: "by ";
   display: inline;
   color: rgb(10,10,10);
@@ -315,21 +328,21 @@ main div.topics {
   user-select: text;
 }
 
-.author .post-author a {
+.post-page .author .post-author a {
   text-decoration: underline;
   transition: color 350ms;
   color: #007bff;
   background-color: transparent;
 }
 
-.author .post-date {
+.post-page .author .post-date {
   letter-spacing: .1em;
   font-weight: 500;
   text-transform: uppercase;
   display: block;
 }
 
-.post-date::before {
+.post-page .post-date::before {
   content: "Published on ";
   display: inline;
   color: rgb(10,10,10);
@@ -345,7 +358,7 @@ main div.topics {
   user-select: text;
 }
 
-.topics::before {
+.post-page .topics::before {
   content: "Topics in this article";
   display: block;
   margin-bottom: 15px;
@@ -361,12 +374,12 @@ main div.topics {
   user-select: text;
 }
 
-.topics {
+.post-page .topics {
   margin: 0 auto 100px auto;
   text-align:center;
 }
 
-.topics a {
+.post-page .topics a {
   font-family: source-code-pro,sans-serif;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -387,11 +400,11 @@ main div.topics {
   display: inline-block;
 }
 
-.topics a:hover {
+.post-page .topics a:hover {
   color: #007bff;
 }
 
-.products::before {
+.post-page .products::before {
   content: "Adobe Products in this article";
   display: block;
   margin-bottom: 15px;
@@ -408,19 +421,19 @@ main div.topics {
   width: 100%;
 }
 
-.products {
+.post-page .products {
   margin-top: 1.25rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.products a {
+.post-page .products a {
   margin: 0 .125rem .5rem;
   font-size: .75rem;
 }
 
-.products a img {
+.post-page .products a img {
   width: 3.125rem;
   height: 3.125rem;
   max-width: 1.875rem;
@@ -428,7 +441,7 @@ main div.topics {
   margin: 0 .188rem;
 }
 
-.social::before {
+.post-page .social::before {
   content: "Follow me on";
   display: block;
   margin-bottom: 5px;
@@ -444,12 +457,12 @@ main div.topics {
   user-select: text;
 }
 
-.social {
+.post-page .social {
   margin: 0 auto 50px auto;
   text-align:center;
 }
 
-.social svg {
+.post-page .social svg {
   fill: #000;
   height: 1em;
   width: 1em;

@@ -355,20 +355,33 @@
    * post page
    */
 
+  function formatLocalDate(date) {
+      const monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+      ];  
+      const dateObj = date.split('-');
+  
+      return monthNames[parseInt(dateObj[0])] + " " + dateObj[1] + ", " + dateObj[2];
+  }
+
   function fetchAuthor() {
-    const insertInside = getSection(2);
-    if (insertInside) {
-      insertInside.classList.add('left');
-      const r = /^By (.*)\n*(.*)$/gmi.exec(insertInside.innerText);
+    const authorSection = getSection(2);
+    if (authorSection) {
+      const r = /^By (.*)\n*(.*)$/gmi.exec(authorSection.innerText);
+      const date = /^posted on (.*)\n*(.*)$/gmi.exec(authorSection.innerText)[1];
       const author = r && r.length > 0 ? r[1] : null;
-      const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
-      const date = d && d.length > 0 ? d[0] : '';
+
+      /*
+        remove "posted on" text from answer
+      */
+      const fullDate = formatLocalDate(date);
+
       if (author) {
         // clear the content of the div and replace by avatar and text
-        insertInside.innerHTML = '';
+        authorSection.innerHTML = '';
         const xhr = new XMLHttpRequest();
         const fileName = author.replace(/\s/gm, '-').toLowerCase();
-        const pageURL = getLink(window.TYPE.AUTHOR, author);
+        const pageURL = getLink(TYPE.AUTHOR, author);
         xhr.open('GET', pageURL);
         xhr.onload = function() {
           if (xhr.status != 200 || xhr.status != 304) {
@@ -381,9 +394,9 @@
 
               const avatarURL = /<img src="(.*?)">/.exec(main)[1];
               const authorDiv = document.createElement('div');
-              authorDiv.innerHTML = '<img class="lazyload" data-src="' + avatarURL + '?width=120&auto=webp"> \
+              authorDiv.innerHTML = '<img class="lazyload" data-src="' + avatarURL + '"> \
                 <span class="post-author"><a href="' + pageURL + '">' + author + '</a></span> \
-                <span class="post-date">' + date + '</span> \
+                <span class="post-date">' + fullDate + '</span> \
                 ';
               authorDiv.classList.add('author');
               // try to get the author's social links
@@ -393,7 +406,7 @@
                 p.innerHTML = socialLinks[1];
                 fetchSocialLinks(p, authorDiv);
               }
-              insertInside.prepend(authorDiv);
+              authorSection.appendChild(authorDiv);
             }
           } else {
             console.log('Author not found...', xhr.response);
@@ -422,6 +435,21 @@
       if (container) {
         container.remove();
       }
+      
+      const captionWrap = document.createElement('div');
+      captionWrap.className = 'default category';
+      if (topics.length >= 1) {
+        const top = topics.pop();
+        const link = document.createElement('a');
+        link.href = getLink(TYPE.TOPIC, top.replace(/\s/gm, '-').toLowerCase());
+        link.title = top;
+        link.innerText = top;
+
+        captionWrap.appendChild(link);
+
+       last.parentNode.insertBefore(captionWrap, last);
+      }
+      
       if (topics.length > 0) {
         const topicsWrap = document.createElement('div');
         topicsWrap.className = 'default topics';
@@ -443,9 +471,7 @@
 
   function fetchProducts() {
     const last = getSection();
-    const insertInside = getSection(2);
-    if (insertInside) {
-      insertInside.classList.add('left');
+    if (last) {
       let hits = [];
       let products, container;
       Array.from(last.children).forEach((i) => {
@@ -463,7 +489,9 @@
       }
       if (products.length > 0) {
         const productsWrap = document.createElement('div');
-        productsWrap.className = 'products';
+        const productsImgWrap = document.createElement('div');
+        productsImgWrap.className = 'prod-design';
+        productsWrap.className = 'default products';
         products.forEach((product) => {
           product = product.trim();
           if (!product) return;
@@ -479,9 +507,10 @@
 
           btn.appendChild(img);
 
-          productsWrap.appendChild(btn);
+          productsImgWrap.appendChild(btn);
         });
-        insertInside.appendChild(productsWrap);
+        productsWrap.appendChild(productsImgWrap);
+        last.parentNode.insertBefore(productsWrap, last);
       }
     }
   }
