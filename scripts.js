@@ -135,8 +135,23 @@
     return Object.assign({}, item, itemParams);
   };
 
+  function addClass(selector, cssClass) {
+    var el=document.querySelector(selector);
+    if (el) el.classList.add(cssClass);
+  } 
+
+  function addClassesToPostPage(){
+    addClass('.post-page main>div:first-of-type', 'post-title');
+    addClass('.post-page main>div:nth-of-type(2)', 'hero-image');
+    addClass('.post-page main>div:nth-of-type(3)', 'author');
+    addClass('.post-page main>div:nth-of-type(4)', 'post-body');
+  }
+
   function addPageTypeAsBodyClass() {
     document.body.classList.add(`${window.helix.pageType}-page`);
+    if (window.helix.pageType == 'post') {
+      addClassesToPostPage();
+    }
   }
 
   function createSVG(id) {
@@ -394,17 +409,16 @@
 
               const avatarURL = /<img src="(.*?)">/.exec(main)[1];
               const authorDiv = document.createElement('div');
-              authorDiv.innerHTML = '<img class="lazyload" data-src="' + avatarURL + '"> \
-                <span class="post-author"><a href="' + pageURL + '">' + author + '</a></span> \
-                <span class="post-date">' + fullDate + '</span> \
-                ';
+              authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" data-src="${avatarURL}">
+                <div><span class="post-author"><a href="${pageURL}">${author}</a></span>
+                <span class="post-date">${fullDate}</span></div></div>`;
               authorDiv.classList.add('author');
               // try to get the author's social links
               const socialLinks = /<p>(Social\: .*)<\/p>/gi.exec(xhr.responseText);
               if (socialLinks) {
-                const p = document.createElement('p');
-                p.innerHTML = socialLinks[1];
-                fetchSocialLinks(p, authorDiv);
+                const $social = document.createElement('div');
+                $social.innerHTML = socialLinks[1];
+                fetchSocialLinks($social, authorDiv);
               }
               authorSection.appendChild(authorDiv);
             }
@@ -435,7 +449,7 @@
       if (container) {
         container.remove();
       }
-      
+
       const captionWrap = document.createElement('div');
       captionWrap.className = 'default category';
       if (topics.length >= 1) {

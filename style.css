@@ -21,7 +21,7 @@
   padding: 0;
   margin: 0;
   background-color: white;
-  font-family: adobe-clean-serif,serif;
+  font-family: "Adobe Clean", sans-serif;
   font-weight: 300;
   font-size: 1.125rem;
   line-height: 1.8;
@@ -53,8 +53,6 @@ main {
 
 .title h1 {
   color: white;
-  text-align: center;
-  text-shadow: 0px 0px 6px #000000;
   margin-bottom: 0.1em;
 }
 
@@ -103,10 +101,6 @@ main div:nth-of-type(2) p:nth-of-type(2) {
 
 .default img {
   max-width: 100%;
-}
-
-h1, h2, h3, h4, h5 {
-  font-family: adobe-clean-serif,serif;
 }
 
 h3, h4 {
@@ -250,35 +244,46 @@ button, input[type=button], input[type=submit], input[type=reset] {
   padding: 2px 20px;
 }
 
-.post-page main div:first-of-type {
-  text-align: center;
-}
-
 .post-page main {
   display: grid;
-  grid-template-areas: "image"
+  grid-template-areas: "hero-image"
                        "category"
-                       "title"
+                       "post-title"
                        "author"
                        "products"
-                       "post"
+                       "post-body"
                        "topics";
 }
 
-.post-page main>div:first-of-type {
-  grid-area: title;
+.post-page main>div.post-title {
+  grid-area: post-title;
+  text-align: left;
+  color: #363636;
+  margin: 0 32px;
+  padding: 0;
 }
 
-.post-page main>div:nth-of-type(2) {
-  grid-area: image;
+.post-page main>div.post-title h1 {
+  font-weight: 600;
+  font-size: 1.6em;
+  line-height: 1.2em;
+  margin: 0;
 }
 
-.post-page main>div:nth-of-type(3) {
+.post-page main>div.post-title h3:empty {
+  display: none;
+}
+
+.post-page main>div.hero-image {
+  grid-area: hero-image;
+}
+
+.post-page main>div.author {
   grid-area: author;
 }
 
-.post-page main>div:nth-of-type(4) {
-  grid-area: post;
+.post-page main>div.post-body {
+  grid-area: post-body;
 }
 
 .post-page main>div.topics {
@@ -287,23 +292,45 @@ button, input[type=button], input[type=submit], input[type=reset] {
 
 .post-page main>div.products {
   grid-area: products;
+  border-style: solid;
+  border-color: #dddddd;
+  border-width: 2px 0 2px 0;
+  margin: 16px 32px;
 }
 
 .post-page main>div.category {
   grid-area: category;
+  margin: 0 32px;
+  padding: 0;
 }
 
-.post-page .left {
-  font-family: "Adobe Clean",sans-serif;
-  font-size: .75rem;
-  text-align: center;
+.post-page main>div.category a {
+  text-decoration: none;
+  color: #EA332B;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  font-size: 0.8em;
+}
+
+
+.post-page .author {
+  text-align: left;
+  color: #363636;
+  font-size: 0.9em;
+  line-height: 1.5em;
+}
+
+.post-page .author .author-summary {
+  display: flex;
+  align-items: center;
 }
 
 .post-page .author img {
-  width: 120px;
-  height: 120px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  margin: auto auto 15px auto;
+  margin-right: 15px;
   display: block;
 }
 
@@ -312,50 +339,10 @@ button, input[type=button], input[type=submit], input[type=reset] {
   display: block;
 }
 
-.post-page .post-date::before {
-  content: "by ";
-  display: inline;
-  color: rgb(10,10,10);
-  text-align: center;
-  text-size-adjust: 100%;
-  text-rendering: optimizeLegibility;
-  font-family: "Adobe Clean",sans-serif;
-  font-size: .75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  line-height:18px;
-  letter-spacing: .02em;
-  user-select: text;
-}
 
 .post-page .author .post-author a {
-  text-decoration: underline;
-  transition: color 350ms;
-  color: #007bff;
-  background-color: transparent;
-}
-
-.post-page .author .post-date {
-  letter-spacing: .1em;
-  font-weight: 500;
-  text-transform: uppercase;
-  display: block;
-}
-
-.post-page .post-date::before {
-  content: "Published on ";
-  display: inline;
-  color: rgb(10,10,10);
-  text-align: center;
-  text-size-adjust: 100%;
-  text-rendering: optimizeLegibility;
-  font-family: "Adobe Clean",sans-serif;
-  font-size: .75rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  line-height:18px;
-  letter-spacing: .1em;
-  user-select: text;
+  text-decoration: none;
+  color: currentColor;
 }
 
 .post-page .topics::before {
@@ -404,29 +391,26 @@ button, input[type=button], input[type=submit], input[type=reset] {
   color: #007bff;
 }
 
-.post-page .products::before {
-  content: "Adobe Products in this article";
-  display: block;
-  margin-bottom: 15px;
-  color: rgb(10,10,10);
-  text-align: center;
-  text-size-adjust: 100%;
-  text-rendering: optimizeLegibility;
-  font-family: "Adobe Clean",sans-serif;
-  font-size: .75rem;
-  line-height:18px;
-  font-weight: 600;
-  letter-spacing: .02em;
-  user-select: text;
-  width: 100%;
-}
 
 .post-page .products {
   margin-top: 1.25rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  color: #363636;
 }
+
+.post-page .products::before {
+  content: "ADOBE PRODUCTS IN THIS ARTICLE";
+  display: block;
+  text-align: center;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  font-size: 0.8em;
+  width: 100%;
+  padding: 16px 0;
+}
+
 
 .post-page .products a {
   margin: 0 .125rem .5rem;
@@ -434,10 +418,8 @@ button, input[type=button], input[type=submit], input[type=reset] {
 }
 
 .post-page .products a img {
-  width: 3.125rem;
-  height: 3.125rem;
-  max-width: 1.875rem;
-  max-height: 1.875rem;
+  width: 45px;
+  height: 45px;
   margin: 0 .188rem;
 }
 
