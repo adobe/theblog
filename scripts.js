@@ -502,9 +502,8 @@
         container.remove();
       }
       if (products.length > 0) {
+        let html='<div class="prod-design">';
         const productsWrap = document.createElement('div');
-        const productsImgWrap = document.createElement('div');
-        productsImgWrap.className = 'prod-design';
         productsWrap.className = 'default products';
         products.forEach((product) => {
           product = product.trim();
@@ -519,11 +518,17 @@
           img.src = `/icons/${productRef}.svg`;
           img.alt = product;
 
-          btn.appendChild(img);
 
-          productsImgWrap.appendChild(btn);
+
+          html+=`<div>
+          <a title=${product} href="https://www.adobe.com/${productRef}.html"><img alt={product} src="/icons/${productRef}.svg"></a>
+          <p>${product}</p>
+          <p><a class="learn-more" href="https://www.adobe.com/${productRef}.html"></a></p>
+          </div>`;
+
         });
-        productsWrap.appendChild(productsImgWrap);
+        html+='</div>';
+        productsWrap.innerHTML=html;
         last.parentNode.insertBefore(productsWrap, last);
       }
     }

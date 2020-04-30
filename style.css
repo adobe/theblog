@@ -24,7 +24,7 @@
   font-family: "Adobe Clean", sans-serif;
   font-weight: 300;
   font-size: 1.125rem;
-  line-height: 1.8;
+  line-height: 1.5em;
   color: #0a0a0a;
 }
 
@@ -244,6 +244,11 @@ button, input[type=button], input[type=submit], input[type=reset] {
   padding: 2px 20px;
 }
 
+a.learn-more::before {
+  content: "Learn more >"
+}
+
+
 .post-page main {
   display: grid;
   grid-template-areas: "hero-image"
@@ -296,8 +301,23 @@ button, input[type=button], input[type=submit], input[type=reset] {
   border-color: #dddddd;
   border-width: 2px 0 2px 0;
   margin: 16px 32px;
+  text-align: center;
 }
 
+.post-page main>div.products .prod-design p {
+  margin: 0;
+  padding: 0;
+  font-size: 0.8em;
+  font-weight: 700;
+  display: none;
+}
+
+.post-page main>div.products .prod-design a {
+  font-size: 1em;
+  font-weight: 400;
+  color: #4682E1;
+  text-decoration: none;
+}
 .post-page main>div.category {
   grid-area: category;
   margin: 0 32px;
@@ -406,11 +426,17 @@ button, input[type=button], input[type=submit], input[type=reset] {
   text-align: center;
   letter-spacing: 0.05em;
   font-weight: 700;
-  font-size: 0.8em;
+  font-size: 0.7em;
   width: 100%;
   padding: 16px 0;
 }
 
+.post-page main>div.post-body h2 {
+  font-size: 1.4em;
+  font-weight: 700;
+  margin-top: 2em;
+  margin-bottom: 0.3em;
+}
 
 .post-page .products a {
   margin: 0 .125rem .5rem;
@@ -727,6 +753,23 @@ button, input[type=button], input[type=submit], input[type=reset] {
   .home-page main li:first-child .hero {
     height: unset;
   }
+  .post-page main>div.category, .post-page main>div.post-title,
+  .post-page main>div.post-body, .post-page main>div.author, .post-page main>div.products  {
+    margin-left: 64px;
+    margin-right: 64px;
+    padding-left: 64px;    
+    padding-right: 64px;    
+  }
+  
+  .post-page main>div.post-title h1 {
+    font-size: 1.8em;
+  }
+
+  .post-page main>div.products .prod-design p {
+    display: block;
+  }
+  
+  
 
 }
 
@@ -737,26 +780,56 @@ button, input[type=button], input[type=submit], input[type=reset] {
     box-sizing: border-box;
   }
 
-  main div:nth-of-type(2) {
-    width: 100%
+  .post-page main .hero-image {
+    width: 100%;
   }
 
-  main {
-    grid-template-areas: "title title title"
-                          "image image image"
-                          "author post ."
-                          "topics topics topics";
+  .post-page main>div.products {
+    width: 170px;
+    padding: 0;
+    border: 0;
+    margin: 0;
+    display: block;
 
-    grid-template-columns: 20% 60% 20%;
   }
 
-  div.default.left {
-    margin-top: 30px;
-    margin-right: 0;
-    width: unset;
-    align-self: start;
+
+  .post-page main {
+    grid-template-areas: "hero-image hero-image category category"
+                         "hero-image hero-image post-title post-title"
+                         "hero-image hero-image author author"
+                         "products post-body post-body  - "
+                         "products topics topics  - ";
+    margin: auto;
+    max-width: 1200px;
+    grid-template-columns: 170px 530px 530px 170px;
   }
 
+  .post-page main>div.category {
+    padding-top: 60px;
+  }
+
+  .post-page main>div.author {
+    padding-bottom: 60px;
+  }
+
+  .post-page main>div.category, .post-page main>div.post-title, .post-page main>div.author {
+    margin-left: 32px;
+    margin-right: 32px;
+    padding-left: 0px;
+    padding-right: 64px;
+  }
+
+  .post-page main>div.post-body, .post-page main>div.topics {
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 64px;
+    padding-right: 64px;
+    width: 100%;
+
+  }
+
+  
   .home-page .latest-posts {
     background-color: white;
   }
