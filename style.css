@@ -85,20 +85,6 @@ main {
   width: 100%;
 }
 
-/* hero caption */
-main div:nth-of-type(2) p:nth-of-type(2) {
-  text-align: right;
-
-  width: 100%;
-  max-width: calc(100% - 60px);
-  margin-top: .625rem;
-  font-style: italic;
-
-  font-size: 1rem;
-  line-height: 1.5;
-
-}
-
 .default img {
   max-width: 100%;
 }
@@ -252,39 +238,59 @@ a.learn-more::before {
 .post-page main {
   display: grid;
   grid-template-areas: "hero-image"
-                       "category"
-                       "post-title"
-                       "author"
+                       "post-header"
                        "products"
                        "post-body"
                        "topics";
 }
 
-.post-page main>div.post-title {
-  grid-area: post-title;
+.post-page .post-title {
   text-align: left;
   color: #363636;
   margin: 0 32px;
   padding: 0;
 }
 
-.post-page main>div.post-title h1 {
+.post-page .post-title h1 {
   font-weight: 600;
   font-size: 1.6em;
   line-height: 1.2em;
   margin: 0;
 }
 
-.post-page main>div.post-title h3:empty {
+.post-page .post-title h3:empty {
   display: none;
 }
 
-.post-page main>div.hero-image {
+.post-page .hero-image {
   grid-area: hero-image;
+  width: 100%;
+  padding: 0;
+  margin: 0;
 }
 
-.post-page main>div.author {
-  grid-area: author;
+/* hero caption */
+.post-page main div.hero-image p {
+  margin: 0;
+}
+
+.post-page main div.hero-image p:nth-of-type(2) {
+  text-align: right;
+
+  width: 100%;
+  max-width: calc(100% - 60px);
+  margin-top: .625rem;
+  font-style: italic;
+
+  font-size: 1rem;
+  line-height: 1.5;
+
+}
+
+
+.post-page main div.post-header {
+  grid-area: post-header;
+  align-self: center;
 }
 
 .post-page main>div.post-body {
@@ -304,6 +310,10 @@ a.learn-more::before {
   text-align: center;
 }
 
+.post-page main>div.products .prod-design {
+  display: flex;
+}
+
 .post-page main>div.products .prod-design p {
   margin: 0;
   padding: 0;
@@ -318,13 +328,13 @@ a.learn-more::before {
   color: #4682E1;
   text-decoration: none;
 }
-.post-page main>div.category {
+.post-page div.category {
   grid-area: category;
   margin: 0 32px;
   padding: 0;
 }
 
-.post-page main>div.category a {
+.post-page div.category a {
   text-decoration: none;
   color: #EA332B;
   text-transform: uppercase;
@@ -418,6 +428,7 @@ a.learn-more::before {
   flex-wrap: wrap;
   justify-content: center;
   color: #363636;
+  line-height: 1.3em;
 }
 
 .post-page .products::before {
@@ -429,6 +440,7 @@ a.learn-more::before {
   font-size: 0.7em;
   width: 100%;
   padding: 16px 0;
+  line-height: 1.3em;
 }
 
 .post-page main>div.post-body h2 {
@@ -769,19 +781,18 @@ a.learn-more::before {
     display: block;
   }
   
-  
-
 }
 
 @media (min-width:900px) {
-  .default {
-    margin: auto;
+
+  .post-page main .post-body {
     width: 700px;
     box-sizing: border-box;
   }
-
-  .post-page main .hero-image {
+  .post-page main .hero-image img {
     width: 100%;
+    object-fit: cover;
+    height: 100%;
   }
 
   .post-page main>div.products {
@@ -793,16 +804,24 @@ a.learn-more::before {
 
   }
 
+  
+  .post-page main>div.products .prod-design {
+    display: block;
+  }
+  
+  .post-page main>div.products .prod-design>div{
+    margin-top: 30px;
+  }
+  
+
 
   .post-page main {
-    grid-template-areas: "hero-image hero-image category category"
-                         "hero-image hero-image post-title post-title"
-                         "hero-image hero-image author author"
+    grid-template-areas: "hero-image hero-image post-header post-header"
                          "products post-body post-body  - "
                          "products topics topics  - ";
     margin: auto;
     max-width: 1200px;
-    grid-template-columns: 170px 430px 430px 170px;
+    grid-template-columns: 170px 1fr 1fr 170px;
   }
 
   .post-page main>div.category {

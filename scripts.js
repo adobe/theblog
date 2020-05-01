@@ -99,6 +99,32 @@
    * all pages
    */
 
+  // wrap elements in div
+
+  function wrapNodes(newparent, elems) {	
+    elems.forEach((el, index) => {	
+      newparent.appendChild(el.cloneNode(true));	
+      if (newparent.children.length !== 1) {	
+        el.parentNode.removeChild(el);	
+      } else {	
+        el.parentNode.replaceChild(newparent, el);	
+      }	
+    });	
+  }	
+  
+  function wrap(classname, selectors) {	
+    if (!Array.isArray(selectors)) {
+      selectors=[selectors];
+    }
+    const div = document.createElement("div");	
+    div.className = classname;	
+  
+    selectors.forEach((selector) => {
+      const elems = document.querySelectorAll(selector);
+      wrapNodes(div, elems);	
+      })
+  }
+
   // load language specific css overlays
 
   const loadCssFile = (path) => {
@@ -140,18 +166,16 @@
     if (el) el.classList.add(cssClass);
   } 
 
-  function addClassesToPostPage(){
+  function decoratePostPage(){
     addClass('.post-page main>div:first-of-type', 'post-title');
     addClass('.post-page main>div:nth-of-type(2)', 'hero-image');
-    addClass('.post-page main>div:nth-of-type(3)', 'author');
+    addClass('.post-page main>div:nth-of-type(3)', 'post-author');
     addClass('.post-page main>div:nth-of-type(4)', 'post-body');
+    wrap('post-header',['main>div.category','main>div.post-title', 'main>div.post-author']);
   }
 
   function addPageTypeAsBodyClass() {
     document.body.classList.add(`${window.helix.pageType}-page`);
-    if (window.helix.pageType == 'post') {
-      addClassesToPostPage();
-    }
   }
 
   function createSVG(id) {
@@ -380,7 +404,7 @@
   }
 
   function fetchAuthor() {
-    const authorSection = getSection(2);
+    const authorSection = document.querySelector('.post-author');
     if (authorSection) {
       const r = /^By (.*)\n*(.*)$/gmi.exec(authorSection.innerText);
       const date = /^posted on (.*)\n*(.*)$/gmi.exec(authorSection.innerText)[1];
@@ -635,8 +659,9 @@
     if (isHome) {
       setupHomepage();
     } else if (isPost) {
-      fetchAuthor();
       fetchTopics();
+      decoratePostPage();
+      fetchAuthor();
       fetchProducts();
       removeEmptySection();
       addGetSocial();
