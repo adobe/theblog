@@ -223,6 +223,7 @@
         body: JSON.stringify({ requests }),
       });
       const { results } = await res.json();
+      if (!results) return [];
       results.forEach((result, i) => {
         const { customSort } = queries[i];
         if (customSort) {
