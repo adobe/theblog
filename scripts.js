@@ -131,6 +131,7 @@
       authorUrl: getLink(window.TYPE.AUTHOR, item.author),
       topic: item.topics.length > 0 ? item.topics[0] : '',
       topicUrl: item.topics.length > 0 ? getLink(window.TYPE.TOPIC, item.topics[0]) : '',
+      path: !window.location.hostname.endsWith('.page') ? path.replace('/publish/', '/') : path,
     }
     return Object.assign({}, item, itemParams);
   };
@@ -313,7 +314,14 @@
     if ($featured) {
       $featured.parentNode.querySelectorAll('a').forEach((e) => {
         const url=new URL(e.getAttribute('href'));
-        featured.push(url.pathname);
+        let path = url.pathname;
+        const p = path.split('/');
+        if (p.length >= 3 && p[2] !== 'drafts' && p[2] !== 'publish') {
+          // re-add /publish/ for the query
+          p.splice(2, 0, 'publish');
+          path = p.join('/');
+        }
+        featured.push(path);
       });
       $featured.parentNode.remove();
     }
