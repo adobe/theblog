@@ -252,6 +252,9 @@
           params: serializeQueryParameters({ ...q, hitsPerPage }),
         };
       });
+
+      /* fetch from algolia
+      
       const res = await fetch(url, {
         method: 'POST',
         headers: {
@@ -260,7 +263,15 @@
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: JSON.stringify({ requests }),
+      });*/
+
+      /*
+      fetch locally for offline dev
+      */
+      const res = await fetch('/query-results.json', {
+        method: 'GET'
       });
+
       const { results } = await res.json();
       results.forEach((result, i) => {
         const { customSort } = queries[i];
@@ -631,6 +642,56 @@
     }
   }
 
+  function logHitJSON() {
+    const path=window.location.pathname;
+    const title = document.querySelector("h1").innerText;
+    const $last = getSection();
+    const $author = getSection(2); 
+    const $blogpost = getSection(3); 
+    let topics="";
+    let products="";
+    let author="";
+    let date="";
+    let teaser="";
+
+    if ($last) {
+      topics = /^Topics\: ?(.*)$/gmi.exec($last.innerText)[1].split(',').map((e) => e.trim());
+      products = /^Products\: ?(.*)$/gmi.exec($last.innerText)[1].split(',').map((e) => e.trim());;
+    }
+
+    if ($author) {
+      author = /^By (.*)\n*(.*)$/gmi.exec($author.innerText)[1];
+      date = /^posted on (.*)\n*(.*)$/gmi.exec($author.innerText)[1];
+      const splits =date.split('-');
+      console.logs
+      date=new Date(`${splits[2]}-${splits[0]}-${splits[1]}`).getTime()/1000;
+    }
+
+    if ($blogpost) {
+      teaser=$blogpost.innerText.substr(0,512);
+    }
+
+
+
+
+
+    const hero=new URL(document.querySelector('main>div:nth-of-type(2) img').getAttribute('src')).pathname;
+ 
+ 
+    console.log(JSON.stringify({ path: path, 
+      topics: topics,
+      products: products,
+      hero: hero,
+      date: date,
+      title: title,
+      teaser: teaser,
+      author: author,
+      objectID: ''+Math.random(),
+
+    }, null, "  ")+", ");
+
+  }
+
   function fetchLatestPosts(type) {
     let filter, emptyTemplate;
     if (type === window.TYPE.TOPIC) {
@@ -659,6 +720,7 @@
     if (isHome) {
       setupHomepage();
     } else if (isPost) {
+      logHitJSON();
       fetchTopics();
       decoratePostPage();
       fetchAuthor();
