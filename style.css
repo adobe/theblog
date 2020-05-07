@@ -788,3 +788,43 @@ main div.topics {
 div.evidon-notice-link {
   display:none;
 }
+
+/*
+ * GetSocial
+ */
+
+ html div.gs-buttons {
+  margin-top: -182px !important;
+  background: white;
+  padding: 8px 5px;
+  border-radius: 5px;
+  box-shadow: 2px 4px 6px 0px rgba(0,0,0,0.15);
+}
+
+html div.gs-buttons.gs-flat-colors:not(.gs-outline-colors):not(.gs-icon-highlight) a[class*="gs-"]:link,
+html div.gs-buttons.gs-flat-colors:not(.gs-outline-colors):not(.gs-icon-highlight) a[class*="gs-"]:visited,
+html div.gs-buttons.gs-flat-colors:not(.gs-outline-colors):not(.gs-icon-highlight) a[class*="gs-"]:hover,
+html div.gs-buttons.gs-flat-colors:not(.gs-outline-colors):not(.gs-icon-highlight) a[class*="gs-"]:active {
+  left: 0 !important;
+  margin-bottom: 0;
+  background: white;
+}
+
+html div.gs-buttons a[class*="gs-"]:link:not(.gs-plus):not(.gs-hide) i,
+html div.gs-buttons a[class*="gs-"]:visited:not(.gs-plus):not(.gs-hide) i,
+html div.gs-buttons a[class*="gs-"]:active:not(.gs-plus):not(.gs-hide) i {
+    color: #777 !important;
+}
+
+html div.gs-buttons a[class*="gs-"]:hover:not(.gs-plus):not(.gs-hide) i {
+  color: #444 !important;
+}
+
+html div.gs-buttons.gs-flat-colors.gs-floating.gs-color-grey a[class*="gs-"]:link:before,
+html div.gs-buttons.gs-flat-colors.gs-floating.gs-color-grey a[class*="gs-"]:link:hover:before,
+html div.gs-buttons.gs-flat-colors.gs-floating.gs-color-grey a[class*="gs-"]:visited:before,
+html div.gs-buttons.gs-flat-colors.gs-floating.gs-color-grey a[class*="gs-"]:visited:hover:before,
+html div.gs-buttons.gs-flat-colors.gs-floating.gs-color-grey a[class*="gs-"]:active:before,
+html div.gs-buttons.gs-flat-colors.gs-floating.gs-color-grey a[class*="gs-"]:active:hover:before {
+  background:white;
+}
