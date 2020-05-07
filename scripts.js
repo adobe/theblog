@@ -377,60 +377,25 @@
     }
     last.remove();
 
-    const hero = getSection(1).querySelector('img');
-    const copy = getSection(3).innerText;
-    const md = {
-      title: document.title,
-      desc: `${copy.substring(0, 171)}...`,
-      url: window.location.href,
-      publishedDate: window.helix.date ? new Date(window.helix.date).toISOString() : '',
-      locale: window.helix.language,
-      tags: [
-        ...topics,
-        ...products,
-      ],
-      imgSrc: hero ? hero.src.replace('?width=2048', '?width=256') : '',
-      imgAlt: hero ? hero.alt : '',
-      // static values
-      publisher: 'https://www.facebook.com/Adobe',
-      twitterID: '@Adobe',
-      siteName: 'Adobe Blog',
-      // imgWidth: 1600,
-      // imgHeight: 700,
-      // modifiedDate: '',
-    }
-
+    const md = [{
+      property: 'og:locale',
+      content: window.helix.language,
+    },{
+      property: 'article:published_time',
+      content: window.helix.date ? new Date(window.helix.date).toISOString() : '',
+    }];
+    // add topics and products as article:tags
+    [...topics, ...products].forEach((content) => {
+      md.push({
+        property: 'article:tag',
+        content,
+      })
+    });
+    // add meta tags to DOM
     const frag = document.createDocumentFragment();
-    // generic
-    frag.appendChild(createTag('meta', { name: 'title', content: md.title }));
-    frag.appendChild(createTag('meta', { name: 'description', content: md.desc }));
-    frag.appendChild(createTag('link', { rel: 'canonical', href: md.url }));
-    frag.appendChild(createTag('link', { rel: 'publisher', href: md.publisher }));
-    // open graph
-    frag.appendChild(createTag('meta', { property: 'og:locale', content: md.locale }));
-    frag.appendChild(createTag('meta', { property: 'og:title', content: md.title }));
-    frag.appendChild(createTag('meta', { property: 'og:description', content: md.desc }));
-    frag.appendChild(createTag('meta', { property: 'og:url', content: md.url }));
-    frag.appendChild(createTag('meta', { property: 'og:site_name', content: md.siteName }));
-    frag.appendChild(createTag('meta', { property: 'og:image', content: md.imgSrc }));
-    frag.appendChild(createTag('meta', { property: 'og:image:secure_url', content: md.imgSrc }));
-    frag.appendChild(createTag('meta', { property: 'og:image:alt', content: md.imgAlt }));
-    // frag.appendChild(createTag('meta', { property: 'og:image:width', content: md.imgWidth }));
-    // frag.appendChild(createTag('meta', { property: 'og:image:height', content: md.imgHeight }));
-    // frag.appendChild(createTag('meta', { property: 'og:updated_time', content: md.modifiedDate }));
-    frag.appendChild(createTag('meta', { property: 'article:publisher', content: md.publisher }));
-    frag.appendChild(createTag('meta', { property: 'article:published_time', content: md.publishedDate }));
-    // frag.appendChild(createTag('meta', { property: 'article:modified_time', content: md.modifiedDate }));
-    md.tags.forEach((tag, index) => {
-      frag.appendChild(createTag('meta', { property: `article:${index === 0 ? 'section' : 'tag'}`, content: tag }));
-    })
-    // twitter
-    frag.appendChild(createTag('meta', { name: 'twitter:title', content: md.title }));
-    frag.appendChild(createTag('meta', { name: 'twitter:description', content: md.desc }));
-    frag.appendChild(createTag('meta', { name: 'twitter:image', content: md.imgSrc }));
-    frag.appendChild(createTag('meta', { name: 'twitter:card', content: 'summary_card_large' }));
-    frag.appendChild(createTag('meta', { name: 'twitter:site', content: md.twitterID }));
-    frag.appendChild(createTag('meta', { name: 'twitter:creator', content: md.twitterID }));
+    md.forEach((meta) => {
+      frag.appendChild(createTag('meta', { property: meta.property, content: meta.content }));
+    });
     document.head.append(frag);
   }
 
@@ -560,13 +525,6 @@
     }
   }
 
-  function removeEmptySection() {
-    const last=getSection();
-    if (last.innerHTML.trim() === "") {
-      last.remove();
-    }
-  }
-
   /*
    * author page
    */
@@ -656,7 +614,6 @@
       addAuthor();
       addTopics();
       addProducts();
-      removeEmptySection();
     } else if (isAuthor) {
       fetchSocialLinks();
       fetchLatestPosts(window.TYPE.AUTHOR);
