@@ -338,6 +338,42 @@
     return el;
   }
 
+  /*
+   * homepage
+   */
+
+  function setupHomepage() {
+    if (!document.title) {
+      document.title = 'The Blog | Welcome to the Adobe Blog';
+    }
+    const titleSection = getSection(0);
+    if (titleSection.innerText === document.title) {
+      titleSection.remove();
+    }
+
+    const postsWrap = document.createElement('div');
+    postsWrap.className = 'default latest-posts';
+    document.querySelector('main').appendChild(postsWrap);
+
+    setupSearch({
+      hitsPerPage: 13,
+      container: '.latest-posts',
+      itemTemplate: document.getElementById('homepage-card'),
+      transformer: (item, index) => {
+        item = itemTransformer(item);
+        if (index === 0) {
+          // use larger hero image on first article
+          item.hero = item.hero ? item.hero.replace('?width=256', `?width=${window.innerWidth <= 900 ? 900 : 2048}`) : '#';
+        }
+        return item;
+      },
+    });
+  }
+
+  /*
+   * post page
+   */
+
   function handleMetadata() {
     // store author and date
     const r = /^By (.*)\n*(.*)$/gmi.exec(getSection(2).innerText);
@@ -385,7 +421,10 @@
       content: window.helix.date ? new Date(window.helix.date).toISOString() : '',
     }];
     // add topics and products as article:tags
-    [...topics, ...products].forEach((content) => {
+    [
+      ...window.helix.topics,
+      ...window.helix.products,
+    ].forEach((content) => {
       md.push({
         property: 'article:tag',
         content,
@@ -398,42 +437,6 @@
     });
     document.head.append(frag);
   }
-
-  /*
-   * homepage
-   */
-
-  function setupHomepage() {
-    if (!document.title) {
-      document.title = 'The Blog | Welcome to the Adobe Blog';
-    }
-    const titleSection = getSection(0);
-    if (titleSection.innerText === document.title) {
-      titleSection.remove();
-    }
-
-    const postsWrap = document.createElement('div');
-    postsWrap.className = 'default latest-posts';
-    document.querySelector('main').appendChild(postsWrap);
-
-    setupSearch({
-      hitsPerPage: 13,
-      container: '.latest-posts',
-      itemTemplate: document.getElementById('homepage-card'),
-      transformer: (item, index) => {
-        item = itemTransformer(item);
-        if (index === 0) {
-          // use larger hero image on first article
-          item.hero = item.hero ? item.hero.replace('?width=256', `?width=${window.innerWidth <= 900 ? 900 : 2048}`) : '#';
-        }
-        return item;
-      },
-    });
-  }
-
-  /*
-   * post page
-   */
 
   function addAuthor() {
     const insertInside = getSection(2);
