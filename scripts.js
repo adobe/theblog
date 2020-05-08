@@ -511,6 +511,76 @@
     s.parentNode.insertBefore(po, s);
   }
 
+  function shapeBanner() {
+    const banners = document.querySelectorAll('div.banner');
+    banners.forEach((banner) => {
+      // remove surrounding p
+      document.querySelectorAll('.banner img, .banner a').forEach((node) => {
+        const p = node.parentNode;
+        p.parentNode.insertBefore(node, p);
+        p.remove();
+      });
+
+      const left = document.createElement('div');
+      const right = document.createElement('div');
+      left.classList.add('banner-left');
+      right.classList.add('banner-right');
+
+      banner.append(left);
+      banner.append(right);
+
+      let backgroundImg;
+      let logoImg;
+      const imgs = document.querySelectorAll('.banner img');
+
+      if (imgs.length == 2) {
+        // easy case, 2 images in the banner
+        backgroundImg = imgs[0];
+        logoImg = imgs[1];
+      } else {
+        if (imgs.length == 1) {
+          // need to find: img before a -> background or img after a -> logo
+          for (let i = 0; i < banner.childNodes.length; i++) {
+            const node = banner.childNodes[i];
+            if (node.tagName === 'A') {
+              // reached the a
+              logoImg = imgs[0];
+              break;
+            }
+            if (node === imgs[0]) {
+              // still before a
+              backgroundImg = imgs[0];
+              break;
+            }
+          }
+        }
+      }
+
+      if (backgroundImg) {
+        banner.style['background-image'] = `url(${backgroundImg.dataset.src})`;
+        backgroundImg.remove();
+      }
+
+      if (logoImg) {
+        left.append(logoImg);
+      }
+
+      const title = document.querySelector('.banner > h1');
+      if (title) {
+        left.append(title);
+      }
+      const p = document.querySelector('.banner > p');
+      if (p) {
+        right.append(p);
+      }
+
+      const cta = document.querySelector('.banner a');
+      if(cta) {
+        right.append(cta);
+      }
+    });
+  }
+
   /*
    * author page
    */
@@ -601,6 +671,7 @@
       fetchProducts();
       removeEmptySection();
       addGetSocial();
+      shapeBanner();
     } else if (isAuthor) {
       fetchSocialLinks();
       fetchLatestPosts(window.TYPE.AUTHOR);
