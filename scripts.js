@@ -157,7 +157,12 @@
   }
 
   function getSection(index) {
-    const nodes = document.querySelectorAll("main > div");
+    const nodes = Array.from(document.querySelectorAll("main > div"));
+    if (nodes.length === 0) {
+      // create a section
+      nodes.push(document.querySelector('main').appendChild(
+        createTag('div', { class: 'default' })));
+    }
     return index !== undefined && nodes.length > index ? nodes[index] : nodes[nodes.length - 1];
   }
 
@@ -390,9 +395,9 @@
         topicContainer = i;
       }
     });
-    window.helix.topics = topics.filter((topic) => {
-      return topic.length > 0;
-    });
+    window.helix.topics = topics
+      ? topics.filter((topic) => topic.length > 0)
+      : [];
     if (topicContainer) {
       topicContainer.remove();
     }
@@ -405,9 +410,9 @@
         productContainer = i;
       }
     });
-    window.helix.products = products.filter((product) => {
-      return product.length > 0;
-    });
+    window.helix.products = products
+    ? products.filter((product) => product.length > 0)
+    : [];
     if (productContainer) {
       productContainer.remove();
     }
@@ -613,11 +618,11 @@
   window.onload = function() {
     removeHeaderAndFooter();
     addPageTypeAsBodyClass();
+    handleMetadata();
     scrani.onload();
     if (isHome) {
       setupHomepage();
     } else if (isPost) {
-      handleMetadata();
       addAuthor();
       addTopics();
       addProducts();
