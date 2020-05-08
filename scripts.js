@@ -386,12 +386,12 @@
     Array.from(last.children).forEach((i) => {
       const r = /^Topics\: ?(.*)$/gmi.exec(i.innerText);
       if (r && r.length > 0) {
-        topics = r[1].split(',');
+        topics = r[1].split(/\,\s*/);
         topicContainer = i;
       }
     });
     window.helix.topics = topics.filter((topic) => {
-      return topic.trim().length > 0;
+      return topic.length > 0;
     });
     if (topicContainer) {
       topicContainer.remove();
@@ -401,12 +401,12 @@
     Array.from(last.children).forEach((i) => {
       const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
       if (r && r.length > 0) {
-        products = r[1].split(',');
+        products = r[1].split(/\,\s*/);
         productContainer = i;
       }
     });
     window.helix.products = products.filter((product) => {
-      return product.trim().length > 0;
+      return product.length > 0;
     });
     if (productContainer) {
       productContainer.remove();
@@ -421,15 +421,14 @@
       content: window.helix.date ? new Date(window.helix.date).toISOString() : '',
     }];
     // add topics and products as article:tags
-    [
-      ...window.helix.topics,
-      ...window.helix.products,
-    ].forEach((content) => {
-      md.push({
+    [...window.helix.topics].forEach((topic) => md.push({
         property: 'article:tag',
-        content,
-      })
-    });
+        content: topic,
+    }));
+    [...window.helix.products].forEach((product) => md.push({
+      property: 'article:tag',
+      content: `Adobe ${product}`,
+    }));
     // add meta tags to DOM
     const frag = document.createDocumentFragment();
     md.forEach((meta) => {
@@ -488,8 +487,6 @@
     const topicsWrap = document.createElement('div');
     topicsWrap.className = 'default topics';
     window.helix.topics.forEach((topic) => {
-      topic = topic.trim();
-      if (!topic) return;
       const btn = document.createElement('a');
       btn.href = getLink(window.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
       btn.title = topic;
@@ -508,8 +505,6 @@
       const productsWrap = document.createElement('div');
       productsWrap.className = 'products';
       window.helix.products.forEach((product) => {
-        product = product.trim();
-        if (!product) return;
         const productRef = product.replace(/\s/gm, '-').toLowerCase();
 
         const btn = document.createElement('a');
