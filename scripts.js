@@ -157,6 +157,7 @@
       authorUrl: getLink(window.TYPE.AUTHOR, item.author),
       topic: item.topics.length > 0 ? item.topics[0] : '',
       topicUrl: item.topics.length > 0 ? getLink(window.TYPE.TOPIC, item.topics[0]) : '',
+      path: !window.location.hostname.endsWith('.page') ? path.replace('/publish/', '/') : path,
     }
     return Object.assign({}, item, itemParams);
   };
@@ -195,7 +196,12 @@
   }
 
   function getSection(index) {
-    const nodes = document.querySelectorAll("main > div");
+    const nodes = Array.from(document.querySelectorAll("main > div"));
+    if (nodes.length === 0) {
+      // create a section
+      nodes.push(document.querySelector('main').appendChild(
+        createTag('div', { class: 'default' })));
+    }
     return index !== undefined && nodes.length > index ? nodes[index] : nodes[nodes.length - 1];
   }
 
@@ -273,6 +279,7 @@
       });
 
       const { results } = await res.json();
+      if (!results) return [];
       results.forEach((result, i) => {
         const { customSort } = queries[i];
         if (customSort) {
@@ -362,11 +369,28 @@
     if ($featured) {
       $featured.parentNode.querySelectorAll('a').forEach((e) => {
         const url=new URL(e.getAttribute('href'));
-        featured.push(url.pathname);
+        let path = url.pathname;
+        const p = path.split('/');
+        if (p.length >= 3 && p[2] !== 'drafts' && p[2] !== 'publish') {
+          // re-add /publish/ for the query
+          p.splice(2, 0, 'publish');
+          path = p.join('/');
+        }
+        featured.push(path);
       });
       $featured.parentNode.remove();
     }
     return featured;
+  }
+
+  function createTag(name, attrs) {
+    const el = document.createElement(name);
+    if (typeof attrs === 'object') {
+      for (let [key, value] of Object.entries(attrs)) {
+        el.setAttribute(key, value);
+      }
+    }
+    return el;
   }
 
   /*
@@ -414,166 +438,154 @@
       return monthNames[parseInt(dateObj[0])] + " " + dateObj[1] + ", " + dateObj[2];
   }
 
-  function fetchAuthor() {
+  function handleMetadata() {
+    // store author and date
+    const r = /^By (.*)\n*(.*)$/gmi.exec(getSection(2).innerText);
+    window.helix.author = r && r.length > 0 ? r[1] : '';
+    const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
+    window.helix.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
+    // store topics
+    const last = getSection();
+    let topics, topicContainer;
+    Array.from(last.children).forEach((i) => {
+      const r = /^Topics\: ?(.*)$/gmi.exec(i.innerText);
+      if (r && r.length > 0) {
+        topics = r[1].split(/\,\s*/);
+        topicContainer = i;
+      }
+    });
+    window.helix.topics = topics
+      ? topics.filter((topic) => topic.length > 0)
+      : [];
+    if (topicContainer) {
+      topicContainer.remove();
+    }
+    // store products
+    let products, productContainer;
+    Array.from(last.children).forEach((i) => {
+      const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
+      if (r && r.length > 0) {
+        products = r[1].split(/\,\s*/);
+        productContainer = i;
+      }
+    });
+    window.helix.products = products
+    ? products.filter((product) => product.length > 0)
+    : [];
+    if (productContainer) {
+      productContainer.remove();
+    }
+    if (last.innerText === '') {
+      last.remove(); // remove empty last div
+    }
+
+    const md = [{
+      property: 'og:locale',
+      content: window.helix.language,
+    },{
+      property: 'article:published_time',
+      content: window.helix.date ? new Date(window.helix.date).toISOString() : '',
+    }];
+    // add topics and products as article:tags
+    [...window.helix.topics].forEach((topic) => md.push({
+        property: 'article:tag',
+        content: topic,
+    }));
+    [...window.helix.products].forEach((product) => md.push({
+      property: 'article:tag',
+      content: `Adobe ${product}`,
+    }));
+    // add meta tags to DOM
+    const frag = document.createDocumentFragment();
+    md.forEach((meta) => {
+      frag.appendChild(createTag('meta', { property: meta.property, content: meta.content }));
+    });
+    document.head.append(frag);
+  }
+
+  function addAuthor() {
+    if (!window.helix.author) return;
     const authorSection = document.querySelector('.post-author');
     if (authorSection) {
-      const r = /^By (.*)\n*(.*)$/gmi.exec(authorSection.innerText);
-      const date = /^posted on (.*)\n*(.*)$/gmi.exec(authorSection.innerText)[1];
-      const author = r && r.length > 0 ? r[1] : null;
+      // clear the content of the div and replace by avatar and text
+      authorSection.innerHTML = '';
+      const xhr = new XMLHttpRequest();
+      const fileName = window.helix.author.replace(/\s/gm, '-').toLowerCase();
+      const pageURL = getLink(TYPE.AUTHOR, window.helix.author);
+      xhr.open('GET', pageURL);
+      xhr.onload = function() {
+        if (xhr.status != 200 || xhr.status != 304) {
+          // try to get <main> elements and find author image
+          const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText);
+          if (!groups) return;
+          let main = groups.length > 2 ? groups[2] : null;
+          if (main) {
+            main = main.replace(fileName, '../authors/' + fileName);
 
-      /*
-        remove "posted on" text from answer
-      */
-      const fullDate = formatLocalDate(date);
-
-      if (author) {
-        // clear the content of the div and replace by avatar and text
-        authorSection.innerHTML = '';
-        const xhr = new XMLHttpRequest();
-        const fileName = author.replace(/\s/gm, '-').toLowerCase();
-        const pageURL = getLink(TYPE.AUTHOR, author);
-        xhr.open('GET', pageURL);
-        xhr.onload = function() {
-          if (xhr.status != 200 || xhr.status != 304) {
-            // try to get <main> elements and find author image
-            const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText);
-            if (!groups) return;
-            let main = groups.length > 2 ? groups[2] : null;
-            if (main) {
-              main = main.replace(fileName, '../authors/' + fileName);
-
-              const avatarURL = /<img src="(.*?)">/.exec(main)[1];
-              const authorDiv = document.createElement('div');
-              authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" data-src="${avatarURL}">
-                <div><span class="post-author"><a href="${pageURL}">${author}</a></span>
-                <span class="post-date">${fullDate}</span></div></div>`;
-              authorDiv.classList.add('author');
-              // try to get the author's social links
-              const socialLinks = /<p>(Social\: .*)<\/p>/gi.exec(xhr.responseText);
-              if (socialLinks) {
-                const $social = document.createElement('div');
-                $social.innerHTML = socialLinks[1];
-                fetchSocialLinks($social, authorDiv);
-              }
-              authorSection.appendChild(authorDiv);
+            const avatarURL = /<img src="(.*?)">/.exec(main)[1];
+            const authorDiv = document.createElement('div');
+            authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" data-src="${avatarURL}">
+              <div><span class="post-author"><a href="${pageURL}">${window.helix.author}</a></span>
+              <span class="post-date">${window.helix.date}</span></div></div>`;
+            authorDiv.classList.add('author');
+            // try to get the author's social links
+            const socialLinks = /<p>(Social\: .*)<\/p>/gi.exec(xhr.responseText);
+            if (socialLinks) {
+              const $social = document.createElement('div');
+              $social.innerHTML = socialLinks[1];
+              fetchSocialLinks($social, authorDiv);
             }
-          } else {
-            console.log('Author not found...', xhr.response);
+            authorSection.appendChild(authorDiv);
           }
-        };
-        xhr.send();
-      }
-    }
-  }
-
-  function fetchTopics() {
-    const last = getSection();
-    if (last) {
-      let hits = [];
-      let topics, container;
-      Array.from(last.children).forEach((i) => {
-        const r = /^Topics\: ?(.*)$/gmi.exec(i.innerText);
-        if (r && r.length > 0) {
-          hits = r[1].split(',');
-          container = i;
+        } else {
+          console.log('Author not found...', xhr.response);
         }
-      });
-      topics = hits.filter((hit) => {
-        return hit.trim().length > 0;
-      });
-      if (container) {
-        container.remove();
-      }
-
-      const captionWrap = document.createElement('div');
-      captionWrap.className = 'default category';
-      if (topics.length >= 1) {
-        const top = topics.pop();
-        const link = document.createElement('a');
-        link.href = getLink(TYPE.TOPIC, top.replace(/\s/gm, '-').toLowerCase());
-        link.title = top;
-        link.innerText = top;
-
-        captionWrap.appendChild(link);
-
-       last.parentNode.insertBefore(captionWrap, last);
-      }
-      
-      if (topics.length > 0) {
-        const topicsWrap = document.createElement('div');
-        topicsWrap.className = 'default topics';
-        topics.forEach((topic) => {
-          topic = topic.trim();
-          if (!topic) return;
-          const btn = document.createElement('a');
-          btn.href = getLink(window.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
-          btn.title = topic;
-          btn.innerText = topic;
-
-          topicsWrap.appendChild(btn);
-        });
-        // topicsWrap.appendChild(btnWrap);
-        last.parentNode.insertBefore(topicsWrap, last);
-      }
+      };
+      xhr.send();
     }
   }
 
-  function fetchProducts() {
-    const last = getSection();
-    if (last) {
-      let hits = [];
-      let products, container;
-      Array.from(last.children).forEach((i) => {
-        const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
-        if (r && r.length > 0) {
-          hits = r[1].split(',');
-          container = i;
-        }
-      });
-      products = hits.filter((hit) => {
-        return hit.trim().length > 0;
-      });
-      if (container) {
-        container.remove();
-      }
-      if (products.length > 0) {
-        let html='<div class="prod-design">';
-        const productsWrap = document.createElement('div');
-        productsWrap.className = 'default products';
-        products.forEach((product) => {
-          product = product.trim();
-          if (!product) return;
-          const productRef = product.replace(/\s/gm, '-').toLowerCase();
+  function addTopics() {
+    if (!window.helix.topics || window.helix.topics.length === 0) return;
+    const topicsWrap = document.createElement('div');
+    topicsWrap.className = 'default topics';
+    window.helix.topics.forEach((topic) => {
+      const btn = document.createElement('a');
+      btn.href = getLink(window.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
+      btn.title = topic;
+      btn.innerText = topic;
 
-          const btn = document.createElement('a');
-          btn.href = `https://www.adobe.com/${productRef}.html`;
-          btn.title = product;
-
-          const img = document.createElement('img');
-          img.src = `/icons/${productRef}.svg`;
-          img.alt = product;
-
-
-
-          html+=`<div>
-          <a title=${product} href="https://www.adobe.com/${productRef}.html"><img alt={product} src="/icons/${productRef}.svg"></a>
-          <p>${product}</p>
-          <p><a class="learn-more" href="https://www.adobe.com/${productRef}.html"></a></p>
-          </div>`;
-
-        });
-        html+='</div>';
-        productsWrap.innerHTML=html;
-        last.parentNode.insertBefore(productsWrap, last);
-      }
-    }
+      topicsWrap.appendChild(btn);
+    });
+    document.querySelector('main').appendChild(topicsWrap);
   }
 
-  function removeEmptySection() {
-    const last=getSection();
-    if (last.innerHTML.trim() === "") {
-      last.remove();
-    }
+  function addProducts() {
+    if (!window.helix.products || window.helix.products.length === 0) return;
+    let html='<div class="prod-design">';
+    const productsWrap = document.createElement('div');
+    productsWrap.className = 'default products';
+    window.helix.products.forEach((product) => {
+      const productRef = product.replace(/\s/gm, '-').toLowerCase();
+
+      const btn = document.createElement('a');
+      btn.href = `https://www.adobe.com/${productRef}.html`;
+      btn.title = product;
+
+      const img = document.createElement('img');
+      img.src = `/icons/${productRef}.svg`;
+      img.alt = product;
+
+      html += `<div>
+      <a title=Adobe ${product} href="https://www.adobe.com/${productRef}.html"><img alt={product} src="/icons/${productRef}.svg"></a>
+      <p>Adobe ${product}</p>
+      <p><a class="learn-more" href="https://www.adobe.com/${productRef}.html"></a></p>
+      </div>`;
+
+    });
+    html += '</div>';
+    productsWrap.innerHTML = html;
+    document.querySelector('main').appendChild(productsWrap);
   }
 
   function addGetSocial() {
@@ -583,6 +595,76 @@
     po.src = 'https://api.at.getsocial.io/get/v1/7a87046a/gs_async.js';
     const s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(po, s);
+  }
+
+  function shapeBanner() {
+    const banners = document.querySelectorAll('div.banner');
+    banners.forEach((banner) => {
+      // remove surrounding p
+      document.querySelectorAll('.banner img, .banner a').forEach((node) => {
+        const p = node.parentNode;
+        p.parentNode.insertBefore(node, p);
+        p.remove();
+      });
+
+      const left = document.createElement('div');
+      const right = document.createElement('div');
+      left.classList.add('banner-left');
+      right.classList.add('banner-right');
+
+      banner.append(left);
+      banner.append(right);
+
+      let backgroundImg;
+      let logoImg;
+      const imgs = document.querySelectorAll('.banner img');
+
+      if (imgs.length == 2) {
+        // easy case, 2 images in the banner
+        backgroundImg = imgs[0];
+        logoImg = imgs[1];
+      } else {
+        if (imgs.length == 1) {
+          // need to find: img before a -> background or img after a -> logo
+          for (let i = 0; i < banner.childNodes.length; i++) {
+            const node = banner.childNodes[i];
+            if (node.tagName === 'A') {
+              // reached the a
+              logoImg = imgs[0];
+              break;
+            }
+            if (node === imgs[0]) {
+              // still before a
+              backgroundImg = imgs[0];
+              break;
+            }
+          }
+        }
+      }
+
+      if (backgroundImg) {
+        banner.style['background-image'] = `url(${backgroundImg.dataset.src})`;
+        backgroundImg.remove();
+      }
+
+      if (logoImg) {
+        left.append(logoImg);
+      }
+
+      const title = document.querySelector('.banner > h1');
+      if (title) {
+        left.append(title);
+      }
+      const p = document.querySelector('.banner > p');
+      if (p) {
+        right.append(p);
+      }
+
+      const cta = document.querySelector('.banner a');
+      if(cta) {
+        right.append(cta);
+      }
+    });
   }
 
   /*
@@ -716,17 +798,18 @@
   window.onload = function() {
     removeHeaderAndFooter();
     addPageTypeAsBodyClass();
+    handleMetadata();
     scrani.onload();
     if (isHome) {
       setupHomepage();
     } else if (isPost) {
-      logHitJSON();
-      fetchTopics();
+      // logHitJSON();
       decoratePostPage();
-      fetchAuthor();
-      fetchProducts();
-      removeEmptySection();
+      addAuthor();
+      addTopics();
+      addProducts();
       addGetSocial();
+      shapeBanner();
     } else if (isAuthor) {
       fetchSocialLinks();
       fetchLatestPosts(window.TYPE.AUTHOR);
@@ -736,4 +819,3 @@
       // todo
     }
   };
-
