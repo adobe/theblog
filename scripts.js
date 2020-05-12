@@ -131,7 +131,7 @@
       authorUrl: getLink(window.TYPE.AUTHOR, item.author),
       topic: item.topics.length > 0 ? item.topics[0] : '',
       topicUrl: item.topics.length > 0 ? getLink(window.TYPE.TOPIC, item.topics[0]) : '',
-      path: !window.location.hostname.endsWith('.page') ? path.replace('/publish/', '/') : path,
+      path: !window.location.hostname.endsWith('.page') ? item.path.replace('/publish/', '/') : item.path,
     }
     return Object.assign({}, item, itemParams);
   };
