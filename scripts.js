@@ -197,7 +197,7 @@
 
   function helixQuery(appId, key) {
     return async (queries, hitsPerPage) => {
-      if (!queries || queries.length === 0) return;
+      if (!queries || queries.length === 0) return {};
       const url = new URL(`https://${appId}-dsn.algolia.net/1/indexes/*/queries`);
       const serializeQueryParameters = (q) => {
         const sp = new URLSearchParams();
