@@ -564,6 +564,16 @@
     }
   }
 
+  function addCategory() {
+    if (!window.helix.topics || window.helix.topics.length === 0) return;
+    const topic = window.helix.topics[0];
+    const categoryWrap = document.createElement('div');
+    categoryWrap.className = 'default category';
+    const href=getLink(window.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
+    categoryWrap.innerHTML = `<a href="${href} title=${topic}">${topic}</a>`;
+    document.querySelector('main').appendChild(categoryWrap);
+  }
+
   function addTopics() {
     if (!window.helix.topics || window.helix.topics.length === 0) return;
     const topicsWrap = document.createElement('div');
@@ -821,6 +831,7 @@
       setupHomepage();
     } else if (isPost) {
       // logHitJSON();
+      addCategory();
       decoratePostPage();
       addAuthor();
       addTopics();
