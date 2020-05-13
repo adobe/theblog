@@ -402,7 +402,7 @@
       document.title = 'The Blog | Welcome to the Adobe Blog';
     }
     const titleSection = getSection(0);
-    if (titleSection.innerText === document.title) {
+    if (titleSection.innerText.trim() === document.title) {
       titleSection.remove();
     }
 
