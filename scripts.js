@@ -197,6 +197,7 @@
 
   function helixQuery(appId, key) {
     return async (queries, hitsPerPage) => {
+      if (!queries || queries.length === 0) return;
       const url = new URL(`https://${appId}-dsn.algolia.net/1/indexes/*/queries`);
       const serializeQueryParameters = (q) => {
         const sp = new URLSearchParams();
@@ -263,13 +264,16 @@
     const filters = Array.from(facetFilters);
     const featured = getFeaturedPostsPaths();
 
-    filters.push(`parents:${window.helix.context}${window.helix.language}`);
-    filters.push(`date < ${Math.round(Date.now()/1000)}`); // hide articles with future dates
+    const queries = [];
+    if (filters.length > 0 && filters[0].length > 0) {
+      filters.push(`parents:${window.helix.context}${window.helix.language}`);
+      filters.push(`date < ${Math.round(Date.now()/1000)}`); // hide articles with future dates
+      queries.push({
+        indexName,
+        filters: filters.join(' AND '),
+      });
+    }
 
-    const queries = [{
-      indexName,
-      filters: filters.join(' AND '),
-    }];
     if (featured.length) {
       queries.unshift({
         indexName,
