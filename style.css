@@ -241,7 +241,8 @@ a.learn-more::before {
                        "post-header"
                        "products"
                        "post-body"
-                       "topics";
+                       "topics"
+                       "posts";
 }
 
 .post-page .post-title {
@@ -283,9 +284,7 @@ a.learn-more::before {
 
   font-size: 1rem;
   line-height: 1.5;
-
 }
-
 
 .post-page main div.post-header {
   grid-area: post-header;
@@ -298,6 +297,10 @@ a.learn-more::before {
 
 .post-page main>div.topics {
   grid-area: topics;
+}
+
+.post-page main>div.latest-posts {
+  grid-area: posts;
 }
 
 .post-page main>div.products {
@@ -800,7 +803,6 @@ a.learn-more::before {
     border: 0;
     margin: 0;
     display: block;
-
   }
 
   
@@ -811,13 +813,12 @@ a.learn-more::before {
   .post-page main>div.products .prod-design>div{
     margin-top: 30px;
   }
-  
-
 
   .post-page main {
     grid-template-areas: "hero-image hero-image post-header post-header"
-                         "products post-body post-body  - "
-                         "products topics topics  - ";
+                         "products   post-body  post-body   - "
+                         "products   topics     topics      - "
+                         "products   posts      posts       - ";
     margin: auto;
     max-width: 1200px;
     grid-template-columns: 170px 1fr 1fr 170px;
@@ -844,7 +845,6 @@ a.learn-more::before {
     padding-left: 64px;
     padding-right: 64px;
     width: 100%;
-
   }
 
   
