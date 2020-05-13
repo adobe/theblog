@@ -162,9 +162,17 @@
     return Object.assign({}, item, itemParams);
   };
 
-  function addClass(selector, cssClass) {
-    var el=document.querySelector(selector);
-    if (el) el.classList.add(cssClass);
+  function addClass(selector, cssClass, parent) {
+    document.querySelectorAll(selector).forEach((el) => {
+      if (el) {
+        var up=parent;
+        while (up) {
+          el = el.parentNode;
+          up--;
+        }
+        el.classList.add(cssClass);
+      }  
+    });
   } 
 
   function decoratePostPage(){
@@ -172,6 +180,7 @@
     addClass('.post-page main>div:nth-of-type(2)', 'hero-image');
     addClass('.post-page main>div:nth-of-type(3)', 'post-author');
     addClass('.post-page main>div:nth-of-type(4)', 'post-body');
+    addClass('.post-page main>div.post-body>p>img', 'images', 1);
     wrap('post-header',['main>div.category','main>div.post-title', 'main>div.post-author']);
   }
 

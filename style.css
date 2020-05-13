@@ -247,7 +247,6 @@ a.load-more::before {
   display: grid;
   grid-template-areas: "hero-image"
                        "post-header"
-                       "products"
                        "post-body"
                        "topics"
                        "posts";
@@ -278,10 +277,18 @@ a.load-more::before {
   margin: 0;
 }
 
+.post-page main .hero-image img {
+  width: 100%;
+  object-fit: cover;
+  height: 220px;
+}
+
+
 /* hero caption */
 .post-page main div.hero-image p {
   margin: 0;
 }
+
 
 .post-page main div.hero-image p:nth-of-type(2) {
   text-align: right;
@@ -295,10 +302,25 @@ a.load-more::before {
 .post-page main div.post-header {
   grid-area: post-header;
   align-self: center;
+  margin-top: 32px;
+}
+
+.post-page main div.post-header .post-author {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 20px;
+}
+
+
+.post-page main>div.post-body img {
+  margin-top: 64px;
 }
 
 .post-page main>div.post-body {
   grid-area: post-body;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 30px;
 }
 
 .post-page main>div.topics {
@@ -337,14 +359,13 @@ a.load-more::before {
   text-decoration: none;
 }
 .post-page div.category {
-  grid-area: category;
   margin: 0 32px;
   padding: 0;
 }
 
 .post-page div.category a {
   text-decoration: none;
-  color: #EA332B;
+  color: #707070;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: 700;
@@ -458,8 +479,11 @@ a.load-more::before {
 .post-page main>div.post-body h2 {
   font-size: 1.4em;
   font-weight: 700;
-  margin-top: 2em;
   margin-bottom: 0.3em;
+}
+
+.post-page main>div.post-body p+h2 {
+  margin-top: 64px;
 }
 
 .post-page .products a {
@@ -762,14 +786,41 @@ a.load-more::before {
   .home-page main li:first-child .hero {
     height: unset;
   }
-  .post-page main>div.category, .post-page main>div.post-title,
-  .post-page main>div.post-body, .post-page main>div.author, .post-page main>div.products  {
+  .post-page main>div.post-header>div {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .post-page main>div.post-header,
+  .post-page main>div.topics  {
+    margin-left: 128px;
+    margin-right: 128px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .post-page main>div.post-body {
     margin-left: 64px;
     margin-right: 64px;
-    padding-left: 64px;    
-    padding-right: 64px;    
+    padding: 0;  
   }
-  
+
+  .post-page main>div.post-body>* {
+    margin-left: 64px;
+    margin-right: 64px;  
+  }
+
+  .post-page main>div.post-body>p.images {
+    margin-left: 0px;
+    margin-right: 0px;  
+  }
+
+  .post-page main>div.post-body>p.images>img {
+    width: 100%;
+  }
+
   .post-page main>div.post-title h1 {
     font-size: 1.8em;
   }
@@ -780,16 +831,19 @@ a.load-more::before {
   
 }
 
-@media (min-width:900px) {
+@media (min-width:1100px) {
+
+  .post-page main  {
+    padding-top: 16px;
+    box-sizing: border-box;
+  }  
 
   .post-page main .post-body {
-    width: 700px;
     box-sizing: border-box;
   }
-  .post-page main .hero-image img {
-    width: 100%;
-    object-fit: cover;
-    height: 100%;
+
+  .post-page main div.hero-image img {
+    height: unset;
   }
 
   .post-page main div.hero-image p:nth-of-type(2) {
@@ -802,7 +856,7 @@ a.load-more::before {
     padding: 0;
     border: 0;
     margin: 0;
-    display: block;
+    display: none;
   }
 
   
@@ -816,9 +870,9 @@ a.load-more::before {
 
   .post-page main {
     grid-template-areas: "hero-image hero-image post-header post-header"
-                         "products   post-body  post-body   - "
-                         "products   topics     topics      - "
-                         "products   posts      posts       - ";
+                         " .         post-body  post-body   . "
+                         " .         topics     topics      . "
+                         " .         posts      posts       . ";
     margin: auto;
     max-width: 1200px;
     grid-template-columns: 170px 1fr 1fr 170px;
@@ -839,14 +893,14 @@ a.load-more::before {
     padding-right: 64px;
   }
 
-  .post-page main>div.post-body, .post-page main>div.topics {
-    margin-left: 0px;
-    margin-right: 0px;
-    padding-left: 64px;
-    padding-right: 64px;
-    width: 100%;
+  .post-page main>div.post-body, .post-page main>div.topics, .post-page main>div.post-header {
+    margin: 0;
+    padding: 0;
   }
 
+  .post-page main>div.post-header {
+    padding-left: 32px;
+  }
   
   .home-page .latest-posts {
     background-color: white;
