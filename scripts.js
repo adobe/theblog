@@ -254,7 +254,7 @@
     indexName = 'adobe--theblog--blog-posts',
     hitsPerPage = 12,
     facetFilters = [],
-    container = '.posts',
+    container = '.latest-posts',
     itemTemplate = document.getElementById('post-card'),
     emptyTemplate = 'There are no articles yet',
     transformer = itemTransformer,
@@ -279,36 +279,47 @@
     }
 
     query(queries, hitsPerPage).then(({ hits }) => {
-      const $el = document.querySelector(container);
-      let $hits, $list;
-      if ($el.querySelector('.ais-Hits')) {
-        $hits=$el.querySelector('.ais-Hits');
-        $list=$el.querySelector('.ais-Hits-list');
-      } else {
-        $hits=document.createElement('div');
-        $hits.classList.add('ais-Hits');
-        $el.appendChild($hits);
-        if (!hits || hits.length === 0) {
-          const $empty = document.createElement('div');
-          $empty.textContent = emptyTemplate;
-          $hits.appendChild($empty);
+      if (emptyTemplate || (hits && hits.length > 0)) {
+        let $el;
+        if (typeof container === 'object') {
+          // create container
+          $el = document.createElement(container.tagName);
+          container.classes.forEach((className) => $el.classList.add(className));
+          container.parent.appendChild($el);
         } else {
-        $list = document.createElement('ol');
-        $list.classList.add('ais-Hits-list');
-        $hits.appendChild($list);
+          // find container
+          $el = document.querySelector(container);
         }
-      }
-      if (hits) {
-        hits
-          .map(transformer)
-          .forEach((hit) => {
-            const $item = itemTemplate.content.cloneNode(true).firstElementChild;
-            fillData($item, hit);
-            const $hit = document.createElement('li');
-            $hit.classList.add('ais-Hits-item');
-            $hit.appendChild($item);
-            $list.appendChild($hit);
-          });
+        let $hits, $list;
+        if ($el.querySelector('.ais-Hits')) {
+          $hits=$el.querySelector('.ais-Hits');
+          $list=$el.querySelector('.ais-Hits-list');
+        } else {
+          $hits=document.createElement('div');
+          $hits.classList.add('ais-Hits');
+          $el.appendChild($hits);
+          if (!hits || hits.length === 0) {
+            const $empty = document.createElement('div');
+            $empty.textContent = emptyTemplate;
+            $hits.appendChild($empty);
+          } else {
+          $list = document.createElement('ol');
+          $list.classList.add('ais-Hits-list');
+          $hits.appendChild($list);
+          }
+        }
+        if (hits) {
+          hits
+            .map(transformer)
+            .forEach((hit) => {
+              const $item = itemTemplate.content.cloneNode(true).firstElementChild;
+              fillData($item, hit);
+              const $hit = document.createElement('li');
+              $hit.classList.add('ais-Hits-item');
+              $hit.appendChild($item);
+              $list.appendChild($hit);
+            });
+        }
       }
     });
   }
@@ -416,7 +427,7 @@
     if (productContainer) {
       productContainer.remove();
     }
-    last.remove();
+    if (last.innerText === '') last.remove();
 
     const md = [{
       property: 'og:locale',
@@ -664,24 +675,28 @@
     }
   }
 
-  function fetchLatestPosts(type) {
+  function fetchLatestPosts() {
     let filter, emptyTemplate;
-    if (type === window.TYPE.TOPIC) {
+    if (isPost) {
+      filter = '';
+      emptyTemplate = '';
+    } else if (isTopic) {
       filter = `topics:"${document.title}"`;
       emptyTemplate = 'There are no articles in this topic yet';
-    } else {
+    } else if (isAuthor) {
       filter = `author:"${document.title.split(',')[0]}"`;
       emptyTemplate = 'This author has not posted any articles yet.';
     }
-    const latestWrap = document.createElement('div');
-    latestWrap.className = 'default latest-posts';
-    getSection().parentNode.appendChild(latestWrap);
     setupSearch({
       facetFilters: [
           filter,
         ],
-      container: '.latest-posts',
       emptyTemplate,
+      container: {
+        tagName: 'div',
+        parent: getSection().parentNode,
+        classes: ['default', 'latest-posts'],
+      },
     });
   }
 
@@ -698,11 +713,12 @@
       addProducts();
       addGetSocial();
       shapeBanner();
+      fetchLatestPosts();
     } else if (isAuthor) {
       fetchSocialLinks();
-      fetchLatestPosts(window.TYPE.AUTHOR);
+      fetchLatestPosts();
     } else if (isTopic) {
-      fetchLatestPosts(window.TYPE.TOPIC);
+      fetchLatestPosts();
     } else if (isProduct) {
       // todo
     }

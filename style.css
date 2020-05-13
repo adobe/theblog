@@ -260,7 +260,8 @@ main {
                        "image"
                        "post"
                        "author"
-                       "topics";
+                       "topics"
+                       "posts";
 }
 
 main div:first-of-type {
@@ -279,6 +280,9 @@ main div.topics {
   grid-area: topics;
 }
 
+main div.latest-posts {
+  grid-area: posts;
+}
 
 .left {
   font-family: "Adobe Clean",sans-serif;
@@ -750,7 +754,8 @@ main div.topics {
     grid-template-areas: "title title title"
                           "image image image"
                           "author post ."
-                          "topics topics topics";
+                          "topics topics topics"
+                          "posts posts posts";
 
     grid-template-columns: 20% 60% 20%;
   }
