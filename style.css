@@ -234,6 +234,14 @@ a.learn-more::before {
   content: "Learn more >"
 }
 
+a.load-more {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a.load-more::before {
+  content: "Load more articles"
+}
 
 .post-page main {
   display: grid;
@@ -423,6 +431,9 @@ a.learn-more::before {
   color: #007bff;
 }
 
+.post-page .latest-posts::before {
+  content: "Recommended for you";
+}
 
 .post-page .products {
   margin-top: 1.25rem;
@@ -434,9 +445,10 @@ a.learn-more::before {
 }
 
 .post-page .products::before {
-  content: "ADOBE PRODUCTS IN THIS ARTICLE";
+  content: "Adobe products in this article";
   display: block;
   text-align: center;
+  text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 700;
   font-size: 0.7em;
@@ -700,21 +712,6 @@ a.learn-more::before {
 
 .home-page main li:first-child span {
   font-weight: 600;
-}
-
-.home-page main li:first-child::after {
-  content: "Latest Stories";
-  display: block;
-  margin: 1rem auto 2rem;
-  color: rgb(153,153,153);
-  text-align: center;
-  text-size-adjust: 100%;
-  text-rendering: optimizeLegibility;
-  font-family: "Adobe Clean",sans-serif;
-  font-size: 1.5rem;
-  line-height:18px;
-  font-weight: 600;
-  user-select: text;
 }
 
 .hide-all {

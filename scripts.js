@@ -373,6 +373,10 @@
               $hit.appendChild($item);
               $list.appendChild($hit);
             });
+          // add button to load more
+          const $more = createTag('a', { 'class': 'load-more' });
+          $more.addEventListener('click', function () { alert('Not implemented yet.'); });
+          $hits.appendChild($more);
         }
       }
     });
