@@ -661,6 +661,7 @@ a.load-more::before {
   background-color: white;
   padding: 0 0 2rem 0;
   margin-bottom: 0;
+  text-align: center;
 }
 
 .home-page .latest-posts::before {
