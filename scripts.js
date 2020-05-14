@@ -99,6 +99,32 @@
    * all pages
    */
 
+  // wrap elements in div
+
+  function wrapNodes(newparent, elems) {	
+    elems.forEach((el, index) => {	
+      newparent.appendChild(el.cloneNode(true));	
+      if (newparent.children.length !== 1) {	
+        el.parentNode.removeChild(el);	
+      } else {	
+        el.parentNode.replaceChild(newparent, el);	
+      }	
+    });	
+  }	
+  
+  function wrap(classname, selectors) {	
+    if (!Array.isArray(selectors)) {
+      selectors=[selectors];
+    }
+    const div = document.createElement("div");	
+    div.className = classname;	
+  
+    selectors.forEach((selector) => {
+      const elems = document.querySelectorAll(selector);
+      wrapNodes(div, elems);	
+      })
+  }
+
   // load language specific css overlays
 
   const loadCssFile = (path) => {
@@ -127,7 +153,7 @@
         month: '2-digit',
         year: 'numeric',
         timeZone: 'UTC',
-      }),
+      }).replace(/\//g, '-'),
       authorUrl: getLink(window.TYPE.AUTHOR, item.author),
       topic: item.topics.length > 0 ? item.topics[0] : '',
       topicUrl: item.topics.length > 0 ? getLink(window.TYPE.TOPIC, item.topics[0]) : '',
@@ -135,6 +161,28 @@
     }
     return Object.assign({}, item, itemParams);
   };
+
+  function addClass(selector, cssClass, parent) {
+    document.querySelectorAll(selector).forEach((el) => {
+      if (el) {
+        var up=parent;
+        while (up) {
+          el = el.parentNode;
+          up--;
+        }
+        el.classList.add(cssClass);
+      }  
+    });
+  } 
+
+  function decoratePostPage(){
+    addClass('.post-page main>div:first-of-type', 'post-title');
+    addClass('.post-page main>div:nth-of-type(2)', 'hero-image');
+    addClass('.post-page main>div:nth-of-type(3)', 'post-author');
+    addClass('.post-page main>div:nth-of-type(4)', 'post-body');
+    addClass('.post-page main>div.post-body>p>img', 'images', 1);
+    wrap('post-header',['main>div.category','main>div.post-title', 'main>div.post-author']);
+  }
 
   function addPageTypeAsBodyClass() {
     document.body.classList.add(`${window.helix.pageType}-page`);
@@ -220,6 +268,9 @@
           params: serializeQueryParameters({ ...q, hitsPerPage }),
         };
       });
+
+      /* fetch from algolia
+      
       const res = await fetch(url, {
         method: 'POST',
         headers: {
@@ -228,7 +279,15 @@
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: JSON.stringify({ requests }),
+      });*/
+
+      /*
+      fetch locally for offline dev
+      */
+      const res = await fetch('/query-results.json', {
+        method: 'GET'
       });
+
       const { results } = await res.json();
       if (!results) return [];
       results.forEach((result, i) => {
@@ -323,6 +382,10 @@
               $hit.appendChild($item);
               $list.appendChild($hit);
             });
+          // add button to load more
+          const $more = createTag('a', { 'class': 'load-more' });
+          $more.addEventListener('click', function () { alert('Not implemented yet.'); });
+          $hits.appendChild($more);
         }
       }
     });
@@ -367,7 +430,7 @@
       document.title = 'The Blog | Welcome to the Adobe Blog';
     }
     const titleSection = getSection(0);
-    if (titleSection.innerText === document.title) {
+    if (titleSection.innerText.trim() === document.title) {
       titleSection.remove();
     }
 
@@ -378,7 +441,6 @@
     setupSearch({
       hitsPerPage: 13,
       container: '.latest-posts',
-      itemTemplate: document.getElementById('homepage-card'),
       transformer: (item, index) => {
         item = itemTransformer(item);
         if (index === 0) {
@@ -394,12 +456,21 @@
    * post page
    */
 
+  function formatLocalDate(date) {
+      const monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+      ];  
+      const dateObj = date.split('-');
+  
+      return monthNames[parseInt(dateObj[0])] + " " + dateObj[1] + ", " + dateObj[2];
+  }
+
   function handleMetadata() {
     // store author and date
     const r = /^By (.*)\n*(.*)$/gmi.exec(getSection(2).innerText);
     window.helix.author = r && r.length > 0 ? r[1] : '';
     const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
-    window.helix.date = d && d.length > 0 ? d[0] : '';
+    window.helix.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
     // store topics
     const last = getSection();
     let topics, topicContainer;
@@ -431,7 +502,9 @@
     if (productContainer) {
       productContainer.remove();
     }
-    if (last.innerText === '') last.remove();
+    if (last.innerText.trim() === '') {
+      last.remove(); // remove empty last div
+    }
 
     const md = [{
       property: 'og:locale',
@@ -458,52 +531,59 @@
   }
 
   function addAuthor() {
-    const insertInside = getSection(2);
-    if (insertInside) {
-      insertInside.classList.add('left');
-      if (window.helix.author) {
-        // clear the content of the div and replace by avatar and text
-        insertInside.innerHTML = '';
-        const xhr = new XMLHttpRequest();
-        const fileName = window.helix.author.replace(/\s/gm, '-').toLowerCase();
-        const pageURL = getLink(window.TYPE.AUTHOR, window.helix.author);
-        xhr.open('GET', pageURL);
-        xhr.onload = function() {
-          if (xhr.status != 200 || xhr.status != 304) {
-            // try to get <main> elements and find author image
-            const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText);
-            if (!groups) return;
-            let main = groups.length > 2 ? groups[2] : null;
-            if (main) {
-              main = main.replace(fileName, '../authors/' + fileName);
+    if (!window.helix.author) return;
+    const authorSection = document.querySelector('.post-author');
+    if (authorSection) {
+      // clear the content of the div and replace by avatar and text
+      authorSection.innerHTML = '';
+      const xhr = new XMLHttpRequest();
+      const fileName = window.helix.author.replace(/\s/gm, '-').toLowerCase();
+      const pageURL = getLink(TYPE.AUTHOR, window.helix.author);
+      xhr.open('GET', pageURL);
+      xhr.onload = function() {
+        if (xhr.status != 200 || xhr.status != 304) {
+          // try to get <main> elements and find author image
+          const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText);
+          if (!groups) return;
+          let main = groups.length > 2 ? groups[2] : null;
+          if (main) {
+            main = main.replace(fileName, '../authors/' + fileName);
 
-              const avatarURL = /<img src="(.*?)">/.exec(main)[1];
-              const authorDiv = document.createElement('div');
-              authorDiv.innerHTML = '<img class="lazyload" data-src="' + avatarURL + '?width=120&auto=webp"> \
-                <span class="post-author"><a href="' + pageURL + '">' + window.helix.author + '</a></span> \
-                <span class="post-date">' + window.helix.date + '</span> \
-                ';
-              authorDiv.classList.add('author');
-              // try to get the author's social links
-              const socialLinks = /<p>(Social\: .*)<\/p>/gi.exec(xhr.responseText);
-              if (socialLinks) {
-                const p = document.createElement('p');
-                p.innerHTML = socialLinks[1];
-                fetchSocialLinks(p, authorDiv);
-              }
-              insertInside.prepend(authorDiv);
+            const avatarURL = /<img src="(.*?)">/.exec(main)[1];
+            const authorDiv = document.createElement('div');
+            authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" data-src="${avatarURL}">
+              <div><span class="post-author"><a href="${pageURL}">${window.helix.author}</a></span>
+              <span class="post-date">${window.helix.date}</span></div></div>`;
+            authorDiv.classList.add('author');
+            // try to get the author's social links
+            const socialLinks = /<p>(Social\: .*)<\/p>/gi.exec(xhr.responseText);
+            if (socialLinks) {
+              const $social = document.createElement('div');
+              $social.innerHTML = socialLinks[1];
+              fetchSocialLinks($social, authorDiv);
             }
-          } else {
-            console.log('Author not found...', xhr.response);
+            authorSection.appendChild(authorDiv);
           }
-        };
-        xhr.send();
-      }
+        } else {
+          console.log('Author not found...', xhr.response);
+        }
+      };
+      xhr.send();
     }
   }
 
+  function addCategory() {
+    if (!window.helix.topics || window.helix.topics.length === 0) return;
+    const topic = window.helix.topics[0];
+    const categoryWrap = document.createElement('div');
+    categoryWrap.className = 'default category';
+    const href=getLink(window.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
+    categoryWrap.innerHTML = `<a href="${href} title=${topic}">${topic}</a>`;
+    document.querySelector('main').appendChild(categoryWrap);
+  }
+
   function addTopics() {
-    if (!window.helix.topics) return;
+    if (!window.helix.topics || window.helix.topics.length === 0) return;
     const topicsWrap = document.createElement('div');
     topicsWrap.className = 'default topics';
     window.helix.topics.forEach((topic) => {
@@ -518,29 +598,31 @@
   }
 
   function addProducts() {
-    if (!window.helix.products) return;
-    const insertInside = getSection(2);
-    if (insertInside) {
-      insertInside.classList.add('left');
-      const productsWrap = document.createElement('div');
-      productsWrap.className = 'products';
-      window.helix.products.forEach((product) => {
-        const productRef = product.replace(/\s/gm, '-').toLowerCase();
+    if (!window.helix.products || window.helix.products.length === 0) return;
+    let html='<div class="prod-design">';
+    const productsWrap = document.createElement('div');
+    productsWrap.className = 'default products';
+    window.helix.products.forEach((product) => {
+      const productRef = product.replace(/\s/gm, '-').toLowerCase();
 
-        const btn = document.createElement('a');
-        btn.href = `https://www.adobe.com/${productRef}.html`;
-        btn.title = product;
+      const btn = document.createElement('a');
+      btn.href = `https://www.adobe.com/${productRef}.html`;
+      btn.title = product;
 
-        const img = document.createElement('img');
-        img.src = `/icons/${productRef}.svg`;
-        img.alt = product;
+      const img = document.createElement('img');
+      img.src = `/icons/${productRef}.svg`;
+      img.alt = product;
 
-        btn.appendChild(img);
+      html += `<div>
+      <a title=Adobe ${product} href="https://www.adobe.com/${productRef}.html"><img alt={product} src="/icons/${productRef}.svg"></a>
+      <p>Adobe ${product}</p>
+      <p><a class="learn-more" href="https://www.adobe.com/${productRef}.html"></a></p>
+      </div>`;
 
-        productsWrap.appendChild(btn);
-      });
-      insertInside.appendChild(productsWrap);
-    }
+    });
+    html += '</div>';
+    productsWrap.innerHTML = html;
+    document.querySelector('main').appendChild(productsWrap);
   }
 
   function addGetSocial() {
@@ -679,6 +761,50 @@
     }
   }
 
+  function logHitJSON() {
+    const path=window.location.pathname;
+    const title = document.querySelector("h1").innerText;
+    const $last = getSection();
+    const $author = getSection(2); 
+    const $blogpost = getSection(3); 
+    let topics="";
+    let products="";
+    let author="";
+    let date="";
+    let teaser="";
+
+    if ($last) {
+      topics = /^Topics\: ?(.*)$/gmi.exec($last.innerText)[1].split(',').map((e) => e.trim());
+      products = /^Products\: ?(.*)$/gmi.exec($last.innerText)[1].split(',').map((e) => e.trim());;
+    }
+
+    if ($author) {
+      author = /^By (.*)\n*(.*)$/gmi.exec($author.innerText)[1];
+      date = /^posted on (.*)\n*(.*)$/gmi.exec($author.innerText)[1];
+      const splits =date.split('-');
+      console.logs
+      date=new Date(`${splits[2]}-${splits[0]}-${splits[1]}`).getTime()/1000;
+    }
+
+    if ($blogpost) {
+      teaser=$blogpost.innerText.substr(0,171);
+    }
+
+    const hero=new URL(document.querySelector('main>div:nth-of-type(2) img').getAttribute('src')).pathname;
+  
+    console.log(JSON.stringify({ path: path, 
+      topics: topics,
+      products: products,
+      hero: hero,
+      date: date,
+      title: title,
+      teaser: teaser,
+      author: author,
+      objectID: ''+Math.random(),
+
+    }, null, "  ")+", ");
+  }
+
   function fetchLatestPosts() {
     let filter, emptyTemplate;
     if (isPost) {
@@ -712,6 +838,9 @@
     if (isHome) {
       setupHomepage();
     } else if (isPost) {
+      // logHitJSON();
+      addCategory();
+      decoratePostPage();
       addAuthor();
       addTopics();
       addProducts();
@@ -727,4 +856,3 @@
       // todo
     }
   };
-

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Adobe. All rights reserved.
+ * Copyright 2020 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -21,13 +21,13 @@
   padding: 0;
   margin: 0;
   background-color: white;
-  font-family: adobe-clean-serif,serif;
+  font-family: "Adobe Clean", sans-serif;
   font-weight: 300;
   font-size: 1.125rem;
-  line-height: 1.8;
-  color: #0a0a0a;
+  line-height: 1.5em;
 }
 
+/* hide to avoid flickering until class is applied to body */
 main {
   visibility: hidden;
 }
@@ -39,7 +39,7 @@ main {
   visibility: visible;
 }
 
-.title {
+/* .title {
   overflow: hidden;
   background-color: black;
 }
@@ -53,8 +53,6 @@ main {
 
 .title h1 {
   color: white;
-  text-align: center;
-  text-shadow: 0px 0px 6px #000000;
   margin-bottom: 0.1em;
 }
 
@@ -71,42 +69,24 @@ main {
   height: 100vh;
   width: 100vw;
   object-fit: cover;
-}
+} */
 
 .default {
   padding: 1rem 2rem;
 }
 
-.image, .post-page main div:nth-of-type(2) {
+.image {
   padding: 0;
   margin: 0;
   font-size: 0;
 }
 
-.image img, main div:nth-of-type(2) img {
-  width: 100vw;
-}
-
-/* hero caption */
-main div:nth-of-type(2) p:nth-of-type(2) {
-  text-align: right;
-
+.image img {
   width: 100%;
-  max-width: calc(100% - 60px);
-  margin-top: .625rem;
-  font-style: italic;
-
-  font-size: 1rem;
-  line-height: 1.5;
-
 }
 
 .default img {
   max-width: 100%;
-}
-
-h1, h2, h3, h4, h5 {
-  font-family: adobe-clean-serif,serif;
 }
 
 h3, h4 {
@@ -250,106 +230,189 @@ button, input[type=button], input[type=submit], input[type=reset] {
   padding: 2px 20px;
 }
 
-main div:first-of-type {
-  text-align: center;
+a.learn-more::before {
+  content: "Learn more >"
 }
 
-main {
+a.load-more {
+  display: inline-block;
+  border: solid #4b4b4b 2px;
+  border-radius: 20px;
+  color: #4b4b4b;
+  font-size:1rem;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 4px 12px;
+  margin-bottom: 2rem;
+}
+
+a.load-more::before {
+  content: "Load more articles"
+}
+
+.post-page main {
   display: grid;
-  grid-template-areas: "title"
-                       "image"
-                       "post"
-                       "author"
+  grid-template-areas: "hero-image"
+                       "post-header"
+                       "post-body"
                        "topics"
                        "posts";
 }
 
-main div:first-of-type {
-  grid-area: title;
+.post-page .post-title {
+  text-align: left;
+  color: #363636;
+  margin: 0 32px;
+  padding: 0;
 }
 
-main div:nth-of-type(2) {
-  grid-area: image;
+.post-page .post-title h1 {
+  font-weight: 600;
+  font-size: 1.6em;
+  line-height: 1.2em;
+  margin: 0;
 }
 
-main div.left, main {
-  grid-area: author;
+.post-page .post-title h3:empty {
+  display: none;
 }
 
-main div.topics {
+.post-page .hero-image {
+  grid-area: hero-image;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.post-page main .hero-image img {
+  width: 100%;
+  object-fit: cover;
+  height: 220px;
+}
+
+
+/* hero caption */
+.post-page main div.hero-image p {
+  margin: 0;
+}
+
+
+.post-page main div.hero-image p:nth-of-type(2) {
+  text-align: right;
+  width: 100%;
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding-right: 20px;
+}
+
+.post-page main div.post-header {
+  grid-area: post-header;
+  align-self: center;
+  margin-top: 32px;
+}
+
+.post-page main div.post-header .post-author {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 20px;
+}
+
+
+.post-page main>div.post-body img {
+  margin-top: 64px;
+}
+
+.post-page main>div.post-body {
+  grid-area: post-body;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 30px;
+}
+
+.post-page main>div.topics {
   grid-area: topics;
 }
 
-main div.latest-posts {
+.post-page main>div.latest-posts {
   grid-area: posts;
 }
 
-.left {
-  font-family: "Adobe Clean",sans-serif;
-  font-size: .75rem;
+.post-page main>div.products {
+  grid-area: products;
+  border-style: solid;
+  border-color: #dddddd;
+  border-width: 2px 0 2px 0;
+  margin: 16px 32px;
   text-align: center;
+  display: none;
 }
 
-.author img {
-  width: 120px;
-  height: 120px;
+.post-page main>div.products .prod-design {
+  display: flex;
+}
+
+.post-page main>div.products .prod-design p {
+  margin: 0;
+  padding: 0;
+  font-size: 0.8em;
+  font-weight: 700;
+  display: none;
+}
+
+.post-page main>div.products .prod-design a {
+  font-size: 1em;
+  font-weight: 400;
+  color: #4682E1;
+  text-decoration: none;
+}
+.post-page div.category {
+  margin: 0 32px;
+  padding: 0;
+}
+
+.post-page div.category a {
+  text-decoration: none;
+  color: #707070;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  font-size: 0.8em;
+}
+
+
+.post-page .author {
+  text-align: left;
+  color: #363636;
+  font-size: 0.9em;
+  line-height: 1.5em;
+}
+
+.post-page .author .author-summary {
+  display: flex;
+  align-items: center;
+}
+
+.post-page .author img {
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  margin: auto auto 15px auto;
+  margin-right: 15px;
   display: block;
 }
 
-.author .post-author {
+.post-page .author .post-author {
   font-weight: 600;
   display: block;
 }
 
-.post-date::before {
-  content: "by ";
-  display: inline;
-  color: rgb(10,10,10);
-  text-align: center;
-  text-size-adjust: 100%;
-  text-rendering: optimizeLegibility;
-  font-family: "Adobe Clean",sans-serif;
-  font-size: .75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  line-height:18px;
-  letter-spacing: .02em;
-  user-select: text;
+
+.post-page .author .post-author a {
+  text-decoration: none;
+  color: currentColor;
 }
 
-.author .post-author a {
-  text-decoration: underline;
-  transition: color 350ms;
-  color: #007bff;
-  background-color: transparent;
-}
-
-.author .post-date {
-  letter-spacing: .1em;
-  font-weight: 500;
-  text-transform: uppercase;
-  display: block;
-}
-
-.post-date::before {
-  content: "Published on ";
-  display: inline;
-  color: rgb(10,10,10);
-  text-align: center;
-  text-size-adjust: 100%;
-  text-rendering: optimizeLegibility;
-  font-family: "Adobe Clean",sans-serif;
-  font-size: .75rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  line-height:18px;
-  letter-spacing: .1em;
-  user-select: text;
-}
-
-.topics::before {
+.post-page .topics::before {
   content: "Topics in this article";
   display: block;
   margin-bottom: 15px;
@@ -365,12 +428,12 @@ main div.latest-posts {
   user-select: text;
 }
 
-.topics {
+.post-page .topics {
   margin: 0 auto 100px auto;
   text-align:center;
 }
 
-.topics a {
+.post-page .topics a {
   font-family: source-code-pro,sans-serif;
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -391,48 +454,58 @@ main div.latest-posts {
   display: inline-block;
 }
 
-.topics a:hover {
+.post-page .topics a:hover {
   color: #007bff;
 }
 
-.products::before {
-  content: "Adobe Products in this article";
-  display: block;
-  margin-bottom: 15px;
-  color: rgb(10,10,10);
-  text-align: center;
-  text-size-adjust: 100%;
-  text-rendering: optimizeLegibility;
-  font-family: "Adobe Clean",sans-serif;
-  font-size: .75rem;
-  line-height:18px;
-  font-weight: 600;
-  letter-spacing: .02em;
-  user-select: text;
-  width: 100%;
+.post-page .latest-posts::before {
+  content: "Recommended for you";
 }
 
-.products {
+.post-page .products {
   margin-top: 1.25rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  color: #363636;
+  line-height: 1.3em;
 }
 
-.products a {
+.post-page .products::before {
+  content: "Adobe products in this article";
+  display: block;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  font-size: 0.7em;
+  width: 100%;
+  padding: 16px 0;
+  line-height: 1.3em;
+}
+
+.post-page main>div.post-body h2 {
+  font-size: 1.4em;
+  font-weight: 700;
+  margin-bottom: 0.3em;
+}
+
+.post-page main>div.post-body p+h2 {
+  margin-top: 64px;
+}
+
+.post-page .products a {
   margin: 0 .125rem .5rem;
   font-size: .75rem;
 }
 
-.products a img {
-  width: 3.125rem;
-  height: 3.125rem;
-  max-width: 1.875rem;
-  max-height: 1.875rem;
+.post-page .products a img {
+  width: 45px;
+  height: 45px;
   margin: 0 .188rem;
 }
 
-.social::before {
+.post-page .social::before {
   content: "Follow me on";
   display: block;
   margin-bottom: 5px;
@@ -448,12 +521,12 @@ main div.latest-posts {
   user-select: text;
 }
 
-.social {
+.post-page .social {
   margin: 0 auto 50px auto;
   text-align:center;
 }
 
-.social svg {
+.post-page .social svg {
   fill: #000;
   height: 1em;
   width: 1em;
@@ -503,105 +576,80 @@ main div.latest-posts {
   flex-flow: row wrap;
 }
 
-.post {
-  background-color: white;
-  font-size: .75rem;
-  color: rgb(10,10,10);
-  width:256px;
-  height: 350px;
-  margin: 0 0 15px 15px;
-  display: inline-block;
+.card {
+  min-width: 268px;
+  max-width: 367px;
+  height: 340px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  border: solid 1px #eaeaea;
+  box-sizing: border-box;
   text-align: left;
+  display: inline-block;
 }
 
-.post .hero {
-  position: relative;
-  width: 256px;
-  height: 120px;
+.card .hero {
+  height:199px;
   background-color: #dfe2e5;
 }
 
-.post .hero img {
+.card .hero img {
   object-fit: cover;
-  width: 100%;
-  height: 120px;
+  height:100%;
   margin: 0;
 }
 
-.post .hero img[src="#"] {
+.card .hero img[src="#"] {
+  /* hide if hero image missing */
   visibility: hidden;
 }
 
-.post .topic {
-  position: absolute;
-  top: 10px;
-  right: 11px;
-  z-index: 10;
-  background: #fff;
-  color: #fc1a00;
-  padding: 8px 9px 9px 9px;
-  font-size: 10px;
-  border-radius: 4px;
-  line-height: 1;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  transition-duration: .3s;
-  font-weight: 500;
-  font-family: source-code-pro,sans-serif;
-  transition: color 350ms;
-  box-sizing: border-box;
+.card a {
+  text-decoration: none;
+  color: currentColor;
 }
 
-.post .topic:hover{
-  background-color: red;
-  color: #fff
-}
-
-.post .content {
-  padding: 10px 10px 10px 20px;
-  height: 205px;
-  text-align: left;
-  display: inline-flex;
-  flex-direction: column;
-  box-sizing: border-box;
+.card .content {
+  padding: 24px;
+  height: 139px;
+  background-color: white;
   overflow: hidden;
 }
 
-.post h2 {
-  text-align: left;
-  margin: 0 0 10px 0;
-  font-size: 1.5rem;
+.card .content p {
+  margin: 0;
+  font-size: 0.75rem;
+}
+
+.card p.topic,
+.card p.date {
+  color: #707070;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: black;
+  overflow: hidden;
   text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
-.post a {
-  text-decoration:none;
-  color: currentColor;
+.card .teaser {
+  display: none;
 }
 
-.post span {
-  display: block;
-  width: 100%;
-  font-family: "Adobe Clean", sans-serif;
-  font-weight: 800;
-  color: rgb(153, 153, 153);
-}
-
-.post .teaser {
-  font-size: 0.875rem;
-  font-weight: normal;
-  text-overflow: ellipsis;
-  flex-grow: 1;
-}
-
-.home-page main li:first-child .teaser {
-  color: currentColor;
-  font-weight: normal;
-  font-size: 1.1rem;
-}
-
-.post .date {
-  align-self: flex-end;
+.card .date {
+  display: none;
 }
 
 .home-page main .default {
@@ -609,16 +657,19 @@ main div.latest-posts {
   padding: 0;
 }
 
-.home-page main div:first-of-type {
-  text-align: left;
-}
-
 .home-page .latest-posts {
+  background-color: white;
   padding: 0 0 2rem 0;
+  margin-bottom: 0;
+  text-align: center;
 }
 
 .home-page .latest-posts::before {
   display: none;
+}
+
+.home-page main div.ais-Hits {
+  text-align: center;
 }
 
 .home-page main .ais-Hits ol,
@@ -626,15 +677,18 @@ main div.latest-posts {
   justify-content: center;
 }
 
-.home-page main .post {
-  margin: 0 2rem 2rem 0;
+.home-page main .card {
+  margin: 0 1rem 1.5rem 1rem;
 }
 
-.home-page main li:first-child .post {
+/*
+ special treatment for first card on homepage
+*/
+.home-page main li:first-child .card {
   width: 100vw;
-  margin: 0 0 30px 0;
+  margin-bottom: 2rem;
+  border: none;
   display: flex;
-  font-size: 1rem;
   flex-direction: column;
   height: unset;
 }
@@ -652,38 +706,34 @@ main div.latest-posts {
   visibility: hidden;
 }
 
-.home-page main li:first-child .topic {
-  display: none;
-}
-
 .home-page main li:first-child h2 {
-  font-size: 2.25rem;
+  font-size: 1.75rem;
+  color: #4b4b4b;
+  margin-bottom: 1rem;
 }
 
 .home-page main li:first-child .content {
-  padding: 1.5rem 1.5rem 1.5rem 3rem;
+  padding: 32px;
+  text-align: center;
   width: 100vw;
-  box-sizing: border-box;
   height: unset;
 }
 
-.home-page main li:first-child span {
-  font-weight: 600;
+.home-page main li:first-child .teaser {
+  display: block;
+  margin-bottom: 1rem;
+  color: #707070;
+  font-weight: normal;
+  font-size: 1.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
-.home-page main li:first-child::after {
-  content: "Latest Stories";
+.home-page main li:first-child .date {
   display: block;
-  margin: 1rem auto 2rem;
-  color: rgb(153,153,153);
-  text-align: center;
-  text-size-adjust: 100%;
-  text-rendering: optimizeLegibility;
-  font-family: "Adobe Clean",sans-serif;
-  font-size: 1.5rem;
-  line-height:18px;
-  font-weight: 600;
-  user-select: text;
 }
 
 .hide-all {
@@ -718,8 +768,6 @@ main div.latest-posts {
     font-size: 1.8rem;
   }
 
-
-
   h4 {
     font-size: 1.75rem;
   }
@@ -733,46 +781,163 @@ main div.latest-posts {
     line-height: 1.7;
   }
 
+  .card {
+    height: 398px;
+  }
+
+  .card a:hover {
+    text-decoration: underline;
+  }
+
+  .card p.teaser {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-flex;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .card p.date {
+    display: -webkit-flex;
+  }
+
+  .post-page main>div.post-header>div {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .post-page main>div.post-header,
+  .post-page main>div.topics  {
+    margin-left: 128px;
+    margin-right: 128px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .post-page main>div.post-body {
+    margin-left: 64px;
+    margin-right: 64px;
+    padding: 0;  
+  }
+
+  .post-page main>div.post-body>* {
+    margin-left: 64px;
+    margin-right: 64px;  
+  }
+
+  .post-page main>div.post-body>p.images {
+    margin-left: 0px;
+    margin-right: 0px;  
+  }
+
+  .post-page main>div.post-body>p.images>img {
+    width: 100%;
+  }
+
+  .post-page main>div.post-title h1 {
+    font-size: 1.8em;
+  }
+
+  .post-page main>div.products .prod-design p {
+    display: block;
+  }
+
+  .home-page main li:first-child .card {
+    width: 100vw;
+    max-width: unset;
+    flex-direction: row;
+    align-items: center;
+    margin: 0;
+    padding: 2rem;
+    text-align: left;
+
+  }
+
   .home-page main li:first-child .hero {
+    width: 50vw;
     height: unset;
+  }
+
+  .home-page main li:first-child .content {
+    padding: 1.5rem 1.5rem 1.5rem 3rem;
+    width: 50vw;
+    text-align: left;
   }
 
 }
 
-@media (min-width:900px) {
-  .default {
-    margin: auto;
-    width: 700px;
+@media (min-width:1100px) {
+
+  .post-page main  {
+    padding-top: 16px;
+    box-sizing: border-box;
+  }  
+
+  .post-page main .post-body {
     box-sizing: border-box;
   }
 
-  main div:nth-of-type(2) {
-    width: 100%
+  .post-page main div.hero-image img {
+    height: unset;
   }
 
-  main {
-    grid-template-areas: "title title title"
-                          "image image image"
-                          "author post ."
-                          "topics topics topics"
-                          "posts posts posts";
-
-    grid-template-columns: 20% 60% 20%;
+  .post-page main div.hero-image p:nth-of-type(2) {
+    padding-right: 0;
   }
 
-  div.default.left {
+  .post-page main>div.products {
+    width: 170px;
+    padding: 0;
+    border: 0;
+    margin: 0;
+  }
+
+  .post-page main>div.products .prod-design {
+    display: block;
+  }
+  
+  .post-page main>div.products .prod-design>div{
     margin-top: 30px;
-    margin-right: 0;
-    width: unset;
-    align-self: start;
   }
 
-  .home-page .latest-posts {
-    background-color: white;
+  .post-page main {
+    grid-template-areas: "hero-image hero-image post-header post-header"
+                         " .         post-body  post-body   . "
+                         " .         topics     topics      . "
+                         " .         posts      posts       . ";
+    margin: auto;
+    max-width: 1200px;
+    grid-template-columns: 170px 1fr 1fr 170px;
   }
 
-  .home-page main li:first-child .post {
-    flex-direction: row;
+  .post-page main>div.category {
+    padding-top: 60px;
+  }
+
+  .post-page main>div.author {
+    padding-bottom: 60px;
+  }
+
+  .post-page main>div.category, .post-page main>div.post-title, .post-page main>div.author {
+    margin-left: 32px;
+    margin-right: 32px;
+    padding-left: 0px;
+    padding-right: 64px;
+  }
+
+  .post-page main>div.post-body, .post-page main>div.topics, .post-page main>div.post-header {
+    margin: 0;
+    padding: 0;
+  }
+
+  .post-page main>div.post-header {
+    padding-left: 32px;
+  }
+
+  .home-page main div.ais-Hits {
+    max-width: 1200px;
   }
 
   .home-page main li:first-child .hero {
@@ -780,7 +945,6 @@ main div.latest-posts {
   }
 
   .home-page main li:first-child .content {
-    padding: 1.5rem 1.5rem 1.5rem 3rem;
     width: 40vw;
   }
 
@@ -795,49 +959,15 @@ div.evidon-notice-link {
 }
 
 /*
- * GetSocial
+ * GetSocial floating bar positioning
  */
-
  html div.gs-buttons {
   margin-top: -182px !important;
-  background: white;
-  padding: 8px 5px;
-  border-radius: 5px;
-  box-shadow: 2px 4px 6px 0px rgba(0,0,0,0.15);
-}
-
-html div.gs-buttons.gs-flat-colors:not(.gs-outline-colors):not(.gs-icon-highlight) a[class*="gs-"]:link,
-html div.gs-buttons.gs-flat-colors:not(.gs-outline-colors):not(.gs-icon-highlight) a[class*="gs-"]:visited,
-html div.gs-buttons.gs-flat-colors:not(.gs-outline-colors):not(.gs-icon-highlight) a[class*="gs-"]:hover,
-html div.gs-buttons.gs-flat-colors:not(.gs-outline-colors):not(.gs-icon-highlight) a[class*="gs-"]:active {
-  left: 0 !important;
-  margin-bottom: 0;
-  background: white;
-}
-
-html div.gs-buttons a[class*="gs-"]:link:not(.gs-plus):not(.gs-hide) i,
-html div.gs-buttons a[class*="gs-"]:visited:not(.gs-plus):not(.gs-hide) i,
-html div.gs-buttons a[class*="gs-"]:active:not(.gs-plus):not(.gs-hide) i {
-    color: #777 !important;
-}
-
-html div.gs-buttons a[class*="gs-"]:hover:not(.gs-plus):not(.gs-hide) i {
-  color: #444 !important;
-}
-
-html div.gs-buttons.gs-flat-colors.gs-floating.gs-color-grey a[class*="gs-"]:link:before,
-html div.gs-buttons.gs-flat-colors.gs-floating.gs-color-grey a[class*="gs-"]:link:hover:before,
-html div.gs-buttons.gs-flat-colors.gs-floating.gs-color-grey a[class*="gs-"]:visited:before,
-html div.gs-buttons.gs-flat-colors.gs-floating.gs-color-grey a[class*="gs-"]:visited:hover:before,
-html div.gs-buttons.gs-flat-colors.gs-floating.gs-color-grey a[class*="gs-"]:active:before,
-html div.gs-buttons.gs-flat-colors.gs-floating.gs-color-grey a[class*="gs-"]:active:hover:before {
-  background:white;
 }
 
 .banner {
   position: relative;
   display: flex;
-  width: 100%;
   background-color: #000;
   background-size: cover;
   background-position: center center;
