@@ -657,10 +657,6 @@ a.load-more::before {
   padding: 0;
 }
 
-.home-page main div:first-of-type {
-  text-align: left;
-}
-
 .home-page .latest-posts {
   background-color: white;
   padding: 0 0 2rem 0;
@@ -669,6 +665,10 @@ a.load-more::before {
 
 .home-page .latest-posts::before {
   display: none;
+}
+
+.home-page main div.ais-Hits {
+  text-align: center;
 }
 
 .home-page main .ais-Hits ol,
@@ -844,8 +844,11 @@ a.load-more::before {
     width: 100vw;
     max-width: unset;
     flex-direction: row;
-    margin-bottom: 2.5rem;
+    align-items: center;
+    margin: 0;
+    padding: 2rem;
     text-align: left;
+
   }
 
   .home-page main li:first-child .hero {
@@ -927,6 +930,10 @@ a.load-more::before {
 
   .post-page main>div.post-header {
     padding-left: 32px;
+  }
+
+  .home-page main div.ais-Hits {
+    max-width: 1200px;
   }
 
   .home-page main li:first-child .hero {
