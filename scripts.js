@@ -153,7 +153,7 @@
         month: '2-digit',
         year: 'numeric',
         timeZone: 'UTC',
-      }),
+      }).replace(/\//g, '-'),
       authorUrl: getLink(window.TYPE.AUTHOR, item.author),
       topic: item.topics.length > 0 ? item.topics[0] : '',
       topicUrl: item.topics.length > 0 ? getLink(window.TYPE.TOPIC, item.topics[0]) : '',
@@ -441,7 +441,6 @@
     setupSearch({
       hitsPerPage: 13,
       container: '.latest-posts',
-      itemTemplate: document.getElementById('homepage-card'),
       transformer: (item, index) => {
         item = itemTransformer(item);
         if (index === 0) {
@@ -788,7 +787,7 @@
     }
 
     if ($blogpost) {
-      teaser=$blogpost.innerText.substr(0,512);
+      teaser=$blogpost.innerText.substr(0,171);
     }
 
     const hero=new URL(document.querySelector('main>div:nth-of-type(2) img').getAttribute('src')).pathname;
