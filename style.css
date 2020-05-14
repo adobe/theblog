@@ -657,14 +657,11 @@ a.load-more::before {
   padding: 0;
 }
 
-.home-page main div:first-of-type {
-  text-align: left;
-}
-
 .home-page .latest-posts {
   background-color: white;
   padding: 0 0 2rem 0;
   margin-bottom: 0;
+  text-align: center;
 }
 
 .home-page .latest-posts::before {
