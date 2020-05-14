@@ -578,7 +578,7 @@ a.load-more::before {
 
 .card {
   min-width: 268px;
-  max-width: 379px;
+  max-width: 367px;
   height: 340px;
   border-radius: 4px;
   overflow: hidden;
@@ -781,21 +781,24 @@ a.load-more::before {
     line-height: 1.7;
   }
 
+  .card {
+    height: 398px;
+  }
+
   .card a:hover {
     text-decoration: underline;
   }
 
   .card p.teaser {
-    display: block;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: -webkit-box;
+    display: -webkit-flex;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
   }
 
   .card p.date {
-    display: block;
+    display: -webkit-flex;
   }
 
   .post-page main>div.post-header>div {
