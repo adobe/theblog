@@ -314,7 +314,7 @@
     indexName = 'adobe--theblog--blog-posts',
     hitsPerPage = 12,
     facetFilters = [],
-    container = '.latest-posts',
+    container = '.articles',
     itemTemplate = document.getElementById('post-card'),
     emptyTemplate = 'There are no articles yet',
     transformer = itemTransformer,
@@ -353,39 +353,23 @@
           // find container
           $el = document.querySelector(container);
         }
-        let $hits, $list;
-        if ($el.querySelector('.ais-Hits')) {
-          $hits=$el.querySelector('.ais-Hits');
-          $list=$el.querySelector('.ais-Hits-list');
+        if (!hits || hits.length === 0) {
+          const $empty = document.createElement('div');
+          $empty.textContent = emptyTemplate;
+          $el.appendChild($empty);
         } else {
-          $hits=document.createElement('div');
-          $hits.classList.add('ais-Hits');
-          $el.appendChild($hits);
-          if (!hits || hits.length === 0) {
-            const $empty = document.createElement('div');
-            $empty.textContent = emptyTemplate;
-            $hits.appendChild($empty);
-          } else {
-          $list = document.createElement('ol');
-          $list.classList.add('ais-Hits-list');
-          $hits.appendChild($list);
-          }
-        }
-        if (hits) {
+          // add hits to container
           hits
             .map(transformer)
             .forEach((hit) => {
               const $item = itemTemplate.content.cloneNode(true).firstElementChild;
               fillData($item, hit);
-              const $hit = document.createElement('li');
-              $hit.classList.add('ais-Hits-item');
-              $hit.appendChild($item);
-              $list.appendChild($hit);
+              $el.appendChild($item);
             });
           // add button to load more
           const $more = createTag('a', { 'class': 'action primary load-more' });
           $more.addEventListener('click', function () { alert('Not implemented yet.'); });
-          $hits.appendChild($more);
+          $el.parentNode.appendChild($more);
         }
       }
     });
@@ -434,13 +418,12 @@
       titleSection.remove();
     }
 
-    const postsWrap = document.createElement('div');
-    postsWrap.className = 'default latest-posts';
-    document.querySelector('main').appendChild(postsWrap);
+    const cardsWrap = document.createElement('div');
+    cardsWrap.className = 'default articles';
+    document.querySelector('main').appendChild(cardsWrap);
 
     setupSearch({
       hitsPerPage: 13,
-      container: '.latest-posts',
       transformer: (item, index) => {
         item = itemTransformer(item);
         if (index === 0) {
@@ -825,7 +808,7 @@
       container: {
         tagName: 'div',
         parent: getSection().parentNode,
-        classes: ['default', 'latest-posts'],
+        classes: ['default', 'articles'],
       },
     });
   }
