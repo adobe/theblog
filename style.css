@@ -234,19 +234,71 @@ a.learn-more::before {
   content: "Learn more >"
 }
 
-a.load-more {
+a.action {
   display: inline-block;
-  border: solid #4b4b4b 2px;
-  border-radius: 20px;
-  color: #4b4b4b;
+  border-radius: 22px;
   font-size:1rem;
   font-weight: 700;
   text-decoration: none;
-  padding: 4px 12px;
+  padding: 4px 16px;
+}
+
+a.action:disabled {
+  border: none;
+  color: #bcbcbc;
+}
+
+a.action.primary {
+  border: solid #505050 3px;
+  color: #505050;
+}
+
+a.action.primary:hover {
+  color: white;
+  background-color: #505050;
+}
+
+a.action.primary:active {
+  color: white;
+  background-color: #323232;
+}
+
+a.action.secondary {
+  border: solid #747474 2px;
+  color: #747474;
+}
+
+a.action.secondary:hover {
+  color: white;
+  background-color: #747474;
+}
+
+a.action.secondary:active {
+  color: white;
+  background-color: #505050;
+}
+
+a.action.call-to-action {
+  border: solid #1673e6 3px;
+  color: white;
+  background-color: #1673e6;
+}
+
+a.action.call-to-action:hover {
+  color: white;
+  background-color: #0e65d0;
+}
+
+a.action.call-to-action:active {
+  color: white;
+  background-color: #095abb;
+}
+
+a.load-more {
   margin-bottom: 2rem;
 }
 
-a.load-more::before {
+a.action.load-more::before {
   content: "Load more articles"
 }
 
@@ -579,9 +631,7 @@ a.load-more::before {
 .card {
   min-width: 268px;
   max-width: 367px;
-  height: 340px;
   border-radius: 4px;
-  overflow: hidden;
   margin-bottom: 24px;
   border: solid 1px #eaeaea;
   box-sizing: border-box;
@@ -611,21 +661,21 @@ a.load-more::before {
 }
 
 .card .content {
-  padding: 24px;
-  height: 139px;
+  padding: 2rem;
+  max-height: 248px;
   background-color: white;
   overflow: hidden;
 }
 
 .card .content p {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
 }
 
 .card p.topic,
 .card p.date {
   color: #707070;
-  font-size: 12px;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: .1em;
   font-weight: 600;
@@ -635,8 +685,9 @@ a.load-more::before {
 .card h2 {
   margin: 0;
   font-size: 1rem;
+  line-height: 1.25rem;
   font-weight: 700;
-  color: black;
+  color: #2c2c2c;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -644,12 +695,14 @@ a.load-more::before {
   -webkit-box-orient: vertical;
 }
 
-.card .teaser {
-  display: none;
-}
-
-.card .date {
-  display: none;
+.card p.teaser {
+  color: #747474;
+  font-size: 0.875rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-flex;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .home-page main .default {
@@ -677,8 +730,13 @@ a.load-more::before {
   justify-content: center;
 }
 
-.home-page main .card {
+.home-page .card {
   margin: 0 1rem 1.5rem 1rem;
+}
+
+.home-page .card p.teaser,
+.home-page .card p.date {
+  display: none;
 }
 
 /*
@@ -708,6 +766,7 @@ a.load-more::before {
 
 .home-page main li:first-child h2 {
   font-size: 1.75rem;
+  line-height: 2rem;
   color: #4b4b4b;
   margin-bottom: 1rem;
 }
@@ -789,16 +848,9 @@ a.load-more::before {
     text-decoration: underline;
   }
 
-  .card p.teaser {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-flex;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
-
-  .card p.date {
-    display: -webkit-flex;
+  .card h2 {
+    font-size: 1.25rem;
+    line-height: 1.5rem;
   }
 
   .post-page main>div.post-header>div {
@@ -856,14 +908,19 @@ a.load-more::before {
   }
 
   .home-page main li:first-child .hero {
-    width: 50vw;
+    width: 40vw;
     height: unset;
   }
 
   .home-page main li:first-child .content {
     padding: 1.5rem 1.5rem 1.5rem 3rem;
-    width: 50vw;
+    width: 60vw;
     text-align: left;
+  }
+
+  .home-page .card p.teaser,
+  .home-page .card p.date {
+    display: block;
   }
 
 }
