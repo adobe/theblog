@@ -18,8 +18,8 @@ a.load-more::before {
   content: "Mehr Artikel laden"
 }
 
-.topics::before {
-  content: "Themen in diesem Artikel";
+.articles-empty::before {
+  content: "Keine Artikel gefunden"
 }
 
 .post-page .latest-posts::before {
@@ -32,10 +32,6 @@ a.load-more::before {
 
 .social::before {
   content: "Folge mir auf";
-}
-
-.latest-posts::before {
-  content: "Neueste Artikel";
 }
 
 .language-Navigation_heading::before {

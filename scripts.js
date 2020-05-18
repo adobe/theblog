@@ -269,7 +269,9 @@
         };
       });
 
-      /* fetch from algolia
+      /*
+      fetch from algolia
+      */
       
       const res = await fetch(url, {
         method: 'POST',
@@ -279,14 +281,14 @@
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: JSON.stringify({ requests }),
-      });*/
+      });
 
       /*
       fetch locally for offline dev
-      */
       const res = await fetch('/query-results.json', {
         method: 'GET'
       });
+      */
 
       const { results } = await res.json();
       if (!results) return [];
@@ -316,7 +318,7 @@
     facetFilters = [],
     container = '.articles',
     itemTemplate = document.getElementById('post-card'),
-    emptyTemplate = 'There are no articles yet',
+    emptyTemplate = '<div class="articles-empty"><div>',
     transformer = itemTransformer,
   }) {
     const query = helixQuery('A8PL9E4TZT', '49f861a069d3c1cdb2c15f6db7929199');
@@ -324,7 +326,7 @@
     const featured = getFeaturedPostsPaths();
 
     const queries = [];
-    if (filters.length > 0 && filters[0].length > 0) {
+    if (filters.length == 0 || filters[0].length > 0) {
       filters.push(`parents:${window.helix.context}${window.helix.language}`);
       filters.push(`date < ${Math.round(Date.now()/1000)}`); // hide articles with future dates
       queries.push({
@@ -345,26 +347,29 @@
       if (emptyTemplate || (hits && hits.length > 0)) {
         let $el;
         if (typeof container === 'object') {
-          // create container
-          $el = document.createElement(container.tagName);
-          container.classes.forEach((className) => $el.classList.add(className));
-          container.parent.appendChild($el);
+          if (hits && hits.length > 0) {
+            // create container if there are hits
+            $el = document.createElement(container.tagName);
+            container.classes.forEach((className) => $el.classList.add(className));
+            container.parent.appendChild($el);
+          }
         } else {
-          // find container
+          // container already created, find it
           $el = document.querySelector(container);
         }
         if (!hits || hits.length === 0) {
           const $empty = document.createElement('div');
-          $empty.textContent = emptyTemplate;
+          $empty.innerHTML = emptyTemplate;
           $el.appendChild($empty);
         } else {
           // add hits to container
           hits
             .map(transformer)
-            .forEach((hit) => {
+            .forEach((hit, index) => {
               const $item = itemTemplate.content.cloneNode(true).firstElementChild;
               fillData($item, hit);
-              $el.appendChild($item);
+              const $parent = index ? $el : document.querySelector('main');
+              $parent.appendChild($item);
             });
           // add button to load more
           const $more = createTag('a', { 'class': 'action primary load-more' });
@@ -788,23 +793,17 @@
     }, null, "  ")+", ");
   }
 
-  function fetchLatestPosts() {
+  function fetchArticles() {
     let filter, emptyTemplate;
     if (isPost) {
       filter = '';
-      emptyTemplate = '';
     } else if (isTopic) {
       filter = `topics:"${document.title}"`;
-      emptyTemplate = 'There are no articles in this topic yet';
     } else if (isAuthor) {
       filter = `author:"${document.title.split(',')[0]}"`;
-      emptyTemplate = 'This author has not posted any articles yet.';
     }
     setupSearch({
-      facetFilters: [
-          filter,
-        ],
-      emptyTemplate,
+      facetFilters: [filter],
       container: {
         tagName: 'div',
         parent: getSection().parentNode,
@@ -829,12 +828,12 @@
       addProducts();
       addGetSocial();
       shapeBanner();
-      fetchLatestPosts();
+      fetchArticles();
     } else if (isAuthor) {
       fetchSocialLinks();
-      fetchLatestPosts();
+      fetchArticles();
     } else if (isTopic) {
-      fetchLatestPosts();
+      fetchArticles();
     } else if (isProduct) {
       // todo
     }
