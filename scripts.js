@@ -316,6 +316,7 @@
     indexName = 'adobe--theblog--blog-posts',
     hitsPerPage = 12,
     facetFilters = [],
+    omitEmpty = false,
     container = '.articles',
     itemTemplate = document.getElementById('post-card'),
     emptyTemplate = '<div class="articles-empty"><div>',
@@ -343,24 +344,23 @@
       })
     }
 
-    query(queries, hitsPerPage).then(({ hits }) => {
-      if (emptyTemplate || (hits && hits.length > 0)) {
+    query(queries, hitsPerPage).then(({ hits = [] }) => {
         let $el;
         if (typeof container === 'object') {
-          if (hits && hits.length > 0) {
-            // create container if there are hits
+          if (!omitEmpty) {
             $el = document.createElement(container.tagName);
             container.classes.forEach((className) => $el.classList.add(className));
             container.parent.appendChild($el);
           }
         } else {
-          // container already created, find it
           $el = document.querySelector(container);
         }
-        if (!hits || hits.length === 0) {
-          const $empty = document.createElement('div');
-          $empty.innerHTML = emptyTemplate;
-          $el.appendChild($empty);
+        if (hits.length === 0) {
+          if (!omitEmpty) {
+            const $empty = document.createElement('div');
+            $empty.innerHTML = emptyTemplate;
+            $el.appendChild($empty);
+          }
         } else {
           // add hits to container
           hits
@@ -376,7 +376,6 @@
           $more.addEventListener('click', function () { alert('Not implemented yet.'); });
           $el.parentNode.appendChild($more);
         }
-      }
     });
   }
 
@@ -794,9 +793,10 @@
   }
 
   function fetchArticles() {
-    let filter, emptyTemplate;
+    let filter, emptyTemplate, omitEmpty;
     if (isPost) {
       filter = '';
+      omitEmpty = true; // don't display anything if no results
     } else if (isTopic) {
       filter = `topics:"${document.title}"`;
     } else if (isAuthor) {
@@ -804,6 +804,7 @@
     }
     setupSearch({
       facetFilters: [filter],
+      omitEmpty,
       container: {
         tagName: 'div',
         parent: getSection().parentNode,
