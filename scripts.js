@@ -269,7 +269,9 @@
         };
       });
 
-      /* fetch from algolia
+      /*
+      fetch from algolia
+      */
       
       const res = await fetch(url, {
         method: 'POST',
@@ -279,18 +281,20 @@
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: JSON.stringify({ requests }),
-      });*/
+      });
 
       /*
       fetch locally for offline dev
-      */
       const res = await fetch('/query-results.json', {
         method: 'GET'
       });
+      */
 
       const { results } = await res.json();
       if (!results) return [];
+      let nbHits = 0;
       results.forEach((result, i) => {
+        nbHits += result.nbHits;
         const { customSort } = queries[i];
         if (customSort) {
           result.hits.sort(customSort);
@@ -306,7 +310,7 @@
           return unique.find((item) => item.objectID === hit.objectID)
             ? unique : [...unique, hit];
         }, []);
-      return { hits: hits.slice(0, hitsPerPage) };
+      return { hits: hits.slice(0, hitsPerPage), nbHits };
     }
   }
 
@@ -314,17 +318,19 @@
     indexName = 'adobe--theblog--blog-posts',
     hitsPerPage = 12,
     facetFilters = [],
-    container = '.latest-posts',
+    omitEmpty = false,
+    container = '.articles',
     itemTemplate = document.getElementById('post-card'),
-    emptyTemplate = 'There are no articles yet',
+    emptyTemplate = '<div class="articles-empty"><div>',
     transformer = itemTransformer,
+    callback = () => {},
   }) {
     const query = helixQuery('A8PL9E4TZT', '49f861a069d3c1cdb2c15f6db7929199');
     const filters = Array.from(facetFilters);
     const featured = getFeaturedPostsPaths();
 
     const queries = [];
-    if (filters.length > 0 && filters[0].length > 0) {
+    if (filters.length == 0 || filters[0].length > 0) {
       filters.push(`parents:${window.helix.context}${window.helix.language}`);
       filters.push(`date < ${Math.round(Date.now()/1000)}`); // hide articles with future dates
       queries.push({
@@ -341,54 +347,43 @@
       })
     }
 
-    query(queries, hitsPerPage).then(({ hits }) => {
-      if (emptyTemplate || (hits && hits.length > 0)) {
+    query(queries, hitsPerPage)
+      .then(({ hits = [], nbHits = 0 }) => {
         let $el;
         if (typeof container === 'object') {
-          // create container
-          $el = document.createElement(container.tagName);
-          container.classes.forEach((className) => $el.classList.add(className));
-          container.parent.appendChild($el);
+          if (hits.length || !omitEmpty) {
+            $el = document.createElement(container.tagName);
+            container.classes.forEach((className) => $el.classList.add(className));
+            container.parent.appendChild($el);
+          }
         } else {
-          // find container
           $el = document.querySelector(container);
         }
-        let $hits, $list;
-        if ($el.querySelector('.ais-Hits')) {
-          $hits=$el.querySelector('.ais-Hits');
-          $list=$el.querySelector('.ais-Hits-list');
-        } else {
-          $hits=document.createElement('div');
-          $hits.classList.add('ais-Hits');
-          $el.appendChild($hits);
-          if (!hits || hits.length === 0) {
+        if (!hits.length) {
+          if (!omitEmpty) {
             const $empty = document.createElement('div');
-            $empty.textContent = emptyTemplate;
-            $hits.appendChild($empty);
-          } else {
-          $list = document.createElement('ol');
-          $list.classList.add('ais-Hits-list');
-          $hits.appendChild($list);
+            $empty.innerHTML = emptyTemplate;
+            $el.appendChild($empty);
           }
-        }
-        if (hits) {
+        } else {
+          // add hits to container
           hits
             .map(transformer)
-            .forEach((hit) => {
+            .forEach((hit, index) => {
               const $item = itemTemplate.content.cloneNode(true).firstElementChild;
               fillData($item, hit);
-              const $hit = document.createElement('li');
-              $hit.classList.add('ais-Hits-item');
-              $hit.appendChild($item);
-              $list.appendChild($hit);
+              $el.appendChild($item);
             });
-          // add button to load more
-          const $more = createTag('a', { 'class': 'load-more' });
-          $more.addEventListener('click', function () { alert('Not implemented yet.'); });
-          $hits.appendChild($more);
+          if (nbHits > hitsPerPage) {
+            // add button to load more
+            const $more = createTag('a', { 'class': 'action primary load-more' });
+            $more.addEventListener('click', function () { alert('Not implemented yet.'); });
+            $el.parentNode.appendChild($more);
+          }
         }
-      }
-    });
+        return { hits, nbHits };
+      })
+      .then(callback);
   }
 
   function getFeaturedPostsPaths() {
@@ -434,13 +429,12 @@
       titleSection.remove();
     }
 
-    const postsWrap = document.createElement('div');
-    postsWrap.className = 'default latest-posts';
-    document.querySelector('main').appendChild(postsWrap);
+    const cardsWrap = document.createElement('div');
+    cardsWrap.className = 'default articles';
+    document.querySelector('main').appendChild(cardsWrap);
 
     setupSearch({
       hitsPerPage: 13,
-      container: '.latest-posts',
       transformer: (item, index) => {
         item = itemTransformer(item);
         if (index === 0) {
@@ -449,7 +443,15 @@
         }
         return item;
       },
+      callback: () => {
+        // move first card to featured 
+        const $firstCard = document.querySelector('.card');
+        if ($firstCard) {
+          wrapNodes(document.querySelector('main'), [$firstCard]);
+        }
+      }
     });
+    
   }
 
   /*
@@ -805,27 +807,23 @@
     }, null, "  ")+", ");
   }
 
-  function fetchLatestPosts() {
-    let filter, emptyTemplate;
+  function fetchArticles() {
+    let filter, emptyTemplate, omitEmpty;
     if (isPost) {
       filter = '';
-      emptyTemplate = '';
+      omitEmpty = true; // don't display anything if no results
     } else if (isTopic) {
       filter = `topics:"${document.title}"`;
-      emptyTemplate = 'There are no articles in this topic yet';
     } else if (isAuthor) {
       filter = `author:"${document.title.split(',')[0]}"`;
-      emptyTemplate = 'This author has not posted any articles yet.';
     }
     setupSearch({
-      facetFilters: [
-          filter,
-        ],
-      emptyTemplate,
+      facetFilters: [filter],
+      omitEmpty,
       container: {
         tagName: 'div',
         parent: getSection().parentNode,
-        classes: ['default', 'latest-posts'],
+        classes: ['default', 'articles'],
       },
     });
   }
@@ -846,12 +844,12 @@
       addProducts();
       addGetSocial();
       shapeBanner();
-      fetchLatestPosts();
+      fetchArticles();
     } else if (isAuthor) {
       fetchSocialLinks();
-      fetchLatestPosts();
+      fetchArticles();
     } else if (isTopic) {
-      fetchLatestPosts();
+      fetchArticles();
     } else if (isProduct) {
       // todo
     }
