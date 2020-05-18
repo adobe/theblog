@@ -759,6 +759,13 @@ a.action.load-more::before {
   content: 'No articles found under this topic';
 }
 
+/*
+ * GetSocial floating share bar
+ */
+html div.gs-buttons {
+  margin-top: -73px !important;
+}
+
 @media (min-width:600px) {
 
   h1 {
@@ -905,6 +912,13 @@ a.action.load-more::before {
     display: block;
   }
 
+  /*
+   * GetSocial floating share bar
+   */
+  html div.gs-buttons {
+    margin-top: -172px !important;
+  }
+
 }
 
 @media (min-width:1100px) {
@@ -1010,13 +1024,6 @@ a.action.load-more::before {
  */
 div.evidon-notice-link {
   display:none;
-}
-
-/*
- * GetSocial floating bar positioning
- */
- html div.gs-buttons {
-  margin-top: -182px !important;
 }
 
 .banner {
