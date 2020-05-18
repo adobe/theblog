@@ -292,7 +292,9 @@
 
       const { results } = await res.json();
       if (!results) return [];
+      let nbHits = 0;
       results.forEach((result, i) => {
+        nbHits += result.nbHits;
         const { customSort } = queries[i];
         if (customSort) {
           result.hits.sort(customSort);
@@ -308,7 +310,7 @@
           return unique.find((item) => item.objectID === hit.objectID)
             ? unique : [...unique, hit];
         }, []);
-      return { hits: hits.slice(0, hitsPerPage) };
+      return { hits: hits.slice(0, hitsPerPage), nbHits };
     }
   }
 
@@ -321,6 +323,7 @@
     itemTemplate = document.getElementById('post-card'),
     emptyTemplate = '<div class="articles-empty"><div>',
     transformer = itemTransformer,
+    callback = () => {},
   }) {
     const query = helixQuery('A8PL9E4TZT', '49f861a069d3c1cdb2c15f6db7929199');
     const filters = Array.from(facetFilters);
@@ -344,7 +347,8 @@
       })
     }
 
-    query(queries, hitsPerPage).then(({ hits = [] }) => {
+    query(queries, hitsPerPage)
+      .then(({ hits = [], nbHits = 0 }) => {
         let $el;
         if (typeof container === 'object') {
           if (!omitEmpty) {
@@ -368,15 +372,18 @@
             .forEach((hit, index) => {
               const $item = itemTemplate.content.cloneNode(true).firstElementChild;
               fillData($item, hit);
-              const $parent = index ? $el : document.querySelector('main');
-              $parent.appendChild($item);
+              $el.appendChild($item);
             });
-          // add button to load more
-          const $more = createTag('a', { 'class': 'action primary load-more' });
-          $more.addEventListener('click', function () { alert('Not implemented yet.'); });
-          $el.parentNode.appendChild($more);
+          if (nbHits > hitsPerPage) {
+            // add button to load more
+            const $more = createTag('a', { 'class': 'action primary load-more' });
+            $more.addEventListener('click', function () { alert('Not implemented yet.'); });
+            $el.parentNode.appendChild($more);
+          }
         }
-    });
+        return { hits, nbHits };
+      })
+      .then(callback);
   }
 
   function getFeaturedPostsPaths() {
@@ -436,7 +443,16 @@
         }
         return item;
       },
+      callback: () => {
+        // move first card to featured 
+        const $firstCard = document.querySelector('.card');
+        if ($firstCard) {
+          $firstCard.parentNode.removeChild($firstCard);
+          document.querySelector('main').appendChild($firstCard);
+        }
+      }
     });
+    
   }
 
   /*
