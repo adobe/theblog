@@ -284,7 +284,6 @@ a.action.load-more::before {
 .post-page main div.post-header .post-author {
   padding-top: 0;
   padding-bottom: 0;
-  margin-top: 20px;
 }
 
 
@@ -357,6 +356,7 @@ a.action.load-more::before {
 }
 
 .post-page .author .author-summary {
+  margin-top: 20px;
   display: flex;
   align-items: center;
 }
