@@ -351,7 +351,7 @@
       .then(({ hits = [], nbHits = 0 }) => {
         let $el;
         if (typeof container === 'object') {
-          if (!omitEmpty) {
+          if (hits.length || !omitEmpty) {
             $el = document.createElement(container.tagName);
             container.classes.forEach((className) => $el.classList.add(className));
             container.parent.appendChild($el);
@@ -359,7 +359,7 @@
         } else {
           $el = document.querySelector(container);
         }
-        if (hits.length === 0) {
+        if (!hits.length) {
           if (!omitEmpty) {
             const $empty = document.createElement('div');
             $empty.innerHTML = emptyTemplate;
@@ -447,8 +447,7 @@
         // move first card to featured 
         const $firstCard = document.querySelector('.card');
         if ($firstCard) {
-          $firstCard.parentNode.removeChild($firstCard);
-          document.querySelector('main').appendChild($firstCard);
+          wrapNodes(document.querySelector('main'), [$firstCard]);
         }
       }
     });
