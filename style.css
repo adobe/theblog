@@ -30,7 +30,6 @@ body {
 /* hide to avoid flickering until class is applied to body */
 main {
   visibility: hidden;
-  margin-bottom: 5rem;
 }
 
 .home-page main,
@@ -406,8 +405,9 @@ a.action.load-more::before {
 }
 
 .post-page .topics {
-  margin: 1.5rem auto 0 auto;
-  text-align:center;
+  margin: 24px auto 56px auto;
+  padding: 0;
+  text-align: center;
 }
 
 .post-page .topics a {
@@ -437,6 +437,12 @@ a.action.load-more::before {
 
 .post-page .articles::before {
   content: "Recommended for you";
+  font-size: 1.5rem;
+  display: block;
+  text-align: center;
+  font-weight: 700;
+  width: 100%;
+  padding-bottom: 32px;
 }
 
 .post-page .products {
@@ -514,7 +520,8 @@ a.action.load-more::before {
 }
 
 .articles {
-  margin: 0 auto;
+  padding: 56px 0;
+  background-color: #eaeaea;
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
@@ -537,7 +544,7 @@ a.action.load-more::before {
 }
 
 .card .hero {
-  height:200px;
+  height:248px;
   background-color: #eaeaea;
 }
 
@@ -604,15 +611,19 @@ a.action.load-more::before {
   overflow: hidden;
   margin-bottom: 1rem;
   text-overflow: ellipsis;
-  display: -webkit-flex;
+  display: none;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+
+.card p.date {
+  display: none;
 }
 
 .home-page main {
   display: grid;
   grid-template-areas: "featured"
-                       "newsroom"
+                       "news-box"
                        "articles"
                        "load-more"
                        "inspiration";
@@ -620,16 +631,11 @@ a.action.load-more::before {
 
 .home-page main .default {
   padding: 0;
-
 }
 
-.home-page .articles {
+.home-page main .articles {
   grid-area: articles;
-}
-
-.home-page .card p.teaser,
-.home-page .card p.date {
-  display: none;
+  background: white;
 }
 
 .home-page main > .card {
@@ -640,6 +646,10 @@ a.action.load-more::before {
   margin: 0;
   display: flex;
   flex-direction: column;
+}
+
+.home-page main > .card .hero {
+  height: 320px;
 }
 
 .home-page main > .card .hero img[src="#"] {
@@ -730,10 +740,6 @@ html div.gs-buttons {
     text-decoration: underline;
   }
 
-  .card .hero {
-    height: 320px;
-  }
-
   .card .content {
     box-sizing: content-box;
     height: 168px;
@@ -750,6 +756,14 @@ html div.gs-buttons {
     margin-bottom: 0.5rem;
   }
 
+  .card p.teaser {
+    display: -webkit-box;
+  }
+
+  .card p.date {
+    display: block;
+  }
+
   .post-page main>div.post-header>div {
     margin-left: 0;
     margin-right: 0;
@@ -758,11 +772,15 @@ html div.gs-buttons {
   }
 
   .post-page main>div.post-header,
-  .post-page main>div.topics  {
+  .post-page main>div.topics {
     margin-left: 128px;
     margin-right: 128px;
     padding-left: 0;
     padding-right: 0;
+  }
+
+  .post-page main>div.topics {
+    margin-bottom: 80px;
   }
 
   .post-page main>div.post-body {
@@ -819,14 +837,6 @@ html div.gs-buttons {
     box-sizing: border-box;
   }
 
-  .home-page .card p.teaser {
-    display: -webkit-box;
-  }
-
-  .home-page .card p.date {
-    display: block;
-  }
-
   /*
    * GetSocial floating share bar
    */
@@ -871,13 +881,11 @@ html div.gs-buttons {
   }
 
   .post-page main {
-    grid-template-areas: "hero-image hero-image post-header post-header"
-                         " .         post-body  post-body   . "
-                         " .         topics     topics      . "
-                         " .         articles   articles    . ";
-    margin: auto;
-    max-width: 1200px;
-    grid-template-columns: 170px 1fr 1fr 170px;
+    grid-template-areas: " . hero-image hero-image post-header post-header . "
+                         " . .          post-body  post-body   . . "
+                         " . .          topics     topics      . . "
+                         "articles articles articles articles articles articles";
+    grid-template-columns: 8.33% 170px minmax(auto, 430px) minmax(auto, 430px) 170px 8.33%;
   }
 
   .post-page main>div.category {
@@ -906,7 +914,7 @@ html div.gs-buttons {
 
   .home-page main {
     grid-template-areas: " . featured    . "
-                         " . newsroom    . "
+                         " . news-box    . "
                          " . articles    . "
                          " . load-more   . "
                          " . inspiration . ";
@@ -915,7 +923,6 @@ html div.gs-buttons {
 
   .home-page .articles {
     justify-content: start;
-
   }
 
   .home-page main > .card {
