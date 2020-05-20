@@ -1017,6 +1017,20 @@ html div.gs-buttons {
     max-width: calc(100%/3 - 2rem);
   }
 
+  .home-page main .articles .card .hero {
+    width: 100%;
+    padding-bottom: 66.67%; /* 16:9 aspect ratio */
+    position: relative;
+  }
+
+  .home-page main .articles .card .hero img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
   .home-page main > .card .hero {
     width: 60%;
   }

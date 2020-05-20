@@ -147,7 +147,7 @@
 
   const itemTransformer = (item) => {
     const itemParams = {
-      hero: item.hero ? `${item.hero}?height=512&crop=7:5&auto=webp` : '#',
+      hero: item.hero ? `${item.hero}?height=512&crop=3:2&auto=webp` : '#',
       date: new Date(item.date * 1000).toLocaleDateString('en-US', {
         day: '2-digit',
         month: '2-digit',
@@ -452,7 +452,7 @@
         item = itemTransformer(item);
         if (index === 0) {
           // use larger hero image on first article
-          item.hero = item.hero ? item.hero.replace('?height=512&crop=7:5', '?height=640') : '#';
+          item.hero = item.hero ? item.hero.replace('?height=512&crop=3:2', '?height=640') : '#';
         }
         return item;
       },
