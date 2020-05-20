@@ -147,7 +147,7 @@
 
   const itemTransformer = (item) => {
     const itemParams = {
-      hero: item.hero ? `${item.hero}?width=256&auto=webp` : '#',
+      hero: item.hero ? `${item.hero}?height=512&crop=3:2&auto=webp` : '#',
       date: new Date(item.date * 1000).toLocaleDateString('en-US', {
         day: '2-digit',
         month: '2-digit',
@@ -175,6 +175,16 @@
     });
   } 
 
+  function addImageClasses() {
+    document.querySelectorAll('.post-page .post-body img').forEach(($e) => {
+      let hasText = false;
+      $e.parentNode.childNodes.forEach(($c) => {
+        if ($c.nodeName == '#text') hasText=true;
+      })
+      if (hasText) $e.parentNode.classList.add('left');
+    })
+  }
+
   function decoratePostPage(){
     addClass('.post-page main>div:first-of-type', 'post-title');
     addClass('.post-page main>div:nth-of-type(2)', 'hero-image');
@@ -182,6 +192,7 @@
     addClass('.post-page main>div:nth-of-type(4)', 'post-body');
     addClass('.post-page main>div.post-body>p>img', 'images', 1);
     wrap('post-header',['main>div.category','main>div.post-title', 'main>div.post-author']);
+    addImageClasses();
   }
 
   function addPageTypeAsBodyClass() {
@@ -439,7 +450,7 @@
         item = itemTransformer(item);
         if (index === 0) {
           // use larger hero image on first article
-          item.hero = item.hero ? item.hero.replace('?width=256', `?width=${window.innerWidth <= 900 ? 900 : 2048}`) : '#';
+          item.hero = item.hero ? item.hero.replace('?height=512&crop=3:2', '?height=640') : '#';
         }
         return item;
       },
@@ -464,7 +475,7 @@
       ];  
       const dateObj = date.split('-');
   
-      return monthNames[parseInt(dateObj[0])] + " " + dateObj[1] + ", " + dateObj[2];
+      return monthNames[parseInt(dateObj[0])-1] + " " + dateObj[1] + ", " + dateObj[2];
   }
 
   function handleMetadata() {
@@ -580,7 +591,7 @@
     const categoryWrap = document.createElement('div');
     categoryWrap.className = 'default category';
     const href=getLink(window.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
-    categoryWrap.innerHTML = `<a href="${href} title=${topic}">${topic}</a>`;
+    categoryWrap.innerHTML = `<a href="${href}" title="${topic}">${topic}</a>`;
     document.querySelector('main').appendChild(categoryWrap);
   }
 
@@ -784,7 +795,6 @@
       author = /^By (.*)\n*(.*)$/gmi.exec($author.innerText)[1];
       date = /^posted on (.*)\n*(.*)$/gmi.exec($author.innerText)[1];
       const splits =date.split('-');
-      console.logs
       date=new Date(`${splits[2]}-${splits[0]}-${splits[1]}`).getTime()/1000;
     }
 
