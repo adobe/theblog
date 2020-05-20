@@ -452,7 +452,7 @@
         item = itemTransformer(item);
         if (index === 0) {
           // use larger hero image on first article
-          item.hero = item.hero ? item.hero.replace('?height=248&crop=4:3', '?height=640') : '#';
+          item.hero = item.hero ? item.hero.replace('?height=512&crop=7:5', '?height=640') : '#';
         }
         return item;
       },
