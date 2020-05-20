@@ -178,9 +178,7 @@
   function addImageClasses() {
     document.querySelectorAll('.post-page .post-body img').forEach(($e) => {
       let hasText = false;
-      console.log(`img:${$e.attributes.src}`);
       $e.parentNode.childNodes.forEach(($c) => {
-        console.log(`nodename:${$c.nodeName}`);
         if ($c.nodeName == '#text') hasText=true;
       })
       if (hasText) $e.parentNode.classList.add('left');
@@ -797,7 +795,6 @@
       author = /^By (.*)\n*(.*)$/gmi.exec($author.innerText)[1];
       date = /^posted on (.*)\n*(.*)$/gmi.exec($author.innerText)[1];
       const splits =date.split('-');
-      console.logs
       date=new Date(`${splits[2]}-${splits[0]}-${splits[1]}`).getTime()/1000;
     }
 
