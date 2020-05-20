@@ -477,7 +477,7 @@
       ];  
       const dateObj = date.split('-');
   
-      return monthNames[parseInt(dateObj[0])] + " " + dateObj[1] + ", " + dateObj[2];
+      return monthNames[parseInt(dateObj[0])-1] + " " + dateObj[1] + ", " + dateObj[2];
   }
 
   function handleMetadata() {
