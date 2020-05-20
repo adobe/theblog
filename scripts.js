@@ -593,7 +593,7 @@
     const categoryWrap = document.createElement('div');
     categoryWrap.className = 'default category';
     const href=getLink(window.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
-    categoryWrap.innerHTML = `<a href="${href} title=${topic}">${topic}</a>`;
+    categoryWrap.innerHTML = `<a href="${href}" title="${topic}">${topic}</a>`;
     document.querySelector('main').appendChild(categoryWrap);
   }
 
