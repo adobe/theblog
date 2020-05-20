@@ -147,7 +147,7 @@
 
   const itemTransformer = (item) => {
     const itemParams = {
-      hero: item.hero ? `${item.hero}?height=248&crop=4:3auto=webp` : '#',
+      hero: item.hero ? `${item.hero}?height=512&crop=7:5&auto=webp` : '#',
       date: new Date(item.date * 1000).toLocaleDateString('en-US', {
         day: '2-digit',
         month: '2-digit',
@@ -175,6 +175,18 @@
     });
   } 
 
+  function addImageClasses() {
+    document.querySelectorAll('.post-page .post-body img').forEach(($e) => {
+      let hasText = false;
+      console.log(`img:${$e.attributes.src}`);
+      $e.parentNode.childNodes.forEach(($c) => {
+        console.log(`nodename:${$c.nodeName}`);
+        if ($c.nodeName == '#text') hasText=true;
+      })
+      if (hasText) $e.parentNode.classList.add('left');
+    })
+  }
+
   function decoratePostPage(){
     addClass('.post-page main>div:first-of-type', 'post-title');
     addClass('.post-page main>div:nth-of-type(2)', 'hero-image');
@@ -182,6 +194,7 @@
     addClass('.post-page main>div:nth-of-type(4)', 'post-body');
     addClass('.post-page main>div.post-body>p>img', 'images', 1);
     wrap('post-header',['main>div.category','main>div.post-title', 'main>div.post-author']);
+    addImageClasses();
   }
 
   function addPageTypeAsBodyClass() {
@@ -439,7 +452,7 @@
         item = itemTransformer(item);
         if (index === 0) {
           // use larger hero image on first article
-          item.hero = item.hero ? item.hero.replace('?height=248&crop=4:3', '?height=320') : '#';
+          item.hero = item.hero ? item.hero.replace('?height=248&crop=4:3', '?height=640') : '#';
         }
         return item;
       },

@@ -290,6 +290,10 @@ a.action.load-more::before {
   margin: 0;
 }
 
+.post-page main p + p {
+  margin-top: 1.5em;
+}
+
 .post-page main div.hero-image p:nth-of-type(2) {
   text-align: right;
   width: 100%;
@@ -391,6 +395,7 @@ a.action.load-more::before {
   border-radius: 50%;
   margin-right: 15px;
   display: block;
+  object-fit: cover;
 }
 
 .post-page .author .post-author {
@@ -467,7 +472,8 @@ a.action.load-more::before {
   line-height: 1.3em;
 }
 
-.post-page main>div.post-body p+h2 {
+.post-page main>div.post-body p+h2, .post-page main>div.post-body div+h2,
+.post-page main>div.post-body p+h3 {
   margin-top: 64px;
 }
 
@@ -509,6 +515,17 @@ a.action.load-more::before {
   width: 1em;
   margin: 0 10px;
 }
+
+.post-page main>div.post-body>p.images.left {
+  text-align: left;
+}
+
+.post-page main>div.post-body>p.images.left>img {
+  float: left;
+  padding-right: 16px;
+  margin-top: 0;
+}
+
 
 .author .social {
   margin: 0;
@@ -619,6 +636,63 @@ a.action.load-more::before {
 .card p.date {
   display: none;
 }
+
+.banner {
+  position: relative;
+  display: flex;
+  background-color: #000;
+  background-size: cover;
+  background-position: center center;
+  color: #fff;
+  padding: 30px 10px;
+  font-family: adobe-clean,sans-serif;
+  margin-top: 48px;
+}
+
+.banner .banner-left, .banner .banner-right {
+  flex: 0 0 50%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px !important;
+  z-index: 1;
+}
+
+.banner .banner-left img {
+  width: 70px;
+  margin-bottom: 10px;
+}
+
+.banner .banner-left h1 {
+  padding-bottom: .2rem;
+  font-size: 2.3rem;
+  font-weight: 200;
+  line-height: 2.8rem;
+  text-align: center;
+  margin: 0;
+}
+
+.banner .banner-right a {
+  padding: 10px 30px;
+  border: solid 1px #fff;
+  border-radius: 5px;
+  font-size: .8rem;
+  color: #fff;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.banner .banner-right p {
+  margin-bottom: 1.75rem;
+  margin-top: 0;
+  font-weight: 400;
+  line-height: 24px;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
 
 .home-page main {
   display: grid;
@@ -796,11 +870,20 @@ html div.gs-buttons {
 
   .post-page main>div.post-body>p.images {
     margin-left: 0px;
-    margin-right: 0px;  
+    margin-right: 0px;
+    text-align: center;
+  }
+
+  .post-page main>div.post-body>p.images.left {
+    margin-left: 64px;
+    margin-right: 64px;
   }
 
   .post-page main>div.post-body>p.images>img {
-    width: 100%;
+    max-width: 100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .post-page main>div.products .prod-design p {
@@ -926,8 +1009,12 @@ html div.gs-buttons {
   }
 
   .home-page main > .card {
-    width: calc(100% - 4rem);
+    width: calc(100% - 5rem);
     margin: 2.5rem 1rem 3rem 1rem;
+  }
+
+  .home-page main .articles .card {
+    max-width: calc(100%/3 - 2rem);
   }
 
   .home-page main > .card .hero {
@@ -948,57 +1035,3 @@ div.evidon-notice-link {
   display:none;
 }
 
-.banner {
-  position: relative;
-  display: flex;
-  background-color: #000;
-  background-size: cover;
-  background-position: center center;
-  color: #fff;
-  padding: 30px 10px;
-  font-family: adobe-clean,sans-serif;
-}
-
-.banner .banner-left, .banner .banner-right {
-  flex: 0 0 50%;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0 5px !important;
-  z-index: 1;
-}
-
-.banner .banner-left img {
-  width: 70px;
-  margin-bottom: 10px;
-}
-
-.banner .banner-left h1 {
-  padding-bottom: .2rem;
-  font-size: 2.3rem;
-  font-weight: 200;
-  line-height: 2.8rem;
-  text-align: center;
-  margin: 0;
-}
-
-.banner .banner-right a {
-  padding: 10px 30px;
-  border: solid 1px #fff;
-  border-radius: 5px;
-  font-size: .8rem;
-  color: #fff;
-  text-transform: uppercase;
-  text-decoration: none;
-}
-
-.banner .banner-right p {
-  margin-bottom: 1.75rem;
-  margin-top: 0;
-  font-weight: 400;
-  line-height: 24px;
-  font-size: 0.9rem;
-  text-align: left;
-}
