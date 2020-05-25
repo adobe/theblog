@@ -284,22 +284,20 @@
       fetch from algolia
       */
       
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'X-Algolia-API-Key': key,
-          'X-Algolia-Application-Id': appId,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: JSON.stringify({ requests }),
-      });
+      // const res = await fetch(url, {
+      //   method: 'POST',
+      //   headers: {
+      //     'X-Algolia-API-Key': key,
+      //     'X-Algolia-Application-Id': appId,
+      //     'Content-Type': 'application/x-www-form-urlencoded',
+      //   },
+      //   body: JSON.stringify({ requests }),
+      // });
 
-      /*
-      fetch locally for offline dev
+      // fetch locally for offline dev
       const res = await fetch('/query-results.json', {
         method: 'GET'
       });
-      */
 
       const { results } = await res.json();
       if (!results) return [];
