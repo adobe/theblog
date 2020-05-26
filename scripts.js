@@ -254,6 +254,13 @@
     return elem;
   }
 
+  function addCard(hit, $template, $container) {
+    const $item = $template.content.cloneNode(true).firstElementChild;
+    fillData($item, hit);
+    $container.appendChild($item);
+    return $item;
+  }
+
   function helixQuery(appId, key) {
     return async (queries, hitsPerPage) => {
       if (!queries || queries.length === 0) return { hits: []};
@@ -294,14 +301,22 @@
       //   body: JSON.stringify({ requests }),
       // });
 
-      // fetch locally for offline dev
+      /*
+      fetch locally for offline dev
+      */
       const res = await fetch('/query-results.json', {
         method: 'GET'
       });
 
       const { results } = await res.json();
       if (!results) return [];
+      let extraHits = [];
       let nbHits = 0;
+      if (results.length === 3) {
+        // collect extra hits separately
+        results[2].hits.forEach((hit) => extraHits.push(hit));
+        results.pop();
+      }
       results.forEach((result, i) => {
         nbHits += result.nbHits;
         const { customSort } = queries[i];
@@ -311,7 +326,7 @@
       });
       const hits = results
         .reduce((a, result) => {
-          // concat all hits in all results
+          // concat all hits in rest of results
           a.push(...result.hits);
           return a;
         }, [])
@@ -319,7 +334,7 @@
           return unique.find((item) => item.objectID === hit.objectID)
             ? unique : [...unique, hit];
         }, []);
-      return { hits: hits.slice(0, hitsPerPage), nbHits };
+      return { hits: hits.slice(0, hitsPerPage - extraHits.length), nbHits, extraHits };
     }
   }
 
@@ -327,16 +342,19 @@
     indexName = 'adobe--theblog--blog-posts',
     hitsPerPage = 12,
     facetFilters = [],
+    extraPaths = [],
     omitEmpty = false,
-    container = '.articles',
+    container = '.articles .deck',
+    extraContainer,
     itemTemplate = document.getElementById('post-card'),
+    extraItemTemplate = itemTemplate,
     emptyTemplate = '<div class="articles-empty"><div>',
     transformer = itemTransformer,
     callback = () => {},
   }) {
     const query = helixQuery('A8PL9E4TZT', '49f861a069d3c1cdb2c15f6db7929199');
     const filters = Array.from(facetFilters);
-    const featured = getFeaturedPostsPaths();
+    const featured = getPostPaths('h2#featured-posts', 1, true);
 
     const queries = [];
     if (filters.length == 0 || filters[0].length > 0) {
@@ -348,6 +366,15 @@
       });
     }
 
+    // extra path handling
+    if (extraPaths.length) {
+      hitsPerPage += extraPaths.length; // increase number of hits
+      queries.push({
+        indexName,
+        filters: extraPaths.map(p => `path:${p.substr(1)}`).join(' OR '),
+      })
+    }
+
     if (featured.length) {
       queries.unshift({
         indexName,
@@ -357,7 +384,11 @@
     }
 
     query(queries, hitsPerPage)
-      .then(({ hits = [], nbHits = 0 }) => {
+      .then(({
+        hits = [],
+        nbHits = 0,
+        extraHits = [],
+      }) => {
         let $el;
         if (typeof container === 'object') {
           if (hits.length || !omitEmpty) {
@@ -375,14 +406,15 @@
             $el.appendChild($empty);
           }
         } else {
-          // add hits to container
+          // add hits to their containers
           hits
             .map(transformer)
-            .forEach((hit, index) => {
-              const $item = itemTemplate.content.cloneNode(true).firstElementChild;
-              fillData($item, hit);
-              $el.appendChild($item);
-            });
+            .forEach((hit) => addCard(hit, itemTemplate, $el));
+          extraHits
+            .map(transformer)
+            .forEach((hit) => addCard(hit, extraItemTemplate, 
+              document.querySelector(extraContainer) || $el));
+
           if (nbHits > hitsPerPage) {
             // add button to load more
             const $more = createTag('a', { 'class': 'action primary load-more' });
@@ -390,17 +422,25 @@
             $el.parentNode.appendChild($more);
           }
         }
-        return { hits, nbHits };
+        return { hits, nbHits, extraHits };
       })
       .then(callback);
   }
 
-  function getFeaturedPostsPaths() {
-    const featured=[];
-    const $featured=document.getElementById('featured-posts');
-    if ($featured) {
-      $featured.parentNode.querySelectorAll('a').forEach((e) => {
-        const url=new URL(e.getAttribute('href'));
+  function getPostPaths(el, parent, removeContainer) {
+    const paths=[];
+    if (typeof el === 'string') {
+      el = document.querySelector(el);
+    }
+    if (el) {
+      let up = parent;
+      while (up) {
+        el = el.parentNode;
+        up -= 1;
+      }
+      el.querySelectorAll('a').forEach((e) => {
+        if (!e.textContent.startsWith('http')) return;
+        const url = new URL(e.getAttribute('href'));
         let path = url.pathname;
         const p = path.split('/');
         if (p.length >= 3 && p[2] !== 'drafts' && p[2] !== 'publish') {
@@ -408,11 +448,13 @@
           p.splice(2, 0, 'publish');
           path = p.join('/');
         }
-        featured.push(path);
+        paths.push(path);
       });
-      $featured.parentNode.remove();
+      if (removeContainer) {
+        el.remove();
+      }
     }
-    return featured;
+    return paths;
   }
 
   function createTag(name, attrs) {
@@ -438,12 +480,44 @@
       titleSection.remove();
     }
 
-    const cardsWrap = document.createElement('div');
-    cardsWrap.className = 'default articles';
-    document.querySelector('main').appendChild(cardsWrap);
+    // news box
+    let newsPaths;
+    addClass('h2#news', 'news-box', 1);
+    const newsBox = document.querySelector('.news-box');
+    if (newsBox) {
+      newsPaths = getPostPaths('.news-box');
+      document.querySelectorAll('.news-box a').forEach((el) => {
+        if (!el.textContent.startsWith('http')) {
+          el.classList.add('action', 'primary');
+          el.title = el.textContent;
+        }
+      });
+      // remove marker
+      newsBox.querySelector('h2').remove();
+      // remove link list
+      Array.from(newsBox.children).forEach((child) => {
+        if (child.tagName === 'OL' || child.tagName === 'UL') {
+          child.remove();
+        }
+      });
+      // add news content container
+      wrapNodes(createTag('div', { 'class': 'content' }), document.querySelectorAll('.news-box > *'));
+      // add button class to last paragraph with a link
+      addClass('.news-box .content > p:last-of-type a', 'button', 1);
+      // add news card container
+      newsBox.appendChild(createTag('div', { class: 'deck' }));
+    }
+
+    // add card container
+    const articles = document.createElement('div');
+    articles.className = 'default articles';
+    articles.innerHTML = '<div class="deck"></div>';
+    document.querySelector('main').appendChild(articles);
 
     setupSearch({
       hitsPerPage: 13,
+      extraPaths: newsPaths,
+      extraContainer: '.news-box .deck',
       transformer: (item, index) => {
         item = itemTransformer(item);
         if (index === 0) {
@@ -454,8 +528,9 @@
       },
       callback: () => {
         // move first card to featured 
-        const $firstCard = document.querySelector('.card');
+        const $firstCard = document.querySelector('.home-page .articles .card');
         if ($firstCard) {
+          $firstCard.classList.add('featured');
           wrapNodes(document.querySelector('main'), [$firstCard]);
         }
       }
@@ -839,12 +914,12 @@
   window.onload = function() {
     removeHeaderAndFooter();
     addPageTypeAsBodyClass();
+    // if (isPost) logHitJSON();
     handleMetadata();
     scrani.onload();
     if (isHome) {
       setupHomepage();
     } else if (isPost) {
-      // logHitJSON();
       addCategory();
       decoratePostPage();
       addAuthor();
