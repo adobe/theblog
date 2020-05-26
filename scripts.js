@@ -848,7 +848,7 @@
   }
 
   function logHitJSON() {
-    const path=window.location.pathname;
+    const path=window.location.pathname.substring(1);
     const title = document.querySelector("h1").innerText;
     const $last = getSection();
     const $author = getSection(2); 
@@ -877,14 +877,15 @@
 
     const hero=new URL(document.querySelector('main>div:nth-of-type(2) img').getAttribute('src')).pathname;
   
-    console.log(JSON.stringify({ path: path, 
-      topics: topics,
-      products: products,
-      hero: hero,
-      date: date,
-      title: title,
-      teaser: teaser,
-      author: author,
+    console.log(JSON.stringify({
+      path, 
+      topics,
+      products,
+      hero,
+      date,
+      title,
+      teaser,
+      author,
       objectID: ''+Math.random(),
 
     }, null, "  ")+", ");

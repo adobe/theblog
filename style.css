@@ -1140,6 +1140,7 @@ html div.gs-buttons {
 
   .home-page main .news-box .button {
     position: absolute;
+    margin-top: 0;
     top: 80px;
     right: 32px;
   }
