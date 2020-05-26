@@ -291,22 +291,22 @@
       fetch from algolia
       */
       
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'X-Algolia-API-Key': key,
-          'X-Algolia-Application-Id': appId,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: JSON.stringify({ requests }),
-      });
+      // const res = await fetch(url, {
+      //   method: 'POST',
+      //   headers: {
+      //     'X-Algolia-API-Key': key,
+      //     'X-Algolia-Application-Id': appId,
+      //     'Content-Type': 'application/x-www-form-urlencoded',
+      //   },
+      //   body: JSON.stringify({ requests }),
+      // });
 
       /*
       fetch locally for offline dev
+      */
       const res = await fetch('/query-results.json', {
         method: 'GET'
       });
-      */
 
       const { results } = await res.json();
       if (!results) return [];
@@ -344,7 +344,7 @@
     facetFilters = [],
     extraPaths = [],
     omitEmpty = false,
-    container = '.articles',
+    container = '.articles .deck',
     extraContainer,
     itemTemplate = document.getElementById('post-card'),
     extraItemTemplate = itemTemplate,
@@ -485,7 +485,6 @@
     addClass('h2#news', 'news-box', 1);
     const newsBox = document.querySelector('.news-box');
     if (newsBox) {
-      newsBox.classList.add('news-box');
       newsPaths = getPostPaths('.news-box');
       document.querySelectorAll('.news-box a').forEach((el) => {
         if (!el.textContent.startsWith('http')) {
@@ -501,20 +500,24 @@
           child.remove();
         }
       });
-      // add card container
-      const newsCardsWrap = document.createElement('div');
-      newsCardsWrap.className = 'news-articles';
-      newsBox.insertBefore(newsCardsWrap, newsBox.querySelector('p:last-of-type'));
+      // add news content container
+      wrapNodes(createTag('div', { 'class': 'content' }), document.querySelectorAll('.news-box > *'));
+      // add button class to last paragraph with a link
+      addClass('.news-box .content > p:last-of-type a', 'button', 1);
+      // add news card container
+      newsBox.appendChild(createTag('div', { class: 'deck' }));
     }
 
-    const cardsWrap = document.createElement('div');
-    cardsWrap.className = 'default articles';
-    document.querySelector('main').appendChild(cardsWrap);
+    // add card container
+    const articles = document.createElement('div');
+    articles.className = 'default articles';
+    articles.innerHTML = '<div class="deck"></div>';
+    document.querySelector('main').appendChild(articles);
 
     setupSearch({
       hitsPerPage: 13,
       extraPaths: newsPaths,
-      extraContainer: '.news-articles',
+      extraContainer: '.news-box .deck',
       transformer: (item, index) => {
         item = itemTransformer(item);
         if (index === 0) {
@@ -911,12 +914,12 @@
   window.onload = function() {
     removeHeaderAndFooter();
     addPageTypeAsBodyClass();
+    // if (isPost) logHitJSON();
     handleMetadata();
     scrani.onload();
     if (isHome) {
       setupHomepage();
     } else if (isPost) {
-      // logHitJSON();
       addCategory();
       decoratePostPage();
       addAuthor();

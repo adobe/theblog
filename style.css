@@ -537,27 +537,34 @@ a.action.load-more::before {
 }
 
 .articles {
-  padding: 56px 0;
   background-color: #eaeaea;
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
+  text-align: center;
+  padding-bottom: 80px;
 }
 
 .articles-empty::before {
   content: "No articles found"
 }
 
+.deck {
+  margin: 0 auto;
+  padding: 48px 32px 0 32px;
+  min-width: 300px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
 .card {
-  min-width: 268px;
+  width: 100%;
+  min-width: 220px;
   max-width: 379px;
+  margin-bottom: 32px;
   border-radius: 4px;
-  margin: 0 1rem 2rem 1rem;
   border: solid 1px #eaeaea;
   box-sizing: border-box;
   text-align: left;
   display: inline-block;
-  flex-grow: 1;
 }
 
 .card .hero {
@@ -717,6 +724,7 @@ a.action.load-more::before {
 .home-page main .articles {
   grid-area: articles;
   background: white;
+  padding-bottom: 80px;
 }
 
 .home-page .featured.card {
@@ -747,7 +755,6 @@ a.action.load-more::before {
 .home-page .featured.card .content {
   text-align: center;
   width: 100%;
-  height: 320px;
   padding-bottom: 0;
 }
 
@@ -775,34 +782,79 @@ a.action.load-more::before {
 
 .home-page main .news-box {
   grid-area: news-box;
-  position: relative;
-  display: flex;
-  flex-flow: column wrap;
-  flex-direction: column;
-  max-width: 1200px;
-  padding: 48px 32px;
-  margin-bottom: 48px;
-  background-color: #eaeaea;
+  margin-top: 48px;
+  background-color: #f4f4f4;
 }
 
-.home-page main .news-box h3 {
+.home-page main .news-box .content {
+  margin: 0 auto;
+  padding: 48px 32px 0 32px;
+}
+
+.home-page main .news-box .content h3 {
   font-size: 1.5rem;
+  margin-top: 0;
 }
 
-.home-page .news-articles {
-  display: flex;
-  display: inline-block;
-  width: 100%;
-  margin: 32px 0 8px 0;
-  flex-flow: column wrap;
+.home-page main .news-box .content p {
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
-.home-page .news-articles .card {
+.home-page main .news-box .content p:last-of-type {
+  margin-top: 8px;
+}
+
+.home-page .news-box .deck {
+  padding-top: 32px;
+  padding-bottom: 24px; 
+}
+
+.home-page .news-box .card {
   margin:0 0 24px 0;
-  max-width: 100%;
+  width: 100%;
+  max-width: unset;
   display: flex;
   flex-flow: row nowrap;
 }
+
+.home-page .news-box .card .hero {
+  padding-bottom: 0;
+  height: 130px;
+  width: 30%;
+}
+
+.home-page .news-box .card .content {
+  padding: 24px;
+  height: 130px;
+  width: 70%;
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+}
+
+.home-page .news-box .card .content h2 {
+  font-size: 1rem;
+  line-height: 1.25rem;
+  min-height: 1.25rem;
+  max-height: 3.75rem;
+  margin-bottom: 0;
+}
+
+.home-page .news-box .card p.topic {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.home-page .news-box .card p.teaser,
+.home-page .news-box .card p.date {
+  display: none;
+}
+
 
 .hide-all {
   display: none;
@@ -847,6 +899,17 @@ html div.gs-buttons {
 
   body {
     font-size: 1.25rem;
+  }
+
+  .deck {
+    padding-left:64px;
+    padding-right:64px;
+    max-width: 912px;
+    justify-content: space-between;
+  }
+
+  .card {
+    width: calc(100%/2 - 16px);
   }
 
   .card a:hover {
@@ -930,12 +993,11 @@ html div.gs-buttons {
   }
 
   .home-page .featured.card {
-    width: 100%;
     height: unset;
     max-width: unset;
     flex-direction: row;
     align-items: center;
-    margin: 2.5rem 0 3rem 0;
+    margin: 40px 0 0 0;
     text-align: left;
   }
 
@@ -951,8 +1013,29 @@ html div.gs-buttons {
 
   .home-page .featured.card .content {
     width: 60%;
+    height: 320px;
     text-align: left;
     box-sizing: border-box;
+  }
+
+  .home-page main .news-box .content,
+  .home-page main .news-box .deck {
+    width: 100%;
+    max-width: 912px;
+  }
+
+  .home-page main .news-box .content {
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+
+  .home-page main .news-box .deck {
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+
+  .home-page main .news-box .card {
+    width: 100%;
   }
 
   /*
@@ -965,6 +1048,16 @@ html div.gs-buttons {
 }
 
 @media (min-width:1100px) {
+
+  .deck {
+    max-width: 1200px;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .card {
+    width: calc(100%/3 - 20px);
+  }
 
   .post-page main  {
     padding-top: 16px;
@@ -1030,26 +1123,11 @@ html div.gs-buttons {
     padding-left: 32px;
   }
 
-  .home-page main {
-    grid-template-areas: " .          featured    . "
-                         "news-box    news-box    news-box "
-                         " .          articles    . "
-                         " .          load-more   . "
-                         "inspiration inspiration inspiration";
-    grid-template-columns: minmax(8.33%, auto) minmax(auto, 1200px) minmax(8.33%, auto);
-  }
-
-  .home-page .articles {
-    justify-content: start;
-  }
-
   .home-page .featured.card {
-    width: calc(100% - 5rem);
-    margin: 2.5rem 1rem 3rem 1rem;
-  }
-
-  .home-page main .articles .card {
-    max-width: calc(100%/3 - 2rem);
+    margin: 40px auto 0 auto;
+    padding-left: 32px;
+    padding-right: 32px;
+    max-width: 1200px;
   }
 
   .home-page .featured.card .hero {
@@ -1058,6 +1136,31 @@ html div.gs-buttons {
 
   .home-page .featured.card .content {
     width: 40%;
+  }
+
+  .home-page main .news-box .button {
+    position: absolute;
+    top: 80px;
+    right: 64px;
+  }
+  
+  .home-page main .news-box .content,
+  .home-page main .news-box .deck {
+    max-width: 1200px;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .home-page main .news-box .content {
+    position: relative;
+  }
+
+  .home-page main .news-box .content p:first-of-type {
+    width: 80%;
+  }
+
+  .home-page main .news-box .card {
+    width: calc(100%/3 - 20px);
   }
 
 }
