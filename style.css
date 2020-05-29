@@ -801,7 +801,7 @@ a.action.load-more::before {
   margin-bottom: 0;
 }
 
-.home-page main .news-box .content p:last-of-type {
+.home-page main .news-box p.button {
   margin-top: 8px;
 }
 
@@ -1138,7 +1138,7 @@ html div.gs-buttons {
     width: 40%;
   }
 
-  .home-page main .news-box .button {
+  .home-page main .news-box p.button {
     position: absolute;
     margin-top: 0;
     top: 80px;
