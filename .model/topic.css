@@ -1,0 +1,128 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.topic-page {
+  --third: #83106a;
+  --first: #2c0167;
+  --second: #fd8467;
+}
+
+/* .topic-page {
+  --third: #07facf;
+  --first: #22837e;
+  --second: #2bfe98;
+} */
+
+.topic-page main div.default:first-child h1 {
+  color: white;
+  max-width: 912px;
+  margin: 0 auto;
+  padding: 86px 0 0 64px;
+}
+
+.topic-page main div.default:first-child {
+  height: 220px;
+  background:
+    radial-gradient(
+      100px 100px at bottom right,
+      var(--third),
+      transparent 150px
+    ),
+    radial-gradient(
+      100px 250px at right,
+      var(--second),
+      transparent 400px
+    ),
+    radial-gradient(
+      100px 650px at left,
+      var(--first),
+      transparent 800px
+    ),
+    linear-gradient(
+      to right,
+      var(--first),
+      var(--first),
+      var(--second)
+    );
+}
+
+@media (min-width:600px) {
+  .topic-page main div.default:first-child {
+    height: 220px;
+    background:
+      radial-gradient(
+        100px 80px at bottom right,
+        var(--third),
+        transparent 200px
+      ),
+      radial-gradient(
+        100px 250px at right,
+        var(--second),
+        transparent 500px
+      ),
+      radial-gradient(
+        80px 100px at bottom left,
+        var(--third),
+        transparent 200px
+      ),
+      radial-gradient(
+        500px 300px at top,
+        var(--third),
+        transparent 200px
+      ),
+      radial-gradient(
+        100px 650px at left,
+        var(--first),
+        transparent 800px
+      ),
+      linear-gradient(
+        to right,
+        var(--first),
+        var(--first),
+        var(--second)
+      );
+  }
+}
+
+@media (min-width:1100px) {
+
+  .topic-page main div.default:first-child {
+    height: 220px;
+    background:
+      radial-gradient(
+        650px 250px at bottom left,
+        var(--third),
+        transparent 500px
+      ),
+      radial-gradient(
+        200px 50px at top,
+        var(--third),
+        transparent 400px
+      ),
+      radial-gradient(
+        550px 150px at bottom right,
+        var(--third),
+        transparent 500px
+      ),
+      radial-gradient(
+        900px 350px at right,
+        var(--second),
+        transparent 800px
+      ),
+      linear-gradient(
+        to right,
+        var(--first),
+        var(--first),
+        var(--second)
+      );
+  }
+
+  .topic-page main div.default:first-child h1 {
+    max-width: 1200px;
+    padding-left: 32px;
+  }
+
+}
