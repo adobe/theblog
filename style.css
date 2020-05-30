@@ -559,7 +559,7 @@ a.action.load-more::before {
   width: 100%;
   min-width: 220px;
   max-width: 379px;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   border-radius: 4px;
   border: solid 1px #eaeaea;
   box-sizing: border-box;
@@ -910,6 +910,7 @@ html div.gs-buttons {
 
   .card {
     width: calc(100%/2 - 16px);
+    margin-bottom: 32px;
   }
 
   .card a:hover {
