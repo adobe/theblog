@@ -868,6 +868,41 @@ a.action.load-more::before {
   content: 'No articles found under this topic';
 }
 
+.topic-page {
+  /* header bg colors */
+  --bg1: #2c0167;
+  --bg2: #fd8467;
+  --bg3: #83106a;
+}
+
+.topic-page main div.default:first-child h1 {
+  color: white;
+  width: 100%;
+  max-width: 912px;
+  margin: auto;
+  align-self: center;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+.topic-page main div.default:first-child {
+  height: 220px;
+  background-color: var(--bg1); /* fallback bg color */
+  display: flex;
+  justify-content: start;
+  background:
+    radial-gradient(
+      350px 100px at bottom left,
+      var(--bg3),
+      transparent 400px
+    ),
+    linear-gradient(
+      to right,
+      var(--bg1),
+      var(--bg2)
+    );
+}
+
 /*
  * GetSocial floating share bar
  */
@@ -1039,6 +1074,43 @@ html div.gs-buttons {
     width: 100%;
   }
 
+  .topic-page main div.default:first-child {
+    height: 220px;
+    background:
+      radial-gradient(
+        75% 250px at bottom left,
+        var(--bg3),
+        transparent 50%
+      ),
+      radial-gradient(
+        25% 80px at top,
+        var(--bg3),
+        transparent 350px
+      ),
+      radial-gradient(
+        45% 150px at bottom right,
+        var(--bg3),
+        transparent 400px
+      ),
+      radial-gradient(
+        67% 350px at right,
+        var(--bg2),
+        transparent 75%
+      ),
+      linear-gradient(
+        to right,
+        var(--bg1),
+        var(--bg1),
+        var(--bg2)
+      );
+  }
+
+  .topic-page main div.default:first-child h1 {
+    max-width: 912px;
+    padding-left: 64px;
+    padding-right:64px;
+  }
+
   /*
    * GetSocial floating share bar
    */
@@ -1163,6 +1235,12 @@ html div.gs-buttons {
 
   .home-page main .news-box .card {
     width: calc(100%/3 - 20px);
+  }
+
+  .topic-page main div.default:first-child h1 {
+    max-width: 1200px;
+    padding-left: 32px;
+    padding-right: 32px;
   }
 
 }
