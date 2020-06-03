@@ -1243,6 +1243,11 @@ html div.gs-buttons {
     padding-right: 32px;
   }
 
+  .author-page .card,
+  .topic-page .card {
+      width: calc(100%/4 - 20px);
+  }
+
 }
 
 /*

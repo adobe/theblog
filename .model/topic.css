@@ -87,4 +87,8 @@
     padding-right: 32px;
   }
 
+  .topic-page .card {
+    width: calc(100%/4 - 20px);
+  }
+
 }
