@@ -254,7 +254,8 @@
     return elem;
   }
 
-  function addCard(hit, $template, $container) {
+  function addCard(hit, $container, $template) {
+    if (!$template) $template = document.getElementById('post-card');
     const $item = $template.content.cloneNode(true).firstElementChild;
     fillData($item, hit);
     $container.appendChild($item);
@@ -263,6 +264,9 @@
 
   function helixQuery(appId, key) {
     return async (queries, hitsPerPage) => {
+      const page = window.helix.nextPage || 0;
+      window.helix.nextPage = page + 1;
+      // console.log('query for page', page);
       if (!queries || queries.length === 0) return { hits: []};
       const url = new URL(`https://${appId}-dsn.algolia.net/1/indexes/*/queries`);
       const serializeQueryParameters = (q) => {
@@ -283,7 +287,7 @@
       const requests = queries.map(q => {
         return {
           indexName: q.indexName,
-          params: serializeQueryParameters({ ...q, hitsPerPage }),
+          params: serializeQueryParameters({ ...q, page, hitsPerPage }),
         };
       });
 
@@ -342,13 +346,8 @@
     indexName = 'adobe--theblog--blog-posts',
     hitsPerPage = 12,
     facetFilters = [],
-    extraPaths = [],
     omitEmpty = false,
-    container = '.articles .deck',
-    extraContainer,
-    itemTemplate = document.getElementById('post-card'),
-    extraItemTemplate = itemTemplate,
-    emptyTemplate = '<div class="articles-empty"><div>',
+    extraPaths = [],
     transformer = itemTransformer,
     callback = () => {},
   }) {
@@ -357,7 +356,7 @@
     const featured = getPostPaths('h2#featured-posts', 1, true);
 
     const queries = [];
-    if (filters.length == 0 || filters[0].length > 0) {
+    if (filters.length === 0 || filters[0].length > 0) {
       filters.push(`parents:${window.helix.context}${window.helix.language}`);
       filters.push(`date < ${Math.round(Date.now()/1000)}`); // hide articles with future dates
       queries.push({
@@ -389,37 +388,31 @@
         nbHits = 0,
         extraHits = [],
       }) => {
-        let $el;
-        if (typeof container === 'object') {
-          if (hits.length || !omitEmpty) {
-            $el = document.createElement(container.tagName);
-            container.classes.forEach((className) => $el.classList.add(className));
-            container.parent.appendChild($el);
-          }
-        } else {
-          $el = document.querySelector(container);
+        let $deck = document.querySelector('.articles .deck');
+        if (!$deck) {
+          // add card container
+          $deck = createTag('div', { 'class': 'deck' });
+          const $container = createTag('div', { 'class': 'default articles' });
+          $container.appendChild($deck);
+          document.querySelector('main').appendChild($container);
         }
         if (!hits.length) {
           if (!omitEmpty) {
-            const $empty = document.createElement('div');
-            $empty.innerHTML = emptyTemplate;
-            $el.appendChild($empty);
+            // $deck.innerHTML = '<div class="articles-empty"><div>';
           }
         } else {
-          // add hits to their containers
+          // add hits to card container
           hits
             .map(transformer)
-            .forEach((hit) => addCard(hit, itemTemplate, $el));
-          extraHits
-            .map(transformer)
-            .forEach((hit) => addCard(hit, extraItemTemplate, 
-              document.querySelector(extraContainer) || $el));
+            .forEach((hit) => addCard(hit, $deck));
 
           if (nbHits > hitsPerPage) {
-            // add button to load more
-            const $more = createTag('a', { 'class': 'action primary load-more' });
-            $more.addEventListener('click', function () { alert('Not implemented yet.'); });
-            $el.parentNode.appendChild($more);
+            if (!$deck.querySelector('.load-more')) {
+              // add button to load more
+              const $more = createTag('a', { 'class': 'action primary load-more' });
+              $more.addEventListener('click', fetchArticles);
+              $deck.appendChild($more);
+            }
           }
         }
         return { hits, nbHits, extraHits };
@@ -508,16 +501,9 @@
       newsBox.appendChild(createTag('div', { class: 'deck' }));
     }
 
-    // add card container
-    const articles = document.createElement('div');
-    articles.className = 'default articles';
-    articles.innerHTML = '<div class="deck"></div>';
-    document.querySelector('main').appendChild(articles);
-
     setupSearch({
       hitsPerPage: 13,
       extraPaths: newsPaths,
-      extraContainer: '.news-box .deck',
       transformer: (item, index) => {
         item = itemTransformer(item);
         if (index === 0) {
@@ -526,16 +512,19 @@
         }
         return item;
       },
-      callback: () => {
+      callback: ({ extraHits }) => {
         // move first card to featured 
         const $firstCard = document.querySelector('.home-page .articles .card');
         if ($firstCard) {
           $firstCard.classList.add('featured');
           wrapNodes(document.querySelector('main'), [$firstCard]);
         }
+        // add hits from extra paths to news box
+        extraHits
+          .map(itemTransformer)
+          .forEach((hit) => addCard(hit, document.querySelector('.news-box .deck')));
       }
     });
-    
   }
 
   /*
@@ -892,8 +881,10 @@
   }
 
   function fetchArticles() {
-    let filter, emptyTemplate, omitEmpty;
-    if (isPost) {
+    let filter, omitEmpty;
+    if (isHome) {
+      filter = '';
+    } else if (isPost) {
       filter = '';
       omitEmpty = true; // don't display anything if no results
     } else if (isTopic) {
@@ -904,11 +895,6 @@
     setupSearch({
       facetFilters: [filter],
       omitEmpty,
-      container: {
-        tagName: 'div',
-        parent: getSection().parentNode,
-        classes: ['default', 'articles'],
-      },
     });
   }
 
