@@ -1,0 +1,245 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+/*
+  Filter Styles
+*/
+.filter-wrapper {
+  border-top: 1px solid #eaeaea;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.filter-layout {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.filter {
+  font-weight: 600;
+  flex: 1 1 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.filter:first-child:before {
+  content: "Filters";
+  display: inline-block;
+  margin-right: 16px;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(130%, -10px);
+}
+
+.filter .dropdown {
+  display: inline-block;
+  position: relative;
+}
+
+.container {
+  margin: 0 auto;
+  padding-left: 32px;
+  padding-right: 32px;
+}
+
+.dropdown .btn {
+  padding: 11px;
+  color: #505050;
+  border: 1px solid #eaeaea;
+  background-color: #ffffff;
+  border-radius: .25rem;
+  cursor: pointer;
+}
+
+.dropdown .btn:hover{
+  background-color: #F4F4F4;
+  border-color: #eaeaea;
+  outline: none;
+}
+
+.dropdown .btn:active,
+.dropdown .btn:focus {
+  outline-color: #505050;
+}
+
+.dropdown .btn .arrow {
+  display: inline-block;
+  margin-left: 11px;
+  position: relative;
+  top: 50%;
+  transform: translateY(-3px);
+}
+
+.dropdown .btn .arrow span {
+  border-radius: .25rem;
+  display: inline-block;
+  height: 2px;
+  width: 7px;
+  background-color: #747474;
+}
+
+.dropdown .btn .arrow span:nth-child(1) {
+  transform: rotate(45deg);
+}
+
+.dropdown .btn .arrow span:nth-child(2) {
+  transform: rotate(-45deg) translate(-5px, -5px);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 16rem;
+  padding-top: 16px;
+  margin: .125rem 0 0;
+  font-size: 1rem;
+  color: #212529;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: .25rem;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-menu .search {
+  border-bottom: 1px solid #eaeaea;
+  padding: 0 16px 16px;
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 22px;
+  height: 18px;
+  transform: translateY(-17px) rotateY(180deg);
+}
+
+.dropdown-menu .search input {
+  border: 1px solid #eaeaea;
+  border-radius: .25rem;
+  padding: 8px 8px 8px 28px;
+  width: 100%;
+}
+
+.dropdown-menu .search input:focus {
+  outline-color: #505050;
+}
+
+.dropdown-menu fieldset {
+  border: none;
+  margin-top: 16px;
+  padding-left: 16px;
+}
+
+.dropdown-menu input[type=checkbox] {
+  border-radius: 0;
+}
+
+.dropdown-menu .options {
+  max-height: 195px;
+  overflow-y: scroll;
+  margin-top: 16px;
+}
+
+.dropdown-menu .option {
+  margin-top: 16px;
+  font-size: smaller;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-menu .option:first-child {
+  margin-top: 0;
+}
+
+.dropdown-menu .option label {
+  margin-left: 10px;
+}
+
+.filter-clear {
+  font-size: smaller;
+  text-decoration: none;
+  color: #505050;
+}
+
+.filter-clear:hover {
+  color: #333333;
+}
+
+.results {
+  margin-top: 5px;
+}
+
+@media (min-width:600px) {
+
+  .filter-layout {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+
+  .filter-bar {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    width: auto;
+  }
+
+  .filter {
+    flex: 1 1 auto;
+    margin-right: 16px;
+    margin-bottom: 0;
+    display: block;
+  }
+
+  .filter:first-child:before {
+    position: static;
+    left: initial;
+    top: initial;
+    transform: initial;
+  }
+
+  .results {
+    margin-top: initial;
+  }
+
+  .container {
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+}
+
+@media (min-width:1100px) {
+
+  .container {
+    padding-left: 32px;
+    padding-right: 32px;
+    max-width: 1200px;
+  }
+}
