@@ -1331,6 +1331,10 @@ html div.gs-buttons {
   }
 }
 
+.embed-soundcloud > iframe {
+  height: 200px ! important;
+}
+
 /*
  * Workaround to hide duplicate AdChoices link.
  * See https://github.com/adobe/theblog/issues/141
