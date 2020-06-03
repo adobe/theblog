@@ -1,0 +1,48 @@
+.deck {
+  margin: 0 auto;
+  padding: 48px 32px;
+  min-width: 300px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+
+.card {
+  background-color: lightskyblue;
+  width: 100%;
+  min-width: 220px;
+  max-width: 379px;
+  height: 400px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+@media (min-width:600px) {
+
+  .deck {
+    padding-left:64px;
+    padding-right:64px;
+    max-width: 912px;
+    justify-content: space-between;
+  }
+
+  .card {
+    width: calc(100%/2 - 16px);
+    margin-bottom: 32px;
+  }
+
+}
+
+@media (min-width:1100px) {
+
+  .deck {
+    max-width: 1200px;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .card {
+    width: calc(100%/3 - 20px);
+  }
+
+}
