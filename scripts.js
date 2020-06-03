@@ -412,6 +412,10 @@
               const $more = createTag('a', { 'class': 'action primary load-more' });
               $more.addEventListener('click', fetchArticles);
               $deck.appendChild($more);
+              const title = window.getComputedStyle($more, ':before').getPropertyValue('content');
+              if (title !== 'normal') {
+                $more.setAttribute('title', title.substring(1, title.length-1));
+              }
             }
           }
         }
