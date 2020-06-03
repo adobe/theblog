@@ -317,7 +317,7 @@ a.action.load-more::before {
 }
 
 
-.post-page main>div.post-body img {
+.post-page main>div.post-body .images img {
   margin-top: 64px;
 }
 
@@ -417,7 +417,6 @@ a.action.load-more::before {
 }
 
 .post-page .topics a {
-  font-family: source-code-pro,sans-serif;
   letter-spacing: .1em;
   text-transform: uppercase;
   text-decoration: none;
@@ -677,6 +676,7 @@ a.action.load-more::before {
 .banner {
   position: relative;
   display: flex;
+  flex-direction: column;
   background-color: #000;
   background-size: cover;
   background-position: center center;
@@ -693,13 +693,14 @@ a.action.load-more::before {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0 5px !important;
   z-index: 1;
+  padding: 10px 20px
 }
 
 .banner .banner-left img {
   width: 70px;
   margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .banner .banner-left h1 {
@@ -719,15 +720,18 @@ a.action.load-more::before {
   color: #fff;
   text-transform: uppercase;
   text-decoration: none;
+  cursor: pointer;
+  line-height: 1.5;
+  font-weight: 500;
 }
 
 .banner .banner-right p {
   margin-bottom: 1.75rem;
   margin-top: 0;
-  font-weight: 400;
   line-height: 24px;
   font-size: 0.9rem;
   text-align: left;
+  font-weight: 500;
 }
 
 
@@ -1170,6 +1174,10 @@ html div.gs-buttons {
   .author-page .author-bio h2 {
     font-size: 2.25rem;
   }
+
+  .banner {
+    flex-direction: row;
+  }  
 
   /*
    * GetSocial floating share bar
