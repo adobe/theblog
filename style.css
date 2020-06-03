@@ -309,7 +309,9 @@ a.action.load-more::before {
   margin-top: 32px;
 }
 
-.post-page main div.post-header .post-author {
+.post-page main div.post-header > .post-author {
+  margin-top: 20px;
+  height: 64px;
   padding-top: 0;
   padding-bottom: 0;
 }
@@ -384,7 +386,6 @@ a.action.load-more::before {
 }
 
 .post-page .author .author-summary {
-  margin-top: 20px;
   display: flex;
   align-items: center;
 }
@@ -542,8 +543,16 @@ a.action.load-more::before {
   padding-bottom: 80px;
 }
 
+.articles-empty {
+  width: 100%;
+  margin-bottom: 48px;
+  text-align: middle;
+}
+
 .articles-empty::before {
-  content: "No articles found"
+  content: "No articles found";
+  display: inline;
+  margin: 0 auto;
 }
 
 .deck {
@@ -572,6 +581,8 @@ a.action.load-more::before {
   padding-bottom: 66.67%; /* 3:2 aspect ratio */
   position: relative;
   background-color: #eaeaea;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
 }
 
 .card .hero img {
@@ -584,6 +595,16 @@ a.action.load-more::before {
   width: 100%;
   height: 100%;
   margin: 0;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.card .hero:hover {
+  background-color: black;
+}
+
+.card .hero img:hover {
+  opacity: 0.6;
 }
 
 .card .hero img[src="#"] {
@@ -600,6 +621,8 @@ a.action.load-more::before {
   position: relative;
   padding: 2rem;
   background-color: white;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 
 .card .content p {
@@ -739,10 +762,11 @@ a.action.load-more::before {
 
 .home-page .featured.card .hero {
   height: 320px;
+  border-radius: 0;
 }
 
-.home-page .featured.card .hero img[src="#"] {
-  visibility: hidden;
+.home-page .featured.card .hero img {
+  border-radius: 0;
 }
 
 .home-page .featured.card h2 {
@@ -756,6 +780,7 @@ a.action.load-more::before {
   text-align: center;
   width: 100%;
   padding-bottom: 0;
+  border-radius: 0;
 }
 
 .home-page .featured.card .teaser {
@@ -789,6 +814,8 @@ a.action.load-more::before {
 .home-page main .news-box .content {
   margin: 0 auto;
   padding: 48px 32px 0 32px;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 4px;
 }
 
 .home-page main .news-box .content h3 {
@@ -822,6 +849,13 @@ a.action.load-more::before {
   padding-bottom: 0;
   height: 130px;
   width: 30%;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 4px;
+}
+
+.home-page .news-box .card .hero img {
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 4px;
 }
 
 .home-page .news-box .card .content {
@@ -901,6 +935,28 @@ a.action.load-more::before {
       var(--bg1),
       var(--bg2)
     );
+}
+
+.author-page .default:first-of-type {
+  background-color: #eaeaea;
+  padding:0;
+}
+
+.author-page .bio {
+  padding: 40px 32px;
+}
+
+.author-page .bio p {
+  font-size: 1rem;
+}
+
+.author-page .bio .frame {
+  font-size: 0;
+  margin-bottom: 32px;
+}
+
+.author-page .bio .frame img {
+  width: 124px;
 }
 
 /*
@@ -1111,6 +1167,10 @@ html div.gs-buttons {
     padding-right:64px;
   }
 
+  .author-page .author-bio h2 {
+    font-size: 2.25rem;
+  }
+
   /*
    * GetSocial floating share bar
    */
@@ -1170,14 +1230,6 @@ html div.gs-buttons {
                          " . .          topics     topics      . . "
                          "articles articles articles articles articles articles";
     grid-template-columns: 8.33% 170px minmax(auto, 430px) minmax(auto, 430px) 170px 8.33%;
-  }
-
-  .post-page main>div.category {
-    padding-top: 60px;
-  }
-
-  .post-page main>div.author {
-    padding-bottom: 60px;
   }
 
   .post-page main>div.category, .post-page main>div.post-title, .post-page main>div.author {
@@ -1243,6 +1295,40 @@ html div.gs-buttons {
     padding-right: 32px;
   }
 
+  .author-page .card,
+  .topic-page .card {
+      width: calc(100%/4 - 20px);
+  }
+
+  .author-page .bio {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 80px;
+    display: flex;
+    flex-flow: row nowrap;
+  }
+  
+  .author-page .bio .frame {
+    font-size: 0;
+    min-width: 224px;
+    margin-right: 80px;
+    margin-bottom: 0;
+  }
+
+  .author-page .bio .frame img {
+    width: 224px;
+  }
+
+  .author-page .bio .summary {
+    height: 224px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .author-page .bio .summary h2 {
+    margin-top: 0;
+  }
 }
 
 /*

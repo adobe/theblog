@@ -14,7 +14,7 @@ a.learn-more::before {
   content: "Mehr erfahren >"
 }
 
-a.load-more::before {
+a.action.load-more::before {
   content: "Mehr Artikel laden"
 }
 
