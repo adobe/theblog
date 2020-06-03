@@ -840,6 +840,15 @@
     }
   }
 
+  function decorateAuthorPage(){
+    wrap('bio', '.author-page main > div:first-of-type > *');
+    wrap('summary', [
+      '.bio > h2',
+      '.bio > p:not(:first-of-type)',
+    ]);
+    addClass('.bio > p:first-of-type', 'frame');
+  }
+
   function logHitJSON() {
     const path=window.location.pathname.substring(1);
     const title = document.querySelector("h1").innerText;
@@ -920,6 +929,7 @@
       shapeBanner();
       fetchArticles();
     } else if (isAuthor) {
+      decorateAuthorPage();
       fetchSocialLinks();
       fetchArticles();
     } else if (isTopic) {
