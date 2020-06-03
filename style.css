@@ -309,7 +309,9 @@ a.action.load-more::before {
   margin-top: 32px;
 }
 
-.post-page main div.post-header .post-author {
+.post-page main div.post-header > .post-author {
+  margin-top: 20px;
+  height: 64px;
   padding-top: 0;
   padding-bottom: 0;
 }
@@ -384,7 +386,6 @@ a.action.load-more::before {
 }
 
 .post-page .author .author-summary {
-  margin-top: 20px;
   display: flex;
   align-items: center;
 }
@@ -542,8 +543,16 @@ a.action.load-more::before {
   padding-bottom: 80px;
 }
 
+.articles-empty {
+  width: 100%;
+  margin-bottom: 48px;
+  text-align: middle;
+}
+
 .articles-empty::before {
-  content: "No articles found"
+  content: "No articles found";
+  display: inline;
+  margin: 0 auto;
 }
 
 .deck {
@@ -1178,14 +1187,6 @@ html div.gs-buttons {
                          " . .          topics     topics      . . "
                          "articles articles articles articles articles articles";
     grid-template-columns: 8.33% 170px minmax(auto, 430px) minmax(auto, 430px) 170px 8.33%;
-  }
-
-  .post-page main>div.category {
-    padding-top: 60px;
-  }
-
-  .post-page main>div.author {
-    padding-bottom: 60px;
   }
 
   .post-page main>div.category, .post-page main>div.post-title, .post-page main>div.author {
