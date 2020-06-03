@@ -586,6 +586,14 @@ a.action.load-more::before {
   margin: 0;
 }
 
+.card .hero:hover {
+  background-color: black;
+}
+
+.card .hero img:hover {
+  opacity: 0.6;
+}
+
 .card .hero img[src="#"] {
   /* hide if hero image missing */
   visibility: hidden;
