@@ -51,7 +51,8 @@
             if (animation == "eager-appear") {
                 const transY=100-progress*100;
                 const opacity=progress;
-                el.style=`opacity: ${opacity}; transform: translateY(${transY}px)`;
+                el.style.opacity=`${opacity}`
+                el.style.transform=`translateY(${transY}px)`;
             }
 
             if (animation == "wipe") {
@@ -183,6 +184,17 @@
       })
       if (hasText) $e.parentNode.classList.add('left');
     })
+  }
+
+  function decorateTopicPage() {
+    addClass('.topic-page main>div:first-of-type', 'topic-title');
+    var img=document.querySelector('main img');
+    console.log(img);
+    if (img) {
+      var title=document.querySelector('.topic-title');
+      title.style.background=`url(${img.getAttribute('src')}) no-repeat center center`;
+      title.style.backgroundSize=`cover`;
+    }
   }
 
   function decoratePostPage(){
@@ -934,6 +946,7 @@
       fetchSocialLinks();
       fetchArticles();
     } else if (isTopic) {
+      decorateTopicPage();
       fetchArticles();
     } else if (isProduct) {
       // todo

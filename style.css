@@ -913,7 +913,7 @@ a.action.load-more::before {
   --bg3: #83106a;
 }
 
-.topic-page main div.default:first-child h1 {
+.topic-page main div.topic-title h1 {
   color: white;
   width: 100%;
   max-width: 912px;
@@ -923,7 +923,11 @@ a.action.load-more::before {
   padding-right: 32px;
 }
 
-.topic-page main div.default:first-child {
+.topic-page main div.topic-title img {
+  display: none;
+}
+
+.topic-page main div.topic-title {
   height: 220px;
   background-color: var(--bg1); /* fallback bg color */
   display: flex;
