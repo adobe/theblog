@@ -1304,7 +1304,7 @@ html div.gs-buttons {
   }
 
   .home-page main .news-box .card {
-    width: calc(100%/3 - 20px);
+    width: calc(100%/3 - 22px);
     margin-right: 32px;
   }
 
