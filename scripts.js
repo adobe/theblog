@@ -295,31 +295,31 @@
       fetch from algolia
       */
       
-      // const res = await fetch(url, {
-      //   method: 'POST',
-      //   headers: {
-      //     'X-Algolia-API-Key': key,
-      //     'X-Algolia-Application-Id': appId,
-      //     'Content-Type': 'application/x-www-form-urlencoded',
-      //   },
-      //   body: JSON.stringify({ requests }),
-      // });
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-Algolia-API-Key': key,
+          'X-Algolia-Application-Id': appId,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify({ requests }),
+      });
 
       /*
       fetch locally for offline dev
       */
-      const res = await fetch('/query-results.json', {
-        method: 'GET'
-      });
+      // const res = await fetch('/query-results.json', {
+      //   method: 'GET'
+      // });
 
       const { results } = await res.json();
       if (!results) return [];
       let extraHits = [];
       let nbHits = 0;
-      if (results.length === 3) {
-        // collect extra hits separately
-        results[2].hits.forEach((hit) => extraHits.push(hit));
-        results.pop();
+      if (results.length > 1 && results[results.length -1].params.startsWith('filters=path')) {
+        // collect extra hits from last result separately
+        const extraResult = results.pop();
+        extraResult.hits.forEach((hit) => extraHits.push(hit));
       }
       results.forEach((result, i) => {
         nbHits += result.nbHits;
@@ -338,7 +338,7 @@
           return unique.find((item) => item.objectID === hit.objectID)
             ? unique : [...unique, hit];
         }, []);
-      return { hits: hits.slice(0, hitsPerPage - extraHits.length), nbHits, extraHits };
+      return { hits: hits.slice(0, hitsPerPage), nbHits, extraHits };
     }
   }
 
@@ -367,7 +367,6 @@
 
     // extra path handling
     if (extraPaths.length) {
-      hitsPerPage += extraPaths.length; // increase number of hits
       queries.push({
         indexName,
         filters: extraPaths.map(p => `path:${p.substr(1)}`).join(' OR '),
@@ -390,15 +389,17 @@
       }) => {
         let $deck = document.querySelector('.articles .deck');
         if (!$deck) {
-          // add card container
-          $deck = createTag('div', { 'class': 'deck' });
-          const $container = createTag('div', { 'class': 'default articles' });
-          $container.appendChild($deck);
-          document.querySelector('main').appendChild($container);
+          if (hits.length || !omitEmpty) {
+            // add card container
+            $deck = createTag('div', { 'class': 'deck' });
+            const $container = createTag('div', { 'class': 'default articles' });
+            $container.appendChild($deck);
+            document.querySelector('main').appendChild($container);
+          }
         }
         if (!hits.length) {
           if (!omitEmpty) {
-            // $deck.innerHTML = '<div class="articles-empty"><div>';
+            $deck.innerHTML = '<div class="articles-empty"><div>';
           }
         } else {
           // add hits to card container
@@ -411,7 +412,7 @@
               // add button to load more
               const $more = createTag('a', { 'class': 'action primary load-more' });
               $more.addEventListener('click', fetchArticles);
-              $deck.appendChild($more);
+              $deck.parentNode.appendChild($more);
               const title = window.getComputedStyle($more, ':before').getPropertyValue('content');
               if (title !== 'normal') {
                 $more.setAttribute('title', title.substring(1, title.length-1));

@@ -68,6 +68,11 @@
 
   main .news-box .card {
     width: calc(100%/3 - 20px);
+    margin-right: 32px;
+  }
+
+  main .news-box .card:nth-last-of-type(3n) {
+    margin-right: 0;
   }
 
 }
