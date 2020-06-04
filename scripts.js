@@ -388,12 +388,14 @@
         extraHits = [],
       }) => {
         let $deck = document.querySelector('.articles .deck');
-        if (!$deck && !omitEmpty) {
-          // add card container
-          $deck = createTag('div', { 'class': 'deck' });
-          const $container = createTag('div', { 'class': 'default articles' });
-          $container.appendChild($deck);
-          document.querySelector('main').appendChild($container);
+        if (!$deck) {
+          if (hits.length || !omitEmpty) {
+            // add card container
+            $deck = createTag('div', { 'class': 'deck' });
+            const $container = createTag('div', { 'class': 'default articles' });
+            $container.appendChild($deck);
+            document.querySelector('main').appendChild($container);
+          }
         }
         if (!hits.length) {
           if (!omitEmpty) {
