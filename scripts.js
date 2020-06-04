@@ -267,11 +267,13 @@
     var buckets={};
     res.forEach((e) => {
       if (e.author!='0') {
-        if (!buckets[e.type]) buckets[e.type]=[];
+        var type=e.type;
+        if (type=='featured') type='feed';
+        if (!buckets[type]) buckets[type]=[];
         e.products=JSON.parse(e.products);
         e.topics=JSON.parse(e.topics);
         e.objectID=e.sourceHash;
-        buckets[e.type].push(e);  
+        buckets[type].push(e);  
       }
     });
     results.push({      
@@ -366,13 +368,13 @@
         extraResult.hits.forEach((hit) => extraHits.push(hit));
       }
       
-      results.forEach((result, i) => {
-        nbHits += result.nbHits;
-        const { customSort } = queries[i];
-        if (customSort) {
-          result.hits.sort(customSort);
-        }
-      });
+      //results.forEach((result, i) => {
+      //  nbHits += result.nbHits;
+      //  const { customSort } = queries[i];
+      //  if (customSort) {
+      //    result.hits.sort(customSort);
+      //  }
+      // });
       const hits = results
         .reduce((a, result) => {
           // concat all hits in rest of results
