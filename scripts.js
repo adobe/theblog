@@ -289,7 +289,8 @@
         var bucket=buckets[a];
         results.push({      
           nbHits: bucket.length,
-          hits: bucket
+          hits: bucket,
+          params: 'filters=path'
       });
     }
     return results;
@@ -358,11 +359,13 @@
       if (!results) return [];
       let extraHits = [];
       let nbHits = 0;
-      if (results.length > 1 && results[results.length -1].params.startsWith('filters=path')) {
+      
+      if (results.length > 1 && results[results.length -1].params && results[results.length -1].params.startsWith('filters=path')) {
         // collect extra hits from last result separately
         const extraResult = results.pop();
         extraResult.hits.forEach((hit) => extraHits.push(hit));
       }
+      
       results.forEach((result, i) => {
         nbHits += result.nbHits;
         const { customSort } = queries[i];
