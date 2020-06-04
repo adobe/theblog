@@ -316,10 +316,10 @@
       if (!results) return [];
       let extraHits = [];
       let nbHits = 0;
-      if (results.length === 3) {
-        // collect extra hits separately
-        results[2].hits.forEach((hit) => extraHits.push(hit));
-        results.pop();
+      if (results.length > 1 && results[results.length -1].params.startsWith('filters=path')) {
+        // collect extra hits from last result separately
+        const extraResult = results.pop();
+        extraResult.hits.forEach((hit) => extraHits.push(hit));
       }
       results.forEach((result, i) => {
         nbHits += result.nbHits;
@@ -388,7 +388,7 @@
         extraHits = [],
       }) => {
         let $deck = document.querySelector('.articles .deck');
-        if (!$deck) {
+        if (!$deck && !omitEmpty) {
           // add card container
           $deck = createTag('div', { 'class': 'deck' });
           const $container = createTag('div', { 'class': 'default articles' });
@@ -397,7 +397,7 @@
         }
         if (!hits.length) {
           if (!omitEmpty) {
-            // $deck.innerHTML = '<div class="articles-empty"><div>';
+            $deck.innerHTML = '<div class="articles-empty"><div>';
           }
         } else {
           // add hits to card container
