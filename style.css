@@ -1248,7 +1248,7 @@ html div.gs-buttons {
                          " . .          post-body  post-body   . . "
                          " . .          topics     topics      . . "
                          "articles articles articles articles articles articles";
-    grid-template-columns: 8.33% 170px minmax(auto, 430px) minmax(auto, 430px) 170px 8.33%;
+    grid-template-columns: auto 170px minmax(auto, 430px) minmax(auto, 430px) 170px auto;
   }
 
   .post-page main>div.category, .post-page main>div.post-title, .post-page main>div.author {
