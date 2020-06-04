@@ -750,6 +750,7 @@ a.action.load-more::before {
 .home-page main .articles {
   grid-area: articles;
   background: white;
+  padding-bottom: 80px;
 }
 
 .home-page .featured.card {
