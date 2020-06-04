@@ -334,6 +334,7 @@ a.action.load-more::before {
 
 .post-page main>div.articles {
   grid-area: articles;
+  padding-top: 80px;
 }
 
 .post-page main>div.products {
@@ -447,7 +448,6 @@ a.action.load-more::before {
   text-align: center;
   font-weight: 700;
   width: 100%;
-  padding-bottom: 32px;
 }
 
 .post-page .products {
@@ -539,7 +539,7 @@ a.action.load-more::before {
 .articles {
   background-color: #eaeaea;
   text-align: center;
-  padding-bottom: 80px;
+  padding: 0 0 80px 0;
 }
 
 .articles-empty {
@@ -750,7 +750,6 @@ a.action.load-more::before {
 .home-page main .articles {
   grid-area: articles;
   background: white;
-  padding-bottom: 80px;
 }
 
 .home-page .featured.card {
@@ -1309,7 +1308,7 @@ html div.gs-buttons {
     margin-right: 32px;
   }
 
-  .home-page main .news-box .card:nth-last-of-type(3n) {
+  .home-page main .news-box .card:nth-of-type(3n) {
     margin-right: 0;
   }
 
@@ -1321,7 +1320,7 @@ html div.gs-buttons {
 
   .author-page .card,
   .topic-page .card {
-      width: calc(100%/4 - 20px);
+      width: calc(100%/4 - 22px);
   }
 
   .author-page .bio {
