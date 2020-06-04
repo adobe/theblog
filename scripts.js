@@ -338,7 +338,7 @@
           return unique.find((item) => item.objectID === hit.objectID)
             ? unique : [...unique, hit];
         }, []);
-      return { hits: hits.slice(0, hitsPerPage - extraHits.length), nbHits, extraHits };
+      return { hits: hits.slice(0, hitsPerPage), nbHits, extraHits };
     }
   }
 
@@ -367,7 +367,6 @@
 
     // extra path handling
     if (extraPaths.length) {
-      hitsPerPage += extraPaths.length; // increase number of hits
       queries.push({
         indexName,
         filters: extraPaths.map(p => `path:${p.substr(1)}`).join(' OR '),
