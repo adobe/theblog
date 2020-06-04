@@ -262,6 +262,40 @@
     return $item;
   }
 
+  function transformTableResults(res) {
+    var results=[];
+    var buckets={};
+    res.forEach((e) => {
+      if (e.author!='0') {
+        if (!buckets[e.type]) buckets[e.type]=[];
+        e.products=JSON.parse(e.products);
+        e.topics=JSON.parse(e.topics);
+        e.objectID=e.sourceHash;
+        buckets[e.type].push(e);  
+      }
+    });
+    results.push({      
+      nbHits: 1,
+      hits: [
+        buckets.feed[0]
+      ] });
+      buckets.feed.shift()
+      results.push({      
+        nbHits: 9999,
+        hits: buckets.feed
+      });
+      for (var a in buckets) {
+        if (a == 'feed') continue;
+        var bucket=buckets[a];
+        results.push({      
+          nbHits: bucket.length,
+          hits: bucket
+      });
+    }
+    return results;
+  }
+
+
   function helixQuery(appId, key) {
     return async (queries, hitsPerPage) => {
       const page = window.helix.nextPage || 0;
@@ -295,15 +329,15 @@
       fetch from algolia
       */
       
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'X-Algolia-API-Key': key,
-          'X-Algolia-Application-Id': appId,
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: JSON.stringify({ requests }),
-      });
+      // const res = await fetch(url, {
+      //   method: 'POST',
+      //   headers: {
+      //     'X-Algolia-API-Key': key,
+      //     'X-Algolia-Application-Id': appId,
+      //     'Content-Type': 'application/x-www-form-urlencoded',
+      //   },
+      //   body: JSON.stringify({ requests }),
+      // });
 
       /*
       fetch locally for offline dev
@@ -312,7 +346,15 @@
       //   method: 'GET'
       // });
 
-      const { results } = await res.json();
+      // const { results } = await res.json();
+
+      const res = await fetch('https://adobeioruntime.net/api/v1/web/helix/helix-services/data-embed@v1/https://adobe.sharepoint.com/sites/TheBlog/_layouts/15/guestaccess.aspx?share=ETprv-cj83ZAloswoVZfI3MBWlZbZTbCqpNyI2r2Dn-e_w&email=helix%40adobe.com&e=fx43wG', {
+        method: 'GET'
+      });
+
+      let results = await res.json();
+      results=transformTableResults(results);
+
       if (!results) return [];
       let extraHits = [];
       let nbHits = 0;
