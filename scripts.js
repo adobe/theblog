@@ -295,22 +295,22 @@
       fetch from algolia
       */
       
-      // const res = await fetch(url, {
-      //   method: 'POST',
-      //   headers: {
-      //     'X-Algolia-API-Key': key,
-      //     'X-Algolia-Application-Id': appId,
-      //     'Content-Type': 'application/x-www-form-urlencoded',
-      //   },
-      //   body: JSON.stringify({ requests }),
-      // });
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-Algolia-API-Key': key,
+          'X-Algolia-Application-Id': appId,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify({ requests }),
+      });
 
       /*
       fetch locally for offline dev
       */
-      const res = await fetch('/query-results.json', {
-        method: 'GET'
-      });
+      // const res = await fetch('/query-results.json', {
+      //   method: 'GET'
+      // });
 
       const { results } = await res.json();
       if (!results) return [];
@@ -411,7 +411,7 @@
               // add button to load more
               const $more = createTag('a', { 'class': 'action primary load-more' });
               $more.addEventListener('click', fetchArticles);
-              $deck.appendChild($more);
+              $deck.parentNode.appendChild($more);
               const title = window.getComputedStyle($more, ':before').getPropertyValue('content');
               if (title !== 'normal') {
                 $more.setAttribute('title', title.substring(1, title.length-1));
