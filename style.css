@@ -560,7 +560,6 @@ a.action.load-more::before {
   min-width: 300px;
   display: flex;
   flex-flow: row wrap;
-  justify-content: center;
 }
 
 .card {
@@ -1000,12 +999,16 @@ html div.gs-buttons {
     padding-left:64px;
     padding-right:64px;
     max-width: 912px;
-    justify-content: space-between;
   }
 
   .card {
     width: calc(100%/2 - 16px);
+    margin-right: 32px;
     margin-bottom: 32px;
+  }
+
+  .card:nth-of-type(2n) {
+    margin-right: 0;
   }
 
   .card a:hover {
@@ -1197,7 +1200,15 @@ html div.gs-buttons {
   }
 
   .card {
-    width: calc(100%/3 - 20px);
+    width: calc(100%/3 - 22px);
+  }
+
+  .card:nth-of-type(2n) {
+    margin-right: 32px;
+  }
+
+  .card:nth-of-type(3n) {
+    margin-right: 0;
   }
 
   .post-page main  {
@@ -1295,6 +1306,11 @@ html div.gs-buttons {
 
   .home-page main .news-box .card {
     width: calc(100%/3 - 20px);
+    margin-right: 32px;
+  }
+
+  .home-page main .news-box .card:nth-last-of-type(3n) {
+    margin-right: 0;
   }
 
   .topic-page main div.default:first-child h1 {

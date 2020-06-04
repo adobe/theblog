@@ -4,7 +4,6 @@
   min-width: 300px;
   display: flex;
   flex-flow: row wrap;
-  justify-content: center;
 }
 
 .card {
@@ -23,12 +22,16 @@
     padding-left:64px;
     padding-right:64px;
     max-width: 912px;
-    justify-content: space-between;
   }
 
   .card {
     width: calc(100%/2 - 16px);
+    margin-right: 32px;
     margin-bottom: 32px;
+  }
+
+  .card:nth-of-type(2n) {
+    margin-right: 0;
   }
 
 }
@@ -42,7 +45,15 @@
   }
 
   .card {
-    width: calc(100%/3 - 20px);
+    width: calc(100%/3 - 22px);
+  }
+
+  .card:nth-of-type(2n) {
+    margin-right: 32px;
+  }
+
+  .card:nth-of-type(3n) {
+    margin-right: 0;
   }
 
 }
