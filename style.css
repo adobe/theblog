@@ -386,7 +386,7 @@ a.action.load-more::before {
   line-height: 1.5em;
 }
 
-.post-page .author .author-summary {
+.post-page .author .summary {
   display: flex;
   align-items: center;
 }
@@ -953,7 +953,7 @@ a.action.load-more::before {
 }
 
 .author-page .default:first-of-type {
-  background-color: #eaeaea;
+  background-color: #f4f4f4;
   padding:0;
 }
 
@@ -1187,7 +1187,13 @@ html div.gs-buttons {
     padding-right:64px;
   }
 
-  .author-page .author-bio h2 {
+  .author-page .bio {
+    padding: 40px 64px;
+    max-width: 912px;
+    margin: 0 auto;
+  }
+
+  .author-page .bio h2 {
     font-size: 2.25rem;
   }
 
@@ -1349,8 +1355,7 @@ html div.gs-buttons {
 
   .author-page .bio {
     max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 80px;
+    padding: 40px 122px;
     display: flex;
     flex-flow: row nowrap;
   }
@@ -1360,6 +1365,7 @@ html div.gs-buttons {
     min-width: 224px;
     margin-right: 80px;
     margin-bottom: 0;
+    align-self: center;
   }
 
   .author-page .bio .frame img {
