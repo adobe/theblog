@@ -188,10 +188,9 @@
 
   function decorateTopicPage() {
     addClass('.topic-page main>div:first-of-type', 'topic-title');
-    var img=document.querySelector('main img');
-    console.log(img);
+    const img = document.querySelector('main img');
     if (img) {
-      var title=document.querySelector('.topic-title');
+      const title = document.querySelector('.topic-title');
       title.style.background=`url(${img.getAttribute('src')}) no-repeat center center`;
       title.style.backgroundSize=`cover`;
     }
