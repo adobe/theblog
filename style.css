@@ -898,6 +898,11 @@ a.action.load-more::before {
   display: none;
 }
 
+.topic-page .articles,
+.author-page  .articles {
+  background-color: white;
+}
+
 .author-page .articles-empty {
   content: 'No articles found by this author';
 }
@@ -1362,7 +1367,6 @@ html div.gs-buttons {
   }
 
   .author-page .bio .summary {
-    height: 224px;
     display: flex;
     flex-direction: column;
     justify-content: center;
