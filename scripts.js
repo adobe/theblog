@@ -938,7 +938,7 @@
       decoratePostPage();
       addAuthor();
       addTopics();
-      addProducts();
+      // addProducts();
       addGetSocial();
       shapeBanner();
       fetchArticles();
