@@ -919,14 +919,11 @@ a.action.load-more::before {
 }
 
 .topic-page main div.topic-title h1 {
-  box-sizing: content-box;
   color: white;
   width: 100%;
   max-width: 379px;
   margin: auto;
   align-self: center;
-  padding-left: 32px;
-  padding-right: 32px;
 }
 
 .topic-page main div.topic-title img {
@@ -1182,7 +1179,7 @@ html div.gs-buttons {
   }
 
   .topic-page main div.topic-title h1 {
-    max-width: 784px;
+    max-width: 912px;
     padding-left: 64px;
     padding-right:64px;
   }
@@ -1333,7 +1330,7 @@ html div.gs-buttons {
   }
 
   .topic-page main div.topic-title h1 {
-    max-width: 1136px;
+    max-width: 1200px;
     padding-left: 32px;
     padding-right: 32px;
   }
