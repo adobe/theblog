@@ -914,9 +914,10 @@ a.action.load-more::before {
 }
 
 .topic-page main div.topic-title h1 {
+  box-sizing: content-box;
   color: white;
   width: 100%;
-  max-width: 912px;
+  max-width: 379px;
   margin: auto;
   align-self: center;
   padding-left: 32px;
@@ -929,6 +930,7 @@ a.action.load-more::before {
 
 .topic-page main div.topic-title {
   height: 220px;
+  padding: 0;
   background-color: var(--bg1); /* fallback bg color */
   display: flex;
   justify-content: start;
@@ -1142,7 +1144,8 @@ html div.gs-buttons {
     width: 100%;
   }
 
-  .topic-page main div.default:first-child {
+  .topic-page main div.topic-title {
+    padding: 0;
     height: 220px;
     background:
       radial-gradient(
@@ -1173,8 +1176,8 @@ html div.gs-buttons {
       );
   }
 
-  .topic-page main div.default:first-child h1 {
-    max-width: 912px;
+  .topic-page main div.topic-title h1 {
+    max-width: 784px;
     padding-left: 64px;
     padding-right:64px;
   }
@@ -1318,15 +1321,25 @@ html div.gs-buttons {
     margin-right: 0;
   }
 
-  .topic-page main div.default:first-child h1 {
-    max-width: 1200px;
+  .topic-page main div.topic-title h1 {
+    max-width: 1136px;
     padding-left: 32px;
     padding-right: 32px;
   }
 
   .author-page .card,
   .topic-page .card {
-      width: calc(100%/4 - 22px);
+      width: calc(100%/4 - 24px);
+  }
+
+  .author-page .card:nth-of-type(3n),
+  .topic-page .card:nth-of-type(3n) {
+      margin-right: 32px;
+  }
+
+  .author-page .card:nth-of-type(4n),
+  .topic-page .card:nth-of-type(4n) {
+      margin-right: 0;
   }
 
   .author-page .bio {
