@@ -386,7 +386,7 @@ a.action.load-more::before {
   line-height: 1.5em;
 }
 
-.post-page .author .summary {
+.post-page .author .author-summary {
   display: flex;
   align-items: center;
 }
