@@ -83,7 +83,7 @@ indices:
         cache: 600
   blog-posts-flat:
     source: html
-    fetch: https://{repo}-{owner}.project-helix.page{path}
+    fetch: https://{repo}-{owner}.project-helix.page/{path}
     include:
       - (en|de|fr)/drafts/migrated/**/*.(md|docx)
       - (en|de|fr)/publish/**/*.(md|docx)
