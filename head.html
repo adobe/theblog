@@ -16,7 +16,13 @@
 <link rel="preconnect" href="https://ims-na1.adobelogin.com"/>
 <link rel="preconnect" href="https://www.adobe.com"/>
 
-<link rel="stylesheet" href="/style.css"/>
+<style type="text/css">
+  /* hide main to avoid flickering until page class is applied to body */
+  main {
+    visibility: hidden;
+  }
+</style>
+<link rel="preload" href="/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
 <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"/>
 <link rel="stylesheet" href="/hlx_fonts/pnv6nym.css"/>
 <link rel="publisher" href="https://www.facebook.com/Adobe"/>

@@ -1,0 +1,473 @@
+.post-page main {
+  display: grid;
+  grid-template-areas: "hero-image"
+                       "post-header"
+                       "post-body"
+                       "topics"
+                       "articles";
+}
+
+.post-page .post-title {
+  text-align: left;
+  color: #363636;
+  margin: 0 32px;
+  padding: 0;
+}
+
+.post-page .post-title h3:empty {
+  display: none;
+}
+
+.post-page .hero-image {
+  grid-area: hero-image;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.post-page main .hero-image img {
+  width: 100%;
+  object-fit: cover;
+  height: 220px;
+}
+
+
+/* hero caption */
+.post-page main div.hero-image p {
+  margin: 0;
+}
+
+.post-page main p + p {
+  margin-top: 1.5em;
+}
+
+.post-page main div.hero-image p:nth-of-type(2) {
+  text-align: right;
+  width: 100%;
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding-right: 20px;
+}
+
+.post-page main div.post-header {
+  grid-area: post-header;
+  align-self: center;
+  margin-top: 32px;
+}
+
+.post-page main div.post-header > .post-author {
+  margin-top: 20px;
+  height: 118px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+
+.post-page main>div.post-body .images img {
+  margin-top: 64px;
+}
+
+.post-page main>div.post-body {
+  grid-area: post-body;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 30px;
+}
+
+.post-page main>div.topics {
+  grid-area: topics;
+}
+
+.post-page main>div.articles {
+  grid-area: articles;
+  padding-top: 80px;
+}
+
+.post-page main>div.products {
+  grid-area: products;
+  border-style: solid;
+  border-color: #dddddd;
+  border-width: 2px 0 2px 0;
+  margin: 16px 32px;
+  text-align: center;
+  display: none;
+}
+
+.post-page main>div.products .prod-design {
+  display: flex;
+}
+
+.post-page main>div.products .prod-design p {
+  margin: 0;
+  padding: 0;
+  font-size: 0.8em;
+  font-weight: 700;
+  display: none;
+}
+
+.post-page main>div.products .prod-design a {
+  font-size: 1em;
+  font-weight: 400;
+  color: #4682E1;
+  text-decoration: none;
+}
+.post-page div.category {
+  margin: 0 32px;
+  padding: 0;
+}
+
+.post-page div.category a {
+  text-decoration: none;
+  color: #707070;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  font-size: 0.8em;
+}
+
+.post-page .author {
+  text-align: left;
+  color: #363636;
+  font-size: 0.9em;
+  line-height: 1.5em;
+}
+
+.post-page .author .summary {
+  display: flex;
+  align-items: center;
+}
+
+.post-page .author img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin-right: 15px;
+  display: block;
+  object-fit: cover;
+}
+
+.post-page .author .post-author {
+  font-weight: 600;
+  display: block;
+}
+
+
+.post-page .author .post-author a {
+  text-decoration: none;
+  color: currentColor;
+}
+
+.post-page .topics {
+  margin: 24px auto 56px auto;
+  padding: 0;
+  text-align: center;
+}
+
+.post-page .topics a {
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  line-height: 1;
+  color: rgb(10,10,10);
+  position: relative;
+  font-weight: 500;
+  font-size: .693rem;
+  z-index: 1;
+  padding: 16px 14px 16px 14px;
+  position: relative;
+  background: #fff;
+  overflow: hidden;
+  border: 1px solid #eaeaea;
+  border-radius: 6px;
+  margin: 0 15px 10px 0;
+  display: inline-block;
+}
+
+.post-page .topics a:hover {
+  color: #007bff;
+}
+
+.post-page .articles::before {
+  content: "Recommended for you";
+  font-size: 1.5rem;
+  display: block;
+  text-align: center;
+  font-weight: 700;
+  width: 100%;
+}
+
+.post-page .products {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  color: #363636;
+  line-height: 1.3em;
+}
+
+.post-page .products::before {
+  content: "Adobe products in this article";
+  display: block;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  font-size: 0.7em;
+  width: 100%;
+  padding: 16px 0;
+  line-height: 1.3em;
+}
+
+.post-page main>div.post-body p+h2, .post-page main>div.post-body div+h2,
+.post-page main>div.post-body p+h3 {
+  margin-top: 64px;
+}
+
+.post-page .products a {
+  margin: 0 .125rem .5rem;
+  font-size: .75rem;
+}
+
+.post-page .products a img {
+  width: 45px;
+  height: 45px;
+  margin: 0 .188rem;
+}
+
+.post-page .social::before {
+  content: "Follow me on";
+  display: block;
+  margin-bottom: 5px;
+  color: rgb(10,10,10);
+  text-align: center;
+  text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  font-family: adobe-clean,sans-serif;
+  font-size: .75rem;
+  line-height:18px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  user-select: text;
+}
+
+.post-page .social {
+  margin: 0 auto 50px auto;
+  text-align:center;
+}
+
+.post-page .social svg {
+  fill: #000;
+  height: 1em;
+  width: 1em;
+  margin: 0 10px;
+}
+
+.post-page main>div.post-body>p.images.left {
+  text-align: left;
+}
+
+.post-page main>div.post-body>p.images.left>img {
+  float: left;
+  padding-right: 16px;
+  margin-top: 0;
+}
+
+.banner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #000;
+  background-size: cover;
+  background-position: center center;
+  color: #fff;
+  padding: 30px 10px;
+  font-family: adobe-clean,sans-serif;
+  margin-top: 48px;
+}
+
+.banner .banner-left, .banner .banner-right {
+  flex: 0 0 50%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  padding: 10px 20px
+}
+
+.banner .banner-left img {
+  width: 70px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.banner .banner-left h1 {
+  padding-bottom: .2rem;
+  font-size: 2.3rem;
+  font-weight: 200;
+  line-height: 2.8rem;
+  text-align: center;
+  margin: 0;
+}
+
+.banner .banner-right a {
+  padding: 10px 30px;
+  border: solid 1px #fff;
+  border-radius: 5px;
+  font-size: .8rem;
+  color: #fff;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  line-height: 1.5;
+  font-weight: 500;
+}
+
+.banner .banner-right p {
+  margin-bottom: 1.75rem;
+  margin-top: 0;
+  line-height: 24px;
+  font-size: 0.9rem;
+  text-align: left;
+  font-weight: 500;
+}
+
+.embed-soundcloud > iframe {
+  height: 200px ! important;
+}
+
+/*
+ * GetSocial floating share bar
+ */
+ html div.gs-buttons {
+  margin-top: -73px !important;
+}
+
+@media (min-width:600px) {
+
+  .post-page main>div.post-header>div {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .post-page main>div.post-header,
+  .post-page main>div.topics {
+    margin-left: 128px;
+    margin-right: 128px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .post-page main>div.topics {
+    margin-bottom: 80px;
+  }
+
+  .post-page main>div.post-body {
+    margin-left: 64px;
+    margin-right: 64px;
+    padding: 0;  
+  }
+
+  .post-page main>div.post-body>* {
+    margin-left: 64px;
+    margin-right: 64px;  
+  }
+
+  .post-page main>div.post-body>p.images {
+    margin-left: 0px;
+    margin-right: 0px;
+    text-align: center;
+  }
+
+  .post-page main>div.post-body>p.images.left {
+    margin-left: 64px;
+    margin-right: 64px;
+  }
+
+  .post-page main>div.post-body>p.images>img {
+    max-width: 100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .post-page main>div.products .prod-design p {
+    display: block;
+  }
+
+  .banner {
+    flex-direction: row;
+  }
+
+  /*
+   * GetSocial floating share bar
+   */
+   html div.gs-buttons {
+    margin-top: -172px !important;
+  }
+
+}
+
+@media (min-width:1100px) {
+
+  .post-page main  {
+    padding-top: 16px;
+    box-sizing: border-box;
+  }  
+
+  .post-page main .post-body {
+    box-sizing: border-box;
+  }
+
+  .post-page main div.hero-image img {
+    height: 360px;
+  }
+
+  .post-page main div.hero-image p:nth-of-type(2) {
+    padding-right: 0;
+  }
+
+  .post-page main>div.products {
+    width: 170px;
+    padding: 0;
+    border: 0;
+    margin: 0;
+  }
+
+  .post-page main>div.products .prod-design {
+    display: block;
+  }
+  
+  .post-page main>div.products .prod-design>div{
+    margin-top: 30px;
+  }
+
+  .post-page main {
+    grid-template-areas: " . hero-image hero-image post-header post-header . "
+                         " . .          post-body  post-body   . . "
+                         " . .          topics     topics      . . "
+                         "articles articles articles articles articles articles";
+    grid-template-columns: auto 170px minmax(auto, 430px) minmax(auto, 430px) 170px auto;
+  }
+
+  .post-page main>div.category, .post-page main>div.post-title, .post-page main>div.author {
+    margin-left: 32px;
+    margin-right: 32px;
+    padding-left: 0px;
+    padding-right: 64px;
+  }
+
+  .post-page main>div.post-body, .post-page main>div.post-header {
+    margin: 0;
+    padding: 0;
+  }
+
+  .post-page main>div.post-header {
+    padding-left: 32px;
+  }
+
+}

@@ -15,8 +15,9 @@ function loadJSModule(src) {
  */
 function loadCSS(href) {
   const link = document.createElement('link');
-  link.setAttribute('type', 'text/css');
-  link.setAttribute('rel', 'stylesheet');
+  link.setAttribute('rel', 'preload');
+  link.setAttribute('as', 'style');
+  link.setAttribute('onload', 'this.onload=null;this.rel="stylesheet"');
   link.setAttribute('href', href);
   document.head.appendChild(link);
 };
@@ -131,7 +132,8 @@ window.adobeid = {
   locale: window.blog.language,
 };
 
-// Load page specific module
+// Load page specific code
+loadCSS(`/style/${window.blog.pageType}.css`);
 loadJSModule(`/scripts/${window.blog.pageType}.js`);
 
 // Load language specific CSS overlays
