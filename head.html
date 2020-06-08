@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://adbcmiltemplate.112.2o7.net"/>
 <link rel="preconnect" href="https://c.evidon.com"/>
 <link rel="preconnect" href="https://l.betrad.com"/>
+<link rel="preconnect" href="https://fast.b-cdn.net"/>
+<link rel="preconnect" href="https://api.at.getsocial.io"/>
 <link rel="preconnect" href="https://ims-na1.adobelogin.com"/>
 <link rel="preconnect" href="https://www.adobe.com"/>
 
@@ -19,125 +21,11 @@
 <link rel="stylesheet" href="/hlx_fonts/pnv6nym.css"/>
 <link rel="publisher" href="https://www.facebook.com/Adobe"/>
 
-<script defer src="https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js" id="feds-script"></script>
-<script defer src="https://static.adobelogin.com/imslib/imslib.min.js"></script>
-<script defer type="module" src="/scripts.js"></script>
+<script src="/scripts.js"></script>
+<script src="/scripts/common.js" type="module"></script>
+<script async src="https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js" id="feds-script"></script>
+<script async src="https://static.adobelogin.com/imslib/imslib.min.js"></script>
 <script async src="//assets.adobedtm.com/faa4be0eccc5/eb6d7e040b1b/launch-1e5aae35cdd5-development.min.js"></script>
-
-<script>
-const TYPE = {
-  HOME: 'home',
-  POST: 'post',
-  AUTHOR: 'author',
-  TOPIC: 'topic',
-  PRODUCT: 'product',
-}
-window.TYPE = TYPE;
-
-const LANG = {
-  EN: 'en',
-  DE: 'de',
-  FR: 'fr',
-}
-window.LANG = LANG;
-
-const helixGlobals = () => {
-  const context = '/';
-  let language = LANG.EN;
-  let pageType = TYPE.HOME;
-  const segs = window.location.pathname
-    .split('/')
-    .filter(seg => seg !== '');
-  if (segs.length > 0) {
-    if (segs.length >= 1) {
-      // language
-      for (let [key, value] of Object.entries(LANG)) {
-        if (value === segs[0]) {
-          language = value;
-          break;
-        }
-      }
-    }
-    if (segs.length >= 2) {
-      // post pages
-      if (segs[1] === 'drafts' || segs[1] === 'publish' || /\d{4}\/\d{2}\/\d{2}/.test(segs)) {
-        pageType = TYPE.POST;
-      } else {
-        for (let [key, value] of Object.entries(TYPE)) {
-          if (segs[1].startsWith(value)) {
-            pageType = value;
-            break;
-          }
-        }
-      }
-    }
-  }
-  return { context, language, pageType };
-};
-window.helix = helixGlobals();
-
-window.fedsConfig = {
-    locale: window.helix.language,
-    disableSticky: false,
-    profile: {
-      localMenu: {
-        title: 'Settings',
-        links: [
-          {
-            title: 'My Subscriptions',
-            action: 'https://theblog.adobe.com/subscriptions.html',
-            description: 'Manage your subscriptions',
-            analyticsID: 'profile-my-subscriptions'
-          },
-        ],
-      }
-    },
-    footer: {
-      breadcrumbs: {
-        showLogo: true,
-        links: [{
-          title: 'Adobe Blog',
-          url: '/',
-          target: '_self',
-        }]
-      },
-    },
-  };
-
-  window.adobeid = {
-    client_id: 'theblog-helix',
-    scope: 'AdobeID,openid',
-    locale: window.helix.language,
-  };
-
-  // prep images for lazy loading and use adequate sizes
-  const imgWidth = window.innerWidth === 375 ? 750 : // double size for retina
-                window.innerWidth < 900 ? 900 : 2048;
-  let imgCount = 0;
-
-  const observer = new MutationObserver(mutations => {
-    mutations.forEach(mutation => {
-      mutation.addedNodes.forEach(node => {
-        // only handle images with src=/hlx_*
-        if (node.tagName === 'IMG' && /\/hlx_/.test(node.src)) {
-          const img = node;
-          if (!/\?width\=\d/.test(img.src)) {
-            // add reasonable width if missing
-            img.setAttribute('src', `${img.src}?width=${imgWidth}&auto=webp`);
-          }
-          if (imgCount > 0) {
-            // skip lazyloading for hero image
-            img.setAttribute('data-src', img.src);
-            img.removeAttribute('src');
-            img.classList.add('lazyload');
-          }
-          imgCount++;
-        }
-      });
-    });
-  });
-  observer.observe(document, { childList: true, subtree: true });
-</script>
 
 <template id="post-card">
   <div class="card">
