@@ -133,7 +133,7 @@
   line-height: 1.5em;
 }
 
-.post-page .author .summary {
+.post-page .author .author-summary {
   display: flex;
   align-items: center;
 }
@@ -271,6 +271,48 @@
   float: left;
   padding-right: 16px;
   margin-top: 0;
+}
+
+.embed-promotions>div.default {
+  display: flex;
+  padding: 24px 0;
+  border-top: 2px solid #ddd;
+  border-bottom: 2px solid #ddd;
+  margin: 64px 0;
+}
+
+.embed-promotions>div.default>p {
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+}
+
+.embed-promotions .embed-promotions-text {
+  padding-left: 32px;
+}
+
+.embed-promotions-text h1, .embed-promotions-text h2, .embed-promotions-text h3, .embed-promotions-text h4, .embed-promotions-text h5 {
+  margin: 0.5em 0;
+  line-height: 1.5em;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+.embed-promotions-text p {
+  margin: 0.5em 0;
+  line-height: 1.5em;
+  font-size: 16px; 
+}
+
+.embed-promotions-text p a:any-link{
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.embed-promotions-text p a::after{
+  content: " >";
 }
 
 .banner {
