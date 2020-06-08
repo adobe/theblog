@@ -16,6 +16,8 @@ export function decoratePostPage(){
   addClass('.post-page main>div:nth-of-type(4)', 'post-body');
   addClass('.post-page main>div.post-body>p>img', 'images', 1);
   wrap('post-header',['main>div.category','main>div.post-title', 'main>div.post-author']);
+  wrap('embed-promotions',['main>div.post-body>div.default:not(.banner)']);
+  wrap('embed-promotions-text',['.embed-promotions>div>*:not(:first-child)']);
   addImageClasses();
 }
 
