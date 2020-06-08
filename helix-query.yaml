@@ -14,7 +14,7 @@ indices:
           match(el, 'by (.*)')
         faceted: true
       title:
-        select: h1:first-of-type
+        select: main > div > h1:first-of-type
         value: |
           textContent(el)
       date:

@@ -311,7 +311,7 @@ a.action.load-more::before {
 
 .post-page main div.post-header > .post-author {
   margin-top: 20px;
-  height: 64px;
+  height: 118px;
   padding-top: 0;
   padding-bottom: 0;
 }
@@ -386,7 +386,7 @@ a.action.load-more::before {
   line-height: 1.5em;
 }
 
-.post-page .author .summary {
+.post-page .author .author-summary {
   display: flex;
   align-items: center;
 }
@@ -526,16 +526,6 @@ a.action.load-more::before {
   margin-top: 0;
 }
 
-
-.author .social {
-  margin: 0;
-  width: auto;
-}
-
-.author .social svg {
-  margin: 0 5px;
-}
-
 .articles {
   background-color: #eaeaea;
   text-align: center;
@@ -672,6 +662,50 @@ a.action.load-more::before {
 .card p.date {
   display: none;
 }
+
+.embed-promotions>div.default {
+  display: flex;
+  padding: 24px 0;
+  border-top: 2px solid #ddd;
+  border-bottom: 2px solid #ddd;
+  margin: 64px 0;
+}
+
+.embed-promotions>div.default>p {
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+}
+
+.embed-promotions .embed-promotions-text {
+  padding-left: 32px;
+}
+
+.embed-promotions-text h1, .embed-promotions-text h2, .embed-promotions-text h3, .embed-promotions-text h4, .embed-promotions-text h5 {
+  margin: 0.5em 0;
+  line-height: 1.5em;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+.embed-promotions-text p {
+  margin: 0.5em 0;
+  line-height: 1.5em;
+  font-size: 16px; 
+}
+
+.embed-promotions-text p a:any-link{
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.embed-promotions-text p a::after{
+  content: " >";
+}
+
+
 
 .banner {
   position: relative;
@@ -949,7 +983,7 @@ a.action.load-more::before {
     );
 }
 
-.author-page .default:first-of-type {
+.author-page main > div:first-of-type {
   background-color: #f4f4f4;
   padding:0;
 }
@@ -969,6 +1003,35 @@ a.action.load-more::before {
 
 .author-page .bio .frame img {
   width: 124px;
+}
+
+.author-page .social::before {
+  content: "Follow me on";
+  display: inline-block;
+  font-size: 1rem;
+  line-height: 1.5em;
+  margin-bottom: 5px;
+}
+
+.author-page .social {
+  padding: 0;
+  margin: 0;
+}
+
+.author-page .social li {
+  list-style: none;
+  display: inline;
+  margin-left: 16px;
+}
+
+.author-page .social svg {
+  opacity: 0.5;
+  width: 1rem;
+  height: 1rem;
+}
+
+.author-page .social svg:hover {
+  opacity: 0.8;
 }
 
 /*

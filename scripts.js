@@ -203,6 +203,8 @@
     addClass('.post-page main>div:nth-of-type(4)', 'post-body');
     addClass('.post-page main>div.post-body>p>img', 'images', 1);
     wrap('post-header',['main>div.category','main>div.post-title', 'main>div.post-author']);
+    wrap('embed-promotions',['main>div.post-body>div.default:not(.banner)']);
+    wrap('embed-promotions-text',['.embed-promotions>div>*:not(:first-child)']);
     addImageClasses();
   }
 
@@ -646,13 +648,6 @@
               <div><span class="post-author"><a href="${pageURL}">${window.helix.author}</a></span>
               <span class="post-date">${window.helix.date}</span></div></div>`;
             authorDiv.classList.add('author');
-            // try to get the author's social links
-            const socialLinks = /<p>(Social\: .*)<\/p>/gi.exec(xhr.responseText);
-            if (socialLinks) {
-              const $social = document.createElement('div');
-              $social.innerHTML = socialLinks[1];
-              fetchSocialLinks($social, authorDiv);
-            }
             authorSection.appendChild(authorDiv);
           }
         } else {
@@ -834,31 +829,33 @@
       const links = r && r.length > 0 ? r[1].split(',') : null;
       if (links) {
         source.innerHTML = source.innerHTML.replace(/<p>Social\: .*<\/p>/gi, '');
-        const socialWrap = document.createElement('div');
-        socialWrap.className = 'default social';
-        links.forEach((url) => {
-          url = url.trim();
-          if (!url) return;
-          const { title, type, className } = getSocialLinkDetails(url);
-          const link = document.createElement('a');
-          link.className = className;
-          link.title = title;
-          link.href = url;
+        const list = createTag('ul', { 'class': 'social' });
+        links.forEach((href) => {
+          href = href.trim();
+          if (!href) return;
+          const { title, type, className } = getSocialLinkDetails(href);
+          const item = createTag('li');
+          const link = createTag('a', {
+            'class': className,
+            title,
+            href,
+          });
           link.appendChild(createSVG(type));
-          socialWrap.appendChild(link);
+          item.appendChild(link);
+          list.appendChild(item);
         });
-        target.insertBefore(socialWrap, source.nextSibling);
+        document.querySelector('.summary').appendChild(list);
       }
     }
   }
 
   function decorateAuthorPage(){
     wrap('bio', '.author-page main > div:first-of-type > *');
+    addClass('.bio > p:first-of-type', 'frame');
     wrap('summary', [
       '.bio > h2',
-      '.bio > p:not(:first-of-type)',
+      '.bio > p:not(.frame)',
     ]);
-    addClass('.bio > p:first-of-type', 'frame');
   }
 
   function logHitJSON() {
@@ -936,7 +933,7 @@
       decoratePostPage();
       addAuthor();
       addTopics();
-      addProducts();
+      // addProducts();
       addGetSocial();
       shapeBanner();
       fetchArticles();
