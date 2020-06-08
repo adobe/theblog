@@ -213,7 +213,7 @@ window.addEventListener('load', function() {
   decoratePostPage();
   fetchAuthor();
   addTopics();
-  addProducts();
+  // addProducts();
   loadGetSocial();
   shapeBanners();
   fetchArticles();
