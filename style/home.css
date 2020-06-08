@@ -241,7 +241,7 @@
     position: relative;
   }
 
-  .home-page main .news-box .content p:first-of-type {
+  .home-page main .news-box .content > p:first-of-type {
     width: 80%;
   }
 
