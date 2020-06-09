@@ -471,8 +471,9 @@ export function setupSearch({
           .map(transformer)
           .forEach((hit) => addCard(hit, $deck));
 
-        if (nbHits > hitsPerPage) {
-          if (!$deck.querySelector('.load-more')) {
+        let $more = $deck.parentNode.querySelector('.load-more');
+        if (nbHits > (hitsPerPage * window.blog.nextPage)) {
+          if (!$more) {
             // add button to load more
             const $more = createTag('a', { 'class': 'action primary load-more' });
             $more.addEventListener('click', fetchArticles);
@@ -482,6 +483,8 @@ export function setupSearch({
               $more.setAttribute('title', title.substring(1, title.length-1));
             }
           }
+        } else if ($more) {
+          $more.remove();
         }
       }
       return { hits, nbHits, extraHits };
@@ -575,19 +578,17 @@ export function handleMetadata() {
  * Fetches articles based on the page type.
  */
 export function fetchArticles() {
-  let filter, omitEmpty;
+  let facetFilters, omitEmpty;
   if (window.blog.pageType === window.blog.TYPE.POST) {
-    filter = '';
+    facetFilters = [''];
     omitEmpty = true; // don't display anything if no results
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
-    filter = `topics:"${document.title}"`;
+    facetFilters = [`topics:"${document.title}"`];
   } else if (window.blog.pageType === window.blog.TYPE.AUTHOR) {
-    filter = `author:"${document.title.split(',')[0]}"`;
-  } else {
-    filter = '';
+    facetFilters = [`author:"${document.title.split(',')[0]}"`];
   }
   setupSearch({
-    facetFilters: [filter],
+    facetFilters,
     omitEmpty,
   });
 }
