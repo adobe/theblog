@@ -1,0 +1,117 @@
+.author-page  .articles {
+  background-color: white;
+}
+
+.author-page .articles-empty {
+  content: 'No articles found by this author';
+}
+
+.author-page main > div:first-of-type {
+  background-color: #f4f4f4;
+  padding:0;
+}
+
+.author-page .bio {
+  padding: 40px 32px;
+}
+
+.author-page .bio p {
+  font-size: 1rem;
+}
+
+.author-page .bio .frame {
+  font-size: 0;
+  margin-bottom: 32px;
+}
+
+.author-page .bio .frame img {
+  width: 124px;
+}
+
+.author-page .social::before {
+  content: "Follow me on";
+  display: inline-block;
+  font-size: 1rem;
+  line-height: 1.5em;
+  margin-bottom: 5px;
+}
+
+.author-page .social {
+  padding: 0;
+  margin: 0;
+}
+
+.author-page .social li {
+  list-style: none;
+  display: inline;
+  margin-left: 16px;
+}
+
+.author-page .social svg {
+  opacity: 0.5;
+  width: 1rem;
+  height: 1rem;
+}
+
+.author-page .social svg:hover {
+  opacity: 0.8;
+}
+
+@media (min-width:600px) {
+
+  .author-page .bio {
+    padding: 40px 64px;
+    max-width: 912px;
+    margin: 0 auto;
+  }
+
+  .author-page .bio h2 {
+    font-size: 2.25rem;
+  }
+
+}
+
+@media (min-width:1100px) {
+
+  .author-page .card {
+      width: calc(100%/4 - 24px);
+  }
+
+  .author-page .card:nth-of-type(3n) {
+      margin-right: 32px;
+  }
+
+  .author-page .card:nth-of-type(4n) {
+      margin-right: 0;
+  }
+
+  .author-page .bio {
+    max-width: 1200px;
+    padding: 40px 122px;
+    display: flex;
+    flex-flow: row nowrap;
+  }
+  
+  .author-page .bio .frame {
+    font-size: 0;
+    min-width: 224px;
+    margin-right: 80px;
+    margin-bottom: 0;
+    align-self: center;
+  }
+
+  .author-page .bio .frame img {
+    width: 224px;
+  }
+
+  .author-page .bio .summary {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .author-page .bio .summary h2 {
+    margin-top: 0;
+  }
+
+}

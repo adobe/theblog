@@ -3,3 +3,5 @@ Disallow: /
 
 User-agent: Twitterbot
 Disallow: 
+
+Sitemap: https://blog.adobe.com/sitemap.xml
