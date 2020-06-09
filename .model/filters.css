@@ -39,14 +39,14 @@
   position: relative;
 }
 
+.filter:first-child {
+  justify-content: start;
+}
+
 .filter:first-child:before {
   content: "Filters";
   display: inline-block;
   margin-right: 16px;
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translate(10%, -10px);
 }
 
 .filter .dropdown {
