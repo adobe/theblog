@@ -15,45 +15,43 @@
   padding: 40px 32px;
 }
 
-.author-page .bio p {
+.author-page .summary p,
+.author-page .summary ul {
   font-size: 1rem;
+  line-height: 1.25;
 }
 
-.author-page .bio .frame {
+.author-page .summary ul {
+  margin: 0.5rem 0;
+  padding-inline-start: 1rem;
+}
+
+.author-page .frame {
   font-size: 0;
   margin-bottom: 32px;
 }
 
-.author-page .bio .frame img {
+.author-page .frame img {
   width: 124px;
 }
 
-.author-page .social::before {
-  content: "Follow me on";
-  display: inline-block;
-  font-size: 1rem;
-  line-height: 1.5em;
-  margin-bottom: 5px;
+.author-page .summary .social {
+  padding-inline-start: 0;
 }
 
-.author-page .social {
-  padding: 0;
-  margin: 0;
-}
-
-.author-page .social li {
+.author-page .summary .social li {
   list-style: none;
   display: inline;
-  margin-left: 16px;
+  margin-right: 16px;
 }
 
-.author-page .social svg {
+.author-page .summary .social svg {
   opacity: 0.5;
   width: 1rem;
   height: 1rem;
 }
 
-.author-page .social svg:hover {
+.author-page .summary .social svg:hover {
   opacity: 0.8;
 }
 
