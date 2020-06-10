@@ -15,9 +15,9 @@
 
 .topic-page main div.topic-title h1 {
   color: white;
-  width: 100%;
+  width: calc(100% - 64px);
   max-width: 379px;
-  margin: auto;
+  margin: 0 auto;
   align-self: center;
 }
 
@@ -79,6 +79,7 @@
   }
 
   .topic-page main div.topic-title h1 {
+    width: 100%;
     max-width: 912px;
     padding-left: 64px;
     padding-right:64px;

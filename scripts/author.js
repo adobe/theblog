@@ -27,7 +27,7 @@ export function decorateAuthorPage(){
   addClass('.bio > p:first-of-type', 'frame');
   wrap('summary', [
     '.bio > h2',
-    '.bio > p:not(.frame)',
+    '.bio > p:not(.frame), .bio > ul',
   ]);
 }
 
@@ -72,27 +72,29 @@ export function addSocialLinks(source, target) {
     target = source.parentNode;
   }
   if (source) {
-    const r = /^Social\: (.*)$/gmi.exec(source.innerText);
-    const links = r && r.length > 0 ? r[1].split(',') : null;
-    if (links) {
-      source.innerHTML = source.innerHTML.replace(/<p>Social\: .*<\/p>/gi, '');
-      const list = createTag('ul', { 'class': 'social' });
-      links.forEach((href) => {
-        href = href.trim();
-        if (!href) return;
-        const { title, type, className } = getSocialLinkDetails(href);
-        const item = createTag('li');
-        const link = createTag('a', {
-          'class': className,
-          title,
-          href,
-        });
-        link.appendChild(createSVG(type));
-        item.appendChild(link);
-        list.appendChild(item);
+    source.querySelectorAll('p').forEach((p) => {
+      if (p.innerText !== 'Social:') return;
+      const list = p.nextSibling;
+      if (!list || list.tagName !== 'UL') return;
+      list.classList.add('social');
+      list.querySelectorAll('a').forEach((e) => {
+        if (e.textContent !== e.href) {
+          // ignore links with different texts
+          return;
+        }
+        const { title, type, className } = getSocialLinkDetails(e.href);
+        if (type === 'unknown') {
+          // remove links with unknown type
+          e.remove();
+          return;
+        }
+        e.innerHTML = '';
+        e.appendChild(createSVG(type))
+        e.setAttribute('title', title);
+        e.className = className;
       });
-      document.querySelector('.summary').appendChild(list);
-    }
+      p.remove();
+    });
   }
 }
 

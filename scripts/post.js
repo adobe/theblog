@@ -142,7 +142,7 @@ export function shapeBanners() {
   const banners = document.querySelectorAll('div.banner');
   banners.forEach((banner) => {
     // remove surrounding p
-    document.querySelectorAll('.banner img, .banner a').forEach((node) => {
+    banner.querySelectorAll('img, a').forEach((node) => {
       const p = node.parentNode;
       p.parentNode.insertBefore(node, p);
       p.remove();
@@ -158,7 +158,7 @@ export function shapeBanners() {
 
     let backgroundImg;
     let logoImg;
-    const imgs = document.querySelectorAll('.banner img');
+    const imgs = banner.querySelectorAll('img');
 
     if (imgs.length == 2) {
       // easy case, 2 images in the banner
@@ -192,16 +192,16 @@ export function shapeBanners() {
       left.append(logoImg);
     }
 
-    const title = document.querySelector('.banner > h1');
+    const title = banner.querySelector('h1');
     if (title) {
       left.append(title);
     }
-    const p = document.querySelector('.banner > p');
+    const p = banner.querySelector('p');
     if (p) {
       right.append(p);
     }
 
-    const cta = document.querySelector('.banner a');
+    const cta = banner.querySelector('a');
     if(cta) {
       right.append(cta);
     }
