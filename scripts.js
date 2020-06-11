@@ -112,20 +112,23 @@ window.blog = function() {
 // Adobe config
 window.fedsConfig = {
     locale: window.blog.language,
-    disableSticky: false,
-    profile: {
-      localMenu: {
-        title: 'Settings',
-        links: [
-          {
-            title: 'My Subscriptions',
-            action: 'https://theblog.adobe.com/subscriptions.html',
-            description: 'Manage your subscriptions',
-            analyticsID: 'profile-my-subscriptions'
-          },
-        ],
-      }
+    content: {
+      experience: 'blog-gnav'
     },
+    disableSticky: false,
+    // profile: {
+    //   localMenu: {
+    //     title: 'Settings',
+    //     links: [
+    //       {
+    //         title: 'My Subscriptions',
+    //         action: 'https://theblog.adobe.com/subscriptions.html',
+    //         description: 'Manage your subscriptions',
+    //         analyticsID: 'profile-my-subscriptions'
+    //       },
+    //     ],
+    //   }
+    // },
     footer: {
       breadcrumbs: {
         showLogo: true,
