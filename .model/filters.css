@@ -123,7 +123,7 @@
   border-radius: .25rem;
 }
 
-.dropdown-menu.show {
+.is-open .dropdown-menu {
   display: block;
 }
 
@@ -183,6 +183,12 @@
 .dropdown-menu .option label {
   margin-left: 10px;
 }
+
+.dropdown-menu .option label,
+.dropdown-menu .option input {
+  cursor: pointer;
+}
+
 
 .filter-clear {
   font-size: smaller;
