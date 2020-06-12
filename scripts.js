@@ -79,7 +79,6 @@ window.blog = function() {
   const context = '/';
   let language = LANG.EN;
   let pageType = TYPE.HOME;
-  let articleIndex = [];
   const segs = window.location.pathname
     .split('/')
     .filter(seg => seg !== '');

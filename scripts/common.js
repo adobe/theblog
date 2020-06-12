@@ -627,7 +627,7 @@ function addArticlesToDeck(hits, omitEmpty, transformer, hasMore) {
           wrapNodes(document.querySelector('main'), [$firstCard]);
         }
         const newsdeck=document.querySelector('.news-box .deck');
-        document.querySelectorAll('.card.type-covid').forEach(e => newsdeck.append(e));
+        document.querySelectorAll('.card.type-news').forEach(e => newsdeck.append(e));
       }
 
       let $more = $deck.parentNode.querySelector('.load-more');
@@ -657,9 +657,9 @@ function translateHits(hits) {
   })
 }
 
-async function fetchHits(filters, limit, offset) {
+async function fetchHits(filters, limit, cursor) {
   if (!window.blog.articleIndex) {
-    let response=await fetch('/en/query-index.json');
+    let response=await fetch('/query-index.json');
     if (response.ok) { 
       let json = await response.json();
       window.blog.articleIndex=translateHits(json);      
@@ -667,8 +667,27 @@ async function fetchHits(filters, limit, offset) {
   }
   const articleIndex=window.blog.articleIndex;
 
-  const hits=[...articleIndex.slice(offset, offset+limit)];
-  return hits;
+  let i=cursor;
+  let hits=[];
+  for (;i<articleIndex.length;i++) {
+    const e=articleIndex[i];
+    let matched=true;
+    if (filters.topics && !e.topics.includes(filters.topics)) matched=false;
+    if (filters.author && (e.author!=filters.author)) matched=false;
+    if (filters.path && !filters.path.includes(e.path)) matched=false;
+    if (matched) {
+      if (hits.length==limit) {
+        break;
+      }
+      hits.push(e);
+    }
+  }
+
+  let result={hits: hits};
+  if (i<articleIndex.length) {
+    result.cursor=i;
+  }
+  return result;
 }
 
 /**
@@ -680,6 +699,7 @@ export async function fetchArticles() {
 
   if (window.blog.pageType === window.blog.TYPE.POST) {
     omitEmpty = true; // don't display anything if no results
+    pageSize=3;
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
     filters = {topics: document.title};
   } else if (window.blog.pageType === window.blog.TYPE.AUTHOR) {
@@ -688,8 +708,11 @@ export async function fetchArticles() {
     pageSize=13;
     transformer = homepageTransformer;
   }
-  const hits=await fetchHits(filters, pageSize, 0);
-  addArticlesToDeck(hits, omitEmpty, transformer, true);
+  const result=await fetchHits(filters, pageSize, window.blog.cursor?window.blog.cursor:0);
+  const hits=result.hits;
+  window.blog.cursor=result.cursor;
+
+  addArticlesToDeck(hits, omitEmpty, transformer, result.cursor);
 }
 
 window.addEventListener('load', function() {
