@@ -113,22 +113,9 @@ window.blog = function() {
 window.fedsConfig = {
     locale: window.blog.language,
     content: {
-      experience: 'blog-gnav'
+      experience: 'adobe.com' // todo: switch to blog-gnav once host names are whitelisted
     },
     disableSticky: false,
-    // profile: {
-    //   localMenu: {
-    //     title: 'Settings',
-    //     links: [
-    //       {
-    //         title: 'My Subscriptions',
-    //         action: 'https://theblog.adobe.com/subscriptions.html',
-    //         description: 'Manage your subscriptions',
-    //         analyticsID: 'profile-my-subscriptions'
-    //       },
-    //     ],
-    //   }
-    // },
     footer: {
       breadcrumbs: {
         showLogo: true,
