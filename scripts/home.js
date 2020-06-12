@@ -18,6 +18,7 @@ import {
   setupSearch,
   itemTransformer,
   addCard,
+  fetchArticles,
 } from '/scripts/common.js';
 
 /**
@@ -60,6 +61,9 @@ export function setupHomepage() {
     newsBox.appendChild(createTag('div', { class: 'deck' }));
   }
 
+  fetchArticles();
+
+  /*
   setupSearch({
     hitsPerPage: 13,
     extraPaths: newsPaths,
@@ -84,6 +88,7 @@ export function setupHomepage() {
         .forEach((hit) => addCard(hit, document.querySelector('.news-box .deck')));
     }
   });
+  */
 }
 
 window.addEventListener('load', function() {

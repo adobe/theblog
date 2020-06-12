@@ -324,6 +324,7 @@ export function addCard(hit, $container, $template) {
   if (!$template) $template = document.getElementById('post-card');
   const $item = $template.content.cloneNode(true).firstElementChild;
   fillData($item, hit);
+  $item.classList.add('type-'+hit.type);
   $container.appendChild($item);
   return $item;
 }
@@ -586,23 +587,109 @@ export function handleMetadata() {
   document.head.append(frag);
 }
 
+function homepageTransformer(item, index) {
+  item = itemTransformer(item);
+  if (index === 0) {
+    // use larger hero image on first article
+    item.hero = item.hero ? item.hero.replace('?height=512&crop=3:2', '?height=640') : '#';
+  }
+  return item;
+}
+
+function addArticlesToDeck(hits, omitEmpty, transformer, hasMore) {
+    
+    let $deck = document.querySelector('.articles .deck');
+    if (!$deck) {
+      if (hits.length || !omitEmpty) {
+        // add card container
+        $deck = createTag('div', { 'class': 'deck' });
+        const $container = createTag('div', { 'class': 'default articles' });
+        $container.appendChild($deck);
+        document.querySelector('main').appendChild($container);
+      }
+    }
+    
+    if (!hits.length) {
+      if (!omitEmpty) {
+        $deck.innerHTML = '<div class="articles-empty"><div>';
+      }
+    } else {
+      // add hits to card container
+      hits
+        .map(transformer)
+        .forEach((hit) => addCard(hit, $deck));
+
+      if (window.blog.pageType === window.blog.TYPE.HOME) {
+        // move first card to featured 
+        const $firstCard = document.querySelector('.home-page .articles .card');
+        if ($firstCard) {
+          $firstCard.classList.add('featured');
+          wrapNodes(document.querySelector('main'), [$firstCard]);
+        }
+        const newsdeck=document.querySelector('.news-box .deck');
+        document.querySelectorAll('.card.type-covid').forEach(e => newsdeck.append(e));
+      }
+
+      let $more = $deck.parentNode.querySelector('.load-more');
+      if (hasMore) {
+        if (!$more) {
+          // add button to load more
+          const $more = createTag('a', { 'class': 'action primary load-more' });
+          $more.addEventListener('click', fetchArticles);
+          $deck.parentNode.appendChild($more);
+          const title = window.getComputedStyle($more, ':before').getPropertyValue('content');
+          if (title !== 'normal') {
+            $more.setAttribute('title', title.substring(1, title.length-1));
+          }
+        }
+      } else if ($more) {
+        $more.remove();
+      }
+    }
+}
+
+function translateHits(hits) {
+  return hits.map((e) => {
+    let r=e;
+    r.products=JSON.parse(r.products);
+    r.topics=JSON.parse(r.topics);
+    return (r);
+  })
+}
+
+async function fetchHits(filters, limit, offset) {
+  if (!window.blog.articleIndex) {
+    let response=await fetch('/en/query-index.json');
+    if (response.ok) { 
+      let json = await response.json();
+      window.blog.articleIndex=translateHits(json);      
+    }
+  }
+  const articleIndex=window.blog.articleIndex;
+
+  const hits=[...articleIndex.slice(offset, offset+limit)];
+  return hits;
+}
+
 /**
  * Fetches articles based on the page type.
  */
-export function fetchArticles() {
-  let facetFilters, omitEmpty;
+export async function fetchArticles() {
+  let filters={}, omitEmpty=false, pageSize=12;
+  let transformer = itemTransformer;
+
   if (window.blog.pageType === window.blog.TYPE.POST) {
-    facetFilters = [''];
     omitEmpty = true; // don't display anything if no results
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
-    facetFilters = [`topics:"${document.title}"`];
+    filters = {topics: document.title};
   } else if (window.blog.pageType === window.blog.TYPE.AUTHOR) {
-    facetFilters = [`author:"${document.title.split(',')[0]}"`];
+    filters = {author: document.title.split(',')[0]};
+  } else if (window.blog.pageType === window.blog.TYPE.HOME) {
+    pageSize=13;
+    transformer = homepageTransformer;
   }
-  setupSearch({
-    facetFilters,
-    omitEmpty,
-  });
+  const hits=await fetchHits(filters, pageSize, 0);
+  addArticlesToDeck(hits, omitEmpty, transformer, true);
 }
 
 window.addEventListener('load', function() {
