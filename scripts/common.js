@@ -659,7 +659,7 @@ function translateHits(hits) {
 
 async function fetchHits(filters, limit, cursor) {
   if (!window.blog.articleIndex) {
-    let response=await fetch('/query-index.json');
+    let response=await fetch('/en/query-index.json');
     if (response.ok) { 
       let json = await response.json();
       window.blog.articleIndex=translateHits(json);      
