@@ -16,7 +16,6 @@
                        "news-box"
                        "articles"
                        "inspiration";
-  grid-template-rows: auto auto 100% auto;
 }
 
 .home-page main .default {
@@ -170,6 +169,11 @@
 .home-page .news-box .card p.teaser,
 .home-page .news-box .card p.date {
   display: none;
+}
+
+.home-page .deck-placeholder {
+  grid-area: articles;
+  height: 50vh;
 }
 
 @media (min-width:600px) {
