@@ -16,7 +16,7 @@
                        "news-box"
                        "articles"
                        "inspiration";
-  height: 100%;
+  grid-template-rows: auto auto 100% auto;
 }
 
 .home-page main .default {
