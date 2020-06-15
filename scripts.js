@@ -116,16 +116,6 @@ window.fedsConfig = {
       experience: 'blog-gnav' 
     },
     disableSticky: false,
-    footer: {
-      breadcrumbs: {
-        showLogo: true,
-        links: [{
-          title: 'Adobe Blog',
-          url: '/',
-          target: '_self',
-        }]
-      },
-    },
   };
 
 window.adobeid = {
