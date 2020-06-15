@@ -19,12 +19,13 @@ import {
   itemTransformer,
   addCard,
   fetchArticles,
+  fetchArticleIndex,
 } from '/scripts/common.js';
 
 /**
  * Sets up the homepage
  */
-export function setupHomepage() {
+export async function setupHomepage() {
   if (!document.title) {
     document.title = 'The Blog | Welcome to the Adobe Blog';
   }
@@ -61,7 +62,22 @@ export function setupHomepage() {
     newsBox.appendChild(createTag('div', { class: 'deck' }));
   }
 
-  fetchArticles();
+  await fetchArticleIndex();
+
+  const pathLookup = window.blog.articleIndex.pathLookup;
+  let news=[];
+  newsPaths.forEach((n) => {
+    if (pathLookup[n.substr(1)])
+    news.push(pathLookup[n.substr(1)]);
+  });
+
+  const newsdeck=document.querySelector('.news-box .deck');
+  news.forEach((n) => {
+    addCard(n, newsdeck)
+  });
+
+  await fetchArticles();
+
 
   /*
   setupSearch({

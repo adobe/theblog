@@ -324,7 +324,6 @@ export function addCard(hit, $container, $template) {
   if (!$template) $template = document.getElementById('post-card');
   const $item = $template.content.cloneNode(true).firstElementChild;
   fillData($item, hit);
-  $item.classList.add('type-'+hit.type);
   $container.appendChild($item);
   return $item;
 }
@@ -626,8 +625,6 @@ function addArticlesToDeck(hits, omitEmpty, transformer, hasMore) {
           $firstCard.classList.add('featured');
           wrapNodes(document.querySelector('main'), [$firstCard]);
         }
-        const newsdeck=document.querySelector('.news-box .deck');
-        document.querySelectorAll('.card.type-news').forEach(e => newsdeck.append(e));
       }
 
       let $more = $deck.parentNode.querySelector('.load-more');
@@ -648,45 +645,68 @@ function addArticlesToDeck(hits, omitEmpty, transformer, hasMore) {
     }
 }
 
-function translateHits(hits) {
-  return hits.map((e) => {
+function translateTable(hits) {
+  let res={pathLookup:{}}
+  res.articles=hits.map((e) => {
     let r=e;
     r.products=JSON.parse(r.products);
     r.topics=JSON.parse(r.topics);
+    res.pathLookup[r.path]=r;
     return (r);
   })
+  return (res);
+}
+
+export async function fetchArticleIndex() {
+  let response=await fetch('/en/query-index.json');
+  if (response.ok) { 
+    let json = await response.json();
+    window.blog.articleIndex=translateTable(json);      
+  }
 }
 
 async function fetchHits(filters, limit, cursor) {
   if (!window.blog.articleIndex) {
-    let response=await fetch('/en/query-index.json');
-    if (response.ok) { 
-      let json = await response.json();
-      window.blog.articleIndex=translateHits(json);      
-    }
+    await fetchArticleIndex();
   }
-  const articleIndex=window.blog.articleIndex;
+
+  const articles=window.blog.articleIndex.articles;
+  const pathLookup=window.blog.articleIndex.pathLookup;
 
   let i=cursor;
   let hits=[];
-  for (;i<articleIndex.length;i++) {
-    const e=articleIndex[i];
-    let matched=true;
-    if (filters.topics && !e.topics.includes(filters.topics)) matched=false;
-    if (filters.author && (e.author!=filters.author)) matched=false;
-    if (filters.path && !filters.path.includes(e.path)) matched=false;
-    if (matched) {
-      if (hits.length==limit) {
-        break;
+  if (filters.paths) {
+    filters.paths.forEach((p) => {
+     if (pathLookup[p.substring(1)]) hits.push(pathLookup[p.substring(1)]);
+   });
+  }
+
+  if (!filters.pathsOnly) {
+    for (;i<articles.length;i++) {
+      const e=articles[i];
+      let matched=true;
+      if (filters.topics && !e.topics.includes(filters.topics)) matched=false;
+      if (filters.author && (e.author!=filters.author)) matched=false;
+  
+      //check if path is already in a card
+      if (document.querySelector(`.card a[href='/${e.path}']`)) matched=false;
+      if (hits.find(h => h.path == e.path)) matched=false;
+  
+      if (matched) {
+        if (hits.length==limit) {
+          break;
+        }
+        hits.push(e);
       }
-      hits.push(e);
     }
+  
   }
 
   let result={hits: hits};
-  if (i<articleIndex.length) {
+  if (i && i<articles.length) {
     result.cursor=i;
-  }
+  }  
+
   return result;
 }
 
@@ -699,7 +719,9 @@ export async function fetchArticles() {
 
   if (window.blog.pageType === window.blog.TYPE.POST) {
     omitEmpty = true; // don't display anything if no results
-    pageSize=3;
+    pageSize=12;
+    filters.paths = getPostPaths('h2#featured-posts', 1, true);
+    filters.pathsOnly = true;
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
     filters = {topics: document.title};
   } else if (window.blog.pageType === window.blog.TYPE.AUTHOR) {
@@ -707,6 +729,7 @@ export async function fetchArticles() {
   } else if (window.blog.pageType === window.blog.TYPE.HOME) {
     pageSize=13;
     transformer = homepageTransformer;
+    filters.paths = getPostPaths('h2#featured-posts', 1, true);
   }
   const result=await fetchHits(filters, pageSize, window.blog.cursor?window.blog.cursor:0);
   const hits=result.hits;
