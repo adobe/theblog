@@ -173,7 +173,7 @@
 
 .home-page .deck-placeholder {
   grid-area: articles;
-  height: 50vh;
+  min-height: 50vh;
 }
 
 @media (min-width:600px) {
