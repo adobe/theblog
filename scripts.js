@@ -113,7 +113,7 @@ window.blog = function() {
 window.fedsConfig = {
     locale: window.blog.language,
     content: {
-      experience: 'blog-gnav.com' 
+      experience: 'blog-gnav' 
     },
     disableSticky: false,
     footer: {
