@@ -112,10 +112,9 @@ window.blog = function() {
 // Adobe config
 window.fedsConfig = {
     locale: window.blog.language,
-    // todo: uncomment once host names are whitelisted, see https://github.com/adobe/theblog/issues/82
-    // content: {
-    //   experience: 'blog-gnav.com' 
-    // },
+    content: {
+      experience: 'blog-gnav.com' 
+    },
     disableSticky: false,
     footer: {
       breadcrumbs: {
