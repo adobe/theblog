@@ -32,6 +32,10 @@ export function setupHomepage() {
     titleSection.remove();
   }
 
+  // add featured placeholder
+  const featuredPlaceholder = createTag('div', { 'class': 'featured-placeholder' });
+  document.querySelector('main').appendChild(featuredPlaceholder);
+
   // news box
   let newsPaths;
   addClass('h2#news', 'news-box', 1);
@@ -72,11 +76,12 @@ export function setupHomepage() {
       return item;
     },
     callback: ({ extraHits }) => {
-      // move first card to featured 
+      // move first card to featured
       const $firstCard = document.querySelector('.home-page .articles .card');
       if ($firstCard) {
         $firstCard.classList.add('featured');
         wrapNodes(document.querySelector('main'), [$firstCard]);
+        featuredPlaceholder.remove();
       }
       // add hits from extra paths to news box
       extraHits

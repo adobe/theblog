@@ -21,9 +21,11 @@
 
 .home-page main .default {
   padding: 0;
+  display: none;
 }
 
 .home-page main .articles {
+  display: block;
   grid-area: articles;
   background: white;
   padding-bottom: 80px;
@@ -80,11 +82,17 @@
   display: block;
 }
 
+.home-page .featured-placeholder {
+  grid-area: featured;
+  height: 550px;
+}
+
 .home-page a.load-more {
   grid-area: load-more;
 }
 
 .home-page main .news-box {
+  display: block;
   grid-area: news-box;
   margin-top: 48px;
   background-color: #f4f4f4;
@@ -200,6 +208,11 @@
 
   .home-page .featured.card p.date {
     bottom: unset;
+  }
+
+  .home-page .featured-placeholder {
+    height: 320px;
+    margin-top: 40px;
   }
 
   .home-page main .news-box .content,
