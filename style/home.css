@@ -15,8 +15,8 @@
   grid-template-areas: "featured"
                        "news-box"
                        "articles"
-                       "load-more"
                        "inspiration";
+  height: 100%;
 }
 
 .home-page main .default {
@@ -85,10 +85,6 @@
 .home-page .featured-placeholder {
   grid-area: featured;
   height: 550px;
-}
-
-.home-page a.load-more {
-  grid-area: load-more;
 }
 
 .home-page main .news-box {
