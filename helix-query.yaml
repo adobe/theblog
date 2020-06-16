@@ -7,12 +7,12 @@ indices:
     include:
       - (en|de|fr)/drafts/migrated/**/*.(md|docx)
       - (en|de|fr)/publish/**/*.(md|docx)
+    target: https://adobe.sharepoint.com/:x:/r/sites/TheBlog/Shared%20Documents/theblog/en/query-index.xlsx?d=we7bf6b3af3234076968b30a1565f2373&csf=1&web=1&e=q9o8tW
     properties:
       author:
         select: main > div:nth-of-type(3) > p:nth-of-type(1)
         value: |
           match(el, 'by (.*)')
-        faceted: true
       title:
         select: main > div > h1:first-of-type
         value: |
@@ -25,12 +25,10 @@ indices:
         select: main > div:last-of-type > p:first-of-type
         values: |
           match(el, '(Topics: )? ([^,]+)')
-        faceted: true
       products:
         select: main > div:last-of-type > p:nth-of-type(2)
         values: |
           match(el, '(Products: )? ([^,]+)')
-        faceted: true
       hero:
         select: main > div:nth-of-type(2) img:first-of-type
         value: |
@@ -43,7 +41,6 @@ indices:
         select: head > meta[name=x-source-hash
         value: |
           attribute(el, 'content')
-        faceted: true
       external-path:
         select: none
         value: |
@@ -81,50 +78,3 @@ indices:
         filters: |
           parents:"${context}${language}" AND date < ${date} AND topics:"${topic}"
         cache: 600
-  blog-posts-flat:
-    source: html
-    fetch: https://{repo}-{owner}.project-helix.page/{path}
-    include:
-      - (en|de|fr)/drafts/migrated/**/*.(md|docx)
-      - (en|de|fr)/publish/**/*.(md|docx)
-    target: https://adobe.sharepoint.com/:x:/r/sites/TheBlog/Shared%20Documents/admin/query/index.xlsx?d=we7bf6b3af3234076968b30a1565f2373&csf=1&web=1&e=vtJGfL
-    properties:
-      author:
-        select: main > div:nth-of-type(3) > p:nth-of-type(1)
-        value: |
-          innerHTML(el)
-        faceted: true
-      title:
-        select: h1:first-of-type
-        value: |
-          textContent(el)
-      date:
-        select: main > div:nth-of-type(3)
-        value: |
-          innerHTML(el)
-      topics:
-        select: main > div:last-of-type > p:first-of-type
-        value: |
-          innerHTML(el)
-        faceted: true
-      products:
-        select: main > div:last-of-type > p:nth-of-type(2)
-        value: |
-          innerHTML(el)
-        faceted: true
-      hero:
-        select: main > div > img:first-of-type
-        value: |
-          attribute(el, 'src')
-      teaser:
-        select: main > div:nth-child(n+4) p
-        value: |
-          words(textContent(el), 0, 10)
-      sourceHash:
-        select: meta[name="x-source-hash"]
-        value: |
-          attribute(el, 'content')
-      external-path:
-        select: none
-        value: |
-          replace(path, '/test/specs/', '/')
