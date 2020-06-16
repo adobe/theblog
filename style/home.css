@@ -90,6 +90,7 @@
   display: block;
   grid-area: news-box;
   margin-top: 48px;
+  min-height: 326px;
   background-color: #f4f4f4;
 }
 
