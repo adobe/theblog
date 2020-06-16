@@ -171,11 +171,6 @@
   display: none;
 }
 
-.home-page .deck-placeholder {
-  grid-area: articles;
-  min-height: 50vh;
-}
-
 @media (min-width:600px) {
 
   .home-page .featured.card {

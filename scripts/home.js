@@ -36,11 +36,6 @@ export function setupHomepage() {
   const featuredPlaceholder = createTag('div', { 'class': 'featured-placeholder' });
   document.querySelector('main').appendChild(featuredPlaceholder);
 
-  // add deck placeholder
-  const deckPlaceholder = createTag('div', { 'class': 'deck-placeholder' });
-  deckPlaceholder.innerHTML = '&nbsp;';
-  document.querySelector('main').appendChild(deckPlaceholder);
-  
   // news box
   let newsPaths;
   addClass('h2#news', 'news-box', 1);
@@ -81,7 +76,6 @@ export function setupHomepage() {
       return item;
     },
     callback: ({ extraHits }) => {
-      deckPlaceholder.remove();
       // move first card to featured
       const $firstCard = document.querySelector('.home-page .articles .card');
       if ($firstCard) {
