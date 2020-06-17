@@ -321,15 +321,6 @@ export function handleMetadata() {
   document.head.append(frag);
 }
 
-function homepageTransformer(item, index) {
-  item = itemTransformer(item);
-  if (index === 0) {
-    // use larger hero image on first article
-    item.hero = item.hero ? item.hero.replace('?height=512&crop=3:2', '?height=640') : '#';
-  }
-  return item;
-}
-
 function addArticlesToDeck(hits, omitEmpty, transformer, hasMore) {
     // console.log('adding articles to page', window.blog.page);
     let $deck = document.querySelector('.articles .deck');
@@ -467,7 +458,6 @@ export async function fetchArticles({
   } else if (window.blog.pageType === window.blog.TYPE.AUTHOR) {
     filters = {author: document.title.split(',')[0]};
   } else if (window.blog.pageType === window.blog.TYPE.HOME) {
-    transformer = homepageTransformer;
     filters.paths = getPostPaths('h2#featured-posts', 1, true);
   }
   window.blog.page = window.blog.page === undefined ? 0 : window.blog.page + 1;

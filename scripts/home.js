@@ -86,6 +86,8 @@ export async function setupHomepage() {
         const $firstCard = document.querySelector('.home-page .articles .card');
         if ($firstCard) {
           $firstCard.classList.add('featured');
+          const hero = $firstCard.querySelector('.hero img');
+          hero.setAttribute('data-src', hero.getAttribute('data-src').replace('?height=512&crop=3:2', '?height=640'));
           wrapNodes(document.querySelector('main'), [$firstCard]);
           featuredPlaceholder.remove();
         }
