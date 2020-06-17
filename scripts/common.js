@@ -653,7 +653,7 @@ function translateTable(pages, index) {
     index.pathLookup[r.path]=r;
     index.articles.push (r);
   })
-  if (pages.length<200) index.done=true;
+  if (pages.length<300) index.done=true;
 }
 
 export async function fetchArticleIndex(offset) {
@@ -661,7 +661,7 @@ export async function fetchArticleIndex(offset) {
   var index=window.blog.articleIndex;
   console.log(`fetching article index: at ${index.articles.length} entries, new offset=${offset}`)
   if (index.done) return;
-  let response=await fetch(`/en/query-index.json?limit=200&offset=${offset}`);
+  let response=await fetch(`/en/query-index.json?limit=300&offset=${offset}`);
   //let response=await fetch(`/query-index-${offset}.json`);
   if (response.ok) { 
     let json = await response.json();
