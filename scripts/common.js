@@ -596,7 +596,7 @@ function homepageTransformer(item, index) {
 }
 
 function addArticlesToDeck(hits, omitEmpty, transformer, hasMore) {
-    console.log('adding articles to page', window.blog.page);
+    // console.log('adding articles to page', window.blog.page);
     let $deck = document.querySelector('.articles .deck');
     if (!$deck) {
       if (hits.length || !omitEmpty) {
@@ -650,7 +650,7 @@ function translateTable(pages, index) {
 export async function fetchArticleIndex(offset) {
   if (!window.blog.articleIndex) window.blog.articleIndex={pathLookup:{},articles:[], done: false};
   var index=window.blog.articleIndex;
-  console.log(`fetching article index: at ${index.articles.length} entries, new offset=${offset}`)
+  // console.log(`fetching article index: at ${index.articles.length} entries, new offset=${offset}`)
   if (index.done) return;
   // let response=await fetch(`/en/query-index.json?limit=256&offset=${offset}`);
   let response=await fetch(`/query-index-${offset}.json`);
@@ -658,7 +658,7 @@ export async function fetchArticleIndex(offset) {
     let json = await response.json();
     translateTable(json,window.blog.articleIndex);
   }
-  console.log(`fetched article index: at ${index.articles.length} entries, done?${index.done}`)
+  // console.log(`fetched article index: at ${index.articles.length} entries, done?${index.done}`)
 }
 
 async function fetchHits(filters, limit, cursor) {
@@ -698,7 +698,6 @@ async function fetchHits(filters, limit, cursor) {
       }
       if (i==articles.length-1 && !index.done) {
         await fetchArticleIndex(articles.length);
-        console.log()
       }
     }
   
