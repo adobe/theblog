@@ -111,22 +111,12 @@ window.blog = function() {
 
 // Adobe config
 window.fedsConfig = {
-    locale: window.blog.language,
-    content: {
-      experience: 'blog-gnav' 
-    },
-    disableSticky: false,
-    footer: {
-      breadcrumbs: {
-        showLogo: true,
-        links: [{
-          title: 'Adobe Blog',
-          url: '/',
-          target: '_self',
-        }]
-      },
-    },
-  };
+  locale: window.blog.language,
+  content: {
+    experience: 'blog-gnav' 
+  },
+  disableSticky: false,
+};
 
 window.adobeid = {
   client_id: 'theblog-helix',
