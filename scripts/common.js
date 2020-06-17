@@ -450,10 +450,13 @@ async function fetchHits(filters, limit, cursor) {
  * Fetches articles based on the page type.
  * @param {function} callback The function to call with <code>hits</code> array when done
  */
-export async function fetchArticles(callback) {
-  let filters={}, omitEmpty=false, pageSize=12;
-  let transformer = itemTransformer;
-
+export async function fetchArticles({
+  filters = {},
+  omitEmpty = false,
+  pageSize = 12,
+  transformer = itemTransformer,
+  callback,
+}) {
   if (window.blog.pageType === window.blog.TYPE.POST) {
     omitEmpty = true; // don't display anything if no results
     pageSize=12;

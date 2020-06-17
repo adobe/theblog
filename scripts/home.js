@@ -78,14 +78,17 @@ export async function setupHomepage() {
     addCard(n, newsdeck)
   });
 
-  await fetchArticles(() => {
-    if (window.blog.page === 0) {
-      // move first card to featured on first page
-      const $firstCard = document.querySelector('.home-page .articles .card');
-      if ($firstCard) {
-        $firstCard.classList.add('featured');
-        wrapNodes(document.querySelector('main'), [$firstCard]);
-        featuredPlaceholder.remove();
+  await fetchArticles({
+    pageSize: 13,
+    callback: () => {
+      if (window.blog.page === 0) {
+        // move first card to featured on first page
+        const $firstCard = document.querySelector('.home-page .articles .card');
+        if ($firstCard) {
+          $firstCard.classList.add('featured');
+          wrapNodes(document.querySelector('main'), [$firstCard]);
+          featuredPlaceholder.remove();
+        }
       }
     }
   });
