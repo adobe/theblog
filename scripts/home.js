@@ -76,35 +76,17 @@ export async function setupHomepage() {
     addCard(n, newsdeck)
   });
 
-  await fetchArticles();
-
-
-  /*
-  setupSearch({
-    hitsPerPage: 13,
-    extraPaths: newsPaths,
-    transformer: (item, index) => {
-      item = itemTransformer(item);
-      if (index === 0) {
-        // use larger hero image on first article
-        item.hero = item.hero ? item.hero.replace('?height=512&crop=3:2', '?height=640') : '#';
-      }
-      return item;
-    },
-    callback: ({ extraHits }) => {
-      // move first card to featured 
+  await fetchArticles(() => {
+    if (window.blog.page === 0) {
+      // move first card to featured on first page
       const $firstCard = document.querySelector('.home-page .articles .card');
       if ($firstCard) {
         $firstCard.classList.add('featured');
         wrapNodes(document.querySelector('main'), [$firstCard]);
       }
-      // add hits from extra paths to news box
-      extraHits
-        .map(itemTransformer)
-        .forEach((hit) => addCard(hit, document.querySelector('.news-box .deck')));
     }
   });
-  */
+
 }
 
 window.addEventListener('load', function() {

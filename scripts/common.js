@@ -596,7 +596,7 @@ function homepageTransformer(item, index) {
 }
 
 function addArticlesToDeck(hits, omitEmpty, transformer, hasMore) {
-    
+    console.log('adding articles to page', window.blog.page);
     let $deck = document.querySelector('.articles .deck');
     if (!$deck) {
       if (hits.length || !omitEmpty) {
@@ -617,15 +617,6 @@ function addArticlesToDeck(hits, omitEmpty, transformer, hasMore) {
       hits
         .map(transformer)
         .forEach((hit) => addCard(hit, $deck));
-
-      if (window.blog.pageType === window.blog.TYPE.HOME) {
-        // move first card to featured 
-        const $firstCard = document.querySelector('.home-page .articles .card');
-        if ($firstCard) {
-          $firstCard.classList.add('featured');
-          wrapNodes(document.querySelector('main'), [$firstCard]);
-        }
-      }
 
       let $more = $deck.parentNode.querySelector('.load-more');
       if (hasMore) {
@@ -661,8 +652,8 @@ export async function fetchArticleIndex(offset) {
   var index=window.blog.articleIndex;
   console.log(`fetching article index: at ${index.articles.length} entries, new offset=${offset}`)
   if (index.done) return;
-  let response=await fetch(`/en/query-index.json?limit=256&offset=${offset}`);
-  //let response=await fetch(`/query-index-${offset}.json`);
+  // let response=await fetch(`/en/query-index.json?limit=256&offset=${offset}`);
+  let response=await fetch(`/query-index-${offset}.json`);
   if (response.ok) { 
     let json = await response.json();
     translateTable(json,window.blog.articleIndex);
@@ -723,8 +714,9 @@ async function fetchHits(filters, limit, cursor) {
 
 /**
  * Fetches articles based on the page type.
+ * @param {function} callback The function to call with <code>hits</code> array when done
  */
-export async function fetchArticles() {
+export async function fetchArticles(callback) {
   let filters={}, omitEmpty=false, pageSize=12;
   let transformer = itemTransformer;
 
@@ -742,11 +734,13 @@ export async function fetchArticles() {
     transformer = homepageTransformer;
     filters.paths = getPostPaths('h2#featured-posts', 1, true);
   }
+  window.blog.page = window.blog.page === undefined ? 0 : window.blog.page + 1;
   const result=await fetchHits(filters, pageSize, window.blog.cursor?window.blog.cursor:0);
   const hits=result.hits;
   window.blog.cursor=result.cursor;
 
   addArticlesToDeck(hits, omitEmpty, transformer, result.cursor);
+  if (typeof callback === 'function') callback(hits);
 }
 
 window.addEventListener('load', function() {
