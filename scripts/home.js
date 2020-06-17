@@ -62,7 +62,7 @@ export async function setupHomepage() {
     newsBox.appendChild(createTag('div', { class: 'deck' }));
   }
 
-  await fetchArticleIndex();
+  await fetchArticleIndex(0);
 
   const pathLookup = window.blog.articleIndex.pathLookup;
   let news=[];

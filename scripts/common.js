@@ -645,31 +645,38 @@ function addArticlesToDeck(hits, omitEmpty, transformer, hasMore) {
     }
 }
 
-function translateTable(hits) {
-  let res={pathLookup:{}}
-  res.articles=hits.map((e) => {
+function translateTable(pages, index) {
+  pages.forEach((e) => {
     let r=e;
     r.products=JSON.parse(r.products);
     r.topics=JSON.parse(r.topics);
-    res.pathLookup[r.path]=r;
-    return (r);
+    index.pathLookup[r.path]=r;
+    index.articles.push (r);
   })
-  return (res);
+  if (pages.length<200) index.done=true;
 }
 
-export async function fetchArticleIndex() {
-  let response=await fetch('/en/query-index.json?limit=200');
+export async function fetchArticleIndex(offset) {
+  if (!window.blog.articleIndex) window.blog.articleIndex={pathLookup:{},articles:[], done: false};
+  var index=window.blog.articleIndex;
+  console.log(`fetching article index: at ${index.articles.length} entries, new offset=${offset}`)
+  if (index.done) return;
+  let response=await fetch(`/en/query-index.json?limit=200&offset=${offset}`);
+  //let response=await fetch(`/query-index-${offset}.json`);
   if (response.ok) { 
     let json = await response.json();
-    window.blog.articleIndex=translateTable(json);      
+    translateTable(json,window.blog.articleIndex);
   }
+  console.log(`fetched article index: at ${index.articles.length} entries, done?${index.done}`)
 }
 
 async function fetchHits(filters, limit, cursor) {
   if (!window.blog.articleIndex) {
-    await fetchArticleIndex();
+    await fetchArticleIndex(0);
   }
 
+  
+  const index=window.blog.articleIndex;
   const articles=window.blog.articleIndex.articles;
   const pathLookup=window.blog.articleIndex.pathLookup;
 
@@ -697,6 +704,10 @@ async function fetchHits(filters, limit, cursor) {
           break;
         }
         hits.push(e);
+      }
+      if (i==articles.length-1 && !index.done) {
+        await fetchArticleIndex(articles.length);
+        console.log()
       }
     }
   
