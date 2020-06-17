@@ -15,8 +15,6 @@ import {
   getPostPaths,
   wrapNodes,
   createTag,
-  setupSearch,
-  itemTransformer,
   addCard,
   fetchArticles,
   fetchArticleIndex,
@@ -33,6 +31,10 @@ export async function setupHomepage() {
   if (titleSection.innerText.trim() === document.title) {
     titleSection.remove();
   }
+
+  // add featured placeholder
+  const featuredPlaceholder = createTag('div', { 'class': 'featured-placeholder' });
+  document.querySelector('main').appendChild(featuredPlaceholder);
 
   // news box
   let newsPaths;
@@ -83,6 +85,7 @@ export async function setupHomepage() {
       if ($firstCard) {
         $firstCard.classList.add('featured');
         wrapNodes(document.querySelector('main'), [$firstCard]);
+        featuredPlaceholder.remove();
       }
     }
   });

@@ -13,7 +13,6 @@ import {
   wrap,
   addClass,
   getSection,
-  createTag,
   fetchArticles,
 } from '/scripts/common.js';
 
