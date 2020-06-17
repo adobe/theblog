@@ -15,15 +15,15 @@ import {
   getPostPaths,
   wrapNodes,
   createTag,
-  setupSearch,
-  itemTransformer,
   addCard,
+  fetchArticles,
+  fetchArticleIndex,
 } from '/scripts/common.js';
 
 /**
  * Sets up the homepage
  */
-export function setupHomepage() {
+export async function setupHomepage() {
   if (!document.title) {
     document.title = 'The Blog | Welcome to the Adobe Blog';
   }
@@ -37,7 +37,7 @@ export function setupHomepage() {
   document.querySelector('main').appendChild(featuredPlaceholder);
 
   // news box
-  let newsPaths;
+  let newsPaths=[];
   addClass('h2#news', 'news-box', 1);
   const newsBox = document.querySelector('.news-box');
   if (newsBox) {
@@ -64,31 +64,37 @@ export function setupHomepage() {
     newsBox.appendChild(createTag('div', { class: 'deck' }));
   }
 
-  setupSearch({
-    hitsPerPage: 13,
-    extraPaths: newsPaths,
-    transformer: (item, index) => {
-      item = itemTransformer(item);
-      if (index === 0) {
-        // use larger hero image on first article
-        item.hero = item.hero ? item.hero.replace('?height=512&crop=3:2', '?height=640') : '#';
+  await fetchArticleIndex(0);
+
+  const pathLookup = window.blog.articleIndex.pathLookup;
+  let news=[];
+  newsPaths.forEach((n) => {
+    if (pathLookup[n.substr(1)])
+    news.push(pathLookup[n.substr(1)]);
+  });
+
+  const newsdeck=document.querySelector('.news-box .deck');
+  news.forEach((n) => {
+    addCard(n, newsdeck)
+  });
+
+  await fetchArticles({
+    pageSize: 13,
+    callback: () => {
+      if (window.blog.page === 0) {
+        // move first card to featured on first page
+        const $firstCard = document.querySelector('.home-page .articles .card');
+        if ($firstCard) {
+          $firstCard.classList.add('featured');
+          const hero = $firstCard.querySelector('.hero img');
+          hero.setAttribute('data-src', hero.getAttribute('data-src').replace('?height=512&crop=3:2', '?height=640'));
+          wrapNodes(document.querySelector('main'), [$firstCard]);
+          featuredPlaceholder.remove();
+        }
       }
-      return item;
-    },
-    callback: ({ extraHits }) => {
-      // move first card to featured
-      const $firstCard = document.querySelector('.home-page .articles .card');
-      if ($firstCard) {
-        $firstCard.classList.add('featured');
-        wrapNodes(document.querySelector('main'), [$firstCard]);
-        featuredPlaceholder.remove();
-      }
-      // add hits from extra paths to news box
-      extraHits
-        .map(itemTransformer)
-        .forEach((hit) => addCard(hit, document.querySelector('.news-box .deck')));
     }
   });
+
 }
 
 window.addEventListener('load', function() {

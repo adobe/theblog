@@ -26,6 +26,7 @@
 .home-page main .articles {
   display: block;
   grid-area: articles;
+  display: block;
   background: white;
   padding-bottom: 80px;
 }
@@ -89,6 +90,8 @@
 .home-page main .news-box {
   display: block;
   grid-area: news-box;
+  display: block;
+  min-height: 326px;
   margin-top: 48px;
   min-height: 326px;
   background-color: #f4f4f4;
