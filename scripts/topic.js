@@ -29,5 +29,5 @@ export function decorateTopicPage() {
 
 window.addEventListener('load', function() {
   decorateTopicPage();
-  fetchArticles();
+  fetchArticles({});
 });
