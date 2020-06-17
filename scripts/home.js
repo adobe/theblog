@@ -37,7 +37,7 @@ export async function setupHomepage() {
   document.querySelector('main').appendChild(featuredPlaceholder);
 
   // news box
-  let newsPaths;
+  let newsPaths=[];
   addClass('h2#news', 'news-box', 1);
   const newsBox = document.querySelector('.news-box');
   if (newsBox) {

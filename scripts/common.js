@@ -467,7 +467,6 @@ export async function fetchArticles({
   } else if (window.blog.pageType === window.blog.TYPE.AUTHOR) {
     filters = {author: document.title.split(',')[0]};
   } else if (window.blog.pageType === window.blog.TYPE.HOME) {
-    pageSize=13;
     transformer = homepageTransformer;
     filters.paths = getPostPaths('h2#featured-posts', 1, true);
   }
