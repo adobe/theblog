@@ -658,7 +658,7 @@ function translateTable(hits) {
 }
 
 export async function fetchArticleIndex() {
-  let response=await fetch('/en/query-index.json');
+  let response=await fetch('/en/query-index.json?limit=200');
   if (response.ok) { 
     let json = await response.json();
     window.blog.articleIndex=translateTable(json);      
