@@ -69,7 +69,7 @@ export function fetchAuthor() {
 
           const avatarURL = /<img src="(.*?)">/.exec(main)[1];
           const authorDiv = document.createElement('div');
-          authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" data-src="${avatarURL}">
+          authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" data-src="${avatarURL}?width=128&crop=1:1&auto=webp">
             <div><span class="post-author"><a href="${pageURL}">${window.blog.author}</a></span>
             <span class="post-date">${window.blog.date}</span></div></div>`;
           authorDiv.classList.add('author');
