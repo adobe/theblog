@@ -111,5 +111,5 @@ export function addSocialLinks(source, target) {
 window.addEventListener('load', function() {
   decorateAuthorPage();
   addSocialLinks();
-  fetchArticles({});
+  fetchArticles();
 });

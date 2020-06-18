@@ -227,5 +227,5 @@ window.addEventListener('load', function() {
   // addProducts();
   loadGetSocial();
   shapeBanners();
-  fetchArticles({});
+  fetchArticles();
 });
