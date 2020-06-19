@@ -379,7 +379,7 @@ export async function fetchArticleIndex(offset) {
   // console.log(`fetching article index: at ${index.articles.length} entries, new offset=${offset}`)
   if (index.done) return;
   let response=await fetch(`/en/query-index.json?limit=256&offset=${offset}`);
-  //let response=await fetch(`/query-index-${offset}.json`);
+  // let response=await fetch(`/query-index-${offset}.json`);
   if (response.ok) { 
     let json = await response.json();
     translateTable(json,window.blog.articleIndex);
@@ -447,7 +447,7 @@ export async function fetchArticles({
   pageSize = 12,
   transformer = itemTransformer,
   callback,
-}) {
+} = {}) {
   if (window.blog.pageType === window.blog.TYPE.POST) {
     omitEmpty = true; // don't display anything if no results
     pageSize=12;
