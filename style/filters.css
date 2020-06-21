@@ -1,0 +1,340 @@
+/*
+ * Copyright 2020 Adobe. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+/*
+  Filter Styles
+*/
+.filter-wrapper {
+  border-top: 1px solid #eaeaea;
+  border-bottom: 1px solid #eaeaea;
+  position: relative;
+  z-index: 999;
+}
+
+.filter-layout {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.filter {
+  font-weight: 600;
+  flex: 1 1 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* margin-bottom: 16px; */
+}
+
+.filter:first-child {
+  justify-content: start;
+}
+
+.filter:first-child:before {
+  content: "Filters";
+  display: inline-block;
+  margin-right: 16px;
+}
+
+.filter .dropdown {
+  display: inline-block;
+}
+
+.container {
+  margin: 0 auto;
+  width: calc(100% - 64px);
+  max-width: 379px;
+}
+
+.dropdown .btn {
+  padding: 11px;
+  color: #505050;
+  border: 1px solid #eaeaea;
+  background-color: #ffffff;
+  border-radius: .25rem;
+  cursor: pointer;
+}
+
+.dropdown.is-open .filter-btn {
+  background-color: #F4F4F4;
+  border-color: #eaeaea;
+}
+
+.dropdown .btn:hover {
+  outline: #505050 auto 1px;
+}
+
+.dropdown .btn:active,
+.dropdown .btn:focus {
+  outline: none;
+}
+
+.dropdown .btn .arrow {
+  display: inline-block;
+  margin-left: 11px;
+  position: relative;
+  top: 50%;
+  transform: translateY(-3px);
+}
+
+.dropdown .btn .arrow span {
+  border-radius: .25rem;
+  display: inline-block;
+  height: 2px;
+  width: 7px;
+  background-color: #747474;
+}
+
+.dropdown .btn .arrow span:nth-child(1) {
+  transform: rotate(45deg);
+}
+
+.dropdown .btn .arrow span:nth-child(2) {
+  transform: rotate(-45deg) translate(-5px, -5px);
+}
+
+.filter-bar > .action.clear-all {
+  display: none;
+}
+
+.dropdown-menu {
+  position: fixed;
+  top: 14px;
+  left: 5%;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 16rem;
+  width: 90%;
+  padding-top: 16px;
+  margin: .125rem 0 0;
+  font-size: 1rem;
+  color: #212529;
+  text-align: left;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: .25rem;
+}
+
+.is-open .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu .search,
+.dropdown-menu .category {
+  border-bottom: 1px solid #eaeaea;
+  padding: 0 16px 16px;
+  position: relative;
+  display: block;
+}
+
+.dropdown-menu .search {
+  display: none;
+}
+
+.dropdown-menu .footer {
+  border-top: 1px solid #eaeaea;
+  padding: 16px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.page-overlay:before {
+  content: "";
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, .5);
+  height: 100%;
+  max-height: 100%;
+  z-index: 999;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 22px;
+  height: 18px;
+  transform: translateY(-17px) rotateY(180deg);
+}
+
+.dropdown-menu .search input {
+  border: 1px solid #eaeaea;
+  border-radius: .25rem;
+  padding: 8px 8px 8px 28px;
+  width: 100%;
+}
+
+.dropdown-menu .search input:focus {
+  outline-color: #505050;
+}
+
+.dropdown-menu fieldset {
+  border: none;
+  padding-left: 16px;
+}
+
+.dropdown-menu input[type=checkbox] {
+  border-radius: 0;
+}
+
+.dropdown-menu .options {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-top: 16px;
+  padding-bottom: 16px;
+}
+
+.dropdown-menu .options legend:not(:first-child){
+  margin-top: 1.5rem;
+}
+
+.dropdown-menu .option {
+  font-size: 0.9rem;
+  font-weight: normal;
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.dropdown-menu .option:first-child {
+  margin-top: 0;
+}
+
+.dropdown-menu .option label {
+  margin-left: 10px;
+}
+
+.dropdown-menu .option label,
+.dropdown-menu .option input {
+  cursor: pointer;
+}
+
+.results {
+  margin-top: 5px;
+}
+
+.container a.action {
+  font-size: 0.8rem;
+  padding: 2px 12px;
+  border-width: 2px;
+}
+
+a.action.apply::before {
+  content: "Apply";
+}
+
+a.action.clear::before {
+  content: "Clear";
+}
+
+a.action.clear-all::before {
+  content: "Clear All";
+}
+
+@media (min-width:600px) {
+
+  .filter .dropdown {
+    position: relative;
+  }
+
+  .filter-layout {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+
+  .filter-bar {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    width: auto;
+  }
+
+  .filter {
+    flex: 1 1 auto;
+    margin-right: 16px;
+    margin-bottom: 0;
+    display: block;
+    position: relative;
+  }
+
+  .filter:first-child:before {
+    position: static;
+    left: initial;
+    top: initial;
+    transform: initial;
+  }
+
+  .results {
+    margin-top: initial;
+  }
+
+  .container {
+    width: 100%;
+    padding-left: 64px;
+    padding-right: 64px;
+    max-width: 912px;
+  }
+
+  .page-overlay:before {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: auto;
+  }
+
+  .dropdown-menu .options {
+    max-height: 245px;
+  }
+
+  .dropdown-menu .option {
+    margin-top: 0;
+  }
+
+  .dropdown-menu .category {
+    display: none;
+  }
+  .dropdown-menu .search {
+    display: block;
+  }
+
+  .dropdown-menu .footer .filter-clear {
+    display: none;
+  }
+}
+
+@media (min-width:1100px) {
+
+  .container {
+    padding-left: 32px;
+    padding-right: 32px;
+    max-width: 1200px;
+  }
+}

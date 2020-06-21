@@ -222,6 +222,14 @@
    background-color: #505050;
  }
  
+ a.action.quiet {
+   color: #747474;
+ }
+ 
+ a.action.quiet:hover {
+   color: #505050;
+ }
+
  a.action.call-to-action {
    border: solid #1673e6 3px;
    color: white;

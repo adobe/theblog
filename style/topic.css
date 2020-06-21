@@ -56,6 +56,10 @@
     );
 }
 
+.topic-page .deck {
+  padding-top: 32px;
+}
+
 @media (min-width:600px) {
 
   .topic-page main div.topic-title {

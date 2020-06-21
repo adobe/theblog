@@ -13,6 +13,10 @@ import {
   addClass,
   fetchArticles,
 } from '/scripts/common.js';
+import {
+  addFilters,
+  clearAllFilters,
+} from '/scripts/filters.js';
 
 /**
  * Decorates the topic page with CSS classes
@@ -27,7 +31,12 @@ export function decorateTopicPage() {
   }
 }
 
+export function applyFilters(filters) {
+  // todo: update articles based on filters
+}
+
 window.addEventListener('load', function() {
   decorateTopicPage();
+  addFilters(applyFilters);
   fetchArticles();
 });
