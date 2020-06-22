@@ -378,8 +378,15 @@ export async function fetchArticleIndex(offset) {
   var index=window.blog.articleIndex;
   // console.log(`fetching article index: at ${index.articles.length} entries, new offset=${offset}`)
   if (index.done) return;
-  let response=await fetch(`/en/query-index.json?limit=256&offset=${offset}`);
-  // let response=await fetch(`/query-index-${offset}.json`);
+  let indexUrl;
+  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+    indexUrl=`/query-index-${offset}.json`;
+  } else {
+    indexUrl=`/en/query-index.json?limit=256&offset=${offset}`;
+  }
+
+  let response=await fetch(indexUrl);
+
   if (response.ok) { 
     let json = await response.json();
     translateTable(json,window.blog.articleIndex);
