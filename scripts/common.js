@@ -502,5 +502,5 @@ export function applyFilters(products) {
 window.addEventListener('load', function() {
   removeHeaderAndFooter();
   addPageTypeAsBodyClass();
-  handleMetadata();
+  if (window.blog.pageType === window.blog.TYPE.POST) handleMetadata();
 });

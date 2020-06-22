@@ -107,7 +107,8 @@ function initFilterActions (callback) {
 }
 
 function drawFilterBar() {
-  const filterBar = createTag('div', { class: 'hide filter-wrapper' });
+  const filterBar = document.querySelector('.filter-wrapper');
+  filterBar.classList.remove('default');
   filterBar.innerHTML = 
   `<div class="filter-layout container">
     <div class="filter-bar">
@@ -305,6 +306,7 @@ function drawFilterBar() {
     </div>
     <span class="results"></span>
   </div>`;
+  filterBar.parentNode.remove();
   document.querySelector('main').appendChild(filterBar);
 }
 

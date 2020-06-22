@@ -34,6 +34,6 @@ export function decorateTopicPage() {
 
 window.addEventListener('load', function() {
   decorateTopicPage();
-  addFilters(applyFilters);
+  if (document.querySelector('.filter-wrapper')) addFilters(applyFilters);
   fetchArticles();
 });

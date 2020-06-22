@@ -324,7 +324,7 @@ a.action.clear-all::before {
     display: none;
   }
   .dropdown-menu .search {
-    display: block;
+    display: none;
   }
 
   .dropdown-menu .footer .filter-clear {
