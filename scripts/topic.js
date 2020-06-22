@@ -12,6 +12,7 @@
 import {
   addClass,
   fetchArticles,
+  applyFilters,
 } from '/scripts/common.js';
 import {
   addFilters,
@@ -29,10 +30,6 @@ export function decorateTopicPage() {
     title.style.background=`url(${img.getAttribute('src')}) no-repeat center center`;
     title.style.backgroundSize=`cover`;
   }
-}
-
-export function applyFilters(filters) {
-  // todo: update articles based on filters
 }
 
 window.addEventListener('load', function() {

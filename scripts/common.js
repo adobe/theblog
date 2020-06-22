@@ -469,6 +469,15 @@ export async function fetchArticles({
   if (typeof callback === 'function') callback(hits);
 }
 
+/**
+ * Applies the specified filters to the query result
+ * @param {array} filters The filters to apply
+ */
+export function applyFilters(filters) {
+  // todo: update articles based on filters
+  console.log(filters);
+}
+
 window.addEventListener('load', function() {
   removeHeaderAndFooter();
   addPageTypeAsBodyClass();

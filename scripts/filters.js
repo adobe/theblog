@@ -104,7 +104,6 @@ function initFilterActions (callback) {
     document.querySelectorAll('.filter-wrapper input[type="checkbox"]').forEach((filter) => {
       if (filter.checked) filters.push(filter.name);
     });
-    console.log(filters);
     closeDropdown(document.querySelector('.dropdown'), document.body);
     callback(filters);
   });

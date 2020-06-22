@@ -14,7 +14,12 @@ import {
   addClass,
   getSection,
   fetchArticles,
+  applyFilters,
 } from '/scripts/common.js';
+import {
+  addFilters,
+  clearAllFilters,
+} from '/scripts/filters.js';
 
 /**
  * Creates an SVG tag using the specified ID.
@@ -111,5 +116,6 @@ export function addSocialLinks(source, target) {
 window.addEventListener('load', function() {
   decorateAuthorPage();
   addSocialLinks();
+  addFilters(applyFilters);
   fetchArticles();
 });
