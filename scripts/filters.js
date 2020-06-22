@@ -31,16 +31,13 @@ function handleDropdownButtons () {
           // Populate category title.
           categoryTitle.textContent = categoryTitleName;
           // toggle dropdown menu open
-          dropdownContainer.classList.toggle('is-open');
-          if(!body.classList.contains('page-overlay')) {
-              body.classList.add('page-overlay');
-          }
+          toggleDropdown(dropdownContainer, body);
           // Set up document click event to close dropdowns.
           const documentClick = (event) => {
               const clickInDropdown = dropdownContainer.contains(event.target);
               const isOpen = dropdownContainer.classList.contains('is-open');
               if(isOpen && clickInDropdown !== true) {
-                  closeDropdown(dropdownContainer, body);
+                  toggleDropdown(dropdownContainer, body);
                   document.removeEventListener('click', documentClick, false);
                   clearCurrentFiltersButton.removeEventListener('click', clearCurrentFiltersClick, false);
               }
@@ -57,11 +54,11 @@ function handleDropdownButtons () {
 }
 
 /**
-* Close dropddown
+* Toggle dropddown
 */
-function closeDropdown (dropdownContainer, body) {
-  dropdownContainer.classList.remove('is-open');
-  body.classList.remove('page-overlay');
+function toggleDropdown (dropdownContainer, body) {
+  dropdownContainer.classList.toggle('is-open');
+  body.classList.toggle('page-overlay');
 }
 
 /**
@@ -104,7 +101,7 @@ function initFilterActions (callback) {
     document.querySelectorAll('.filter-wrapper input[type="checkbox"]').forEach((filter) => {
       if (filter.checked) filters.push(filter.name);
     });
-    closeDropdown(document.querySelector('.dropdown'), document.body);
+    toggleDropdown(document.querySelector('.dropdown'), document.body);
     callback(filters);
   });
 }
