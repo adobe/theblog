@@ -391,14 +391,13 @@ export async function fetchArticleIndex(offset) {
     let json = await response.json();
     translateTable(json,window.blog.articleIndex);
   }
-  console.log(`fetched article index: at ${index.articles.length} entries, done?${index.done}`)
+  console.log(`fetched article index: at ${index.articles.length} entries, ${index.done?'':'not'} done.`)
 }
 
 async function fetchHits(filters, limit, cursor) {
   if (!window.blog.articleIndex) {
     await fetchArticleIndex(0);
   }
-
   
   const index=window.blog.articleIndex;
   const articles=window.blog.articleIndex.articles;
@@ -418,7 +417,15 @@ async function fetchHits(filters, limit, cursor) {
       let matched=true;
       if (filters.topics && !e.topics.includes(filters.topics)) matched=false;
       if (filters.author && (e.author!=filters.author)) matched=false;
-  
+
+      if (filters.products) {
+        var productsMatched=false;
+        filters.products.forEach((p) => {
+          if (e.products.includes(p)) productsMatched=true;
+        })
+        matched=productsMatched;
+      }
+
       //check if path is already in a card
       if (document.querySelector(`.card a[href='/${e.path}']`)) matched=false;
       if (hits.find(h => h.path == e.path)) matched=false;
@@ -457,13 +464,13 @@ export async function fetchArticles({
 } = {}) {
   if (window.blog.pageType === window.blog.TYPE.POST) {
     omitEmpty = true; // don't display anything if no results
-    pageSize=12;
+    pageSize = 12;
     filters.paths = getPostPaths('h2#featured-posts', 1, true);
     filters.pathsOnly = true;
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
-    filters = {topics: document.title};
+    filters.topics = document.title;
   } else if (window.blog.pageType === window.blog.TYPE.AUTHOR) {
-    filters = {author: document.title.split(',')[0]};
+    filters.author = document.title.split(',')[0];
   } else if (window.blog.pageType === window.blog.TYPE.HOME) {
     filters.paths = getPostPaths('h2#featured-posts', 1, true);
   }
@@ -480,9 +487,16 @@ export async function fetchArticles({
  * Applies the specified filters to the query result
  * @param {array} filters The filters to apply
  */
-export function applyFilters(filters) {
-  // todo: update articles based on filters
-  console.log(filters);
+export function applyFilters(products) {
+  
+  window.blog.cursor=0;
+  let $deck = document.querySelector('.articles .deck');
+  if ($deck) $deck.parentNode.remove();
+
+  const config=products.length?{filters:{products}}:{};
+  
+  fetchArticles(config);
+
 }
 
 window.addEventListener('load', function() {
