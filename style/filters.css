@@ -125,7 +125,7 @@
   z-index: 1000;
   display: none;
   float: left;
-  min-width: 16rem;
+  min-width: 17.5rem;
   width: 90%;
   padding-top: 16px;
   margin: .125rem 0 0;
@@ -196,7 +196,7 @@
 
 .dropdown-menu fieldset {
   border: none;
-  padding-left: 16px;
+  padding: 0 0 0 16px;
 }
 
 .dropdown-menu input[type=checkbox] {
@@ -204,10 +204,11 @@
 }
 
 .dropdown-menu .options {
-  max-height: 400px;
+  max-height: 24rem;
   overflow-y: auto;
   padding-top: 16px;
   padding-bottom: 16px;
+  padding-right: 16px;
 }
 
 .dropdown-menu .options legend:not(:first-child){
