@@ -111,7 +111,7 @@ function initFilterActions (callback) {
 }
 
 function drawFilterBar() {
-  const filterBar = createTag('div', { class: 'filter-wrapper' });
+  const filterBar = createTag('div', { class: 'hide filter-wrapper' });
   filterBar.innerHTML = 
   `<div class="filter-layout container">
     <div class="filter-bar">
