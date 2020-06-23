@@ -181,8 +181,7 @@ function drawFilterBar() {
     return null;
   }
   filterBar.classList.remove('default');
-  filterBar.innerHTML = 
-  `<div class="filter-layout container">
+  let html = `<div class="filter-layout container">
     <div class="filter-bar">
       <div class="filter">
         <div class="dropdown">
@@ -199,171 +198,12 @@ function drawFilterBar() {
                 <input type="search" aria-label="Search" placeholder="Search...">
               </div>
               <div class="category">
-                <h2>Hi</h2>
+                <h2>Category</h2>
               </div>
               <fieldset>
-                <div class="options">
-                  <legend>Creative Cloud</legend>
-                  <div class="option">
-                    <input type="checkbox" id="aero" name="Aero">
-                    <label for="aero">Aero</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="fresco" name="Fresco">
-                    <label for="fresco">Fresco</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="photoshop" name="Photoshop">
-                    <label for="photoshop">Photoshop</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="lightroom" name="Lightroom">
-                    <label for="lightroom">Lightroom</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="lightroomClassic" name="Lightroom Classic">
-                    <label for="lightroomClassic">Lightroom Classic</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="stock" name="Stock">
-                    <label for="stock">Stock</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="premierePro" name="Premiere Pro">
-                    <label for="premierePro">Premiere Pro</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="xd" name="XD">
-                    <label for="xd">XD</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="inDesign" name="InDesign">
-                    <label for="inDesign">InDesign</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="afterEffects" name="After Effects">
-                    <label for="afterEffects">After Effects</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="dimension" name="Dimension">
-                    <label for="dimension">Dimension</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="dreamweaver" name="Dreamweaver">
-                    <label for="dreamweaver">Dreamweaver</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="animate" name="Animate">
-                    <label for="animate">Animate</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="audition" name="Audition">
-                    <label for="audition">Audition</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="premiereRush" name="Premiere Rush">
-                    <label for="premiereRush">Premiere Rush</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="story" name="Story">
-                    <label for="story">Story</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="characterAnimator" name="Character Animator">
-                    <label for="characterAnimator">Character Animator</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="creativeCloudMobileApps" name="Creative Cloud MobileApps">
-                    <label for="creativeCloudMobileApps">Creative Cloud Mobile Apps</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="illustrator" name="Illustrator">
-                    <label for="illustrator">Illustrator</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="spark" name="Spark">
-                    <label for="spark">Spark</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="substanceByAdobe" name="Substance By Adobe">
-                    <label for="substanceByAdobe">Substance by Adobe</label>
-                  </div>
-                  <legend>Document Cloud</legend>
-                  <div class="option">
-                    <input type="checkbox" id="acrobatDc" name="Acrobat DC">
-                    <label for="acrobatDc">Acrobat DC</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="acrobatScan" name="Acrobat Scan">
-                    <label for="acrobatScan">Acrobat Scan</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="acrobatSign" name="Acrobat Sign">
-                    <label for="acrobatSign">Acrobat Sign</label>
-                  </div>
-                   <legend>Experience Cloud</legend>
-                  <div class="option">
-                    <input type="checkbox" id="marketingCloud" name="Marketing Cloud">
-                    <label for="marketingCloud">Marketing Cloud</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="experienceManager" name="Experience Manager">
-                    <label for="experienceManager">Experience Manager</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="target" name="Target">
-                    <label for="target">Target</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="campaign" name="Campaign">
-                    <label for="campaign">Campaign</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="marketoEngage" name="Marketo Engage">
-                    <label for="marketoEngage">Marketo Engage</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="analyticsCloud" name="Analytics Cloud">
-                    <label for="analyticsCloud">Analytics Cloud</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="analytics" name="Analytics">
-                    <label for="analytics">Analytics</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="audienceManager" name="Audience Manager">
-                    <label for="audienceManager">Audience Manager</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="advertisingCloud" name="Advertising Cloud">
-                    <label for="advertisingCloud">Advertising Cloud</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="CommerceCloud" name="Commerce Cloud">
-                    <label for="CommerceCloud">Commerce Cloud</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="magentoCommerce" name="Magento Commerce">
-                    <label for="magentoCommerce">Magento Commerce</label>
-                  </div>
-                  <legend>Other</legend>
-                  <div class="option">
-                    <input type="checkbox" id="Connect" name="Connect">
-                    <label for="Connect">Connect</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="technicalCommunicationsSuite" name="Technical Communications Suite">
-                    <label for="technicalCommunicationsSuite">Technical Communications Suite</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="pdfPrintEngine" name="PDF Print Engine">
-                    <label for="pdfPrintEngine">PDF Print Engine</label>
-                  </div>
-                  <div class="option">
-                    <input type="checkbox" id="postScript" name="PostScript">
-                    <label for="postScript">PostScript</label>
-                  </div>
-                </div>
+                <div class="options">`;
+                
+  html+= `</div>
               </fieldset>
               <div class="footer">
                 <a href="#" class="action quiet clear" title="Clear"></a>
@@ -376,6 +216,36 @@ function drawFilterBar() {
     </div>
     <span class="results"></span>
   </div>`;
+
+  fetch(`/${window.blog.language}/topics/_taxonomy.plain.html`)
+  .then(resp => resp.text()
+  .then((tax) => {
+      const $tax=document.createElement('div');
+      $tax.innerHTML=tax;
+      let $productsAndTech;
+      $tax.querySelectorAll('li').forEach((e) => {
+        let t;
+        if (e.firstChild) t=e.firstChild.textContent;
+        if (t && t.toLowerCase() == 'products & technology') $productsAndTech=e;
+      });
+      let html='';
+      if ($productsAndTech) {
+        $productsAndTech.querySelectorAll(':scope>ul>li').forEach((l) => {
+          html+=`<legend>${l.firstChild.textContent}</legend>`;
+          
+          l.querySelectorAll(':scope>ul>li').forEach((p) => {
+          html+=`<div class="option">
+            <input type="checkbox" id="${p.firstChild.textContent}" name="${p.firstChild.textContent}">
+            <label for="${p.firstChild.textContent}">${p.firstChild.textContent}</label>
+          </div>`
+          })
+        })
+      document.querySelector('.filter-wrapper .options').innerHTML=html;
+      }
+    })  
+  );
+
+  filterBar.innerHTML=html;
   filterBar.parentNode.remove();
   return document.querySelector('main').appendChild(filterBar);
 }

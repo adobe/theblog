@@ -316,8 +316,6 @@ export async function fetchArticleIndex(offset) {
 
 async function fetchHits(filters, limit, cursor) {
 
-  console.log(filters);
-
   if (!window.blog.articleIndex) {
     await fetchArticleIndex(0);
   }
