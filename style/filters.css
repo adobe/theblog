@@ -236,25 +236,25 @@
   margin-top: 5px;
 }
 
-a.action {
+.filter-wrapper a.action {
   font-size: 0.8rem;
   padding: 0 12px;
   border-width: 2px;
 }
 
-a.action.apply::before {
+.filter-wrapper a.action.apply::before {
   content: "Apply";
 }
 
-a.action.clear::before {
+.filter-wrapper a.action.clear::before {
   content: "Clear";
 }
 
-a.action.clear-all {
+.filter-wrapper a.action.clear-all {
   padding: 0;
 }
 
-a.action.clear-all::before {
+.filter-wrapper a.action.clear-all::before {
   content: "Clear All";
 }
 
