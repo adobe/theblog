@@ -9,15 +9,12 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-import {
-  createTag,
-} from '/scripts/common.js';
 
 /**
  * Get filter buttons.
  * Set up a click event to show/hide dropdown menu.
  */
-function handleDropdownButtons () {
+function handleDropdownButtons() {
   const getFilterButtons = document.querySelectorAll('.filter-btn');
   const body = document.querySelector('body');
   getFilterButtons.forEach((filterButton) => {
@@ -54,9 +51,17 @@ function handleDropdownButtons () {
 }
 
 /**
+* Close dropddown
+*/
+function closeDropdown(dropdownContainer, body) {
+  dropdownContainer.classList.remove('is-open');
+  body.classList.remove('page-overlay');
+}
+
+/**
 * Toggle dropddown
 */
-function toggleDropdown (dropdownContainer, body) {
+function toggleDropdown(dropdownContainer, body) {
   dropdownContainer.classList.toggle('is-open');
   body.classList.toggle('page-overlay');
 }
@@ -64,7 +69,7 @@ function toggleDropdown (dropdownContainer, body) {
 /**
 * Clear ALL selected filters.
 */
-export function clearAllFilters (allFilterOptions) {
+export function clearAllFilters(allFilterOptions) {
   allFilterOptions.forEach((option) => {
       const selectedFilters = option.querySelectorAll('input:checked');
       selectedFilters.forEach((filter) => {
@@ -76,13 +81,50 @@ export function clearAllFilters (allFilterOptions) {
 /**
 * Clear current selected filters.
 */
-function clearCurrentFilters (currentFilterOptions) {
+function clearCurrentFilters(currentFilterOptions) {
   currentFilterOptions.forEach((option) => {
       option.checked = false;
   });
 }
 
-function initFilterActions (callback) {
+function filterFilters(event) {
+  const value = event.target.value;
+  if (event.key !== 'Escape') {
+    event.stopPropagation();
+  }
+  document.querySelectorAll('.filter-wrapper input[type="checkbox"]').forEach((filter) => {
+    if (!filter.name.toLowerCase().includes(value)) {
+      filter.checked = false; // deselect if hidden
+      filter.parentNode.classList.add('hide');
+    } else {
+      filter.parentNode.classList.remove('hide');
+    }
+  });
+  // hide legends without visible options
+  document.querySelectorAll('.filter-wrapper legend').forEach((legend) => {
+    if (value) {
+      let elem = legend;
+      let hasVisibleOptions = false;
+      while (elem.nextElementSibling) {
+        elem = elem.nextElementSibling;
+        if (elem.tagName === 'LEGEND') break;
+        if (!elem.classList.contains('hide')) {
+          hasVisibleOptions = true;
+          break;
+        }
+      }
+      if (hasVisibleOptions) {
+        legend.classList.remove('hide');
+      } else {
+        legend.classList.add('hide');
+      }
+    } else {
+      legend.classList.remove('hide');
+    }
+  });
+}
+
+function initFilterActions(callback) {
   if (typeof callback !== 'function') callback = function() {}; 
   handleDropdownButtons();
   // Clear all buttons
@@ -104,10 +146,24 @@ function initFilterActions (callback) {
     toggleDropdown(document.querySelector('.dropdown'), document.body);
     callback(filters);
   });
+  // Search field
+  const searchField = document.querySelector('.filter-wrapper input[type="search"]');
+  searchField.addEventListener('search', filterFilters);
+  searchField.addEventListener('keyup', filterFilters);
+  // ESC key
+  document.body.addEventListener('keyup', (event) => {
+    if (event.key === 'Escape') {
+      closeDropdown(document.querySelector('.dropdown'), document.body);
+    }
+  })
 }
 
 function drawFilterBar() {
   const filterBar = document.querySelector('.filter-wrapper');
+  if (!filterBar) {
+    // topic has no filter bar
+    return null;
+  }
   filterBar.classList.remove('default');
   filterBar.innerHTML = 
   `<div class="filter-layout container">
@@ -122,7 +178,6 @@ function drawFilterBar() {
             </span>
           </button>
           <div class="dropdown-menu">
-            <form>
               <div class="search">
                 <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" width="20" height="20" viewBox="0 0 24 24" focusable="false"><path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path></svg>
                 <input type="search" aria-label="Search" placeholder="Search...">
@@ -298,7 +353,6 @@ function drawFilterBar() {
                 <a href="#" class="action quiet clear-all" title="Clear all"></a>
                 <a href="#" class="action call-to-action apply" title="Apply"></a>
               </div>
-            </form>
           </div>
         </div>
       </div>
@@ -307,12 +361,13 @@ function drawFilterBar() {
     <span class="results"></span>
   </div>`;
   filterBar.parentNode.remove();
-  document.querySelector('main').appendChild(filterBar);
+  return document.querySelector('main').appendChild(filterBar);
 }
 
 export function addFilters(callback) {
-  loadCSS('/style/filters.css');
-  drawFilterBar();
-  initFilterActions(callback);
+  if (drawFilterBar()) {
+    loadCSS('/style/filters.css');
+    initFilterActions(callback);
+  }
 }
 

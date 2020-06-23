@@ -211,10 +211,6 @@
   padding-right: 16px;
 }
 
-.dropdown-menu .options legend:not(:first-child){
-  margin-top: 1.5rem;
-}
-
 .dropdown-menu .option {
   font-size: 0.9rem;
   font-weight: normal;
@@ -234,6 +230,10 @@
 .dropdown-menu .option label,
 .dropdown-menu .option input {
   cursor: pointer;
+}
+
+.dropdown-menu .option.hide {
+  display: none;
 }
 
 .results {
@@ -324,7 +324,7 @@ a.action.clear-all::before {
     display: none;
   }
   .dropdown-menu .search {
-    display: none;
+    display: block;
   }
 
   .dropdown-menu .footer .filter-clear {
