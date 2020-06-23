@@ -392,6 +392,9 @@ export async function fetchArticles({
     filters.pathsOnly = true;
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
     filters.topics = document.title;
+    if (window.blog.productFilters) {
+      filters.products=window.blog.productFilters;
+    }
   } else if (window.blog.pageType === window.blog.TYPE.AUTHOR) {
     filters.author = document.title.split(',')[0];
   } else if (window.blog.pageType === window.blog.TYPE.HOME) {
@@ -415,10 +418,9 @@ export function applyFilters(products) {
   window.blog.cursor=0;
   let $deck = document.querySelector('.articles .deck');
   if ($deck) $deck.parentNode.remove();
-
-  const config=products.length?{filters:{products}}:{};
+  window.blog.productFilters=products.length?products:false;
   
-  fetchArticles(config);
+  fetchArticles();
 
 }
 
