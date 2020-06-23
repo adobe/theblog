@@ -58,6 +58,7 @@
 
 .filter .dropdown {
   display: inline-block;
+  position: relative;
 }
 
 .container {
@@ -115,7 +116,7 @@
 
 .dropdown-menu {
   position: fixed;
-  top: 14px;
+  top: calc((100% - 530px) / 2);
   left: 5%;
   z-index: 11;
   display: none;
