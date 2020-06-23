@@ -315,6 +315,9 @@ export async function fetchArticleIndex(offset) {
 }
 
 async function fetchHits(filters, limit, cursor) {
+
+  console.log(filters);
+
   if (!window.blog.articleIndex) {
     await fetchArticleIndex(0);
   }
@@ -343,7 +346,7 @@ async function fetchHits(filters, limit, cursor) {
         filters.products.forEach((p) => {
           if (e.products.includes(p)) productsMatched=true;
         })
-        matched=productsMatched;
+        if (!productsMatched) matched=false;
       }
 
       //check if path is already in a card
