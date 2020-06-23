@@ -285,6 +285,8 @@ function translateTable(pages, index) {
     let r=e;
     r.products=JSON.parse(r.products);
     r.topics=JSON.parse(r.topics);
+    if (!r.products) r.products=[];
+    if (!r.topics) r.topics=[];
     index.pathLookup[r.path]=r;
     index.articles.push (r);
   })
