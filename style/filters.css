@@ -32,7 +32,7 @@
 
 .filter-bar {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -44,7 +44,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* margin-bottom: 16px; */
 }
 
 .filter:first-child {
@@ -112,10 +111,6 @@
 
 .dropdown .btn .arrow span:nth-child(2) {
   transform: rotate(-45deg) translate(-5px, -5px);
-}
-
-.filter-bar > .action.clear-all {
-  display: none;
 }
 
 .dropdown-menu {
@@ -240,9 +235,9 @@
   margin-top: 5px;
 }
 
-.container a.action {
+a.action {
   font-size: 0.8rem;
-  padding: 2px 12px;
+  padding: 0 12px;
   border-width: 2px;
 }
 
@@ -252,6 +247,10 @@ a.action.apply::before {
 
 a.action.clear::before {
   content: "Clear";
+}
+
+a.action.clear-all {
+  padding: 0;
 }
 
 a.action.clear-all::before {

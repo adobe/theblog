@@ -24,7 +24,7 @@ function handleDropdownButtons() {
           const dropdownContainer = currentDropdown.parentElement;
           const categoryTitleName = currentDropdown.textContent;
           const categoryTitle = dropdownContainer.querySelector('.category h2');
-          const clearCurrentFiltersButton = dropdownContainer.querySelector('.action.clear-all')
+          const clearCurrentFiltersButton = dropdownContainer.querySelector('.action.clear')
           // Populate category title.
           categoryTitle.textContent = categoryTitleName;
           // toggle dropdown menu open
@@ -127,29 +127,42 @@ function filterFilters(event) {
 function initFilterActions(callback) {
   if (typeof callback !== 'function') callback = function() {}; 
   handleDropdownButtons();
-  // Clear all buttons
-  document.querySelectorAll('.filter-wrapper a.action.clear').forEach((button) => {
-    button.addEventListener('click', (event) => {
+  // Clear all button
+  const clearAllBtn = document.querySelector('.filter-bar > a.action.clear-all');
+  clearAllBtn.addEventListener('click', (event) => {
+    event.stopPropagation();
+    const allFilterOptions = document.querySelectorAll('.dropdown-menu');
+    clearAllFilters(allFilterOptions);
+    closeDropdown(document.querySelector('.dropdown'), document.body);
+    clearAllBtn.classList.add('hide');
+    callback([]);
+  });
+
+  // Clear button
+  document.querySelector('.filter-bar a.action.clear').addEventListener('click', (event) => {
       event.stopPropagation();
       const allFilterOptions = document.querySelectorAll('.dropdown-menu');
+      clearAllBtn.classList.add('hide');
       clearAllFilters(allFilterOptions);
-      callback([]);
     });
-  });
+
   // Apply button
-  document.querySelector('.action.apply').addEventListener('click', (event) => {
+  document.querySelector('.filter-bar .action.apply').addEventListener('click', (event) => {
     event.stopPropagation();
     const filters = [];
     document.querySelectorAll('.filter-wrapper input[type="checkbox"]').forEach((filter) => {
       if (filter.checked) filters.push(filter.name);
     });
     toggleDropdown(document.querySelector('.dropdown'), document.body);
+    clearAllBtn.classList.remove('hide');
     callback(filters);
   });
+
   // Search field
   const searchField = document.querySelector('.filter-wrapper input[type="search"]');
   searchField.addEventListener('search', filterFilters);
   searchField.addEventListener('keyup', filterFilters);
+
   // ESC key
   document.body.addEventListener('keyup', (event) => {
     if (event.key === 'Escape') {
@@ -350,13 +363,13 @@ function drawFilterBar() {
                 </div>
               </fieldset>
               <div class="footer">
-                <a href="#" class="action quiet clear-all" title="Clear all"></a>
+                <a href="#" class="action quiet clear" title="Clear"></a>
                 <a href="#" class="action call-to-action apply" title="Apply"></a>
               </div>
           </div>
         </div>
       </div>
-      <a href="#" class="action quiet clear-all"></a>
+      <a href="#" class="hide action quiet clear-all"></a>
     </div>
     <span class="results"></span>
   </div>`;
