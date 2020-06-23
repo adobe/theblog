@@ -18,6 +18,7 @@ import {
   addCard,
   fetchArticles,
   fetchArticleIndex,
+  itemTransformer,
 } from '/scripts/common.js';
 
 /**
@@ -74,7 +75,7 @@ export async function setupHomepage() {
   });
 
   const newsdeck=document.querySelector('.news-box .deck');
-  news.forEach((n) => {
+  news.map(itemTransformer).forEach((n) => {
     addCard(n, newsdeck)
   });
 
