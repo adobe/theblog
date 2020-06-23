@@ -27,9 +27,7 @@ function loadJSModule(src) {
  */
 function loadCSS(href) {
   const link = document.createElement('link');
-  link.setAttribute('rel', 'preload');
-  link.setAttribute('as', 'style');
-  link.setAttribute('onload', 'this.onload=null;this.rel="stylesheet"');
+  link.setAttribute('rel', 'stylesheet');
   link.setAttribute('href', href);
   document.head.appendChild(link);
 };
