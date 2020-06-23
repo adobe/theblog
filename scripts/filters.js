@@ -153,7 +153,11 @@ function initFilterActions(callback) {
       if (filter.checked) filters.push(filter.name);
     });
     toggleDropdown(document.querySelector('.dropdown'), document.body);
-    if (filters.length > 0) clearAllBtn.classList.remove('hide');
+    if (filters.length > 0) {
+      clearAllBtn.classList.remove('hide');
+    } else {
+      clearAllBtn.classList.add('hide');
+    }
     callback(filters);
   });
 
