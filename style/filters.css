@@ -53,6 +53,7 @@
 .filter:first-child:before {
   content: "Filters";
   display: inline-block;
+  font-size: 1rem;
   margin-right: 16px;
 }
 
