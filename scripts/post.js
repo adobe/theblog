@@ -11,11 +11,94 @@
  */
 import {
   fetchArticles,
+  getSection,
   addClass,
   getLink,
   wrap,
   createTag,
 } from '/scripts/common.js';
+
+/**
+ * Reformats a date string from "01-15-2020" to "January 15, 2020"
+ * @param {string} date The date string to format
+ * @returns {string} The formatted date
+ */
+function formatLocalDate(date) {
+  const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+  ];  
+  const dateObj = date.split('-');
+
+  return monthNames[parseInt(dateObj[0])-1] + " " + dateObj[1] + ", " + dateObj[2];
+}
+
+/**
+ * Extracts metadata from the page and adds it to the head.
+ */
+export function handleMetadata() {
+  // store author and date
+  const r = /^By (.*)\n*(.*)$/gmi.exec(getSection(2).innerText);
+  window.blog.author = r && r.length > 0 ? r[1] : '';
+  const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
+  window.blog.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
+  // store topics
+  const last = getSection();
+  let topics, topicContainer;
+  Array.from(last.children).forEach((i) => {
+    const r = /^Topics\: ?(.*)$/gmi.exec(i.innerText);
+    if (r && r.length > 0) {
+      topics = r[1].split(/\,\s*/);
+      topicContainer = i;
+    }
+  });
+  window.blog.topics = topics
+    ? topics.filter((topic) => topic.length > 0)
+    : [];
+  if (topicContainer) {
+    topicContainer.remove();
+  }
+  // store products
+  let products, productContainer;
+  Array.from(last.children).forEach((i) => {
+    const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
+    if (r && r.length > 0) {
+      products = r[1].split(/\,\s*/);
+      productContainer = i;
+    }
+  });
+  window.blog.products = products
+  ? products.filter((product) => product.length > 0)
+  : [];
+  if (productContainer) {
+    productContainer.remove();
+  }
+  if (last.innerText.trim() === '') {
+    last.remove(); // remove empty last div
+  }
+
+  const md = [{
+    property: 'og:locale',
+    content: window.blog.language,
+  },{
+    property: 'article:published_time',
+    content: window.blog.date ? new Date(window.blog.date).toISOString() : '',
+  }];
+  // add topics and products as article:tags
+  [...window.blog.topics].forEach((topic) => md.push({
+      property: 'article:tag',
+      content: topic,
+  }));
+  [...window.blog.products].forEach((product) => md.push({
+    property: 'article:tag',
+    content: `Adobe ${product}`,
+  }));
+  // add meta tags to DOM
+  const frag = document.createDocumentFragment();
+  md.forEach((meta) => {
+    frag.appendChild(createTag('meta', { property: meta.property, content: meta.content }));
+  });
+  document.head.append(frag);
+}
 
 /**
  * Decorates the post page with CSS classes
@@ -220,6 +303,7 @@ export function shapeBanners() {
 }
 
 window.addEventListener('load', function() {
+  handleMetadata();
   addCategory();
   decoratePostPage();
   fetchAuthor();
