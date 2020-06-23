@@ -142,7 +142,6 @@ function initFilterActions(callback) {
   document.querySelector('.filter-bar a.action.clear').addEventListener('click', (event) => {
       event.stopPropagation();
       const allFilterOptions = document.querySelectorAll('.dropdown-menu');
-      clearAllBtn.classList.add('hide');
       clearAllFilters(allFilterOptions);
     });
 
@@ -154,7 +153,7 @@ function initFilterActions(callback) {
       if (filter.checked) filters.push(filter.name);
     });
     toggleDropdown(document.querySelector('.dropdown'), document.body);
-    clearAllBtn.classList.remove('hide');
+    if (filters.length > 0) clearAllBtn.classList.remove('hide');
     callback(filters);
   });
 
