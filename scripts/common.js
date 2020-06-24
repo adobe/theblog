@@ -285,6 +285,8 @@ function translateTable(pages, index) {
     let r=e;
     r.products=JSON.parse(r.products);
     r.topics=JSON.parse(r.topics);
+    if (!r.products) r.products=[];
+    if (!r.topics) r.topics=[];
     index.pathLookup[r.path]=r;
     index.articles.push (r);
   })
@@ -313,6 +315,7 @@ export async function fetchArticleIndex(offset) {
 }
 
 async function fetchHits(filters, limit, cursor) {
+
   if (!window.blog.articleIndex) {
     await fetchArticleIndex(0);
   }
@@ -341,7 +344,7 @@ async function fetchHits(filters, limit, cursor) {
         filters.products.forEach((p) => {
           if (e.products.includes(p)) productsMatched=true;
         })
-        matched=productsMatched;
+        if (!productsMatched) matched=false;
       }
 
       //check if path is already in a card
@@ -387,6 +390,9 @@ export async function fetchArticles({
     filters.pathsOnly = true;
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
     filters.topics = document.title;
+    if (window.blog.productFilters) {
+      filters.products=window.blog.productFilters;
+    }
   } else if (window.blog.pageType === window.blog.TYPE.AUTHOR) {
     filters.author = document.title.split(',')[0];
   } else if (window.blog.pageType === window.blog.TYPE.HOME) {
@@ -410,10 +416,9 @@ export function applyFilters(products) {
   window.blog.cursor=0;
   let $deck = document.querySelector('.articles .deck');
   if ($deck) $deck.parentNode.remove();
-
-  const config=products.length?{filters:{products}}:{};
+  window.blog.productFilters=products.length?products:false;
   
-  fetchArticles(config);
+  fetchArticles();
 
 }
 
