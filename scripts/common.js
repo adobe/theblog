@@ -239,88 +239,6 @@ export function addCard(hit, $container, $template) {
   return $item;
 }
 
-/**
- * Reformats a date string from "01-15-2020" to "January 15, 2020"
- * @param {string} date The date string to format
- * @returns {string} The formatted date
- */
-function formatLocalDate(date) {
-  const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-  ];  
-  const dateObj = date.split('-');
-
-  return monthNames[parseInt(dateObj[0])-1] + " " + dateObj[1] + ", " + dateObj[2];
-}
-
-/**
- * Extracts metadata from the page and adds it to the head.
- */
-export function handleMetadata() {
-  // store author and date
-  const r = /^By (.*)\n*(.*)$/gmi.exec(getSection(2).innerText);
-  window.blog.author = r && r.length > 0 ? r[1] : '';
-  const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
-  window.blog.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
-  // store topics
-  const last = getSection();
-  let topics, topicContainer;
-  Array.from(last.children).forEach((i) => {
-    const r = /^Topics\: ?(.*)$/gmi.exec(i.innerText);
-    if (r && r.length > 0) {
-      topics = r[1].split(/\,\s*/);
-      topicContainer = i;
-    }
-  });
-  window.blog.topics = topics
-    ? topics.filter((topic) => topic.length > 0)
-    : [];
-  if (topicContainer) {
-    topicContainer.remove();
-  }
-  // store products
-  let products, productContainer;
-  Array.from(last.children).forEach((i) => {
-    const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
-    if (r && r.length > 0) {
-      products = r[1].split(/\,\s*/);
-      productContainer = i;
-    }
-  });
-  window.blog.products = products
-  ? products.filter((product) => product.length > 0)
-  : [];
-  if (productContainer) {
-    productContainer.remove();
-  }
-  if (last.innerText.trim() === '') {
-    last.remove(); // remove empty last div
-  }
-
-  const md = [{
-    property: 'og:locale',
-    content: window.blog.language,
-  },{
-    property: 'article:published_time',
-    content: window.blog.date ? new Date(window.blog.date).toISOString() : '',
-  }];
-  // add topics and products as article:tags
-  [...window.blog.topics].forEach((topic) => md.push({
-      property: 'article:tag',
-      content: topic,
-  }));
-  [...window.blog.products].forEach((product) => md.push({
-    property: 'article:tag',
-    content: `Adobe ${product}`,
-  }));
-  // add meta tags to DOM
-  const frag = document.createDocumentFragment();
-  md.forEach((meta) => {
-    frag.appendChild(createTag('meta', { property: meta.property, content: meta.content }));
-  });
-  document.head.append(frag);
-}
-
 function addArticlesToDeck(hits, omitEmpty, transformer, hasMore) {
     // console.log('adding articles to page', window.blog.page);
     let $deck = document.querySelector('.articles .deck');
@@ -378,20 +296,26 @@ export async function fetchArticleIndex(offset) {
   var index=window.blog.articleIndex;
   // console.log(`fetching article index: at ${index.articles.length} entries, new offset=${offset}`)
   if (index.done) return;
-  let response=await fetch(`/en/query-index.json?limit=256&offset=${offset}`);
-  //let response=await fetch(`/query-index-${offset}.json`);
+  let indexUrl;
+  if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+    indexUrl=`/query-index-${offset}.json`;
+  } else {
+    indexUrl=`/en/query-index.json?limit=256&offset=${offset}`;
+  }
+
+  let response=await fetch(indexUrl);
+
   if (response.ok) { 
     let json = await response.json();
     translateTable(json,window.blog.articleIndex);
   }
-  console.log(`fetched article index: at ${index.articles.length} entries, done?${index.done}`)
+  console.log(`fetched article index: at ${index.articles.length} entries, ${index.done?'':'not'} done.`)
 }
 
 async function fetchHits(filters, limit, cursor) {
   if (!window.blog.articleIndex) {
     await fetchArticleIndex(0);
   }
-
   
   const index=window.blog.articleIndex;
   const articles=window.blog.articleIndex.articles;
@@ -411,7 +335,15 @@ async function fetchHits(filters, limit, cursor) {
       let matched=true;
       if (filters.topics && !e.topics.includes(filters.topics)) matched=false;
       if (filters.author && (e.author!=filters.author)) matched=false;
-  
+
+      if (filters.products) {
+        var productsMatched=false;
+        filters.products.forEach((p) => {
+          if (e.products.includes(p)) productsMatched=true;
+        })
+        matched=productsMatched;
+      }
+
       //check if path is already in a card
       if (document.querySelector(`.card a[href='/${e.path}']`)) matched=false;
       if (hits.find(h => h.path == e.path)) matched=false;
@@ -447,16 +379,16 @@ export async function fetchArticles({
   pageSize = 12,
   transformer = itemTransformer,
   callback,
-}) {
+} = {}) {
   if (window.blog.pageType === window.blog.TYPE.POST) {
     omitEmpty = true; // don't display anything if no results
-    pageSize=12;
+    pageSize = 12;
     filters.paths = getPostPaths('h2#featured-posts', 1, true);
     filters.pathsOnly = true;
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
-    filters = {topics: document.title};
+    filters.topics = document.title;
   } else if (window.blog.pageType === window.blog.TYPE.AUTHOR) {
-    filters = {author: document.title.split(',')[0]};
+    filters.author = document.title.split(',')[0];
   } else if (window.blog.pageType === window.blog.TYPE.HOME) {
     filters.paths = getPostPaths('h2#featured-posts', 1, true);
   }
@@ -469,8 +401,23 @@ export async function fetchArticles({
   if (typeof callback === 'function') callback(hits);
 }
 
+/**
+ * Applies the specified filters to the query result
+ * @param {array} filters The filters to apply
+ */
+export function applyFilters(products) {
+  
+  window.blog.cursor=0;
+  let $deck = document.querySelector('.articles .deck');
+  if ($deck) $deck.parentNode.remove();
+
+  const config=products.length?{filters:{products}}:{};
+  
+  fetchArticles(config);
+
+}
+
 window.addEventListener('load', function() {
   removeHeaderAndFooter();
   addPageTypeAsBodyClass();
-  handleMetadata();
 });
