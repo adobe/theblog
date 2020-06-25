@@ -44,8 +44,7 @@ function getOtDomainId() {
   };
   const currentDomain = Object.keys(domains).find(domain => window.location.host.indexOf(domain) > -1);
 
-  //TODO: remove `-test` once integration is ready for production
-  return `${domains[currentDomain] || domains[Object.keys(domains)[0]]}-test`;
+  return `${domains[currentDomain] || domains[Object.keys(domains)[0]]}`;
 };
 
 // Prep images for lazy loading and use adequate sizes
