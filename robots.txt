@@ -1,7 +1,10 @@
-User-agent: *
-Disallow: /
+user-agent: *
+disallow: /archive
+disallow: /components
+disallow: /en/
+allow: /en/20*/
+allow: /en/publish/20*/
+allow: /en/authors/
+allow: /en/topics/
 
-User-agent: Twitterbot
-Disallow: 
-
-Sitemap: https://blog.adobe.com/sitemap.xml
+sitemap: https://blog.adobe.com/sitemap.xml
