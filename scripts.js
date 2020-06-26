@@ -108,7 +108,7 @@ window.blog = function() {
     }
     if (segs.length >= 2) {
       // post pages
-      if (segs[1] === 'drafts' || segs[1] === 'publish' || /\d{4}\/\d{2}\/\d{2}/.test(segs.join('/'))) {
+      if (segs[1] === 'drafts' || segs[1] === 'publish' || segs[1] === 'documentation' || /\d{4}\/\d{2}\/\d{2}/.test(segs.join('/'))) {
         pageType = TYPE.POST;
       } else {
         for (let [key, value] of Object.entries(TYPE)) {
