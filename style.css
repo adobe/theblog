@@ -32,11 +32,15 @@
    line-height: 1.5em;
  }
  
+ .home-page header,
  .home-page main,
+ .post-page header,
  .post-page main,
+ .topic-page header,
  .topic-page main,
+ .author-page header,
  .author-page main {
-   visibility: visible;
+    visibility: visible;
  }
  
  .default {
