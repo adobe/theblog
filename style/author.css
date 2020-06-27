@@ -20,7 +20,7 @@
   background-color: white;
 }
 
-.author-page .articles-empty {
+.author-page .articles-empty::before {
   content: 'No articles found by this author';
 }
 
