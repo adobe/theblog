@@ -10,7 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
+.post-page header,
+.post-page footer {
+  visibility: visible;
+}
+
 .post-page main {
+  visibility: visible;
   display: grid;
   grid-template-areas: "hero-image"
                        "post-header"

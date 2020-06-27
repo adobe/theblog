@@ -10,6 +10,12 @@
  * governing permissions and limitations under the License.
  */
 
+.topic-page header,
+.topic-page main,
+.topic-page footer {
+  visibility: visible;
+}
+
 .topic-page  .articles {
   background-color: white;
 }

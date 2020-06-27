@@ -10,7 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
- .home-page main {
+.home-page header,
+.home-page footer {
+  visibility: visible;
+}
+
+.home-page main {
+  visibility: visible;
   display: grid;
   grid-template-areas: "featured"
                        "news-box"
