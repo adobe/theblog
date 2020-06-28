@@ -27,7 +27,7 @@ a.action.load-more::before {
 }
 
 .topic-page .articles-empty::before {
-  content: 'Keine Artukel in dieser Kategorie gefunden';
+  content: 'Keine Artikel in dieser Kategorie gefunden';
 }
 
 .post-page .latest-posts::before {
