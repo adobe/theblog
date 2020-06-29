@@ -22,6 +22,14 @@ a.action.load-more::before {
   content: "Keine Artikel gefunden"
 }
 
+.author-page .articles-empty::before {
+  content: 'Dieser Autor hat noch keine Artikel publiziert';
+}
+
+.topic-page .articles-empty::before {
+  content: 'Keine Artikel in dieser Kategorie gefunden';
+}
+
 .post-page .latest-posts::before {
   content: "Für Dich empfohlen";
 }

@@ -10,12 +10,18 @@
  * governing permissions and limitations under the License.
  */
 
+.topic-page header,
+.topic-page main,
+.topic-page footer {
+  visibility: visible;
+}
+
 .topic-page  .articles {
   background-color: white;
 }
 
-.topic-page .articles-empty {
-  content: 'No articles found under this topic';
+.topic-page .articles-empty::before {
+  content: 'No articles found in this category';
 }
 
 .topic-page {

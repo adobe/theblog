@@ -32,13 +32,6 @@
    line-height: 1.5em;
  }
  
- .home-page main,
- .post-page main,
- .topic-page main,
- .author-page main {
-   visibility: visible;
- }
- 
  .default {
    padding: 1rem 2rem;
  }
