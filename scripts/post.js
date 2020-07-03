@@ -221,6 +221,8 @@ export function addProducts() {
  * Loads the GetSocial sharing tool
  */
 export function loadGetSocial() {
+  if (window.location.pathname.includes('/drafts/')
+    || window.location.pathname.includes('/documentation/')) return;
   const po = createTag('script', {
     type: 'text/javascript',
     async: true,
