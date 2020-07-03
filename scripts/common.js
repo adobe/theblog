@@ -134,36 +134,6 @@ export function getLink(type, name) {
 }
 
 /**
- * Replaces variables in the text of an element using the specified data.
- * @param {element} elem The element
- * @param {object} data The object containing name/value pairs
- * @returns {element} The element
- */
-export function fillData(elem, data) {
-  const TOKEN_REGEXP = /{{(.+)}}/;
-  for (let i = 0; i < elem.attributes.length; i++) {
-    const attr = elem.attributes[i];
-    const match = TOKEN_REGEXP.exec(attr.value);
-    if (match) {
-      attr.value = attr.value.replace(TOKEN_REGEXP, data[match[1]] || '');
-    }
-  }
-  let node = elem.firstChild;
-  while (node) {
-    if (node.nodeType === Node.TEXT_NODE) {
-      const match = TOKEN_REGEXP.exec(node.textContent);
-      if (match) {
-        node.textContent = node.textContent.replace(TOKEN_REGEXP, data[match[1]] || '');
-      }
-    } else if (node.nodeType === Node.ELEMENT_NODE) {
-      fillData(node, data);
-    }
-    node = node.nextSibling;
-  }
-  return elem;
-}
-
-/**
  * Retrieves article paths from an element or one of its parent elements.
  * @param {element} el The element
  * @param {number} parent The number of parent elements to climb
@@ -228,13 +198,20 @@ export function itemTransformer(item) {
  * adds it to the specified container.
  * @param {object} hit The query hit with the card data.
  * @param {element} $container The container element to add the card to
- * @param {element} $template The template element to use (optional)
  * @returns {element} The card element
  */
-export function addCard(hit, $container, $template) {
-  if (!$template) $template = document.getElementById('post-card');
-  const $item = $template.content.cloneNode(true).firstElementChild;
-  fillData($item, hit);
+export function addCard(hit, $container) {
+  const $item = createTag('div', {'class': 'card'});
+  $item.innerHTML = `
+  <div class="hero">
+    <a href="/${hit.path}" title="${hit.title}"><img class="lazyload" src="#" data-src="${hit.hero}" alt="${hit.title}"></a>
+  </div>
+  <div class="content">
+    <p class="topic"><a href="${hit.topicUrl}" title="${hit.topic}">${hit.topic}</a></p>
+    <h2><a href="/${hit.path}" title="${hit.title}">${hit.title}</a></h2>
+    <p class="teaser"><a href="/${hit.path}" title="${hit.teaser}…">${hit.teaser}…</a></p>
+    <p class="date">${hit.date}</p>
+  </div>`;
   $container.appendChild($item);
   return $item;
 }
