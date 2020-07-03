@@ -57,6 +57,11 @@
   padding-inline-start: 0;
 }
 
+.social::before {
+  content: "Follow me on";
+  margin-right: 16px;
+}
+
 .author-page .summary .social li {
   list-style: none;
   display: inline;
