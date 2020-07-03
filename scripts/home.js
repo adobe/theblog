@@ -24,7 +24,7 @@ import {
 /**
  * Sets up the homepage
  */
-export async function setupHomepage() {
+async function setupHomepage() {
   if (!document.title) {
     document.title = 'The Blog | Welcome to the Adobe Blog';
   }
