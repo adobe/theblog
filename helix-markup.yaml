@@ -1,0 +1,23 @@
+version: 1
+
+markup:
+  home:
+    match: /(|:lang/home)(.*)
+    classnames: home-page
+    type: url
+  author:
+    match: /:lang/author(.*)
+    classnames: author-page
+    type: url
+  post:
+    match: /:lang/(post|drafts/|publish/|\d{4}\/\d{2}\/\d{2}/)(.*)
+    classnames: post-page
+    type: url
+  product:
+    match: /:lang/product(.*)
+    classnames: product-page
+    type: url
+  topic:
+    match: /:lang/topic(.*)
+    classnames: topic-page
+    type: url
