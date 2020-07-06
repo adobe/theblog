@@ -456,5 +456,4 @@ export function applyFilters(products) {
 window.addEventListener('load', function() {
   setDocumentLanguage();
   removeHeaderAndFooter();
-  addPageTypeAsBodyClass();
 });

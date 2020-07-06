@@ -120,6 +120,25 @@ function getOtDomainId() {
   return `${domains[currentDomain] || domains[Object.keys(domains)[0]]}`;
 };
 
+/**
+ * Return the language detected in the current path
+ */
+function getDetectedLanguage() {
+  return window.location.pathname
+    .split('/').slice(1, 2)
+    .pop();
+}
+
+/**
+ * Return the page type detected in the current markup
+ */
+function getDetectedPageType() {
+  return [...document.documentElement.classList]
+    .filter((cls) => cls.endsWith('-page'))
+    .map((cls) => cls.split('-')[0])
+    .pop();
+}
+
 // Prep images for lazy loading and use adequate sizes
 const imgWidth = window.innerWidth === 375 ? 750 : // double size for retina
               window.innerWidth < 900 ? 900 : 2048;
@@ -168,38 +187,10 @@ window.blog = function() {
     ES: 'es',
   };
   const context = '/';
-  let language = LANG.EN;
-  let pageType = TYPE.HOME;
-  const segs = window.location.pathname
-    .split('/')
-    .filter(seg => seg !== '');
-  if (segs.length > 0) {
-    if (segs.length >= 1) {
-      // language
-      for (let [key, value] of Object.entries(LANG)) {
-        if (value === segs[0]) {
-          language = value;
-          break;
-        }
-      }
-    }
-    if (segs.length >= 2) {
-      // post pages
-      if (segs[1] === 'drafts' || segs[1] === 'publish' || segs[1] === 'fpost' || segs[1] === 'documentation' || /\d{4}\/\d{2}\/\d{2}/.test(segs.join('/'))) {
-        pageType = TYPE.POST;
-      } else {
-        for (let [key, value] of Object.entries(TYPE)) {
-          if (segs[1].startsWith(value)) {
-            pageType = value;
-            break;
-          }
-        }
-      }
-    }
-  }
-  if (window.isErrorPage) {
-    pageType = TYPE.BLANK; 
-  }
+  const language = LANG[getDetectedLanguage().toUpperCase()] || LANG.EN;
+  const pageType = !window.isErrorPage
+    ? TYPE[getDetectedPageType().toUpperCase()] || TYPE.HOME
+    : TYPE.BLANK;
   return { context, language, pageType, TYPE, LANG };
 }();
 
