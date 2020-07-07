@@ -35,7 +35,7 @@ function formatLocalDate(date) {
 /**
  * Extracts metadata from the page and adds it to the head.
  */
-export function handleMetadata() {
+function handleMetadata() {
   // store author and date
   const r = /^By (.*)\n*(.*)$/gmi.exec(getSection(2).innerText);
   window.blog.author = r && r.length > 0 ? r[1] : '';
@@ -103,7 +103,7 @@ export function handleMetadata() {
 /**
  * Decorates the post page with CSS classes
  */
-export function decoratePostPage(){
+function decoratePostPage(){
   addClass('.post-page main>div:first-of-type', 'post-title');
   addClass('.post-page main>div:nth-of-type(2)', 'hero-image');
   addClass('.post-page main>div:nth-of-type(3)', 'post-author');
@@ -118,7 +118,7 @@ export function decoratePostPage(){
 /**
  * Adds CSS classes to images appearing within text
  */
-export function addImageClasses() {
+function addImageClasses() {
   document.querySelectorAll('.post-page .post-body img').forEach(($e) => {
     let hasText = false;
     $e.parentNode.childNodes.forEach(($c) => {
@@ -131,7 +131,7 @@ export function addImageClasses() {
 /**
  * Fetches the author details from the author page and adds them to the post header
  */
-export function fetchAuthor() {
+function fetchAuthor() {
   if (!window.blog.author) return;
   const authorSection = document.querySelector('.post-author');
   if (authorSection) {
@@ -169,7 +169,7 @@ export function fetchAuthor() {
 /**
  * Adds the primary topic as category to the post header
  */
-export function addCategory() {
+function addCategory() {
   if (!window.blog.topics || window.blog.topics.length === 0) return;
   const topic = window.blog.topics[0];
   const categoryWrap = document.createElement('div');
@@ -182,7 +182,7 @@ export function addCategory() {
 /**
  * Adds buttons for all topics to the bottom of the post
  */
-export function addTopics() {
+function addTopics() {
   if (!window.blog.topics || window.blog.topics.length === 0) return;
   const topicsWrap = createTag('div', { 'class' : 'default topics' });
   window.blog.topics.forEach((topic) => {
@@ -199,7 +199,7 @@ export function addTopics() {
 /**
  * Adds product details to the post.
  */
-export function addProducts() {
+function addProducts() {
   if (!window.blog.products || window.blog.products.length === 0) return;
   let html='<div class="prod-design">';
   const productsWrap = createTag('div', { 'class': 'default products' });
@@ -220,7 +220,7 @@ export function addProducts() {
 /**
  * Loads the GetSocial sharing tool
  */
-export function loadGetSocial() {
+function loadGetSocial() {
   if (window.location.pathname.includes('/drafts/')
     || window.location.pathname.includes('/documentation/')) return;
   const po = createTag('script', {
@@ -234,7 +234,7 @@ export function loadGetSocial() {
 /**
  * Shapes promotional banners
  */
-export function shapeBanners() {
+function shapeBanners() {
   const banners = document.querySelectorAll('div.banner');
   banners.forEach((banner) => {
     // remove surrounding p

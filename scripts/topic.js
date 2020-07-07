@@ -16,13 +16,12 @@ import {
 } from '/scripts/common.js';
 import {
   addFilters,
-  clearAllFilters,
 } from '/scripts/filters.js';
 
 /**
  * Decorates the topic page with CSS classes
  */
-export function decorateTopicPage() {
+function decorateTopicPage() {
   addClass('.topic-page main>div:first-of-type', 'topic-title');
   const img = document.querySelector('main img');
   if (img) {

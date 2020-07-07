@@ -69,7 +69,7 @@ function toggleDropdown(dropdownContainer, body) {
 /**
 * Clear ALL selected filters.
 */
-export function clearAllFilters(allFilterOptions) {
+function clearAllFilters(allFilterOptions) {
   allFilterOptions.forEach((option) => {
       const selectedFilters = option.querySelectorAll('input:checked');
       selectedFilters.forEach((filter) => {
