@@ -286,7 +286,7 @@ export async function fetchArticleIndex(offset) {
   if (isLocalhost()) {
     indexUrl=`/query-index-${offset}.json`;
   } else {
-    indexUrl=`/en/query-index.json?limit=256&offset=${offset}`;
+    indexUrl=`/${window.blog.language}/query-index.json?limit=256&offset=${offset}`;
   }
 
   let response=await fetch(indexUrl);
