@@ -90,6 +90,9 @@ window.blog = function() {
     DE: 'de',
     FR: 'fr',
     JP: 'jp',
+    PT: 'pt',
+    KO: 'ko',
+    ES: 'es',
   };
   const context = '/';
   let language = LANG.EN;
