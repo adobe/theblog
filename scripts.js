@@ -89,6 +89,7 @@ window.blog = function() {
     EN: 'en',
     DE: 'de',
     FR: 'fr',
+    JP: 'jp',
   };
   const context = '/';
   let language = LANG.EN;
