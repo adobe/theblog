@@ -1,19 +1,20 @@
 # The Blog
 
-## What?
+## What
 
-This is a port of [The Blog](https://theblog.adobe.com) on [Helix Pages](https://helix-pages--adobe.hlx.page). Currently WIP.
+This is a port of [The Blog](https://theblog.adobe.com) on [Helix Pages](https://helix-pages--adobe.hlx.page).
 
-## Current State?
 
-Inner CDN (uncached):
+## Current State
+
+Origin:
 
 - https://theblog-adobe.hlx.page/
+- https://staging--theblog--adobe.hlx.page/
 
-Outer CDN (cached):
+Public Site:
 
-- https://theblog.helix-demo.xyz/
-
+- https://blog.adobe.com/
 
 
 ## How to develop and test locally
