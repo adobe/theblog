@@ -237,9 +237,17 @@
   line-height: 1.3em;
 }
 
-.post-page main>div.post-body p+h2, .post-page main>div.post-body div+h2,
-.post-page main>div.post-body p+h3 {
+.post-page main>div.post-body *+h2 {
   margin-top: 64px;
+}
+
+.post-page main>div.post-body *+h3 {
+  margin-top: 48px;
+}
+
+.post-page main>div.post-body h1+h2,
+.post-page main>div.post-body h2+h3 {
+  margin-top: 32px;
 }
 
 .post-page .products a {
