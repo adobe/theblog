@@ -123,20 +123,20 @@ function getOtDomainId() {
 /**
  * Return the language detected in the current path
  */
-function getDetectedLanguage() {
+function getDetectedLanguage(defaultValue) {
   return window.location.pathname
     .split('/').slice(1, 2)
-    .pop();
+    .pop() || defaultValue;
 }
 
 /**
  * Return the page type detected in the current markup
  */
-function getDetectedPageType() {
+function getDetectedPageType(defaultValue) {
   return [...document.documentElement.classList]
     .filter((cls) => cls.endsWith('-page'))
     .map((cls) => cls.split('-')[0])
-    .pop();
+    .pop() || defaultValue;
 }
 
 // Prep images for lazy loading and use adequate sizes

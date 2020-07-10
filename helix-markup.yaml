@@ -3,21 +3,22 @@ version: 1
 markup:
   home:
     match: /(|:lang/home)(.*)
-    classnames: home-page
     type: url
+    wrap: .home-page
   author:
     match: /:lang/author(.*)
     classnames: author-page
     type: url
+    wrap: .author-page
   post:
-    match: /:lang/(post|drafts/|fpost/|publish/|\d{4}\/\d{2}\/\d{2}/)(.*)
-    classnames: post-page
+    match: /:lang/(post|drafts/|fpost/|documentation/|publish/|\d{4}\/\d{2}\/\d{2}/)(.*)
     type: url
+    wrap: .post-page
   product:
     match: /:lang/product(.*)
-    classnames: product-page
     type: url
+    wrap: .product-page
   topic:
     match: /:lang/topic(.*)
-    classnames: topic-page
     type: url
+    wrap: .topic-page
