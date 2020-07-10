@@ -133,10 +133,7 @@ function getDetectedLanguage(defaultValue) {
  * Return the page type detected in the current markup
  */
 function getDetectedPageType(defaultValue) {
-  return [...document.documentElement.classList]
-    .filter((cls) => cls.endsWith('-page'))
-    .map((cls) => cls.split('-')[0])
-    .pop() || defaultValue;
+  return document.documentElement.dataset.pagetype || defaultValue;
 }
 
 // Prep images for lazy loading and use adequate sizes

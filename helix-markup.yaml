@@ -4,21 +4,21 @@ markup:
   home:
     match: /(|:lang/home)(.*)
     type: url
-    wrap: .home-page
+    wrap: .home-page[data-pageType="home"]
   author:
     match: /:lang/author(.*)
     classnames: author-page
     type: url
-    wrap: .author-page
+    wrap: .author-page[data-pageType="author"]
   post:
     match: /:lang/(post|drafts/|publish/|fpost/|documentation/|\d{4}\/\d{2}\/\d{2}/)(.*)
     type: url
-    wrap: .post-page
+    wrap: .post-page[data-pageType="post"]
   product:
     match: /:lang/product(.*)
     type: url
-    wrap: .product-page
+    wrap: .product-page[data-pageType="product"]
   topic:
     match: /:lang/topic(.*)
     type: url
-    wrap: .topic-page
+    wrap: .topic-page[data-pageType="topic"]
