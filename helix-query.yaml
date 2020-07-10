@@ -1,7 +1,7 @@
 version: 1
 
 indices:
-  raw_index: @default
+  raw_index: &default
     source: html
     fetch: https://{repo}-{owner}.project-helix.page/{path}
     include:
