@@ -7,7 +7,6 @@ markup:
     wrap: .home-page[data-pageType="home"]
   author:
     match: /:lang/author(.*)
-    classnames: author-page
     type: url
     wrap: .author-page[data-pageType="author"]
   post:
