@@ -373,6 +373,7 @@ export async function fetchArticles({
     filters.paths = getPostPaths('h2#featured-posts', 1, true);
     filters.pathsOnly = true;
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
+    // await getTaxonomy();
     filters.topics = document.title;
     if (window.blog.productFilters) {
       filters.products=window.blog.productFilters;
@@ -404,6 +405,59 @@ export function applyFilters(products) {
   
   fetchArticles();
 
+}
+
+export async function getTaxonomy() {
+  if (window.blog.taxonomy) {
+    return window.blog.taxonomy;
+  }
+
+  return fetch('/en/topics/_taxonomy.plain.html')
+    .then((response) => {
+      return response.text();
+    })
+    .then((data) => {
+      const div = document.createElement('div');
+      div.innerHTML = data;
+
+      div.querySelectorAll('li').forEach((e, i) => {
+        if (e.firstChild) {
+          e.setAttribute('data-topic',e.firstChild.textContent);
+        }
+      });
+
+      // second div contains the User Facing Tags
+      div.firstElementChild.nextElementSibling.setAttribute('data-isuft', 'true');
+
+      window.blog.taxonomy = {
+        node: div,
+        isUFT: function(topic) {
+          let n = div.querySelector(`[data-topic="${topic}"]`);
+          while (n) {
+            if (n.getAttribute('data-isuft') === 'true') {
+              return true;
+            }
+            n = n.parentElement;
+          }
+          
+          return false;
+        },
+
+        getParents: function(topic) {
+          const parents = [];
+          let n = div.querySelector(`[data-topic="${topic}"]`);
+          while (n) {
+            const parentTopic = n.getAttribute('data-topic');
+            if (parentTopic) {
+              parents.push(parentTopic);
+            }
+            n = n.parentElement;
+          }
+          return parents;
+        }
+      };
+      return window.blog.taxonomy;
+    });
 }
 
 window.addEventListener('load', function() {
