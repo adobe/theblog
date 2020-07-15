@@ -373,7 +373,6 @@ export async function fetchArticles({
     filters.paths = getPostPaths('h2#featured-posts', 1, true);
     filters.pathsOnly = true;
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
-    // await getTaxonomy();
     filters.topics = document.title;
     if (window.blog.productFilters) {
       filters.products=window.blog.productFilters;
