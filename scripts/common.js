@@ -320,7 +320,10 @@ async function fetchHits(filters, limit, cursor) {
     for (;i<articles.length;i++) {
       const e=articles[i];
       let matched=true;
-      if (filters.topics && !e.topics.includes(filters.topics)) matched=false;
+      if (filters.topics) {
+        filters.topics = Array.isArray(filters.topics) ? filters.topics : [filters.topics];
+        if (filters.topics.find((t) => { return e.topics.indexOf(t) })) matched=false;
+      } 
       if (filters.author && (e.author!=filters.author)) matched=false;
 
       if (filters.products) {
@@ -373,7 +376,10 @@ export async function fetchArticles({
     filters.paths = getPostPaths('h2#featured-posts', 1, true);
     filters.pathsOnly = true;
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
-    filters.topics = document.title;
+    const taxonomy = await getTaxonomy();
+    const currentTopic = document.title;
+    const topics = [currentTopic].concat(taxonomy.getChildren(currentTopic));
+    filters.topics = topics;
     if (window.blog.productFilters) {
       filters.products=window.blog.productFilters;
     }
@@ -431,7 +437,7 @@ export async function getTaxonomy() {
       window.blog.taxonomy = {
         node: div,
         isUFT: function(topic) {
-          let n = div.querySelector(`[data-topic="${topic}"]`);
+          let n = this.node.querySelector(`[data-topic="${topic}"]`);
           while (n) {
             if (n.getAttribute('data-isuft') === 'true') {
               return true;
@@ -444,7 +450,7 @@ export async function getTaxonomy() {
 
         getParents: function(topic) {
           const parents = [];
-          let n = div.querySelector(`[data-topic="${topic}"]`);
+          let n = this.node.querySelector(`[data-topic="${topic}"]`);
           while (n) {
             const parentTopic = n.getAttribute('data-topic');
             if (parentTopic) {
@@ -453,6 +459,17 @@ export async function getTaxonomy() {
             n = n.parentElement;
           }
           return parents;
+        },
+
+        getChildren: function(topic) {
+          const children = [];
+          this.node.querySelectorAll(`[data-topic="${topic}"] li`).forEach((n) => {
+            const t = n.getAttribute('data-topic');
+            if (children.indexOf(t) === -1) {
+              children.push(t);
+            }
+          });
+          return children;
         }
       };
       return window.blog.taxonomy;
