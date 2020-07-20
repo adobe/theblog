@@ -16,6 +16,7 @@ import {
   getLink,
   wrap,
   createTag,
+  getTaxonomy
 } from '/scripts/common.js';
 
 /**
@@ -35,7 +36,7 @@ function formatLocalDate(date) {
 /**
  * Extracts metadata from the page and adds it to the head.
  */
-function handleMetadata() {
+async function handleMetadata() {
   // store author and date
   const r = /^By (.*)\n*(.*)$/gmi.exec(getSection(2).innerText);
   window.blog.author = r && r.length > 0 ? r[1] : '';
@@ -51,12 +52,36 @@ function handleMetadata() {
       topicContainer = i;
     }
   });
-  window.blog.topics = topics
+  topics = topics
     ? topics.filter((topic) => topic.length > 0)
     : [];
   if (topicContainer) {
     topicContainer.remove();
   }
+
+  const taxonomy = await getTaxonomy();
+  window.blog.topics = []; // UFT + parents only
+  window.blog.tags = []; // UFT and NUFT + parents
+  topics.forEach((topic) => {
+    if (taxonomy.isUFT(topic)) {
+      window.blog.topics.push(topic);
+    }
+    window.blog.tags.push(topic);
+  });
+
+  // handle parents afterward so that all leafs stay first
+  topics.forEach((topic) => {
+    const parents = taxonomy.getParents(topic);
+    if (taxonomy.isUFT(topic)) {
+      window.blog.topics = window.blog.topics.concat(parents);
+    }
+    window.blog.tags = window.blog.tags.concat(parents);
+  });
+
+  // remove duplicates
+  window.blog.topics = Array.from(new Set(window.blog.topics));
+  window.blog.tags = Array.from(new Set(window.blog.tags));
+
   // store products
   let products, productContainer;
   Array.from(last.children).forEach((i) => {
@@ -304,8 +329,8 @@ function shapeBanners() {
   });
 }
 
-window.addEventListener('load', function() {
-  handleMetadata();
+window.addEventListener('load', async function() {
+  await handleMetadata();
   addCategory();
   decoratePostPage();
   fetchAuthor();
