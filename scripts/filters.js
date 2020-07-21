@@ -226,7 +226,7 @@ function drawFilterBar() {
       $tax.querySelectorAll('li').forEach((e) => {
         let t;
         if (e.firstChild) t=e.firstChild.textContent;
-        if (t && t.toLowerCase() == 'products & technology') $productsAndTech=e;
+        if (t && t.toLowerCase() == 'products') $productsAndTech=e;
       });
       let html='';
       if ($productsAndTech) {
