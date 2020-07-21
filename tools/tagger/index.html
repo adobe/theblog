@@ -1,291 +1,375 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html>
+<html>
 
 <head>
-    <title>the blog - tagger</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
-<style>
+  <title>the blog - tagger</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <style>
     body {
-        font-family: 'Adobe Clean';
+      font-family: 'Adobe Clean';
     }
 
     main input {
-        width: 100%;
-        font-size: 2rem;
-        font-family: 'Adobe Clean';
-        border: none;
-        border-bottom: solid 1px grey;
-        padding-top: 5px;
+      width: 100%;
+      font-size: 2rem;
+      font-family: 'Adobe Clean';
+      border: none;
+      border-bottom: solid 1px grey;
+      padding-top: 5px;
     }
 
     main .filter {
-        padding: 0px 10px 20px 10px;
+      padding: 0px 10px 20px 10px;
     }
 
     main #selected {
-        padding: 30px;
+      padding: 30px;
     }
 
     main #selected button {
-        border-radius: 1em;
-        padding: 5px 20px;
+      border-radius: 1em;
+      padding: 5px 20px;
     }
 
 
     #tags-data {
-        display: none;
+      display: none;
     }
 
     #results {
-        overflow: scroll;
-        user-select: none;
+      overflow: scroll;
+      user-select: none;
     }
 
     main>div>span {
-        white-space: nowrap;
-        margin: 10px;
+      white-space: nowrap;
+      margin: 10px;
     }
 
     main {
-        padding: 20px;
-        font-size: 1.3rem;
-        line-height: 1.2em;
+      padding: 20px;
+      font-size: 1.3rem;
+      line-height: 1.2em;
     }
 
     span.tag {
-        background-color: #888888;
-        color: lightgrey;
-        padding: 2px 20px;
-        border-radius: 10px;
-        font-size: 16px;
+      color: lightgrey;
+      padding: 2px 20px;
+      border-radius: 10px;
+      font-size: 16px;
     }
 
-    .active .tag {
-        background-color: #0d66d0;
-        cursor: pointer;
-        padding-top: 5px;
+    .tag {
+      cursor: pointer;
+      padding-top: 5px;
     }
 
-    .active .tag.non-user{
-        background-color: #12805c;
+    .selected span.tag {
+      background-color: #888888;
+    }
+
+    .tag.categories {
+      background-color: #0d66d0;
+    }
+
+    .tag.products {
+      background-color: #d7373f;
+    }
+
+    .tag.industries {
+      background-color: #12805c;
+    }
+
+    .tag.internals {
+      background-color: #d2b200;
     }
 
 
-    #selected .active .tag {
-        background-color: #F25749;
-        color: white;
-        font-weight: 700;
+    #selected .tag {
+      color: white;
+      font-weight: 700;
     }
 
     span.tag .highlight {
-        font-weight: 700;
-        color: white;
+      font-weight: 700;
+      color: white;
     }
 
     span.path {
-        border-radius: 10px;
-        border: 1px dashed black;
-        padding: 4px 0px 2px 20px;
-        font-size: 10px;
+      border-radius: 10px;
+      border: 1px dashed black;
+      padding: 4px 0px 2px 20px;
+      font-size: 10px;
     }
 
     #selected {
-        position: fixed;
-        bottom: 0;
-        background-color:lightsalmon;
-        padding-bottom: 20px;
-        width: 100%;
-        box-sizing: border-box;
-        left: 0;
-        user-select: none;
+      position: fixed;
+      bottom: 0;
+      background-color: lightsalmon;
+      padding-bottom: 20px;
+      width: 100%;
+      box-sizing: border-box;
+      left: 0;
+      user-select: none;
     }
 
     #selected button:disabled {
-        background-color: #ccc;
-        color: grey;
+      background-color: #ccc;
+      color: grey;
     }
 
     #selected button {
-        background-color: #F25749;
-        color: white;
-        position: absolute;
-        right: 10px;
-        bottom: 10px;
-        border: 1px solid white;
-        font-size: 13px;
+      background-color: #F25749;
+      color: white;
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      border: 1px solid white;
+      font-size: 13px;
     }
 
     .hidden {
-        display: none;
+      display: none;
     }
 
     .offscreen {
-        position: absolute;
-        top: -1000px;
+      position: absolute;
+      top: -1000px;
+    }
+  </style>
+  <script>
+    const CATEGORIES = [
+      'Categories',
+      'Products',
+      'Industries',
+      'Internals'
+    ];
+
+    (function (d) {
+      var config = {
+        // Todo: pull in the kit Id from the ACF field in the admin
+        kitId: 'lkg3fdt',
+        scriptTimeout: 3000,
+        async: true
+      },
+        h = d.documentElement, t = setTimeout(function () { h.className = h.className.replace(/\bwf-loading\b/g, '') + ' wf-inactive'; }, config.scriptTimeout), tk = d.createElement('script'), f = false, s = d.getElementsByTagName('script')[0], a; h.className += ' wf-loading'; tk.src = 'https://use.typekit.net/' + config.kitId + '.js'; tk.async = true; tk.onload = tk.onreadystatechange = function () { a = this.readyState; if (f || a && a != 'complete' && a != 'loaded') return; f = true; clearTimeout(t); try { Typekit.load(config) } catch (e) { } }; s.parentNode.insertBefore(tk, s)
+    })(document);
+
+    var selected = [];
+    function generateTagIDs() {
+      document.querySelectorAll('#tags-data li').forEach((e, i) => {
+        if (e.firstChild && e.firstChild.textContent) {
+          e.setAttribute('id', 'tag-' + i);
+          e.setAttribute('data-name', e.firstChild.textContent);
+        } else {
+          // useless element
+          e.remove();
+        }
+      });
     }
 
-</style>
-<script>
-  (function(d) {
-    var config = {
-            // Todo: pull in the kit Id from the ACF field in the admin
-            kitId: 'lkg3fdt',
-            scriptTimeout: 3000,
-            async: true
-        },
-        h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
-})(document);
-
-    const productsPath = 'Products & Technology';
-
-    var selected=[];
-    function generateTagIDs() {
-        document.querySelectorAll("#tags-data li").forEach((e, i) => {
-            e.setAttribute("id","tag-"+i);
-        });
+    function flagCategories() {
+      document.querySelectorAll('#tags-data > div ').forEach((e, i) => {
+        if (i === 0) return; // ignore first div
+        e.setAttribute('id', `cat-${CATEGORIES[i - 1]}`);
+      });
     }
 
     function remove(e) {
-        var target=e.getAttribute("data-target");
-        selected.splice(selected.indexOf(target),1);
-        displaySelected();
+      var target = e.getAttribute('data-target');
+      selected.splice(selected.indexOf(target), 1);
+      displaySelected();
     }
 
     function add(e) {
-        var target=e.getAttribute("data-target");
-        selected.push(target);
+      var target = e.getAttribute('data-target');
+      selected.push(target);
+      displaySelected();
+    }
+
+    function addByName(name) {
+      const e = document.querySelector(`#tags-data [data-name="${name}"]`);
+      if (e) {
+        const id = e.getAttribute('id');
+        selected.push(id);
         displaySelected();
+      }
     }
 
     function copy(button) {
 
-        var copyText = document.getElementById("copybuffer");
+      var copyText = document.getElementById('copybuffer');
 
-        copyText.select();
-        copyText.setSelectionRange(0, 99999);
+      copyText.select();
+      copyText.setSelectionRange(0, 99999);
 
-        document.execCommand("copy");
+      document.execCommand('copy');
 
-        button.disabled=true;
+      button.disabled = true;
 
     }
 
 
     function displaySelected() {
-        var html="";
-        var products="";
-        var topics="";
+      var html = '';
+      var products = '';
+      var topics = '';
 
-        selected.forEach((e) => {
-            tagInfo=fetchTag(e);
-            html+=`<span data-target="${e}" onclick="remove(this)" class="path active">${tagInfo.path}<span class="tag">${tagInfo.tag}</span></span> `;
-            if (productsPath==tagInfo.path.split('/')[0].trim()) products+=tagInfo.tag+", ";
-            else topics+=tagInfo.tag+", ";
-        });
+      const tags = [];
+      selected.forEach((e) => {
+        tags.push(fetchTag(e));
+      });
+      // sort array to keep CATEGORIES logical order
+      tags.sort((t1, t2) => {
+        const i1 = CATEGORIES.indexOf(t1.category);
+        const i2 = CATEGORIES.indexOf(t2.category);
+        if (i1 <= i2) return -1;
+        return 1;
+      });
 
-        var selEl=document.getElementById("selected");
+      tags.forEach((tagInfo) => {
+        html += `<span data-target="${tagInfo.id}" onclick="remove(this)" class="path">${tagInfo.path}<span class="tag ${tagInfo.category.toLowerCase()}">${tagInfo.tag}</span></span> `;
+        if ('Products' === tagInfo.category) products += tagInfo.tag + ', ';
+        else topics += tagInfo.tag + ', ';
+      });
 
-        var button='<button onclick="copy(this)">Copy</button>';
-        selEl.innerHTML=html+button;
+      var selEl = document.getElementById('selected');
 
-        if (selected.length==0) {
-            selEl.classList.add("hidden");
+      var button = '<button onclick="copy(this)">Copy</button>';
+      selEl.innerHTML = html + button;
+
+      if (selected.length == 0) {
+        selEl.classList.add('hidden');
+      } else {
+        selEl.classList.remove('hidden');
+      }
+
+      var copybuffer = document.getElementById('copybuffer');
+      copybuffer.value = `---\r\n\r\nProducts: ${products}\r\nTopics: ${topics}\r\n\r\n`
+
+      document.querySelectorAll('#results>span').forEach((e) => {
+        if (selected.indexOf(e.getAttribute('data-target')) < 0) {
+          e.classList.remove('selected');
+          e.setAttribute('onclick', 'add(this)');
         } else {
-            selEl.classList.remove("hidden");
+          e.classList.add('selected');
+          e.setAttribute('onclick', 'remove(this)');
         }
-
-        var copybuffer=document.getElementById("copybuffer");
-        copybuffer.value=`---\r\n\r\nProducts: ${products}\r\nTopics: ${topics}\r\n\r\n`
-
-        document.querySelectorAll("#results>span").forEach((e) => {
-            if (selected.indexOf(e.getAttribute("data-target"))<0) {
-                e.classList.add("active");
-                e.setAttribute("onclick",'add(this)');
-            } else {
-                e.classList.remove("active");
-                e.setAttribute("onclick",'');
-            }
-        });
+      });
     }
 
     function getLabel(node) {
-        var label="";
-        node.childNodes.forEach((c)=>{
-            if (c.nodeName!="UL") {
-                label+=c.textContent+" ";
-            }
-        })
-        label=label.trim();
-        return label;
+      var label = '';
+      node.childNodes.forEach((c) => {
+        if (c.nodeName != 'UL') {
+          label += c.textContent + ' ';
+        }
+      })
+      label = label.trim();
+      return label;
     }
 
     function fetchTag(id) {
-        var tagInfo;
-        var e=document.getElementById(id);
-        if (e.firstChild && e.firstChild.nodeValue) {
-                var tag=e.firstChild.nodeValue;
-                var path="";
-                var parent=e.parentNode.parentNode;
-                while (parent.nodeName=="LI") {
-                    var label=getLabel(parent);
-                    label=label.trim();
-                    path = label+(path?" / ":" ")+path;
-                    parent=parent.parentNode.parentNode;
-                }
-                var cat=getLabel(parent);
-        tagInfo={tag: tag, path: path, category: cat};
+      var tagInfo;
+      var e = document.getElementById(id);
+      if (e.firstChild && e.firstChild.textContent) {
+        var tag = e.firstChild.textContent;
+        var path = '';
+        var parent = e.parentNode.parentNode;
+        while (parent.nodeName == 'LI') {
+          var label = getLabel(parent);
+          label = label.trim();
+          path = label + (path ? ' / ' : ' ') + path;
+          parent = parent.parentNode.parentNode;
         }
-    return tagInfo;
+        var cat = getLabel(parent);
+        tagInfo = {
+          tag: tag,
+          path: path,
+          category: cat,
+          id
+        };
+      }
+      return tagInfo;
     }
 
     function filter() {
-        var html="";
-        var searchTerm=document.getElementById("search").value.toLowerCase();
-        // console.log(searchTerm);
-        document.querySelectorAll("#tags-data li").forEach((e) => {
-            var tagInfo=fetchTag(e.id);
-            if (tagInfo) {
-                var tag=tagInfo.tag;
-                var offset=tag.toLowerCase().indexOf(searchTerm);
+      var searchTerm = document.getElementById('search').value.toLowerCase();
 
-                if (offset>=0) {
+      let html = '';
 
-                    before=tag.substr(0, offset);
-                    term=tag.substr(offset, searchTerm.length);
-                    after=tag.substr(offset+searchTerm.length);
+      CATEGORIES.forEach((cat) => {
+        html += `<h1>${cat}</h1>`;
+        document.querySelectorAll(`#tags-data #cat-${cat} li`).forEach((e) => {
+          var tagInfo = fetchTag(e.id);
+          if (tagInfo) {
+            var tag = tagInfo.tag;
+            var offset = tag.toLowerCase().indexOf(searchTerm);
 
-                    html+=`<span data-target="${e.id}" onclick="add(this)" class="path active">${tagInfo.path}<span class="tag ${tagInfo.category.split(" ")[0].toLowerCase()}">${before}<span class="highlight">${term}</span>${after}</span></span> `;
-                }
+            if (offset >= 0) {
+              before = tag.substr(0, offset);
+              term = tag.substr(offset, searchTerm.length);
+              after = tag.substr(offset + searchTerm.length);
+
+              html += `<span data-target="${e.id}" onclick="add(this)" class="path">${tagInfo.path}<span class="tag ${tagInfo.category.split(' ')[0].toLowerCase()}">${before}<span class="highlight">${term}</span>${after}</span></span> `;
             }
+          }
         })
-        var results=document.getElementById("results");
-        results.innerHTML=html;
+      });
+      var results = document.getElementById('results');
+      results.innerHTML = html;
     }
 
-</script>
+    function handlePaste(event) {
+      let paste = (event.clipboardData || window.clipboardData).getData('text');
+
+      if (paste) {
+        // extract topics and products
+        let topics = [];
+        let products = [];
+        let r = /^Topics\: ?(.*)$/gmi.exec(paste);
+        if (r && r.length > 0) {
+          topics = r[1].split(/\,\s*/);
+        }
+        r = /^Products\: ?(.*)$/gmi.exec(paste);
+        if (r && r.length > 0) {
+          products = r[1].split(/\,\s*/);
+        }
+
+        topics.forEach((t) => addByName(t));
+        products.forEach((p) => addByName(p));
+      }
+    }
+
+  </script>
 </head>
+
 <body>
-    <div id="tags-data">
-        
+  <div id="tags-data"></div>
+  <main>
+    <div class="filter">
+      <input autocomplete="off" placeholder="Type to filter" id="search" onkeydown="filter()" onkeyup="filter()">
     </div>
-    <main>
-    <div class="filter"><input autocomplete="off" placeholder="Type to filter" id="search" onkeydown="filter()" onkeyup="filter()"></div>
     <div id="results"></div>
     <div id="selected" class="hidden">test</div>
-    </main>
-    <textarea class="offscreen" id="copybuffer"></textarea>
+  </main>
+  <textarea class="offscreen" id="copybuffer"></textarea>
 
-    <script>
-fetch('/en/topics/_taxonomy.plain.html')
-  .then((response) => {
-    return response.text();
-  })
-  .then((data) => {
-    document.getElementById("tags-data").innerHTML=data;
-    generateTagIDs();
-    filter();
-  });
-    </script>
+  <script>
+    fetch('/en/topics/_taxonomy.plain.html')
+      .then((response) => {
+        return response.text();
+      })
+      .then((data) => {
+        document.getElementById('tags-data').innerHTML = data;
+        flagCategories();
+        generateTagIDs();
+        filter();
 
+        document.addEventListener('paste', handlePaste);
+ 
+      });
+  </script>
 </body>
 </html>
