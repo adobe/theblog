@@ -54,37 +54,39 @@
     }
 
     span.tag {
-      background-color: #888888;
       color: lightgrey;
       padding: 2px 20px;
       border-radius: 10px;
       font-size: 16px;
     }
 
-    .active .tag {
+    .tag {
       cursor: pointer;
       padding-top: 5px;
     }
 
-    .active .tag.categories {
+    .selected span.tag {
+      background-color: #888888;
+    }
+
+    .tag.categories {
       background-color: #0d66d0;
     }
 
-    .active .tag.products {
+    .tag.products {
       background-color: #d7373f;
     }
 
-    .active .tag.industries {
+    .tag.industries {
       background-color: #12805c;
     }
 
-    .active .tag.internals {
+    .tag.internals {
       background-color: #d2b200;
     }
 
 
-    #selected .active .tag {
-      background-color: #F25749;
+    #selected .tag {
       color: white;
       font-weight: 700;
     }
@@ -229,7 +231,7 @@
       });
 
       tags.forEach((tagInfo) => {
-        html += `<span data-target="${tagInfo.id}" onclick="remove(this)" class="path active">${tagInfo.path}<span class="tag">${tagInfo.tag}</span></span> `;
+        html += `<span data-target="${tagInfo.id}" onclick="remove(this)" class="path">${tagInfo.path}<span class="tag ${tagInfo.category.toLowerCase()}">${tagInfo.tag}</span></span> `;
         if ('Products' === tagInfo.category) products += tagInfo.tag + ', ';
         else topics += tagInfo.tag + ', ';
       });
@@ -250,11 +252,11 @@
 
       document.querySelectorAll('#results>span').forEach((e) => {
         if (selected.indexOf(e.getAttribute('data-target')) < 0) {
-          e.classList.add('active');
+          e.classList.remove('selected');
           e.setAttribute('onclick', 'add(this)');
         } else {
-          e.classList.remove('active');
-          e.setAttribute('onclick', '');
+          e.classList.add('selected');
+          e.setAttribute('onclick', 'remove(this)');
         }
       });
     }
@@ -312,7 +314,7 @@
               term = tag.substr(offset, searchTerm.length);
               after = tag.substr(offset + searchTerm.length);
 
-              html += `<span data-target="${e.id}" onclick="add(this)" class="path active">${tagInfo.path}<span class="tag ${tagInfo.category.split(' ')[0].toLowerCase()}">${before}<span class="highlight">${term}</span>${after}</span></span> `;
+              html += `<span data-target="${e.id}" onclick="add(this)" class="path">${tagInfo.path}<span class="tag ${tagInfo.category.split(' ')[0].toLowerCase()}">${before}<span class="highlight">${term}</span>${after}</span></span> `;
             }
           }
         })
