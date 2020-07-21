@@ -264,13 +264,22 @@ function addArticlesToDeck(hits, omitEmpty, transformer, hasMore) {
     }
 }
 
-function translateTable(pages, index) {
+async function translateTable(pages, index) {
+  const taxonomy = await getTaxonomy();
   pages.forEach((e) => {
     let r=e;
     r.products=JSON.parse(r.products);
-    r.topics=JSON.parse(r.topics);
+    let topics=JSON.parse(r.topics);
     if (!r.products) r.products=[];
-    if (!r.topics) r.topics=[];
+    if (!topics) topics=[];
+    // also append parents
+    r.topics = topics;
+    topics.forEach((topic) => {
+      r.topics = r.topics.concat(taxonomy.getParents(topic));
+    });
+    // filter duplicates
+    r.topics = Array.from(new Set(r.topics));
+
     index.pathLookup[r.path]=r;
     index.articles.push (r);
   })
@@ -293,7 +302,7 @@ export async function fetchArticleIndex(offset) {
 
   if (response.ok) { 
     let json = await response.json();
-    translateTable(json,window.blog.articleIndex);
+    await translateTable(json,window.blog.articleIndex);
   }
   console.log(`fetched article index: at ${index.articles.length} entries, ${index.done?'':'not'} done.`)
 }
@@ -322,7 +331,8 @@ async function fetchHits(filters, limit, cursor) {
       let matched=true;
       if (filters.topics) {
         filters.topics = Array.isArray(filters.topics) ? filters.topics : [filters.topics];
-        if (filters.topics.find((t) => { return e.topics.indexOf(t) })) matched=false;
+        // find intersection between filter.topics and current e.topics
+        if (filters.topics.filter(t => e.topics.indexOf(t) !== -1).length === 0) matched=false;
       } 
       if (filters.author && (e.author!=filters.author)) matched=false;
 
