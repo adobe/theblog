@@ -61,13 +61,24 @@
     }
 
     .active .tag {
-        background-color: #0d66d0;
         cursor: pointer;
         padding-top: 5px;
     }
 
-    .active .tag.non-user{
+    .active .tag.categories {
+        background-color: #0d66d0;
+    }
+
+    .active .tag.products {
+        background-color: #d7373f;
+    }
+
+    .active .tag.industries {
         background-color: #12805c;
+    }
+
+    .active .tag.internals {
+        background-color: #d2b200;
     }
 
 
@@ -126,6 +137,13 @@
 
 </style>
 <script>
+    const CATEGORIES = [
+        'Categories',
+        'Products',
+        'Industries',
+        'Internals'
+    ];
+
   (function(d) {
     var config = {
             // Todo: pull in the kit Id from the ACF field in the admin
@@ -142,6 +160,13 @@
     function generateTagIDs() {
         document.querySelectorAll("#tags-data li").forEach((e, i) => {
             e.setAttribute("id","tag-"+i);
+        });
+    }
+
+    function flagCategories() {
+        document.querySelectorAll("#tags-data > div ").forEach((e, i) => {
+            if (i===0) return; // ignore first div
+            e.setAttribute('id', `cat-${CATEGORIES[i-1]}`);
         });
     }
 
@@ -176,10 +201,21 @@
         var products="";
         var topics="";
 
+        const tags = [];
         selected.forEach((e) => {
-            tagInfo=fetchTag(e);
-            html+=`<span data-target="${e}" onclick="remove(this)" class="path active">${tagInfo.path}<span class="tag">${tagInfo.tag}</span></span> `;
-            if (productsPath==tagInfo.path.split('/')[0].trim()) products+=tagInfo.tag+", ";
+            tags.push(fetchTag(e));
+        });
+        // sort array to keep CATEGORIES logical order
+        tags.sort((t1, t2) => {
+            const i1 = CATEGORIES.indexOf(t1.category);
+            const i2 = CATEGORIES.indexOf(t2.category);
+            if (i1 <= i2) return -1;
+            return 1;
+        });
+
+        tags.forEach((tagInfo) => {
+            html+=`<span data-target="${tagInfo.id}" onclick="remove(this)" class="path active">${tagInfo.path}<span class="tag">${tagInfo.tag}</span></span> `;
+            if ('Products' === tagInfo.category) products+=tagInfo.tag+", ";
             else topics+=tagInfo.tag+", ";
         });
 
@@ -222,42 +258,52 @@
     function fetchTag(id) {
         var tagInfo;
         var e=document.getElementById(id);
-        if (e.firstChild && e.firstChild.nodeValue) {
-                var tag=e.firstChild.nodeValue;
-                var path="";
-                var parent=e.parentNode.parentNode;
-                while (parent.nodeName=="LI") {
-                    var label=getLabel(parent);
-                    label=label.trim();
-                    path = label+(path?" / ":" ")+path;
-                    parent=parent.parentNode.parentNode;
-                }
-                var cat=getLabel(parent);
-        tagInfo={tag: tag, path: path, category: cat};
+        if (e.firstChild && e.firstChild.textContent) {
+            var tag=e.firstChild.textContent;
+            var path="";
+            var parent=e.parentNode.parentNode;
+            while (parent.nodeName=="LI") {
+                var label=getLabel(parent);
+                label=label.trim();
+                path = label+(path?" / ":" ")+path;
+                parent=parent.parentNode.parentNode;
+            }
+            var cat=getLabel(parent);
+            tagInfo = {
+                tag: tag,
+                path: path,
+                category: cat,
+                id
+            };
         }
-    return tagInfo;
+        console.log('tag info', tagInfo);
+        return tagInfo;
     }
 
     function filter() {
-        var html="";
-        var searchTerm=document.getElementById("search").value.toLowerCase();
-        // console.log(searchTerm);
-        document.querySelectorAll("#tags-data li").forEach((e) => {
-            var tagInfo=fetchTag(e.id);
-            if (tagInfo) {
-                var tag=tagInfo.tag;
-                var offset=tag.toLowerCase().indexOf(searchTerm);
+        var searchTerm = document.getElementById("search").value.toLowerCase();
 
-                if (offset>=0) {
+        let html='';
+        
+        CATEGORIES.forEach((cat) => {
+            html += `<h1>${cat}</h1>`;
+            document.querySelectorAll(`#tags-data #cat-${cat} li`).forEach((e) => {
+                var tagInfo=fetchTag(e.id);
+                if (tagInfo) {
+                    var tag=tagInfo.tag;
+                    var offset=tag.toLowerCase().indexOf(searchTerm);
 
-                    before=tag.substr(0, offset);
-                    term=tag.substr(offset, searchTerm.length);
-                    after=tag.substr(offset+searchTerm.length);
+                    if (offset>=0) {
 
-                    html+=`<span data-target="${e.id}" onclick="add(this)" class="path active">${tagInfo.path}<span class="tag ${tagInfo.category.split(" ")[0].toLowerCase()}">${before}<span class="highlight">${term}</span>${after}</span></span> `;
+                        before=tag.substr(0, offset);
+                        term=tag.substr(offset, searchTerm.length);
+                        after=tag.substr(offset+searchTerm.length);
+
+                        html+=`<span data-target="${e.id}" onclick="add(this)" class="path active">${tagInfo.path}<span class="tag ${tagInfo.category.split(" ")[0].toLowerCase()}">${before}<span class="highlight">${term}</span>${after}</span></span> `;
+                    }
                 }
-            }
-        })
+            })
+        });
         var results=document.getElementById("results");
         results.innerHTML=html;
     }
@@ -281,7 +327,8 @@ fetch('/en/topics/_taxonomy.plain.html')
     return response.text();
   })
   .then((data) => {
-    document.getElementById("tags-data").innerHTML=data;
+    document.getElementById("tags-data").innerHTML = data;
+    flagCategories();
     generateTagIDs();
     filter();
   });
