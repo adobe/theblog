@@ -292,7 +292,6 @@ export async function fetchArticleIndex(offset) {
   let response=await fetch(indexUrl);
 
   if (response.ok) { 
-    let json = await response.json();
     const json = await response.json();
     const data = Array.isArray(json) ? json : json.data;
     translateTable(data,window.blog.articleIndex);
