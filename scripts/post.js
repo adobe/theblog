@@ -168,20 +168,24 @@ function fetchAuthor() {
     xhr.open('GET', pageURL);
     xhr.onload = function() {
       if (xhr.status != 200 || xhr.status != 304) {
-        // try to get <main> elements and find author image
-        const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText);
-        if (!groups) return;
-        let main = groups.length > 2 ? groups[2] : null;
-        if (main) {
-          main = main.replace(fileName, '../authors/' + fileName);
+        try {
+          // try to get <main> elements and find author image
+          const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText);
+          if (!groups) return;
+          let main = groups.length > 2 ? groups[2] : null;
+          if (main) {
+            main = main.replace(fileName, '../authors/' + fileName);
 
-          const avatarURL = /<img src="(.*?)"/.exec(main)[1];
-          const authorDiv = document.createElement('div');
-          authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" data-src="${avatarURL}?width=128&crop=1:1&auto=webp">
-            <div><span class="post-author"><a href="${pageURL}">${window.blog.author}</a></span>
-            <span class="post-date">${window.blog.date}</span></div></div>`;
-          authorDiv.classList.add('author');
-          authorSection.appendChild(authorDiv);
+            const avatarURL = /<img src="(.*?)"/.exec(main)[1];
+            const authorDiv = document.createElement('div');
+            authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" data-src="${avatarURL}?width=128&crop=1:1&auto=webp">
+              <div><span class="post-author"><a href="${pageURL}">${window.blog.author}</a></span>
+              <span class="post-date">${window.blog.date}</span></div></div>`;
+            authorDiv.classList.add('author');
+            authorSection.appendChild(authorDiv);
+          }
+        } catch(e) {
+          console.error('Error while extracting author info', e);
         }
       } else {
         console.log('Author not found...', xhr.response);
