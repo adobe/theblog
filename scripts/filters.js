@@ -10,6 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  getTaxonomy
+} from '/scripts/taxonomy.js';
+
 /**
  * Get filter buttons.
  * Set up a click event to show/hide dropdown menu.
@@ -174,7 +178,7 @@ function initFilterActions(callback) {
   })
 }
 
-function drawFilterBar() {
+async function drawFilterBar() {
   const filterBar = document.querySelector('.filter-wrapper');
   if (!filterBar) {
     // topic has no filter bar
@@ -217,41 +221,31 @@ function drawFilterBar() {
     <span class="results"></span>
   </div>`;
 
-  fetch(`/${window.blog.language}/topics/_taxonomy.plain.html`)
-  .then(resp => resp.text()
-  .then((tax) => {
-      const $tax=document.createElement('div');
-      $tax.innerHTML=tax;
-      let $productsAndTech;
-      $tax.querySelectorAll('li').forEach((e) => {
-        let t;
-        if (e.firstChild) t=e.firstChild.textContent;
-        if (t && t.toLowerCase() == 'products') $productsAndTech=e;
-      });
-      let html='';
-      if ($productsAndTech) {
-        $productsAndTech.querySelectorAll(':scope>ul>li').forEach((l) => {
-          html+=`<legend>${l.firstChild.textContent}</legend>`;
-          
-          l.querySelectorAll(':scope>ul>li').forEach((p) => {
-          html+=`<div class="option">
-            <input type="checkbox" id="${p.firstChild.textContent}" name="${p.firstChild.textContent}">
-            <label for="${p.firstChild.textContent}">${p.firstChild.textContent}</label>
-          </div>`
-          })
-        })
-      document.querySelector('.filter-wrapper .options').innerHTML=html;
-      }
-    })  
-  );
+  filterBar.innerHTML = html;
 
-  filterBar.innerHTML=html;
-  filterBar.parentNode.remove();
+  const taxonomy = await getTaxonomy();
+  const $productsAndTech = taxonomy.getCategory(taxonomy.PRODUCTS);
+
+  let filterBarHTML = '';
+  if ($productsAndTech) {
+    $productsAndTech.querySelectorAll(':scope>ul>li').forEach((l) => {
+      filterBarHTML += `<legend>${l.firstChild.textContent}</legend>`;
+      
+      l.querySelectorAll(':scope>ul>li').forEach((p) => {
+        filterBarHTML+=`<div class="option">
+        <input type="checkbox" id="${p.firstChild.textContent}" name="${p.firstChild.textContent}">
+        <label for="${p.firstChild.textContent}">${p.firstChild.textContent}</label>
+      </div>`
+      })
+    })
+    document.querySelector('.filter-wrapper .options').innerHTML = filterBarHTML;
+  }
+
   return document.querySelector('main').appendChild(filterBar);
 }
 
-export function addFilters(callback) {
-  if (drawFilterBar()) {
+export async function addFilters(callback) {
+  if (await drawFilterBar()) {
     loadCSS('/style/filters.css');
     initFilterActions(callback);
   }
