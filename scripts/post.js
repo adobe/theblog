@@ -37,14 +37,17 @@ function formatLocalDate(date) {
 }
 
 /**
- * Extracts metadata from the page and adds it to the head.
+ * Extracts metadata from the page and adds it to the head. No fetch or async task running.
  */
-async function handleMetadata() {
+function handleImmediateMetadata() {
   // store author and date
-  const r = /^By (.*)\n*(.*)$/gmi.exec(getSection(2).innerText);
-  window.blog.author = r && r.length > 0 ? r[1] : '';
-  const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
-  window.blog.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
+  const authorSection = document.querySelector('.post-author');
+  if (authorSection) {
+    const r = /^By (.*)\n*(.*)$/gmi.exec(authorSection.innerText);
+    window.blog.author = r && r.length > 0 ? r[1] : '';
+    const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
+    window.blog.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
+  }
   // store topics
   const last = getSection();
   let topics, topicContainer;
@@ -62,28 +65,7 @@ async function handleMetadata() {
     topicContainer.remove();
   }
 
-  const taxonomy = await getTaxonomy();
-  window.blog.topics = []; // UFT + parents only
-  window.blog.tags = []; // UFT and NUFT + parents
-  topics.forEach((topic) => {
-    if (taxonomy.isUFT(topic)) {
-      window.blog.topics.push(topic);
-    }
-    window.blog.tags.push(topic);
-  });
-
-  // handle parents afterward so that all leafs stay first
-  topics.forEach((topic) => {
-    const parents = taxonomy.getParents(topic);
-    if (taxonomy.isUFT(topic)) {
-      window.blog.topics = window.blog.topics.concat(parents);
-    }
-    window.blog.tags = window.blog.tags.concat(parents);
-  });
-
-  // remove duplicates
-  window.blog.topics = Array.from(new Set(window.blog.topics));
-  window.blog.tags = Array.from(new Set(window.blog.tags));
+  window.blog.topics = topics;
 
   // store products
   let products, productContainer;
@@ -128,6 +110,34 @@ async function handleMetadata() {
   document.head.append(frag);
 }
 
+async function handleAsyncMetadata() {
+  const topics = window.blog.topics;
+
+  const taxonomy = await getTaxonomy();
+  window.blog.topics = []; // UFT + parents only
+  window.blog.tags = []; // UFT and NUFT + parents
+
+  topics.forEach((topic) => {
+    if (taxonomy.isUFT(topic)) {
+      window.blog.topics.push(topic);
+    }
+    window.blog.tags.push(topic);
+  });
+
+  // handle parents afterward so that all leafs stay first
+  topics.forEach((topic) => {
+    const parents = taxonomy.getParents(topic);
+    if (taxonomy.isUFT(topic)) {
+      window.blog.topics = window.blog.topics.concat(parents);
+    }
+    window.blog.tags = window.blog.tags.concat(parents);
+  });
+
+  // remove duplicates
+  window.blog.topics = Array.from(new Set(window.blog.topics));
+  window.blog.tags = Array.from(new Set(window.blog.tags));
+}
+
 /**
  * Decorates the post page with CSS classes
  */
@@ -135,8 +145,17 @@ function decoratePostPage(){
   addClass('.post-page main>div:first-of-type', 'post-title');
   addClass('.post-page main>div:nth-of-type(2)', 'hero-image');
   addClass('.post-page main>div:nth-of-type(3)', 'post-author');
+   // hide author name
+  addClass('.post-author', 'hide');
   addClass('.post-page main>div:nth-of-type(4)', 'post-body');
   addClass('.post-page main>div.post-body>p>img', 'images', 1);
+
+  // hide product / topics section
+  const last = getSection();
+  if (!last.classList.contains('post-body')) {
+    last.classList.add('hide');
+  }
+  
   wrap('post-header',['main>div.category','main>div.post-title', 'main>div.post-author']);
   wrap('embed-promotions',['main>div.post-body>div.default:not(.banner)']);
   wrap('embed-promotions-text',['.embed-promotions>div>*:not(:first-child)']);
@@ -186,6 +205,7 @@ function fetchAuthor() {
               <span class="post-date">${window.blog.date}</span></div></div>`;
             authorDiv.classList.add('author');
             authorSection.appendChild(authorDiv);
+            authorSection.classList.remove('hide');
           }
         } catch(e) {
           console.error('Error while extracting author info', e);
@@ -208,7 +228,7 @@ function addCategory() {
   const href = getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
   categoryWrap.className = 'default category';
   categoryWrap.innerHTML = `<a href="${href}" title="${topic}">${topic}</a>`;
-  document.querySelector('main').appendChild(categoryWrap);
+  document.querySelector('main .post-header').prepend(categoryWrap);
 }
 
 /**
@@ -337,10 +357,11 @@ function shapeBanners() {
 }
 
 window.addEventListener('load', async function() {
-  await handleMetadata();
-  addCategory();
   decoratePostPage();
+  handleImmediateMetadata();
+  addCategory();
   fetchAuthor();
+  await handleAsyncMetadata();
   addTopics();
   // addProducts();
   loadGetSocial();
