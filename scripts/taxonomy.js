@@ -11,55 +11,73 @@
  */
 
 export async function getTaxonomy() {
-    if (window.blog.taxonomy) {
-      return window.blog.taxonomy;
-    }
-  
-    return fetch('/en/topics/_taxonomy.plain.html')
-      .then((response) => {
-        return response.text();
-      })
-      .then((data) => {
-        const dataContainer = document.createElement('div');
-        dataContainer.innerHTML = data;
-  
-        dataContainer.querySelectorAll('li').forEach((e, i) => {
-          if (e.firstChild) {
-            e.setAttribute('data-topic',e.firstChild.textContent);
-          }
-        });
-  
-        const CATEGORIES = 'categories';
-        const PRODUCTS = 'products';
-        const INDUSTRIES = 'industries';
-        const INTERNALS = 'internals';
-  
+  if (window.blog.taxonomy) {
+    return window.blog.taxonomy;
+  }
+
+  return fetch('/en/topics/_taxonomy.plain.html')
+    .then((response) => {
+      return response.text();
+    })
+    .then((data) => {
+      const dataContainer = document.createElement('div');
+      dataContainer.innerHTML = data;
+
+      dataContainer.querySelectorAll('li').forEach((e, i) => {
+        if (e.firstChild) {
+          e.setAttribute('data-topic', e.firstChild.textContent);
+        }
+      });
+
+      const CATEGORIES = 'categories';
+      const PRODUCTS = 'products';
+      const INDUSTRIES = 'industries';
+      const INTERNALS = 'internals';
+
+      if (dataContainer.firstElementChild && dataContainer.firstElementChild.nextElementSibling) {
         let div = dataContainer.firstElementChild.nextElementSibling;
         // second div contains Categories
         div.setAttribute('data-type', CATEGORIES);
         div = div.nextElementSibling;
-        div.setAttribute('data-type', PRODUCTS);
-        div = div.nextElementSibling;
-        div.setAttribute('data-type', INDUSTRIES);
-        div = div.nextElementSibling;
-        div.setAttribute('data-type', INTERNALS);
-  
-  
-        window.blog.taxonomy = {
-          node: dataContainer,
-          CATEGORIES,
-          PRODUCTS,
-          INDUSTRIES,
-          INTERNALS,
-  
-          isUFT: function(topic) {
-            let n = this.node.querySelector(`[data-type="${CATEGORIES}"] [data-topic="${topic}"]`);
+        if (div) {
+          div.setAttribute('data-type', PRODUCTS);
+          div = div.nextElementSibling;
+          if (div) {
+            div.setAttribute('data-type', INDUSTRIES);
+            div = div.nextElementSibling;
+            if (div) {
+              div.setAttribute('data-type', INTERNALS);
+            }
+          }
+        }
+      }
+
+      const escapeTopic = (topic) => {
+        return topic.replace(/\n/gm, ' ');
+      }
+
+
+      window.blog.taxonomy = {
+        node: dataContainer,
+        CATEGORIES,
+        PRODUCTS,
+        INDUSTRIES,
+        INTERNALS,
+
+        isUFT: function (topic) {
+          try {
+            let n = this.node.querySelector(`[data-type="${CATEGORIES}"] [data-topic="${escapeTopic(topic)}"]`);
             return !!n;
-          },
-  
-          getParents: function(topic) {
+          } catch (error) {
+            console.error(`isUFT error with topic "${topic}"`, error);
+            return false;
+          }
+        },
+
+        getParents: function (topic) {
+          try {
             const parents = [];
-            let n = this.node.querySelector(`[data-topic="${topic}"]`);
+            let n = this.node.querySelector(`[data-topic="${escapeTopic(topic)}"]`);
             while (n) {
               const parentTopic = n.getAttribute('data-topic');
               if (parentTopic) {
@@ -68,23 +86,32 @@ export async function getTaxonomy() {
               n = n.parentElement;
             }
             return parents;
-          },
-  
-          getChildren: function(topic) {
+          } catch (error) {
+            console.error(`getParents error with topic "${topic}"`, error);
+            return [];
+          }
+        },
+
+        getChildren: function (topic) {
+          try {
             const children = [];
-            this.node.querySelectorAll(`[data-topic="${topic}"] li`).forEach((n) => {
+            this.node.querySelectorAll(`[data-topic="${escapeTopic(topic)}"] li`).forEach((n) => {
               const t = n.getAttribute('data-topic');
               if (children.indexOf(t) === -1) {
                 children.push(t);
               }
             });
             return children;
-          },
-
-          getCategory: function(cat) {
-              return this.node.querySelector(`[data-type="${cat}"]`);
+          } catch (error) {
+            console.error(`getChildren error with topic "${topic}"`, error);
+            return [];
           }
-        };
-        return window.blog.taxonomy;
-      });
-  }
+        },
+
+        getCategory: function (cat) {
+          return this.node.querySelector(`[data-type="${cat}"]`);
+        }
+      };
+      return window.blog.taxonomy;
+    });
+}
