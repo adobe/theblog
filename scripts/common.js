@@ -250,8 +250,11 @@ function addArticlesToDeck(hits, omitEmpty, transformer, hasMore) {
       if (hasMore) {
         if (!$more) {
           // add button to load more
-          const $more = createTag('a', { 'class': 'action primary load-more' });
+          const $more = createTag('a', { 'class': 'action primary load-more', role: 'button', tabindex: '0'});
           $more.addEventListener('click', fetchArticles);
+          $more.addEventListener('keydown', (evt) => {
+            if (evt.keyCode == 13 || evt.keyCode == 32) $more.click();
+          });
           $deck.parentNode.appendChild($more);
           const title = window.getComputedStyle($more, ':before').getPropertyValue('content');
           if (title !== 'normal') {
