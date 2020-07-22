@@ -31,8 +31,8 @@ function decorateTopicPage() {
   }
 }
 
-window.addEventListener('load', function() {
+window.addEventListener('load', async function() {
   decorateTopicPage();
-  addFilters(applyFilters);
+  await addFilters(applyFilters);
   fetchArticles();
 });

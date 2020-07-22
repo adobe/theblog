@@ -16,8 +16,11 @@ import {
   getLink,
   wrap,
   createTag,
-  getTaxonomy
 } from '/scripts/common.js';
+
+import {
+  getTaxonomy
+} from '/scripts/taxonomy.js';
 
 /**
  * Reformats a date string from "01-15-2020" to "January 15, 2020"

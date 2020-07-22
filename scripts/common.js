@@ -10,6 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  getTaxonomy
+} from '/scripts/taxonomy.js';
+
  /*
  * lazysizes - v5.2.0
  * The MIT License (MIT)
@@ -420,70 +424,6 @@ export function applyFilters(products) {
   
   fetchArticles();
 
-}
-
-export async function getTaxonomy() {
-  if (window.blog.taxonomy) {
-    return window.blog.taxonomy;
-  }
-
-  return fetch('/en/topics/_taxonomy.plain.html')
-    .then((response) => {
-      return response.text();
-    })
-    .then((data) => {
-      const div = document.createElement('div');
-      div.innerHTML = data;
-
-      div.querySelectorAll('li').forEach((e, i) => {
-        if (e.firstChild) {
-          e.setAttribute('data-topic',e.firstChild.textContent);
-        }
-      });
-
-      // second div contains the User Facing Tags
-      div.firstElementChild.nextElementSibling.setAttribute('data-isuft', 'true');
-
-      window.blog.taxonomy = {
-        node: div,
-        isUFT: function(topic) {
-          let n = this.node.querySelector(`[data-topic="${topic}"]`);
-          while (n) {
-            if (n.getAttribute('data-isuft') === 'true') {
-              return true;
-            }
-            n = n.parentElement;
-          }
-          
-          return false;
-        },
-
-        getParents: function(topic) {
-          const parents = [];
-          let n = this.node.querySelector(`[data-topic="${topic}"]`);
-          while (n) {
-            const parentTopic = n.getAttribute('data-topic');
-            if (parentTopic) {
-              parents.push(parentTopic);
-            }
-            n = n.parentElement;
-          }
-          return parents;
-        },
-
-        getChildren: function(topic) {
-          const children = [];
-          this.node.querySelectorAll(`[data-topic="${topic}"] li`).forEach((n) => {
-            const t = n.getAttribute('data-topic');
-            if (children.indexOf(t) === -1) {
-              children.push(t);
-            }
-          });
-          return children;
-        }
-      };
-      return window.blog.taxonomy;
-    });
 }
 
 window.addEventListener('load', function() {
