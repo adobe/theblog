@@ -35,7 +35,8 @@ async function setupHomepage() {
 
   // add featured placeholder
   const featuredPlaceholder = createTag('div', { 'class': 'featured-placeholder' });
-  document.querySelector('main').appendChild(featuredPlaceholder);
+  const $main=document.querySelector('main');
+  $main.insertBefore(featuredPlaceholder, $main.childNodes[0]);
 
   // news box
   let newsPaths=[];
@@ -89,7 +90,8 @@ async function setupHomepage() {
           $firstCard.classList.add('featured');
           const hero = $firstCard.querySelector('.hero img');
           hero.setAttribute('data-src', hero.getAttribute('data-src').replace('?height=512&crop=3:2', '?height=640'));
-          wrapNodes(document.querySelector('main'), [$firstCard]);
+          const $main=document.querySelector('main');
+          $main.insertBefore($firstCard,featuredPlaceholder);
           featuredPlaceholder.remove();
         }
       }
