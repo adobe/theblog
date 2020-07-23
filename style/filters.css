@@ -81,12 +81,11 @@
   border-color: #eaeaea;
 }
 
-.dropdown .btn:hover {
+.dropdown .btn:hover, .downdown .btn:focus {
   outline: #505050 auto 1px;
 }
 
-.dropdown .btn:active,
-.dropdown .btn:focus {
+.dropdown .btn:active {
   outline: none;
 }
 
