@@ -227,7 +227,7 @@ export function addCard(hit, $container) {
   return $item;
 }
 
-function addArticlesToDeck(hits, omitEmpty, transformer, hasMore) {
+function addArticlesToDeck(hits, omitEmpty, transformer, hasMore, setFocus) {
     // console.log('adding articles to page', window.blog.page);
     let $deck = document.querySelector('.articles .deck');
     if (!$deck) {
@@ -248,14 +248,20 @@ function addArticlesToDeck(hits, omitEmpty, transformer, hasMore) {
       // add hits to card container
       hits
         .map(transformer)
-        .forEach((hit) => addCard(hit, $deck));
+        .forEach((hit, i) => {
+          const $card=addCard(hit, $deck);
+          if (!i && setFocus) $card.querySelector('a').focus();
+        });
 
       let $more = $deck.parentNode.querySelector('.load-more');
       if (hasMore) {
         if (!$more) {
           // add button to load more
-          const $more = createTag('a', { 'class': 'action primary load-more' });
+          const $more = createTag('a', { 'class': 'action primary load-more', role: 'button', tabindex: '0'});
           $more.addEventListener('click', fetchArticles);
+          $more.addEventListener('keydown', (evt) => {
+            if (evt.keyCode == 13 || evt.keyCode == 32) $more.click();
+          });
           $deck.parentNode.appendChild($more);
           const title = window.getComputedStyle($more, ':before').getPropertyValue('content');
           if (title !== 'normal') {
@@ -305,8 +311,9 @@ export async function fetchArticleIndex(offset) {
   let response=await fetch(indexUrl);
 
   if (response.ok) { 
-    let json = await response.json();
-    await translateTable(json,window.blog.articleIndex);
+    const json = await response.json();
+    const data = Array.isArray(json) ? json : json.data;
+    await translateTable(data,window.blog.articleIndex);
   }
   console.log(`fetched article index: at ${index.articles.length} entries, ${index.done?'':'not'} done.`)
 }
@@ -405,9 +412,10 @@ export async function fetchArticles({
   window.blog.page = window.blog.page === undefined ? 0 : window.blog.page + 1;
   const result=await fetchHits(filters, pageSize, window.blog.cursor?window.blog.cursor:0);
   const hits=result.hits;
+  const setFocus=window.blog.page?true:false;
   window.blog.cursor=result.cursor;
 
-  addArticlesToDeck(hits, omitEmpty, transformer, result.cursor);
+  addArticlesToDeck(hits, omitEmpty, transformer, result.cursor, setFocus);
   if (typeof callback === 'function') callback(hits);
 }
 
