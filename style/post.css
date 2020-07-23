@@ -491,10 +491,6 @@
     box-sizing: border-box;
   }
 
-  .post-page main div.hero-image img {
-    height: 360px;
-  }
-
   .post-page main div.hero-image p:nth-of-type(2) {
     padding-right: 0;
   }
