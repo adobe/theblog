@@ -34,7 +34,7 @@ indices:
         value: |
           attribute(el, 'src')
       teaser:
-        select: main > div:nth-child(n+4) p
+        select: main > div:nth-child(n+4):not(:last-child) p
         value: |
           words(textContent(el), 0, 20)
       sourceHash:

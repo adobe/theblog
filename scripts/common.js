@@ -10,6 +10,10 @@
  * governing permissions and limitations under the License.
  */
 
+import {
+  getTaxonomy
+} from '/scripts/taxonomy.js';
+
  /*
  * lazysizes - v5.2.0
  * The MIT License (MIT)
@@ -270,13 +274,22 @@ function addArticlesToDeck(hits, omitEmpty, transformer, hasMore, setFocus) {
     }
 }
 
-function translateTable(pages, index) {
+async function translateTable(pages, index) {
+  const taxonomy = await getTaxonomy();
   pages.forEach((e) => {
     let r=e;
     r.products=JSON.parse(r.products);
-    r.topics=JSON.parse(r.topics);
+    let topics=JSON.parse(r.topics);
     if (!r.products) r.products=[];
-    if (!r.topics) r.topics=[];
+    if (!topics) topics=[];
+    // also append parents
+    r.topics = topics;
+    topics.forEach((topic) => {
+      r.topics = r.topics.concat(taxonomy.getParents(topic));
+    });
+    // filter duplicates
+    r.topics = Array.from(new Set(r.topics));
+
     index.pathLookup[r.path]=r;
     index.articles.push (r);
   })
@@ -327,7 +340,11 @@ async function fetchHits(filters, limit, cursor) {
     for (;i<articles.length;i++) {
       const e=articles[i];
       let matched=true;
-      if (filters.topics && !e.topics.includes(filters.topics)) matched=false;
+      if (filters.topics) {
+        filters.topics = Array.isArray(filters.topics) ? filters.topics : [filters.topics];
+        // find intersection between filter.topics and current e.topics
+        if (filters.topics.filter(t => e.topics.indexOf(t) !== -1).length === 0) matched=false;
+      } 
       if (filters.author && (e.author!=filters.author)) matched=false;
 
       if (filters.products) {
@@ -380,7 +397,10 @@ export async function fetchArticles({
     filters.paths = getPostPaths('h2#featured-posts', 1, true);
     filters.pathsOnly = true;
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
-    filters.topics = document.title;
+    const taxonomy = await getTaxonomy();
+    const currentTopic = document.title;
+    const topics = [currentTopic].concat(taxonomy.getChildren(currentTopic));
+    filters.topics = topics;
     if (window.blog.productFilters) {
       filters.products=window.blog.productFilters;
     }

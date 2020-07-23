@@ -18,6 +18,10 @@ import {
   createTag,
 } from '/scripts/common.js';
 
+import {
+  getTaxonomy
+} from '/scripts/taxonomy.js';
+
 /**
  * Reformats a date string from "01-15-2020" to "January 15, 2020"
  * @param {string} date The date string to format
@@ -33,14 +37,17 @@ function formatLocalDate(date) {
 }
 
 /**
- * Extracts metadata from the page and adds it to the head.
+ * Extracts metadata from the page and adds it to the head. No fetch or async task running.
  */
-function handleMetadata() {
+function handleImmediateMetadata() {
   // store author and date
-  const r = /^By (.*)\n*(.*)$/gmi.exec(getSection(2).innerText);
-  window.blog.author = r && r.length > 0 ? r[1] : '';
-  const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
-  window.blog.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
+  const authorSection = document.querySelector('.post-author');
+  if (authorSection) {
+    const r = /^By (.*)\n*(.*)$/gmi.exec(authorSection.innerText);
+    window.blog.author = r && r.length > 0 ? r[1] : '';
+    const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
+    window.blog.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
+  }
   // store topics
   const last = getSection();
   let topics, topicContainer;
@@ -51,12 +58,15 @@ function handleMetadata() {
       topicContainer = i;
     }
   });
-  window.blog.topics = topics
+  topics = topics
     ? topics.filter((topic) => topic.length > 0)
     : [];
   if (topicContainer) {
     topicContainer.remove();
   }
+
+  window.blog.topics = topics;
+
   // store products
   let products, productContainer;
   Array.from(last.children).forEach((i) => {
@@ -100,6 +110,34 @@ function handleMetadata() {
   document.head.append(frag);
 }
 
+async function handleAsyncMetadata() {
+  const topics = window.blog.topics;
+
+  const taxonomy = await getTaxonomy();
+  window.blog.topics = []; // UFT + parents only
+  window.blog.tags = []; // UFT and NUFT + parents
+
+  topics.forEach((topic) => {
+    if (taxonomy.isUFT(topic)) {
+      window.blog.topics.push(topic);
+    }
+    window.blog.tags.push(topic);
+  });
+
+  // handle parents afterward so that all leafs stay first
+  topics.forEach((topic) => {
+    const parents = taxonomy.getParents(topic);
+    if (taxonomy.isUFT(topic)) {
+      window.blog.topics = window.blog.topics.concat(parents);
+    }
+    window.blog.tags = window.blog.tags.concat(parents);
+  });
+
+  // remove duplicates
+  window.blog.topics = Array.from(new Set(window.blog.topics));
+  window.blog.tags = Array.from(new Set(window.blog.tags));
+}
+
 /**
  * Decorates the post page with CSS classes
  */
@@ -107,8 +145,17 @@ function decoratePostPage(){
   addClass('.post-page main>div:first-of-type', 'post-title');
   addClass('.post-page main>div:nth-of-type(2)', 'hero-image');
   addClass('.post-page main>div:nth-of-type(3)', 'post-author');
+   // hide author name
+  addClass('.post-author', 'hide');
   addClass('.post-page main>div:nth-of-type(4)', 'post-body');
   addClass('.post-page main>div.post-body>p>img', 'images', 1);
+
+  // hide product / topics section
+  const last = getSection();
+  if (!last.classList.contains('post-body')) {
+    last.classList.add('hide');
+  }
+  
   wrap('post-header',['main>div.category','main>div.post-title', 'main>div.post-author']);
   wrap('embed-promotions',['main>div.post-body>div.default:not(.banner)']);
   wrap('embed-promotions-text',['.embed-promotions>div>*:not(:first-child)']);
@@ -143,20 +190,25 @@ function fetchAuthor() {
     xhr.open('GET', pageURL);
     xhr.onload = function() {
       if (xhr.status != 200 || xhr.status != 304) {
-        // try to get <main> elements and find author image
-        const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText);
-        if (!groups) return;
-        let main = groups.length > 2 ? groups[2] : null;
-        if (main) {
-          main = main.replace(fileName, '../authors/' + fileName);
+        try {
+          // try to get <main> elements and find author image
+          const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText);
+          if (!groups) return;
+          let main = groups.length > 2 ? groups[2] : null;
+          if (main) {
+            main = main.replace(fileName, '../authors/' + fileName);
 
-          const avatarURL = /<img src="(.*?)">/.exec(main)[1];
-          const authorDiv = document.createElement('div');
-          authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" data-src="${avatarURL}?width=128&crop=1:1&auto=webp">
-            <div><span class="post-author"><a href="${pageURL}">${window.blog.author}</a></span>
-            <span class="post-date">${window.blog.date}</span></div></div>`;
-          authorDiv.classList.add('author');
-          authorSection.appendChild(authorDiv);
+            const avatarURL = /<img src="(.*?)"/.exec(main)[1];
+            const authorDiv = document.createElement('div');
+            authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" data-src="${avatarURL}?width=128&crop=1:1&auto=webp">
+              <div><span class="post-author"><a href="${pageURL}">${window.blog.author}</a></span>
+              <span class="post-date">${window.blog.date}</span></div></div>`;
+            authorDiv.classList.add('author');
+            authorSection.appendChild(authorDiv);
+            authorSection.classList.remove('hide');
+          }
+        } catch(e) {
+          console.error('Error while extracting author info', e);
         }
       } else {
         console.log('Author not found...', xhr.response);
@@ -176,7 +228,7 @@ function addCategory() {
   const href = getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
   categoryWrap.className = 'default category';
   categoryWrap.innerHTML = `<a href="${href}" title="${topic}">${topic}</a>`;
-  document.querySelector('main').appendChild(categoryWrap);
+  document.querySelector('main .post-header').prepend(categoryWrap);
 }
 
 /**
@@ -304,11 +356,12 @@ function shapeBanners() {
   });
 }
 
-window.addEventListener('load', function() {
-  handleMetadata();
-  addCategory();
+window.addEventListener('load', async function() {
   decoratePostPage();
+  handleImmediateMetadata();
+  addCategory();
   fetchAuthor();
+  await handleAsyncMetadata();
   addTopics();
   // addProducts();
   loadGetSocial();
