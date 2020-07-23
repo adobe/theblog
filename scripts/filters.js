@@ -185,7 +185,7 @@ function drawFilterBar() {
     <div class="filter-bar">
       <div class="filter">
         <div class="dropdown">
-          <button class="btn filter-btn" type="button">
+          <button role="button" tabindex="0" class="btn filter-btn" type="button">
             Products &amp; Technology
             <span class="arrow">
               <span></span>
