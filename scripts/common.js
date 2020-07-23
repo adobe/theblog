@@ -313,7 +313,7 @@ export async function fetchArticleIndex(offset) {
   if (response.ok) { 
     const json = await response.json();
     const data = Array.isArray(json) ? json : json.data;
-    translateTable(data,window.blog.articleIndex);
+    await translateTable(data,window.blog.articleIndex);
   }
   console.log(`fetched article index: at ${index.articles.length} entries, ${index.done?'':'not'} done.`)
 }
