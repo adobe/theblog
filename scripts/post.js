@@ -183,7 +183,7 @@ function decorateImages() {
     })
     if (hasText) $e.parentNode.classList.add('left');
     const $next=$e.parentNode.nextElementSibling;
-    if ($next.tagName=='P' && $next.innerHTML.length<200) {
+    if ($next && $next.tagName=='P' && $next.innerHTML.length<200) {
       $next.classList.add('legend');
     }
   })
