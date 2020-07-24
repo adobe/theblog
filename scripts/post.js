@@ -141,7 +141,7 @@ async function handleAsyncMetadata() {
 function addTargetToExternalLinks() {
   document.querySelectorAll('main a[href]').forEach(($a) => {
     const href=$a.getAttribute('href');
-    if ((href.indexOf('//')>=0) && (href.indexOf('adobe.com/')==-1)) {
+    if (href.indexOf('//')>=0) {
       $a.setAttribute('target','_blank');
     }
   })
