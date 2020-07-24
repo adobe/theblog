@@ -491,6 +491,10 @@
     box-sizing: border-box;
   }
 
+  .post-page main .post-body p:first-child {
+    margin-top: 24px;
+  }
+
   .post-page main div.hero-image p:nth-of-type(2) {
     padding-right: 0;
   }

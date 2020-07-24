@@ -138,6 +138,15 @@ async function handleAsyncMetadata() {
   window.blog.tags = Array.from(new Set(window.blog.tags));
 }
 
+function addTargetToExternalLinks() {
+  document.querySelectorAll('main a[href]').forEach(($a) => {
+    const href=$a.getAttribute('href');
+    if ((href.indexOf('//')>=0) && (href.indexOf('adobe.com/')==-1)) {
+      $a.setAttribute('target','_blank');
+    }
+  })
+}
+
 /**
  * Decorates the post page with CSS classes
  */
@@ -160,6 +169,7 @@ function decoratePostPage(){
   wrap('embed-promotions',['main>div.post-body>div.default:not(.banner)']);
   wrap('embed-promotions-text',['.embed-promotions>div>*:not(:first-child)']);
   addImageClasses();
+  addTargetToExternalLinks()
 }
 
 /**
