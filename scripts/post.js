@@ -168,20 +168,24 @@ function decoratePostPage(){
   wrap('post-header',['main>div.category','main>div.post-title', 'main>div.post-author']);
   wrap('embed-promotions',['main>div.post-body>div.default:not(.banner)']);
   wrap('embed-promotions-text',['.embed-promotions>div>*:not(:first-child)']);
-  addImageClasses();
+  decorateImages();
   addTargetToExternalLinks()
 }
 
 /**
  * Adds CSS classes to images appearing within text
  */
-function addImageClasses() {
+function decorateImages() {
   document.querySelectorAll('.post-page .post-body img').forEach(($e) => {
     let hasText = false;
     $e.parentNode.childNodes.forEach(($c) => {
       if ($c.nodeName == '#text') hasText=true;
     })
     if (hasText) $e.parentNode.classList.add('left');
+    const $next=$e.parentNode.nextElementSibling;
+    if ($next.tagName=='P' && $next.innerHTML.length<200) {
+      $next.classList.add('legend');
+    }
   })
 }
 
