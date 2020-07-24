@@ -86,6 +86,11 @@
   margin-top: 64px;
 }
 
+.post-page main>div.post-body p.legend {
+  font-size: 16px;
+}
+
+
 .post-page main>div.post-body {
   grid-area: post-body;
   padding-top: 0;
@@ -491,8 +496,8 @@
     box-sizing: border-box;
   }
 
-  .post-page main div.hero-image img {
-    height: 360px;
+  .post-page main .post-body p:first-child {
+    margin-top: 24px;
   }
 
   .post-page main div.hero-image p:nth-of-type(2) {
