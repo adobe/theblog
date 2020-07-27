@@ -14,7 +14,7 @@ A good start point is to check the issue tagged with ["good first issue"](https:
 
 ## How to communicate with The Blog
 
-1. Join us in the [`#helix-chat`](https://adobe.slack.com/archives/CT7LDKK0F/) Slack channel (Enterprise Grid)
+1. Join us in the [`#helix-theblog`](https://adobe.slack.com/archives/CT7LDKK0F/) Slack channel (Enterprise Grid)
 
 
 
