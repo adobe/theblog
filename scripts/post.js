@@ -156,7 +156,7 @@ function addPredictedPublishURL() {
     const url=`https://blog.adobe.com/${segs[1]}/${datesplits[2]}/${datesplits[0]}/${datesplits[1]}/${segs[segs.length-1].split('.')[0]}`;
     $predURL.innerHTML=`Predicted Publish URL: ${url}`;
     console.log (url);
-    document.querySelector('main').appendChild($predURL);
+    document.querySelector('.post-body').appendChild($predURL);
   }
 }
 
