@@ -169,7 +169,35 @@ function decoratePostPage(){
   wrap('embed-promotions',['main>div.post-body>div.default:not(.banner)']);
   wrap('embed-promotions-text',['.embed-promotions>div>*:not(:first-child)']);
   decorateImages();
+  decoratePullQuotes();
   addTargetToExternalLinks()
+}
+
+
+/**
+ * Adds pull quotes appearing in post body
+ */
+function decoratePullQuotes() {
+  document.querySelectorAll('.post-page .post-body p').forEach(($e) => {
+    console.log ($e.innerHTML.substr(0,1));
+    if ($e.innerHTML.substr(0,1) == '“') {
+      const $prev1=$e.previousElementSibling;
+      console.log ($prev1.className);
+      if ($prev1 && $prev1.classList.contains('legend')) {
+        const $prev2=$prev1.previousElementSibling;
+        console.log ($prev2.className);
+        if ($prev2 && $prev2.classList.contains('images')) {
+          const $pullquote=createTag('div', {class: 'pullquote'});
+          $pullquote.appendChild($prev2);
+          const $h2=createTag('h2');
+          $h2.innerHTML=$e.innerHTML
+          $pullquote.appendChild($h2);
+          $pullquote.appendChild($prev1);
+          $e.parentNode.replaceChild($pullquote, $e);
+        }
+      }
+    } 
+  })
 }
 
 /**
