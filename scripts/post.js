@@ -47,6 +47,7 @@ function handleImmediateMetadata() {
     window.blog.author = r && r.length > 0 ? r[1] : '';
     const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
     window.blog.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
+    if (window.blog.date) window.blog.rawDate = d[0];
   }
   // store topics
   const last = getSection();
@@ -147,6 +148,18 @@ function addTargetToExternalLinks() {
   })
 }
 
+function addPredictedPublishURL() {
+  const segs=window.location.pathname.split('/');
+  const datesplits=window.blog.rawDate.split('-');
+  if (segs[2]=='drafts' && datesplits.length>2) {
+    const $predURL=createTag('div', {class:'predicted-url'});
+    const url=`https://blog.adobe.com/${segs[1]}/${datesplits[2]}/${datesplits[0]}/${datesplits[1]}/${segs[segs.length-1].split('.')[0]}`;
+    $predURL.innerHTML=`Predicted Publish URL: ${url}`;
+    console.log (url);
+    document.querySelector('main').appendChild($predURL);
+  }
+}
+
 /**
  * Decorates the post page with CSS classes
  */
@@ -170,7 +183,7 @@ function decoratePostPage(){
   wrap('embed-promotions-text',['.embed-promotions>div>*:not(:first-child)']);
   decorateImages();
   decoratePullQuotes();
-  addTargetToExternalLinks()
+  addTargetToExternalLinks();
 }
 
 
@@ -179,13 +192,10 @@ function decoratePostPage(){
  */
 function decoratePullQuotes() {
   document.querySelectorAll('.post-page .post-body p').forEach(($e) => {
-    console.log ($e.innerHTML.substr(0,1));
     if ($e.innerHTML.substr(0,1) == '“') {
       const $prev1=$e.previousElementSibling;
-      console.log ($prev1.className);
       if ($prev1 && $prev1.classList.contains('legend')) {
         const $prev2=$prev1.previousElementSibling;
-        console.log ($prev2.className);
         if ($prev2 && $prev2.classList.contains('images')) {
           const $pullquote=createTag('div', {class: 'pullquote'});
           $pullquote.appendChild($prev2);
@@ -401,6 +411,7 @@ function shapeBanners() {
 window.addEventListener('load', async function() {
   decoratePostPage();
   handleImmediateMetadata();
+  addPredictedPublishURL();
   addCategory();
   fetchAuthor();
   await handleAsyncMetadata();
