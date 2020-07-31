@@ -32,6 +32,20 @@ function loadCSS(href) {
   document.head.appendChild(link);
 };
 
+
+function checkDX(tags) {
+  const dxtags=`Experience Cloud, Experience Manager, Magento Commerce, Marketo Engage, Target, Commerce Cloud, Campaign, Audience Manager, Analytics, Advertising Cloud,
+      Travel & Hospitality, Media & Entertainment, Financial Services, Government, Non-profits, Other, Healthcare, High Tech, Retail, Telecom, Manufacturing, Education, 
+      B2B, Social, Personalization, Campaign Management, Content Management, Email Marketing, Commerce, Analytics, Advertising, Digital Transformation`;
+  const dx=dxtags.split(',').map(e => e.trim());
+  let found=false;
+  tags.split(',').forEach((p) => {
+    p=p.trim();
+    if (dx.includes(p)) found=true; 
+  });
+  return found;
+}
+
 /**
  * sets marketing tech context
  */
@@ -44,8 +58,10 @@ function setMarTechContext() {
 
   var isDX=false;
   document.querySelectorAll('main>div:last-of-type>p').forEach(($p) => {
-    if ($p.innerHTML.includes('Topics:') && $p.innerHTML.includes('DX Analytics')) {
-      isDX=true;
+    if ($p.innerHTML.includes('Products:') || $p.innerHTML.includes('Topics:')) {
+      if (checkDX($p.innerHTML.split(':')[1])) {
+        isDX=true;
+      }
     }
   });
 
