@@ -47,7 +47,11 @@ function handleImmediateMetadata() {
     window.blog.author = r && r.length > 0 ? r[1] : '';
     const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
     window.blog.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
-    if (window.blog.date) window.blog.rawDate = d[0];
+    window.blog.rawDate = window.blog.date ? d[0] : new Date().toLocaleDateString('en-US', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).replace(/\//g, '-');
   }
   // store topics
   const last = getSection();
