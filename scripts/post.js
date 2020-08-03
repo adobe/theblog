@@ -47,11 +47,7 @@ function handleImmediateMetadata() {
     window.blog.author = r && r.length > 0 ? r[1] : '';
     const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
     window.blog.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
-    window.blog.rawDate = window.blog.date ? d[0] : new Date().toLocaleDateString('en-US', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).replace(/\//g, '-');
+    if (window.blog.date) window.blog.rawDate = d[0];
   }
   // store topics
   const last = getSection();
@@ -154,10 +150,16 @@ function addTargetToExternalLinks() {
 
 function addPredictedPublishURL() {
   const segs=window.location.pathname.split('/');
-  const datesplits=window.blog.rawDate.split('-');
-  if (segs[2]=='drafts' && datesplits.length>2) {
+  if (segs[2]=='drafts') {
+    const datePath = '';
+    if (window.blog.rawDate) {
+      const datesplits = window.blog.rawDate.split('-');
+      if (datesplits.length > 2) {
+        datePath = `/${datesplits[2]}/${datesplits[0]}/${datesplits[1]}`;
+      }
+    }
     const $predURL=createTag('div', {class:'predicted-url'});
-    const url=`https://blog.adobe.com/${segs[1]}/${datesplits[2]}/${datesplits[0]}/${datesplits[1]}/${segs[segs.length-1].split('.')[0]}`;
+    const url=`https://blog.adobe.com/${segs[1]}${datePath}/${segs[segs.length-1].split('.')[0]}`;
     $predURL.innerHTML=`Predicted Publish URL: ${url}`;
     console.log (url);
     document.querySelector('.post-body').appendChild($predURL);
