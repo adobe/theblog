@@ -55,19 +55,15 @@ function handleDropdownButtons() {
 }
 
 /**
-* Close dropddown
-*/
-function closeDropdown(dropdownContainer, body) {
-  dropdownContainer.classList.remove('is-open');
-  body.classList.remove('page-overlay');
-}
-
-/**
 * Toggle dropddown
 */
 function toggleDropdown(dropdownContainer, body) {
   dropdownContainer.classList.toggle('is-open');
   body.classList.toggle('page-overlay');
+  // place tab focus on dropdown button after closing dropdown
+  if (!dropdownContainer.classList.contains('is-open')) {
+    dropdownContainer.querySelector('.filter-btn').focus();
+  }
 }
 
 /**
@@ -89,6 +85,24 @@ function clearCurrentFilters(currentFilterOptions) {
   currentFilterOptions.forEach((option) => {
       option.checked = false;
   });
+}
+
+/**
+ * Apply current selected filters.
+ */
+function applyCurrentFilters(callback) {
+  const filters = [];
+  document.querySelectorAll('.filter-wrapper input[type="checkbox"]').forEach((filter) => {
+    if (filter.checked) filters.push(filter.name);
+  });
+  const clearAllBtn = document.querySelector('.filter-bar > a.action.clear-all')
+  if (filters.length > 0) {
+    clearAllBtn.classList.remove('hide');
+  } else {
+    clearAllBtn.classList.add('hide');
+  }
+  callback(filters);
+  toggleDropdown(document.querySelector('.dropdown'), document.body);
 }
 
 function filterFilters(event) {
@@ -129,16 +143,16 @@ function filterFilters(event) {
 }
 
 function initFilterActions(callback) {
+  const dropdownContainer = document.querySelector('.dropdown');
   if (typeof callback !== 'function') callback = function() {}; 
   handleDropdownButtons();
   // Clear all button
-  const clearAllBtn = document.querySelector('.filter-bar > a.action.clear-all');
-  clearAllBtn.addEventListener('click', (event) => {
+  document.querySelector('.filter-bar > a.action.clear-all').addEventListener('click', (event) => {
     event.stopPropagation();
     const allFilterOptions = document.querySelectorAll('.dropdown-menu');
     clearAllFilters(allFilterOptions);
-    closeDropdown(document.querySelector('.dropdown'), document.body);
-    clearAllBtn.classList.add('hide');
+    toggleDropdown(dropdownContainer, document.body);
+    event.target.classList.add('hide');
     callback([]);
   });
 
@@ -152,17 +166,7 @@ function initFilterActions(callback) {
   // Apply button
   document.querySelector('.filter-bar .action.apply').addEventListener('click', (event) => {
     event.stopPropagation();
-    const filters = [];
-    document.querySelectorAll('.filter-wrapper input[type="checkbox"]').forEach((filter) => {
-      if (filter.checked) filters.push(filter.name);
-    });
-    toggleDropdown(document.querySelector('.dropdown'), document.body);
-    if (filters.length > 0) {
-      clearAllBtn.classList.remove('hide');
-    } else {
-      clearAllBtn.classList.add('hide');
-    }
-    callback(filters);
+    applyCurrentFilters(callback);
   });
 
   // Search field
@@ -170,12 +174,23 @@ function initFilterActions(callback) {
   searchField.addEventListener('search', filterFilters);
   searchField.addEventListener('keyup', filterFilters);
 
-  // ESC key
+  // Keyboard access
   document.body.addEventListener('keyup', (event) => {
     if (event.key === 'Escape') {
-      closeDropdown(document.querySelector('.dropdown'), document.body);
+      if (dropdownContainer.classList.contains('is-open')) {
+        toggleDropdown(dropdownContainer, document.body);
+      }
     }
-  })
+  });
+  document.querySelector('.dropdown-menu').addEventListener('keyup', (event) => {
+    if (event.key === 'Enter') {
+      if (dropdownContainer.classList.contains('is-open')) {
+        event.stopPropagation();
+        applyCurrentFilters(callback);
+      }
+    }
+  });
+
 }
 
 async function drawFilterBar() {
@@ -189,7 +204,7 @@ async function drawFilterBar() {
     <div class="filter-bar">
       <div class="filter">
         <div class="dropdown">
-          <button role="button" tabindex="0" class="btn filter-btn" type="button">
+          <button role="button" tabindex="0" aria-haspopup="true" class="btn filter-btn" type="button">
             Products &amp; Technology
             <span class="arrow">
               <span></span>

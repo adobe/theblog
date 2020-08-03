@@ -16,6 +16,10 @@
   visibility: visible;
 }
 
+.topic-page main .default:not(.articles) {
+  padding: 0;
+}
+
 .topic-page  .articles {
   background-color: white;
 }
