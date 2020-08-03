@@ -151,7 +151,6 @@ function initFilterActions(callback) {
     event.stopPropagation();
     const allFilterOptions = document.querySelectorAll('.dropdown-menu');
     clearAllFilters(allFilterOptions);
-    toggleDropdown(dropdownContainer, document.body);
     event.target.classList.add('hide');
     callback([]);
   });
