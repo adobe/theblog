@@ -151,7 +151,7 @@ function addTargetToExternalLinks() {
 function addPredictedPublishURL() {
   const segs=window.location.pathname.split('/');
   if (segs[2]=='drafts') {
-    const datePath = '';
+    let datePath = '';
     if (window.blog.rawDate) {
       const datesplits = window.blog.rawDate.split('-');
       if (datesplits.length > 2) {
