@@ -88,7 +88,7 @@ function setMarTechContext() {
       audienceManager: true    // if audience manager needs to be enabled else false
     }
   };
-  console.log(window.marketingtech)
+  // console.log(window.marketingtech)
 }
 
 /**
@@ -100,7 +100,7 @@ function setDigitalData() {
   var lang=window.blog.language;
   if (langMap[lang]) lang=langMap[lang];
   digitalData._set('page.pageInfo.language', lang);
-  console.log(lang);
+  // console.log(lang);
 }
 
 
