@@ -227,12 +227,17 @@ function decorateImages() {
     })
     if (hasText) $e.parentNode.classList.add('left');
     const $next=$e.parentNode.nextElementSibling;
-    if ($next && $next.tagName=='P' && $next.innerHTML.length<200) {
+    if ($next && $next.tagName=='P') {
       let punctCount=0;
+      let italicMarker=false;
       punctCount+=($next.innerText.split('.').length-1);
       punctCount+=($next.innerText.split('?').length-1);
       punctCount+=($next.innerText.split('!').length-1);
-      if (punctCount<=1) {
+      if ($next.firstElementChild && $next.firstElementChild.tagName=='EM') {
+        italicMarker=true;
+      }
+
+      if ((punctCount<=1 && $next.innerHTML.length<200) || italicMarker) {
         $next.classList.add('legend');
       }
     }
