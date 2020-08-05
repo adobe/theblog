@@ -1,8 +1,37 @@
+<!DOCTYPE html>
 <html>
-	<head>
-		<title>Adobe Blog: Page not found</title>
-	</head>
-	<body>
-		The page you are looking for does not exist.
-	</body>
+<head>
+  <title>Adobe Blog: Page not found</title>
+  <esi:include src="/head.html" onerror="continue"/>
+</head>
+<body>
+  <!--  header -->
+  <header><esi:include src="/header.plain.html" onerror="continue"/></header>
+  <!--  main content -->
+  <main>
+	<figure class="hero2 hero2-theme-2 hero2-avoid-2   hero2-size-1 hero2-size-flex  ">
+		<figcaption>
+			<div class="hero2-title">
+				<h2 class="title"><strong>These are uncharted waters.</strong></h2>
+			</div>
+			<p class="detail">Sorry, that page can't be found.</p>
+			<nav class="list">
+				<a class="cta" href="/index.html" target="_self">Go to homepage</a>
+				<a class="cta" href="/search.html" target="_self">Search Adobe.com</a>
+			</nav>
+
+			<cite class="hero2-align-1 hero2-basis-0">
+				<i class="fa fa-behance"></i>
+				<a href="https://www.behance.net/rsvn" target="_blank">The Story Begins Here by Risfan Fardiansyah</a>	
+			</cite>
+		
+		</figcaption>
+		<picture data-seed-background="" data-background-position="58% 35%" id="picture0">
+			<img src="https://adobe.com/content/dam/acom/en/error-pages/images/404-1440x612_edge2.jpg" alt="Sailing on water edge">
+		</picture>
+	</figure>	
+  </main>
+  <!--  footer -->
+  <footer><esi:include src="/footer.plain.html"  onerror="continue"/></footer>
+</body>
 </html>
