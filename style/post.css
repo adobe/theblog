@@ -82,7 +82,7 @@
 }
 
 
-.post-page main>div.post-body .images img {
+.post-page main>div.post-body .images img, .embed {
   margin-top: 64px;
 }
 
