@@ -197,6 +197,9 @@ window.blog = function() {
       }
     }
   }
+  if (window.isErrorPage) {
+    pageType = TYPE.POST; 
+  }
   return { context, language, pageType, TYPE, LANG };
 }();
 
