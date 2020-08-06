@@ -329,6 +329,14 @@
    visibility: hidden;
  }
  
+ .card .hero a:focus img {
+   outline: #505050 auto 1px;
+ }
+
+ .card .hero a {
+   font-size: 0;
+ }
+ 
  .card a {
    text-decoration: none;
    color: currentColor;
