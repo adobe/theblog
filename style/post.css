@@ -81,8 +81,10 @@
 }
 
 .post-page main>div.post-body p.legend {
-  font-size: 16px;
-  font-style: italic; 
+  margin-top: 1em;
+  font-style: italic;
+  font-size: 14px;
+  color: #4b4b4b
 }
 
 

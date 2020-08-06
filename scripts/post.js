@@ -183,7 +183,12 @@ function decoratePostPage(){
   if (!last.classList.contains('post-body')) {
     last.classList.add('hide');
   }
-  
+  const $main=document.querySelector('main');
+  const $postAuthor=document.querySelector('.post-author');
+  const $heroImage=document.querySelector('.hero-image');
+
+  $main.insertBefore($postAuthor,$heroImage);
+
   wrap('post-header',['main>div.category','main>div.post-title']);
   wrap('embed-promotions',['main>div.post-body>div.default:not(.banner)']);
   wrap('embed-promotions-text',['.embed-promotions>div>*:not(:first-child)']);
