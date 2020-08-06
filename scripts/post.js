@@ -184,7 +184,7 @@ function decoratePostPage(){
     last.classList.add('hide');
   }
   
-  wrap('post-header',['main>div.category','main>div.post-title', 'main>div.post-author']);
+  wrap('post-header',['main>div.category','main>div.post-title']);
   wrap('embed-promotions',['main>div.post-body>div.default:not(.banner)']);
   wrap('embed-promotions-text',['.embed-promotions>div>*:not(:first-child)']);
   decorateImages();

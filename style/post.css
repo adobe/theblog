@@ -17,12 +17,6 @@
 
 .post-page main {
   visibility: visible;
-  display: grid;
-  grid-template-areas: "hero-image"
-                       "post-header"
-                       "post-body"
-                       "topics"
-                       "articles";
 }
 
 .post-page .post-title {
@@ -37,7 +31,6 @@
 }
 
 .post-page .hero-image {
-  grid-area: hero-image;
   width: 100%;
   padding: 0;
   margin: 0;
@@ -45,8 +38,6 @@
 
 .post-page main .hero-image img {
   width: 100%;
-  object-fit: cover;
-  height: 220px;
 }
 
 
@@ -69,18 +60,21 @@
 }
 
 .post-page main div.post-header {
-  grid-area: post-header;
   align-self: center;
   margin-top: 32px;
 }
 
-.post-page main div.post-header > .post-author {
+.post-page main div.post-author {
   margin-top: 20px;
   height: 118px;
   padding-top: 0;
   padding-bottom: 0;
 }
 
+.post-page main div.post-author .author {
+  max-width: 600px; 
+  margin: 20px auto 0 auto;
+}
 
 .post-page main>div.post-body .images img, .embed {
   margin-top: 64px;
@@ -88,27 +82,21 @@
 
 .post-page main>div.post-body p.legend {
   font-size: 16px;
+  font-style: italic; 
 }
 
 
 .post-page main>div.post-body {
-  grid-area: post-body;
   padding-top: 0;
   padding-bottom: 0;
   margin-top: 30px;
 }
 
-.post-page main>div.topics {
-  grid-area: topics;
-}
-
 .post-page main>div.articles {
-  grid-area: articles;
   padding-top: 80px;
 }
 
 .post-page main>div.products {
-  grid-area: products;
   border-style: solid;
   border-color: #dddddd;
   border-width: 2px 0 2px 0;
@@ -449,8 +437,12 @@
   font-size: 12px;
 }
 
+.post-page main .post-title h3 {
+  display: none;
+}
 
-@media (min-width:600px) {
+
+@media (min-width:700px) {
 
   .post-page main>div.post-header>div {
     margin-left: 0;
@@ -461,10 +453,16 @@
 
   .post-page main>div.post-header,
   .post-page main>div.topics {
-    margin-left: 128px;
-    margin-right: 128px;
+    margin-left: auto;
+    margin-right: auto;
     padding-left: 0;
     padding-right: 0;
+    max-width: 600px
+  }
+
+  .post-page .hero-image {
+    max-width: 1000px;
+    margin: auto;
   }
 
   .post-page main>div.topics {
@@ -472,20 +470,22 @@
   }
 
   .post-page main>div.post-body {
-    margin-left: 64px;
-    margin-right: 64px;
-    padding: 0;  
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+    max-width: 800px;
   }
 
   .post-page main>div.post-body>* {
-    margin-left: 64px;
-    margin-right: 64px;  
+    max-width: 600px;
+    margin: auto;
   }
 
   .post-page main>div.post-body>p.images {
     margin-left: 0px;
     margin-right: 0px;
     text-align: center;
+    max-width: 800px;
   }
 
   .post-page main>div.post-body>p.images.left {
@@ -517,63 +517,10 @@
 
 }
 
-
-@media (min-width:1100px) {
-
-  .post-page main  {
-    padding-top: 16px;
-    box-sizing: border-box;
-  }  
-
-  .post-page main .post-body {
-    box-sizing: border-box;
+@media (min-width:900px) {
+  .post-page main>div.post-header,
+  .post-page main>div.topics {
+    margin-left: auto;
+    margin-right: auto;
   }
-
-  .post-page main .post-body p:first-child {
-    margin-top: 24px;
-  }
-
-  .post-page main div.hero-image p:nth-of-type(2) {
-    padding-right: 0;
-  }
-
-  .post-page main>div.products {
-    width: 170px;
-    padding: 0;
-    border: 0;
-    margin: 0;
-  }
-
-  .post-page main>div.products .prod-design {
-    display: block;
-  }
-  
-  .post-page main>div.products .prod-design>div{
-    margin-top: 30px;
-  }
-
-  .post-page main {
-    grid-template-areas: " . hero-image hero-image post-header post-header . "
-                         " . .          post-body  post-body   . . "
-                         " . .          topics     topics      . . "
-                         "articles articles articles articles articles articles";
-    grid-template-columns: auto 170px minmax(auto, 430px) minmax(auto, 430px) 170px auto;
-  }
-
-  .post-page main>div.category, .post-page main>div.post-title, .post-page main>div.author {
-    margin-left: 32px;
-    margin-right: 32px;
-    padding-left: 0px;
-    padding-right: 64px;
-  }
-
-  .post-page main>div.post-body, .post-page main>div.post-header {
-    margin: 0;
-    padding: 0;
-  }
-
-  .post-page main>div.post-header {
-    padding-left: 32px;
-  }
-
 }
