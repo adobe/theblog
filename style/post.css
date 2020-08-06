@@ -480,7 +480,8 @@
 
   .post-page main>div.post-body>* {
     max-width: 600px;
-    margin: auto;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .post-page main>div.post-body>p.images {
