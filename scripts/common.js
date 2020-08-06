@@ -104,7 +104,15 @@ export function addClass(selector, cssClass, parent) {
       el.classList.add(cssClass);
     }  
   });
-} 
+}
+
+/**
+ * Sets the lang attribute on the <html> tag.
+ */
+function setDocumentLanguage() {
+  // set document language
+  document.documentElement.setAttribute('lang', window.blog.language);
+}
 
 /**
  * Removes header and footer if empty.
@@ -435,6 +443,7 @@ export function applyFilters(products) {
 }
 
 window.addEventListener('load', function() {
+  setDocumentLanguage();
   removeHeaderAndFooter();
   addPageTypeAsBodyClass();
 });
