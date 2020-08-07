@@ -59,7 +59,6 @@
 .home-page .featured.card h2 {
   font-size: 1.75rem;
   line-height: 2.2rem;
-  color: #4b4b4b;
   margin-bottom: 1rem;
 }
 
@@ -73,11 +72,11 @@
 
 .home-page .featured.card .teaser {
   margin-bottom: 1.5rem;
-  color: #707070;
+  color: #2c2c2c;
   font-weight: normal;
-  font-size: 1.25rem;
-  line-height: 1.5rem;
-  height: 3rem;
+  font-size: 1.125rem;
+  line-height: 1.5;
+  height: 3.375rem;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
