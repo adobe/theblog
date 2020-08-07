@@ -452,6 +452,8 @@
   margin-top: 64px;
   border-top: 1px solid #eaeaea;
   padding-top: 32px;
+  margin-left: 32px;
+  margin-right: 32px;
 }
 
 
@@ -460,6 +462,9 @@
 
   .post-page main>div.topics {
     margin-bottom: 80px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
   }
   
 
