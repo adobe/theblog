@@ -177,13 +177,14 @@
  a.action {
    width: fit-content;
    border-radius: 22px;
-   font-size:1rem;
+   font-size:0.875rem;
    font-weight: 700;
    text-align: center;
    text-decoration: none;
    white-space: nowrap;
-   padding: 4px 16px;
+   padding: 5px 16px;
    cursor: pointer;
+   outline: none;
  }
  
  a.action:disabled {
@@ -192,12 +193,13 @@
  }
  
  a.action.primary {
-   border: solid #505050 3px;
+   border: solid #505050 2px;
    color: #505050;
  }
  
- a.action.primary:hover {
-   color: white;
+ a.action.primary:hover,
+ a.action.primary:focus {
+    color: white;
    background-color: #505050;
  }
  
@@ -211,7 +213,8 @@
    border: solid currentColor 2px;
  }
  
- a.action.secondary:hover {
+ a.action.secondary:hover,
+ a.action.secondary:focus {
    color: white;
    background-color: #747474;
  }
@@ -230,12 +233,13 @@
  }
 
  a.action.call-to-action {
-   border: solid #1673e6 3px;
+   border: solid #1673e6 2px;
    color: white;
    background-color: #1673e6;
  }
  
- a.action.call-to-action:hover {
+ a.action.call-to-action:hover,
+ a.action.call-to-action:focus {
    color: white;
    background-color: #0e65d0;
  }
@@ -330,7 +334,8 @@
  }
  
  .card .hero a:focus img {
-   outline: #505050 auto 1px;
+   outline: #bcbcbc solid 2px;
+   z-index: 1;
  }
 
  .card .hero a {
@@ -342,7 +347,12 @@
    color: currentColor;
  }
  
- .card .content {
+ .card a:focus {
+  outline: none;
+  background-color: #eaeaea;
+}
+
+.card .content {
    position: relative;
    padding: 2rem;
    background-color: white;
@@ -367,6 +377,9 @@
  
  .card p.topic {
    margin-bottom: 0.5rem;
+   max-height: 1rem;
+   overflow: hidden;
+   text-overflow: ellipsis;
  }
  
  .card h2 {
@@ -377,9 +390,7 @@
    color: #2c2c2c;
    overflow: hidden;
    text-overflow: ellipsis;
-   display: -webkit-box;
-   -webkit-line-clamp: 3;
-   -webkit-box-orient: vertical;
+   max-height: 3.75rem;
  }
  
  .card p.teaser {
@@ -463,6 +474,10 @@
      font-size: 1.25rem;
      line-height: 1.5rem;
      margin-bottom: 0.5rem;
+     max-height: unset;
+     display: -webkit-box;
+     -webkit-line-clamp: 3;
+     -webkit-box-orient: vertical;
    }
  
    .card p.teaser {

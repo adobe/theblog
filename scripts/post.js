@@ -183,8 +183,13 @@ function decoratePostPage(){
   if (!last.classList.contains('post-body')) {
     last.classList.add('hide');
   }
-  
-  wrap('post-header',['main>div.category','main>div.post-title', 'main>div.post-author']);
+  const $main=document.querySelector('main');
+  const $postAuthor=document.querySelector('.post-author');
+  const $heroImage=document.querySelector('.hero-image');
+
+  $main.insertBefore($postAuthor,$heroImage);
+
+  wrap('post-header',['main>div.category','main>div.post-title']);
   wrap('embed-promotions',['main>div.post-body>div.default:not(.banner)']);
   wrap('embed-promotions-text',['.embed-promotions>div>*:not(:first-child)']);
   decorateImages();
@@ -281,7 +286,7 @@ function fetchAuthor() {
 
             const avatarURL = /<img src="(.*?)"/.exec(main)[1];
             const authorDiv = document.createElement('div');
-            authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" data-src="${avatarURL}?width=128&crop=1:1&auto=webp">
+            authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" alt="${window.blog.author}" title="${window.blog.author}" data-src="${avatarURL}?width=128&crop=1:1&auto=webp">
               <div><span class="post-author"><a href="${pageURL}">${window.blog.author}</a></span>
               <span class="post-date">${window.blog.date}</span></div></div>`;
             authorDiv.classList.add('author');
