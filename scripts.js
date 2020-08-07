@@ -157,6 +157,7 @@ window.blog = function() {
     AUTHOR: 'author',
     TOPIC: 'topic',
     PRODUCT: 'product',
+    BLANK: 'blank',
   };
   const LANG = {
     EN: 'en',
@@ -196,6 +197,9 @@ window.blog = function() {
         }
       }
     }
+  }
+  if (window.isErrorPage) {
+    pageType = TYPE.BLANK; 
   }
   return { context, language, pageType, TYPE, LANG };
 }();
