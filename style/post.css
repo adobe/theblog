@@ -38,6 +38,7 @@
 
 .post-page main .hero-image img {
   width: 100%;
+  object-fit: cover;
 }
 
 
@@ -51,12 +52,15 @@
 }
 
 .post-page main div.hero-image p:nth-of-type(2) {
-  text-align: right;
+  text-align: left;
   width: 100%;
+  max-width: 600px;
+  margin: auto;
   font-style: italic;
   font-size: 1rem;
   line-height: 1.5;
-  padding-right: 20px;
+  padding: 0 32px;
+  box-sizing: content-box;
 }
 
 .post-page main div.post-header {
@@ -462,9 +466,14 @@
     max-width: 600px
   }
 
+
   .post-page .hero-image {
     max-width: 1000px;
     margin: auto;
+  }
+  .post-page .hero-image img {
+    max-height: 438px;
+    object-fit: cover;
   }
 
   .post-page main>div.topics {
