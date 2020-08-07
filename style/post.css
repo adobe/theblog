@@ -448,8 +448,20 @@
   display: none;
 }
 
+.post-page main>div.topics {
+  margin-top: 64px;
+  border-top: 1px solid #eaeaea;
+  padding-top: 32px;
+}
+
+
 
 @media (min-width:700px) {
+
+  .post-page main>div.topics {
+    margin-bottom: 80px;
+  }
+  
 
   .post-page main>div.post-header>div {
     margin-left: 0;
@@ -475,13 +487,6 @@
   .post-page .hero-image img {
     max-height: 438px;
     object-fit: cover;
-  }
-
-  .post-page main>div.topics {
-    margin-top: 64px;
-    border-top: 1px solid #eaeaea;
-    padding-top: 32px;
-    margin-bottom: 80px;
   }
 
   .post-page main>div.post-body {
