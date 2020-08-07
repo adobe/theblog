@@ -184,6 +184,7 @@
    white-space: nowrap;
    padding: 5px 16px;
    cursor: pointer;
+   outline: none;
  }
  
  a.action:disabled {
@@ -196,8 +197,9 @@
    color: #505050;
  }
  
- a.action.primary:hover {
-   color: white;
+ a.action.primary:hover,
+ a.action.primary:focus {
+    color: white;
    background-color: #505050;
  }
  
@@ -211,7 +213,8 @@
    border: solid currentColor 2px;
  }
  
- a.action.secondary:hover {
+ a.action.secondary:hover,
+ a.action.secondary:focus {
    color: white;
    background-color: #747474;
  }
@@ -235,7 +238,8 @@
    background-color: #1673e6;
  }
  
- a.action.call-to-action:hover {
+ a.action.call-to-action:hover,
+ a.action.call-to-action:focus {
    color: white;
    background-color: #0e65d0;
  }
@@ -330,7 +334,12 @@
  }
  
  .card .hero a:focus img {
-   outline: #505050 auto 1px;
+   outline: #bcbcbc auto;
+ }
+ 
+ .card a:focus {
+   outline: none;
+   background-color: #eaeaea;
  }
 
  .card .hero a {
