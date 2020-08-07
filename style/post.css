@@ -172,7 +172,7 @@
 }
 
 .post-page .topics {
-  margin: 24px auto 56px auto;
+  margin: 0 auto 56px auto;
   padding: 0;
   text-align: center;
 }
@@ -434,7 +434,7 @@
 
 .post-page main .predicted-url {
   text-align: center;
-  background-color: #4682E1;
+  background-color: #707070;
   color: white;
   font-size: 12px;
 }
@@ -474,6 +474,7 @@
   .post-page main>div.post-body {
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 24px;
     padding: 0;
     max-width: 800px;
   }

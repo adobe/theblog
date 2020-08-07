@@ -162,7 +162,7 @@ function addPredictedPublishURL() {
     const url=`https://blog.adobe.com/${segs[1]}${datePath}/${segs[segs.length-1].split('.')[0]}`;
     $predURL.innerHTML=`Predicted Publish URL: ${url}`;
     console.log (url);
-    document.querySelector('.post-body').appendChild($predURL);
+    document.querySelector('main').insertBefore($predURL, getSection(0));
   }
 }
 
@@ -187,7 +187,7 @@ function decoratePostPage(){
   const $postAuthor=document.querySelector('.post-author');
   const $heroImage=document.querySelector('.hero-image');
 
-  $main.insertBefore($postAuthor,$heroImage);
+  if ($postAuthor && $heroImage) $main.insertBefore($postAuthor,$heroImage);
 
   wrap('post-header',['main>div.category','main>div.post-title']);
   wrap('embed-promotions',['main>div.post-body>div.default:not(.banner)']);
