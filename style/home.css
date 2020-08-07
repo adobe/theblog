@@ -111,12 +111,12 @@
   border-top-right-radius: 4px;
 }
 
-.home-page main .news-box .content h3 {
+.home-page main .news-box > .content h3 {
   font-size: 1.5rem;
   margin-top: 0;
 }
 
-.home-page main .news-box .content p {
+.home-page main .news-box > .content p {
   font-size: 1rem;
   line-height: 1.5;
   margin-top: 0;
