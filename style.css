@@ -334,12 +334,8 @@
  }
  
  .card .hero a:focus img {
-   outline: #bcbcbc auto;
- }
- 
- .card a:focus {
-   outline: none;
-   background-color: #eaeaea;
+   outline: #bcbcbc solid 2px;
+   z-index: 1;
  }
 
  .card .hero a {
@@ -351,7 +347,12 @@
    color: currentColor;
  }
  
- .card .content {
+ .card a:focus {
+  outline: none;
+  background-color: #eaeaea;
+}
+
+.card .content {
    position: relative;
    padding: 2rem;
    background-color: white;
