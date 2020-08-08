@@ -66,12 +66,12 @@
 
 .post-page main div.post-header {
   align-self: center;
-  margin-top: 32px;
+  margin-top: 49px;
 }
 
 .post-page main div.post-author {
   margin-top: 20px;
-  height: 118px;
+  height: 96px;
   padding-top: 0;
   padding-bottom: 0;
 }
@@ -96,7 +96,7 @@
 .post-page main>div.post-body {
   padding-top: 0;
   padding-bottom: 0;
-  margin-top: 30px;
+  margin-top: 57px;
 }
 
 .post-page main>div.articles {
@@ -405,16 +405,15 @@
 }
 
 .banner .banner-right a {
-  padding: 7px 15px;
+  padding: 3px 15px;
   border: solid 2px #fff;
   border-radius: 20px;
-  font-size: .8rem;
+  font-size: 15px;
   color: #fff;
-  text-transform: uppercase;
   text-decoration: none;
   cursor: pointer;
   line-height: 1.5;
-  font-weight: 500;
+  font-weight: 700;
 }
 
 .banner .banner-right p {
