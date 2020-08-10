@@ -351,7 +351,7 @@ async function fetchHits(filters, limit, cursor) {
       if (filters.topics) {
         filters.topics = Array.isArray(filters.topics) ? filters.topics : [filters.topics];
         // find intersection between filter.topics and current e.topics
-        if (filters.topics.filter(t => e.topics.indexOf(t) !== -1).length === 0) matched=false;
+        if (filters.topics.filter(t => e.topics.includes(t) || e.products.includes(t.replace('Adobe ', ''))).length === 0) matched=false;
       } 
       if (filters.author && (e.author!=filters.author)) matched=false;
 
