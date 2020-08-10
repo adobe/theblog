@@ -233,16 +233,18 @@ function decorateImages() {
     if (hasText) $e.parentNode.classList.add('left');
     const $next=$e.parentNode.nextElementSibling;
     if ($next && $next.tagName=='P') {
+      const inner=$next.innerHTML.trim();
       let punctCount=0;
       let italicMarker=false;
-      punctCount+=($next.innerText.split('.').length-1);
-      punctCount+=($next.innerText.split('?').length-1);
-      punctCount+=($next.innerText.split('!').length-1);
-      if ($next.firstElementChild && $next.firstElementChild.tagName=='EM') {
+
+      punctCount+=(inner.split('.').length-1);
+      punctCount+=(inner.split('?').length-1);
+      punctCount+=(inner.split('!').length-1);
+      if (inner.startsWith('<em>')) {
         italicMarker=true;
       }
 
-      if ((punctCount<=1 && $next.innerHTML.length<200) || italicMarker) {
+      if ((punctCount<=1 && inner.length<200 && inner.endsWith('.')) || italicMarker) {
         $next.classList.add('legend');
       }
     }
