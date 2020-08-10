@@ -203,7 +203,7 @@ function decoratePostPage(){
  */
 function decoratePullQuotes() {
   document.querySelectorAll('.post-page .post-body p').forEach(($e) => {
-    if ($e.innerHTML.substr(0,1) == '“') {
+    if ($e.innerHTML.substr(0,1) == '“' && $e.innerHTML.endsWith('”')) {
       const $prev1=$e.previousElementSibling;
       if ($prev1 && $prev1.classList.contains('legend')) {
         const $prev2=$prev1.previousElementSibling;
