@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Adobe Blog</title>
+  <link href="https://blog.adobe.com/"/>
+  <id>https://blog.adobe.com/</id>
+  <esi:include src="/cgi-bin/feed.xml?src=/en/query-index.json%3Flimit%3D10&amp;id=path&amp;title=title&amp;updated=date">
+</feed>

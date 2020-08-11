@@ -204,7 +204,7 @@ export function itemTransformer(item) {
       year: 'numeric',
       timeZone: 'UTC',
     }).replace(/\//g, '-'),
-    authorUrl: getLink(window.blog.TYPE.AUTHOR, item.author),
+    authorUrl: item.author ? getLink(window.blog.TYPE.AUTHOR, item.author) : '',
     topic: item.topics.length > 0 ? item.topics[0] : '',
     topicUrl: item.topics.length > 0 ? getLink(window.blog.TYPE.TOPIC, item.topics[0]) : '',
     path: !window.location.hostname.endsWith('.page') && !isLocalhost() ? item.path.replace('/publish/', '/') : item.path,
@@ -351,7 +351,7 @@ async function fetchHits(filters, limit, cursor) {
       if (filters.topics) {
         filters.topics = Array.isArray(filters.topics) ? filters.topics : [filters.topics];
         // find intersection between filter.topics and current e.topics
-        if (filters.topics.filter(t => e.topics.indexOf(t) !== -1).length === 0) matched=false;
+        if (filters.topics.filter(t => e.topics.includes(t) || e.products.includes(t.replace('Adobe ', ''))).length === 0) matched=false;
       } 
       if (filters.author && (e.author!=filters.author)) matched=false;
 

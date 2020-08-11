@@ -349,7 +349,7 @@
  
  .card a:focus {
   outline: none;
-  background-color: #eaeaea;
+  text-decoration: underline;
 }
 
 .card .content {

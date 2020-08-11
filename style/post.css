@@ -516,8 +516,9 @@
   }
 
   .post-page main>div.post-body>p.images.left {
-    margin-left: 64px;
-    margin-right: 64px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 600px;
   }
 
   .post-page main>div.post-body>p.images>img {
