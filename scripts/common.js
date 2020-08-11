@@ -204,7 +204,7 @@ export function itemTransformer(item) {
       year: 'numeric',
       timeZone: 'UTC',
     }).replace(/\//g, '-'),
-    authorUrl: getLink(window.blog.TYPE.AUTHOR, item.author),
+    authorUrl: item.author ? getLink(window.blog.TYPE.AUTHOR, item.author) : '',
     topic: item.topics.length > 0 ? item.topics[0] : '',
     topicUrl: item.topics.length > 0 ? getLink(window.blog.TYPE.TOPIC, item.topics[0]) : '',
     path: !window.location.hostname.endsWith('.page') && !isLocalhost() ? item.path.replace('/publish/', '/') : item.path,
