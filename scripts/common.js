@@ -323,11 +323,11 @@ export async function fetchArticleIndex(offset) {
     let data = Array.isArray(json) ? json : json.data;
 
     // filter out future date
-    const current = new Date();
-    const today = new Date(Date.UTC(current.getFullYear(), current.getMonth(), current.getDate()));
-    const endOfToday = today.setDate(today.getDate() + 1) - 1; // tomorrow midnight minus 1 millis
+    const today = new Date();
+    today.setHours(23);
+    const eod = today.setMinutes(59, 59, 999);
     data = data.filter((item) => {
-      return item.date && item.date * 1000 <= endOfToday;
+      return item.date && item.date * 1000 <= eod;
     });
     await translateTable(data,window.blog.articleIndex);
   }
