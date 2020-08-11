@@ -418,13 +418,16 @@ export async function fetchArticles({
     filters.paths = getPostPaths('h2#featured-posts', 1, true);
   }
   window.blog.page = window.blog.page === undefined ? 0 : window.blog.page + 1;
-  const result=await fetchHits(filters, pageSize, window.blog.cursor?window.blog.cursor:0);
-  const hits=result.hits;
-  const setFocus=window.blog.page?true:false;
-  window.blog.cursor=result.cursor;
-
-  addArticlesToDeck(hits, omitEmpty, transformer, result.cursor, setFocus);
-  if (typeof callback === 'function') callback(hits);
+  if (!(filters.pathsOnly && filters.paths.length==0)) {
+    const result=await fetchHits(filters, pageSize, window.blog.cursor?window.blog.cursor:0);
+    const hits=result.hits;
+    const setFocus=window.blog.page?true:false;
+    window.blog.cursor=result.cursor;
+  
+    addArticlesToDeck(hits, omitEmpty, transformer, result.cursor, setFocus);
+    if (typeof callback === 'function') callback(hits);
+  
+  }
 }
 
 /**
