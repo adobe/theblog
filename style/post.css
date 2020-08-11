@@ -60,8 +60,7 @@
   font-size: 1rem;
   line-height: 1.5;
   padding: 0 32px;
-  box-sizing: content-box;
-  color: #4b4b4b
+  color: #4b4b4b;
 }
 
 .post-page main div.post-header {
