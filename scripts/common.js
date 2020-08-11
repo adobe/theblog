@@ -149,7 +149,7 @@ export function getSection(index) {
  */
 export function getLink(type, name) {
   if (!type.endsWith('s')) type += 's';
-  return `${window.blog.context}${window.blog.language}/${type}/${name.replace(/\s/gm, '-').replace(/\&amp;/gm,'').replace(/\&/gm,'').toLowerCase()}.html`;
+  return `${window.blog.context}${window.blog.language}/${type}/${name.replace(/\s/gm, '-').replace(/\&amp;/gm,'').replace(/\&/gm,'').replace(/\./gm,'').toLowerCase()}.html`;
 }
 
 /**
