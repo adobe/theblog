@@ -66,6 +66,8 @@
   list-style: none;
   display: inline;
   margin-right: 16px;
+  position: relative;
+  top: 2px;
 }
 
 .author-page .summary .social svg {
