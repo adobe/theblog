@@ -54,9 +54,9 @@
 
   .featured.card {
     margin: 40px auto 0 auto;
-    padding-left: 32px;
-    padding-right: 32px;
-    max-width: 1200px;
+    padding-left: 0;
+    padding-right: 0;
+    max-width: 1136px;
   }
 
   main .news-box .content,
