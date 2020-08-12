@@ -236,6 +236,7 @@ function decorateImages() {
       const inner=$next.innerHTML.trim();
       let punctCount=0;
       let italicMarker=false;
+      let slashMarker=false;
 
       punctCount+=(inner.split('.').length-1);
       punctCount+=(inner.split('?').length-1);
@@ -243,9 +244,13 @@ function decorateImages() {
       if (inner.startsWith('<em>')) {
         italicMarker=true;
       }
+      if (inner.startsWith('/')) {
+        slashMarker=true;
+        $next.innerHTML=inner.substr(1);
+      }
 
       if ((punctCount<=1 && inner.length<200 && inner.endsWith('.')) || italicMarker) {
-        $next.classList.add('legend');
+        if (!slashMarker) $next.classList.add('legend');
       }
     }
   })

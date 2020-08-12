@@ -149,7 +149,7 @@ export function getSection(index) {
  */
 export function getLink(type, name) {
   if (!type.endsWith('s')) type += 's';
-  return `${window.blog.context}${window.blog.language}/${type}/${name.replace(/\s/gm, '-').replace(/\&amp;/gm,'').replace(/\&/gm,'').toLowerCase()}.html`;
+  return `${window.blog.context}${window.blog.language}/${type}/${name.replace(/\s/gm, '-').replace(/\&amp;/gm,'').replace(/\&/gm,'').replace(/\./gm,'').toLowerCase()}.html`;
 }
 
 /**
@@ -351,7 +351,14 @@ async function fetchHits(filters, limit, cursor) {
       if (filters.topics) {
         filters.topics = Array.isArray(filters.topics) ? filters.topics : [filters.topics];
         // find intersection between filter.topics and current e.topics
-        if (filters.topics.filter(t => e.topics.includes(t) || e.products.includes(t.replace('Adobe ', ''))).length === 0) matched=false;
+        if (filters.topics.filter((t) => {
+          // quick fix to get caseless comparison working with minimum impact
+          // should be rewritten more efficiently
+          const ltopics=e.topics.map(item => item.toLowerCase())
+          const lt=t.toLowerCase();
+          if(ltopics.includes(lt) || e.products.includes(t.replace('Adobe ', ''))) return true;
+          else return false;
+        } ).length === 0) matched=false;
       } 
       if (filters.author && (e.author!=filters.author)) matched=false;
 
@@ -418,13 +425,16 @@ export async function fetchArticles({
     filters.paths = getPostPaths('h2#featured-posts', 1, true);
   }
   window.blog.page = window.blog.page === undefined ? 0 : window.blog.page + 1;
-  const result=await fetchHits(filters, pageSize, window.blog.cursor?window.blog.cursor:0);
-  const hits=result.hits;
-  const setFocus=window.blog.page?true:false;
-  window.blog.cursor=result.cursor;
-
-  addArticlesToDeck(hits, omitEmpty, transformer, result.cursor, setFocus);
-  if (typeof callback === 'function') callback(hits);
+  if (!(filters.pathsOnly && filters.paths.length==0)) {
+    const result=await fetchHits(filters, pageSize, window.blog.cursor?window.blog.cursor:0);
+    const hits=result.hits;
+    const setFocus=window.blog.page?true:false;
+    window.blog.cursor=result.cursor;
+  
+    addArticlesToDeck(hits, omitEmpty, transformer, result.cursor, setFocus);
+    if (typeof callback === 'function') callback(hits);
+  
+  }
 }
 
 /**
