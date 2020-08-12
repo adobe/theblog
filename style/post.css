@@ -379,13 +379,20 @@
 
 .banner .banner-left, .banner .banner-right {
   flex: 0 0 50%;
-
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   justify-content: center;
   z-index: 1;
   padding: 10px 20px;
+}
+
+.banner .banner-left {
+  align-items: center;
+  text-align: center;
+}
+
+.banner .banner-right {
+  align-items: flex-start;
 }
 
 .banner .banner-left img {
@@ -399,7 +406,6 @@
   font-size: 2.3rem;
   font-weight: 200;
   line-height: 2.8rem;
-  text-align: center;
   margin: 0;
 }
 
@@ -507,6 +513,14 @@
     margin-right: auto;
   }
 
+  .post-page main>div.post-body>.embed {
+    max-width: 800px;
+  }
+
+  .post-page main>div.post-body>.embed.embed-promotions {
+    max-width: 600px;
+  }
+
   .post-page main>div.post-body>p.images {
     margin-left: 0px;
     margin-right: 0px;
@@ -531,7 +545,7 @@
     display: block;
   }
 
-  main>div.post-body>div.banner {
+  main>div.post-body div.banner {
     flex-direction: row;
     max-width: 800px;
     margin: 32px;
