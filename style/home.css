@@ -256,6 +256,7 @@
 
   .home-page .featured.card {
     margin: 40px auto 0 auto;
+    border-radius: 0;
     max-width: 1136px;
   }
 
