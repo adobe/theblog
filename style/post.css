@@ -389,6 +389,7 @@
 
 .banner .banner-left {
   align-items: center;
+  text-align: center;
 }
 
 .banner .banner-right {
@@ -511,6 +512,14 @@
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+  }
+
+  .post-page main>div.post-body>.embed {
+    max-width: 800px;
+  }
+
+  .post-page main>div.post-body>.embed.embed-promotions {
+    max-width: 600px;
   }
 
   .post-page main>div.post-body>p.images {
