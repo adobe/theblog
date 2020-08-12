@@ -298,7 +298,7 @@
  }
  
  .card:focus-within {
-   box-shadow: #1473e6 0 0 0 2px;
+   box-shadow: 0 0 5px 0 #707070
  }
  
  .card .hero {
@@ -337,11 +337,6 @@
    visibility: hidden;
  }
  
- .card .hero a:focus img {
-   outline: #bcbcbc solid 2px;
-   z-index: 1;
- }
-
  .card .hero a {
    font-size: 0;
  }
