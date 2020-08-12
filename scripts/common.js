@@ -414,7 +414,8 @@ export async function fetchArticles({
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
     const taxonomy = await getTaxonomy();
     const currentTopic = document.title;
-    const topics = [currentTopic].concat(taxonomy.getChildren(currentTopic));
+    let topics = [currentTopic].concat(taxonomy.getChildren(currentTopic));
+    if (currentTopic.includes('Adobe ')) topics = topics.concat(taxonomy.getChildren(currentTopic.replace('Adobe ', '')));
     filters.topics = topics;
     if (window.blog.productFilters) {
       filters.products=window.blog.productFilters;
