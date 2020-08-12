@@ -351,7 +351,14 @@ async function fetchHits(filters, limit, cursor) {
       if (filters.topics) {
         filters.topics = Array.isArray(filters.topics) ? filters.topics : [filters.topics];
         // find intersection between filter.topics and current e.topics
-        if (filters.topics.filter(t => e.topics.includes(t) || e.products.includes(t.replace('Adobe ', ''))).length === 0) matched=false;
+        if (filters.topics.filter((t) => {
+          // quick fix to get caseless comparison working with minimum impact
+          // should be rewritten more efficiently
+          const ltopics=e.topics.map(item => item.toLowerCase())
+          const lt=t.toLowerCase();
+          if(ltopics.includes(lt) || e.products.includes(t.replace('Adobe ', ''))) return true;
+          else return false;
+        } ).length === 0) matched=false;
       } 
       if (filters.author && (e.author!=filters.author)) matched=false;
 
