@@ -43,8 +43,8 @@ function handleImmediateMetadata() {
   // store author and date
   const authorSection = document.querySelector('.post-author');
   if (authorSection) {
-    const r = /^By (.*)\n*(.*)$/gmi.exec(authorSection.innerText);
-    window.blog.author = r && r.length > 0 ? r[1] : '';
+    const r = /^[bB]y(.*)\n*(.*)$/gmi.exec(authorSection.innerText);
+    window.blog.author = r && r.length > 0 ? r[1].trim() : '';
     const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
     window.blog.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
     if (window.blog.date) window.blog.rawDate = d[0];
@@ -272,11 +272,23 @@ function fixLinks() {
  * Fetches the author details from the author page and adds them to the post header
  */
 function fetchAuthor() {
-  if (!window.blog.author) return;
+  if (!window.blog.author && !window.blog.date) return;
   const authorSection = document.querySelector('.post-author');
   if (authorSection) {
     // clear the content of the div and replace by avatar and text
     authorSection.innerHTML = '';
+
+    if (!window.blog.author) {
+      const authorDiv = document.createElement('div');
+      authorDiv.innerHTML = `<div class="author-summary">
+        <div><span class="post-author"></span>
+        <span class="post-date">${window.blog.date}</span></div></div>`;
+      authorDiv.classList.add('author');
+      authorSection.appendChild(authorDiv);
+      authorSection.classList.remove('hide');
+      return;
+    }
+
     const xhr = new XMLHttpRequest();
     const fileName = window.blog.author.replace(/\s/gm, '-').toLowerCase();
     const pageURL = getLink(window.blog.TYPE.AUTHOR, window.blog.author);
@@ -295,7 +307,7 @@ function fetchAuthor() {
             const authorDiv = document.createElement('div');
             authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" alt="${window.blog.author}" title="${window.blog.author}" data-src="${avatarURL}?width=128&crop=1:1&auto=webp">
               <div><span class="post-author"><a href="${pageURL}">${window.blog.author}</a></span>
-              <span class="post-date">${window.blog.date}</span></div></div>`;
+              <span class="post-date">${window.blog.date || ''}</span></div></div>`;
             authorDiv.classList.add('author');
             authorSection.appendChild(authorDiv);
             authorSection.classList.remove('hide');
