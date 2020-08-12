@@ -190,7 +190,7 @@ function decoratePostPage(){
   if ($postAuthor && $heroImage) $main.insertBefore($postAuthor,$heroImage);
 
   wrap('post-header',['main>div.category','main>div.post-title']);
-  addClass('main .post-body .embed-internal', 'embed-promotions');
+  addClass('main .post-body .embed-internal-eml2020', 'embed-promotions');
   wrap('embed-promotions-text',['.embed-promotions>div>*:not(:first-child)']);
   decorateImages();
   decoratePullQuotes();
