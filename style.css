@@ -297,6 +297,10 @@
    animation: appear 800ms;
  }
  
+ .card:focus-within {
+   box-shadow: #1473e6 0 0 0 2px;
+ }
+ 
  .card .hero {
    width: 100%;
    padding-bottom: 66.67%; /* 3:2 aspect ratio */

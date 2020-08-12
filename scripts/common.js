@@ -223,12 +223,12 @@ export function addCard(hit, $container) {
   const $item = createTag('div', {'class': 'card'});
   $item.innerHTML = `
   <div class="hero">
-    <a href="/${hit.path}" title="${hit.title}"><img class="lazyload" src="#" data-src="${hit.hero}" alt="${hit.title}"></a>
+    <a href="/${hit.path}" title="${hit.title}" tabindex="-1"><img class="lazyload" src="#" data-src="${hit.hero}" alt="${hit.title}"></a>
   </div>
   <div class="content">
     <p class="topic"><a href="${hit.topicUrl}" title="${hit.topic}">${hit.topic}</a></p>
     <h2><a href="/${hit.path}" title="${hit.title}">${hit.title}</a></h2>
-    <p class="teaser"><a href="/${hit.path}" title="${hit.teaser}…">${hit.teaser}…</a></p>
+    <p class="teaser"><a href="/${hit.path}" title="${hit.teaser}" tabindex="-1">${hit.teaser}</a></p>
     <p class="date">${hit.date}</p>
   </div>`;
   $container.appendChild($item);
