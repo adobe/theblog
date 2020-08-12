@@ -380,13 +380,19 @@
 
 .banner .banner-left, .banner .banner-right {
   flex: 0 0 50%;
-
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   justify-content: center;
   z-index: 1;
   padding: 10px 20px;
+}
+
+.banner .banner-left {
+  align-items: center;
+}
+
+.banner .banner-right {
+  align-items: flex-start;
 }
 
 .banner .banner-left img {
@@ -400,7 +406,6 @@
   font-size: 2.3rem;
   font-weight: 200;
   line-height: 2.8rem;
-  text-align: center;
   margin: 0;
 }
 
@@ -532,7 +537,7 @@
     display: block;
   }
 
-  main>div.post-body>div.banner {
+  main>div.post-body div.banner {
     flex-direction: row;
     max-width: 800px;
     margin: 32px;
