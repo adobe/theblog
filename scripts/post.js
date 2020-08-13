@@ -22,6 +22,10 @@ import {
   getTaxonomy
 } from '/scripts/taxonomy.js';
 
+import { 
+  wrapNodes 
+} from '/scripts/common.js';
+
 /**
  * Reformats a date string from "01-15-2020" to "January 15, 2020"
  * @param {string} date The date string to format
@@ -190,8 +194,14 @@ function decoratePostPage(){
   if ($postAuthor && $heroImage) $main.insertBefore($postAuthor,$heroImage);
 
   wrap('post-header',['main>div.category','main>div.post-title']);
-  addClass('main .post-body .embed-internal-eml2020', 'embed-promotions');
-  wrap('embed-promotions-text',['.embed-promotions>div>*:not(:first-child)']);
+
+  document.querySelectorAll('.embed-internal-undefined>div:not(.banner), .embed-internal-promotions>div:not(.banner)').forEach(($e) => {
+    const children = Array.from($e.childNodes);
+    children.shift();
+    const parent = createTag('div', { 'class' : 'embed-promotions-text' });
+    wrapNodes(parent, children);
+  });
+  
   decorateImages();
   decoratePullQuotes();
   addTargetToExternalLinks();
