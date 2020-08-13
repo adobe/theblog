@@ -143,6 +143,7 @@ function addTargetToExternalLinks() {
   document.querySelectorAll('main a[href]').forEach(($a) => {
     const href=$a.getAttribute('href');
     if (href.indexOf('//')>=0) {
+      $a.setAttribute('rel','noopener');
       $a.setAttribute('target','_blank');
     }
   })
