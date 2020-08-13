@@ -521,7 +521,8 @@
     max-width: 800px;
   }
 
-  .post-page main>div.post-body>.embed.embed-promotions {
+  .post-page main>div.post-body>.embed.embed-internal-promotions,
+  .post-page main>div.post-body>.embed.embed-internal-undefined {
     max-width: 600px;
   }
 
