@@ -256,9 +256,8 @@
 
   .home-page .featured.card {
     margin: 40px auto 0 auto;
-    padding-left: 32px;
-    padding-right: 32px;
-    max-width: 1200px;
+    border-radius: 0;
+    max-width: 1136px;
   }
 
   .home-page .featured.card .hero {
