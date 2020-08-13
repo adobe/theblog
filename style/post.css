@@ -526,6 +526,11 @@
     max-width: 600px;
   }
 
+  .post-page main>div.post-body>.embed.embed-internal-promotions.embed-banner,
+  .post-page main>div.post-body>.embed.embed-internal-undefined.embed-banner {
+    max-width: 800px;
+  }
+
   .post-page main>div.post-body>p.images {
     margin-left: 0px;
     margin-right: 0px;
@@ -552,7 +557,6 @@
 
   main>div.post-body div.banner {
     flex-direction: row;
-    max-width: 800px;
     margin: 32px;
   }
 

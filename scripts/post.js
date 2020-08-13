@@ -201,6 +201,10 @@ function decoratePostPage(){
     const parent = createTag('div', { 'class' : 'embed-promotions-text' });
     wrapNodes(parent, children);
   });
+
+  document.querySelectorAll('.banner').forEach(($e) => {
+    $e.parentNode.classList.add('embed-banner');
+  });
   
   decorateImages();
   decoratePullQuotes();
