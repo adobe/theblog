@@ -377,6 +377,8 @@
   padding: 30px 32px;
   font-family: adobe-clean,sans-serif;
   margin-top: 48px;
+  padding: none;
+  border: none;
 }
 
 .banner .banner-left, .banner .banner-right {
