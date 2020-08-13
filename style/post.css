@@ -567,3 +567,8 @@
     margin-right: auto;
   }
 }
+
+.embed-youtu iframe, .embed-youtube iframe{
+  width: 100%;
+  height: 450px;
+}
