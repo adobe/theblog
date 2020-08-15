@@ -13,11 +13,9 @@
 .topic-page main div.default:first-child h1 {
   color: white;
   width: 100%;
-  max-width: 912px;
+  max-width: 379px;
   margin: auto;
   align-self: center;
-  padding-left: 32px;
-  padding-right: 32px;
 }
 
 .topic-page main div.default:first-child {
@@ -72,9 +70,8 @@
   }
 
   .topic-page main div.default:first-child h1 {
-    max-width: 912px;
-    padding-left: 64px;
-    padding-right:64px;
+    width: calc(100% - 64px);
+    max-width: 790px;
   }
 
 }
@@ -83,12 +80,22 @@
 
   .topic-page main div.default:first-child h1 {
     max-width: 1200px;
-    padding-left: 32px;
-    padding-right: 32px;
+  }
+
+  .topic-page .deck {
+    min-width: 1168px;
   }
 
   .topic-page .card {
-    width: calc(100%/4 - 20px);
+    width: calc(100%/4 - 24px);
+  }
+
+  .topic-page .card:nth-of-type(3n) {
+    margin-right: 32px;
+  }
+
+  .topic-page .card:nth-of-type(4n) {
+    margin-right: 0;
   }
 
 }
