@@ -10,7 +10,7 @@
   --bg3: #83106a;
 }
 
-.topic-page main div.default:first-child h1 {
+.topic-page main > div:first-child h1 {
   color: white;
   width: 100%;
   max-width: 912px;
@@ -20,7 +20,7 @@
   padding-right: 32px;
 }
 
-.topic-page main div.default:first-child {
+.topic-page main > div:first-child {
   height: 220px;
   background-color: var(--bg1); /* fallback bg color */
   display: flex;
@@ -40,7 +40,7 @@
 
 @media (min-width:600px) {
 
-  .topic-page main div.default:first-child {
+  .topic-page main > div:first-child {
     height: 220px;
     background:
       radial-gradient(
@@ -71,7 +71,7 @@
       );
   }
 
-  .topic-page main div.default:first-child h1 {
+  .topic-page main > div:first-child h1 {
     max-width: 912px;
     padding-left: 64px;
     padding-right:64px;
@@ -81,7 +81,7 @@
 
 @media (min-width: 1100px) {
 
-  .topic-page main div.default:first-child h1 {
+  .topic-page main > div:first-child h1 {
     max-width: 1200px;
     padding-left: 32px;
     padding-right: 32px;

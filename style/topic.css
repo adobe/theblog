@@ -16,7 +16,7 @@
   visibility: visible;
 }
 
-.topic-page main .default:not(.articles) {
+.topic-page main > div:not(.articles) {
   padding: 0;
 }
 

@@ -135,7 +135,7 @@ export function getSection(index) {
   if (nodes.length === 0) {
     // create a section
     nodes.push(document.querySelector('main').appendChild(
-      createTag('div', { class: 'default' })));
+      createTag('div')));
   }
   return index !== undefined && nodes.length > index ? nodes[index] : nodes[nodes.length - 1];
 }
@@ -242,7 +242,7 @@ function addArticlesToDeck(hits, omitEmpty, transformer, hasMore, setFocus) {
       if (hits.length || !omitEmpty) {
         // add card container
         $deck = createTag('div', { 'class': 'deck' });
-        const $container = createTag('div', { 'class': 'default articles' });
+        const $container = createTag('div', { 'class': 'articles' });
         $container.appendChild($deck);
         document.querySelector('main').appendChild($container);
       }

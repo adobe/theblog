@@ -13,6 +13,7 @@ import {
   addClass,
   fetchArticles,
   applyFilters,
+  wrapNodes,
 } from '/scripts/common.js';
 import {
   addFilters,
@@ -24,10 +25,16 @@ import {
 function decorateTopicPage() {
   addClass('.topic-page main>div:first-of-type', 'topic-title');
   const img = document.querySelector('main img');
+  const titleSection = document.querySelector('.topic-title');
   if (img) {
-    const title = document.querySelector('.topic-title');
-    title.style.background=`url(${img.getAttribute('src')}) no-repeat center center`;
-    title.style.backgroundSize=`cover`;
+    titleSection.style.background=`url(${img.getAttribute('src')}) no-repeat center center`;
+    titleSection.style.backgroundSize=`cover`;
+    img.parentNode.remove();
+  }
+  // if banner image inserted above the title, move title up into first div
+  const title = document.querySelector('main h1');
+  if (title.parentNode !== titleSection) {
+    wrapNodes(titleSection, [title]);
   }
 }
 
