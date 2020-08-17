@@ -322,8 +322,11 @@
   margin-top: 0;
 }
 
-.embed-internal-promotions>div.default,
-.embed-internal-undefined>div.default {
+.embed img {
+  max-width: 100%;
+}
+
+.embed-internal-promotions>div {
   display: flex;
   padding: 24px 0;
   border-top: 2px solid #ddd;
@@ -331,8 +334,7 @@
   margin: 64px 0;
 }
 
-.embed-internal-promotions>div.default>p,
-.embed-internal-undefined>div.default>p {
+.embed-internal-promotions>div>p {
   margin: 0;
   padding: 0;
   line-height: 0;
@@ -521,13 +523,11 @@
     max-width: 800px;
   }
 
-  .post-page main>div.post-body>.embed.embed-internal-promotions,
-  .post-page main>div.post-body>.embed.embed-internal-undefined {
+  .post-page main>div.post-body>.embed.embed-internal-promotions {
     max-width: 600px;
   }
 
-  .post-page main>div.post-body>.embed.embed-internal-promotions.embed-banner,
-  .post-page main>div.post-body>.embed.embed-internal-undefined.embed-banner {
+  .post-page main>div.post-body>.embed.embed-internal-promotions.embed-banner {
     max-width: 800px;
   }
 
