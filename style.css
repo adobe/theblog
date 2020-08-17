@@ -375,7 +375,7 @@
  
  .card p.topic {
    margin-bottom: 0.5rem;
-   max-height: 1rem;
+   max-height: 2rem;
    overflow: hidden;
    text-overflow: ellipsis;
  }
@@ -460,7 +460,7 @@
  
    .card .content {
      box-sizing: content-box;
-     height: 168px;
+     height: 11.5rem;
    }
  
    .card p.date {
