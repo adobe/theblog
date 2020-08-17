@@ -338,7 +338,12 @@
   line-height: 0;
 }
 
-.embed-promotions-text {
+.embed-internal-promotions>div.default>p img {
+  width: 182px;
+  max-width: unset;
+}
+
+.embed-internal-promotions .embed-promotions-text {
   padding-left: 32px;
 }
 
