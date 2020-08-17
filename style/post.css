@@ -60,8 +60,7 @@
   font-size: 1rem;
   line-height: 1.5;
   padding: 0 32px;
-  box-sizing: content-box;
-  color: #4b4b4b
+  color: #4b4b4b;
 }
 
 .post-page main div.post-header {
@@ -323,7 +322,8 @@
   margin-top: 0;
 }
 
-.embed-promotions>div.default {
+.embed-internal-promotions>div.default,
+.embed-internal-undefined>div.default {
   display: flex;
   padding: 24px 0;
   border-top: 2px solid #ddd;
@@ -331,13 +331,14 @@
   margin: 64px 0;
 }
 
-.embed-promotions>div.default>p {
+.embed-internal-promotions>div.default>p,
+.embed-internal-undefined>div.default>p {
   margin: 0;
   padding: 0;
   line-height: 0;
 }
 
-.embed-promotions .embed-promotions-text {
+.embed-promotions-text {
   padding-left: 32px;
 }
 
@@ -376,6 +377,8 @@
   padding: 30px 32px;
   font-family: adobe-clean,sans-serif;
   margin-top: 48px;
+  padding: none;
+  border: none;
 }
 
 .banner .banner-left, .banner .banner-right {
@@ -518,8 +521,14 @@
     max-width: 800px;
   }
 
-  .post-page main>div.post-body>.embed.embed-promotions {
+  .post-page main>div.post-body>.embed.embed-internal-promotions,
+  .post-page main>div.post-body>.embed.embed-internal-undefined {
     max-width: 600px;
+  }
+
+  .post-page main>div.post-body>.embed.embed-internal-promotions.embed-banner,
+  .post-page main>div.post-body>.embed.embed-internal-undefined.embed-banner {
+    max-width: 800px;
   }
 
   .post-page main>div.post-body>p.images {
@@ -548,7 +557,6 @@
 
   main>div.post-body div.banner {
     flex-direction: row;
-    max-width: 800px;
     margin: 32px;
   }
 
