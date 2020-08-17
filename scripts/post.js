@@ -196,7 +196,7 @@ function decoratePostPage(){
 
   wrap('post-header',['main>div.category','main>div.post-title']);
 
-  document.querySelectorAll('.embed-internal-undefined>div:not(.banner), .embed-internal-promotions>div:not(.banner)').forEach(($e) => {
+  document.querySelectorAll('.embed-internal-promotions>div:not(.banner)').forEach(($e) => {
     const children = Array.from($e.childNodes);
     children.shift();
     const parent = createTag('div', { 'class' : 'embed-promotions-text' });
