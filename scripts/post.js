@@ -164,7 +164,7 @@ function addPredictedPublishURL() {
       }
     }
     const $predURL=createTag('div', {class:'predicted-url'});
-    const url=`https://blog.adobe.com/${segs[1]}${datePath}/${segs[segs.length-1].split('.')[0]}`;
+    const url=`https://blog.adobe.com/${segs[1]}${datePath}/${segs[segs.length-1].split('.')[0]}.html`;
     $predURL.innerHTML=`Predicted Publish URL: ${url}`;
     console.log (url);
     document.querySelector('main').insertBefore($predURL, getSection(0));
