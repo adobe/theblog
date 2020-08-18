@@ -105,7 +105,7 @@
   }
 
   .topic-page main div.topic-title h1 {
-    width: 100%;
+    width: calc(100% - 64px);
     max-width: 790px;
   }
 
@@ -115,6 +115,11 @@
 
   .topic-page main div.topic-title h1 {
     max-width: 1200px;
+  }
+
+  .topic-page main div.topic-title h1,
+  .topic-page .deck {
+    min-width: 1168px;
   }
 
   .topic-page .card {

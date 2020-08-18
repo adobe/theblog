@@ -96,6 +96,10 @@
 
 @media (min-width:1200px) {
 
+  .author-page .deck {
+    min-width: 1168px;
+  }
+
   .author-page .card {
       width: calc(100%/4 - 24px);
   }
