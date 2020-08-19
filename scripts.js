@@ -207,7 +207,10 @@ window.blog = function() {
 window.fedsConfig = {
   locale: window.blog.language,
   content: {
-    experience: 'blog-gnav' 
+    experience: 'blog-gnav',
+  },
+  search: {
+    context: 'blogs',
   },
   disableSticky: false,
   privacy: {
