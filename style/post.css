@@ -15,6 +15,10 @@
   visibility: visible;
 }
 
+.post-page footer.mobile-footer {
+  margin-bottom: 61px;
+}
+
 .post-page main {
   visibility: visible;
 }

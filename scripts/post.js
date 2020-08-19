@@ -389,6 +389,15 @@ function loadGetSocial() {
     src: 'https://api.at.getsocial.io/get/v1/7a87046a/gs_async.js',
   });
   document.head.appendChild(po);
+
+  document.addEventListener('gs:load', () => {
+    if (typeof window.GS === 'object' && window.GS.isMobile) {
+      const footer = document.querySelector('footer');
+      if (footer instanceof HTMLElement) {
+        footer.classList.add('mobile-footer');
+      }
+    }
+  });
 }
 
 /**
