@@ -277,7 +277,7 @@ function decorateImages() {
 function fixLinks() {
   document.querySelectorAll('main a').forEach((a) => {
     if (!a.href) return;
-    if (!a.href.startsWith('http') || !a.href.startsWith('#')) {
+    if (!a.href.startsWith('http') && !a.href.startsWith('#')) {
       a.href = `https://${a.href}`;
     }
   });
