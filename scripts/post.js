@@ -276,9 +276,10 @@ function decorateImages() {
  */
 function fixLinks() {
   document.querySelectorAll('main a').forEach((a) => {
-    if (!a.href) return;
-    if (!a.href.startsWith('http') || !a.href.startsWith('#')) {
-      a.href = `https://${a.href}`;
+    const href = a.getAttribute('href');
+    if (!href) return;
+    if (!href.startsWith('http') && !href.startsWith('#')) {
+      a.href = `https://${href}`;
     }
   });
 }
