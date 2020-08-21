@@ -142,7 +142,7 @@
     const CATEGORIES = [
       'Categories',
       'Products',
-      'Industries',
+      /*'Industries',*/
       'Internals'
     ];
 
@@ -362,7 +362,7 @@
         return response.text();
       })
       .then((data) => {
-        document.getElementById('tags-data').innerHTML = data;
+        document.getElementById('tags-data').innerHTML = data.replace(/<(\/)?strong>/gm, '');
         flagCategories();
         generateTagIDs();
         filter();
