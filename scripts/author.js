@@ -12,6 +12,7 @@
 import {
   wrap,
   addClass,
+  setAttributes,
   getSection,
   fetchArticles,
 } from '/scripts/common.js';
@@ -101,6 +102,7 @@ function addSocialLinks(source, target) {
         e.innerHTML = '';
         e.appendChild(createSVG(type))
         e.setAttribute('title', title);
+        e.setAttribute('itemprop', 'mainEntityOfPage');
         e.className = className;
       });
       p.remove();
@@ -108,8 +110,18 @@ function addSocialLinks(source, target) {
   }
 }
 
+function addSchema() {
+  // Author
+  const schema = document.querySelector('.summary p') ? 'Person' : 'Organization';
+  setAttributes('main', { itemscope: '', itemtype: `http://schema.org/${schema}` });
+  setAttributes('.bio .frame img', { itemprop: 'image' });
+  setAttributes('.summary h2', { itemprop: 'name' });
+  setAttributes('.summary p', { itemprop: 'description' });
+}
+
 window.addEventListener('load', function() {
   decorateAuthorPage();
   addSocialLinks();
   fetchArticles();
+  addSchema();
 });

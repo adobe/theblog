@@ -106,6 +106,14 @@ export function addClass(selector, cssClass, parent) {
   });
 }
 
+export function setAttributes(selector, attributes) {
+  document.querySelectorAll(selector).forEach((el) => {
+    Object.entries(attributes).forEach(([key, value]) => {
+      el.setAttribute(key, value);
+    });
+  });
+}
+
 /**
  * Sets the lang attribute on the <html> tag.
  */
@@ -221,15 +229,19 @@ export function itemTransformer(item) {
  */
 export function addCard(hit, $container) {
   const $item = createTag('div', {'class': 'card'});
+  $item.setAttribute('itemscope', '');
+  $item.setAttribute('itemtype', 'http://schema.org/BlogPosting');
   $item.innerHTML = `
   <div class="hero">
-    <a href="/${hit.path}" title="${hit.title}" tabindex="-1"><img class="lazyload" src="#" data-src="${hit.hero}" alt="${hit.title}"></a>
+    <a href="/${hit.path}" title="${hit.title}" tabindex="-1">
+      <img class="lazyload" itemprop="image" src="#" data-src="${hit.hero}" alt="${hit.title}">
+    </a>
   </div>
   <div class="content">
-    <p class="topic"><a href="${hit.topicUrl}" title="${hit.topic}">${hit.topic}</a></p>
-    <h2><a href="/${hit.path}" title="${hit.title}">${hit.title}</a></h2>
-    <p class="teaser"><a href="/${hit.path}" title="${hit.teaser}" tabindex="-1">${hit.teaser}</a></p>
-    <p class="date">${hit.date}</p>
+    <p class="topic"><a itemprop="genre" href="${hit.topicUrl}" title="${hit.topic}">${hit.topic}</a></p>
+    <h2 itemprop="headline"><a itemprop="url" href="/${hit.path}" title="${hit.title}">${hit.title}</a></h2>
+    <p class="teaser" itemprop="abstract"><a href="/${hit.path}" title="${hit.teaser}" tabindex="-1">${hit.teaser}</a></p>
+    <p class="date" itemprop="datePublished">${hit.date}</p>
   </div>`;
   $container.appendChild($item);
   return $item;

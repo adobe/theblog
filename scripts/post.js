@@ -13,6 +13,7 @@ import {
   fetchArticles,
   getSection,
   addClass,
+  setAttributes,
   getLink,
   wrap,
   createTag,
@@ -310,11 +311,17 @@ function fetchAuthor() {
             const avatarURL = /<img src="(.*?)"/.exec(main)[1];
             const authorDiv = document.createElement('div');
             authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" alt="${window.blog.author}" title="${window.blog.author}" data-src="${avatarURL}?width=128&crop=1:1&auto=webp">
-              <div><span class="post-author"><a href="${pageURL}">${window.blog.author}</a></span>
+              <div><span class="post-author"><a href="${pageURL}"><span>${window.blog.author}</span></a></span>
               <span class="post-date">${window.blog.date}</span></div></div>`;
             authorDiv.classList.add('author');
             authorSection.appendChild(authorDiv);
             authorSection.classList.remove('hide');
+
+            // Add microdata schema
+            setAttributes('.author .post-author', {  itemprop: 'author', itemscope: '', itemtype: 'http://schema.org/Person' });
+            setAttributes('.author .post-author a', {  itemprop: 'url' });
+            setAttributes('.author .post-author span', {  itemprop: 'name' });
+            setAttributes('.author .post-date', { itemprop: 'datePublished' });
           }
         } catch(e) {
           console.error('Error while extracting author info', e);
@@ -349,7 +356,7 @@ function addTopics() {
   window.blog.topics.forEach((topic) => {
     const btn = createTag('a', {
       href: getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase()),
-      title: topic,
+      title: topic
     });
     btn.innerText = topic;
     topicsWrap.appendChild(btn);
@@ -474,6 +481,36 @@ function shapeBanners() {
   });
 }
 
+function addSchema() {
+  // Blog
+  setAttributes('main', { itemscope: '', itemtype: 'http://schema.org/BlogPosting' });
+  setAttributes('.post-header .category a', { itemprop: 'genre' });
+  setAttributes('.post-header .post-title', { itemprop: 'headline' });
+  setAttributes('.post-body', { itemprop: 'articleBody' });
+
+  // Hero
+  setAttributes('.hero-image', { itemprop: 'image', itemscope: '', itemtype: 'http://schema.org/ImageObject' });
+  setAttributes('.hero-image img', { itemprop: 'url' });
+  setAttributes('.hero-image p:last-child', { itemprop: 'caption' });
+
+  // Topics
+  setAttributes('.topics a', { itemprop: 'genre' });
+
+  // Author is loaded async, so schema is added as part of fetchAuthor
+
+  // Publisher
+  const publisherName = document.querySelector('meta[name="twitter:creator"]');
+  const publisherUrl = document.querySelector('link[rel="publisher"]');
+  const publisherEl = document.createElement('div');
+  publisherEl.innerHTML = `<div itemprop="publisher" itemscope itemtype="http://schema.org/Organization" style="display:none">
+    <a itemprop="url" href="${publisherUrl && publisherUrl.href}">
+      <span itemprop="name">${publisherName && publisherName.getAttribute('content')}</span>
+    </a>
+    <img itemprop="logo" src="https://www.adobe.com/content/dam/cc/icons/Adobe_Corporate_Horizontal_Red_HEX.svg"/>
+  </div>`;
+  document.querySelector('main').appendChild(publisherEl.firstChild);
+}
+
 window.addEventListener('load', async function() {
   decoratePostPage();
   handleImmediateMetadata();
@@ -487,4 +524,5 @@ window.addEventListener('load', async function() {
   loadGetSocial();
   shapeBanners();
   fetchArticles();
+  addSchema();
 });
