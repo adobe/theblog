@@ -13,6 +13,7 @@
     alert(`Helix Pages Preview Bookmarklet misconfigured for ${c.project}.`);
     return;
   }
+  console.log('config', c);
   let loc = window.location;
   const $test=document.getElementById('test_location');
   if ($test && $test.value) {
@@ -27,7 +28,6 @@
   const currentPath=loc.pathname;
 
   c.id = `hlxPreview-${c.ref}--${c.repo}--${c.owner}`;
-  c.innerHost=`${c.ref !== 'master' && c.ref !== 'main' ? `${c.ref}--` : ''}${c.repo}--${c.owner}.hlx.page`;
   if (/.*\.sharepoint\.com/.test(currentHost)
     || currentHost.startsWith('https://docs.google.com')) {
     // source document, open window with staging url
