@@ -45,13 +45,6 @@ export function createTag(name, attrs) {
 }
 
 /**
- * Adds page type as body class.
- */
-function addPageTypeAsBodyClass() {
-  document.body.classList.add(`${window.blog.pageType}-page`);
-}
-
-/**
  * Wraps nodes with a new parent node.
  * @param {node} newparent The new parent node
  * @param {array} nodes The nodes to wrap
