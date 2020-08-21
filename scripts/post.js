@@ -484,7 +484,6 @@ function shapeBanners() {
 function addSchema() {
   // Blog
   setAttributes('main', { itemscope: '', itemtype: 'http://schema.org/BlogPosting' });
-  setAttributes('.post-header .category a', { itemprop: 'genre' });
   setAttributes('.post-header .post-title', { itemprop: 'headline' });
   setAttributes('.post-body', { itemprop: 'articleBody' });
 
