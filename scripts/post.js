@@ -166,9 +166,73 @@ function addPredictedPublishURL() {
     const $predURL=createTag('div', {class:'predicted-url'});
     const url=`https://blog.adobe.com/${segs[1]}${datePath}/${segs[segs.length-1].split('.')[0]}.html`;
     $predURL.innerHTML=`Predicted Publish URL: ${url}`;
-    console.log (url);
     document.querySelector('main').insertBefore($predURL, getSection(0));
   }
+}
+
+function toClassName(name) {
+  return (name.toLowerCase().replace(/[^0-9a-z]/gi, '-'))
+}
+
+/**
+ * Decorates tables to divs with CSS classes
+ */
+
+function decorateTables() {
+  document.querySelectorAll('main div.post-body table').forEach(($table) => {
+      const $cols=$table.querySelectorAll('thead tr th');
+      const cols=Array.from($cols).map((e) => toClassName(e.innerHTML));
+      const $rows=$table.querySelectorAll('tbody tr');
+      let $div={};
+
+      if (cols.length==1 && $rows.length==1) {
+          $div=createTag('div', {class:`${cols[0]}`});
+          $div.innerHTML=$rows[0].querySelector('td').innerHTML;
+      } else {
+          $div=turnTableIntoCards($table, cols) 
+      }
+      $table.parentNode.replaceChild($div, $table);
+  });
+}
+
+function turnTableIntoCards($table, cols) {
+  const $rows=$table.querySelectorAll('tbody tr');
+  const $cards=createTag('div', {class:`post-blocks ${cols.join('-')}`})
+  $rows.forEach(($tr) => {
+      const $card=createTag('div', {class:'post-block'})
+      $tr.querySelectorAll('td').forEach(($td, i) => {
+          const $div=createTag('div', {class: cols[i]});
+          const $a=$td.querySelector('a[href]');
+          if ($a && $a.getAttribute('href').startsWith('https://www.youtube.com/')) {
+              const yturl=new URL($a.getAttribute('href'));
+              const vid=yturl.searchParams.get('v');
+              $div.innerHTML=`<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;"><iframe src="https://www.youtube.com/embed/${vid}?rel=0" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen scrolling="no" allow="encrypted-media; accelerometer; gyroscope; picture-in-picture"></iframe></div>`;
+          } else {
+              $div.innerHTML=$td.innerHTML;
+          }
+          $card.append($div);
+      });
+      $cards.append($card);
+  });
+  return ($cards);
+}
+
+/**
+ * Temporary empty <p> fix for table cells
+ */
+
+function fixTableCleanup() {
+  document.querySelectorAll('.post-body td p:empty').forEach($p=>$p.remove());
+  document.querySelectorAll('.post-body td>img').forEach(($img) => {
+    const $p=createTag('p');
+    $p.appendChild($img.cloneNode(true));
+    $img.parentNode.replaceChild($p,$img);
+  })
+  document.querySelectorAll('.post-body td>em').forEach(($em) => {
+    const $p=createTag('p');
+    $p.appendChild($em.cloneNode(true));
+    $em.parentNode.replaceChild($p,$em);
+  })
 }
 
 /**
@@ -182,6 +246,9 @@ function decoratePostPage(){
   addClass('.post-author', 'hide');
   addClass('.post-page main>div:nth-of-type(4)', 'post-body');
   addClass('.post-page main>div.post-body>p>img', 'images', 1);
+
+  // fix tables
+  fixTableCleanup();
 
   // hide product / topics section
   const last = getSection();
@@ -206,10 +273,6 @@ function decoratePostPage(){
   document.querySelectorAll('.banner').forEach(($e) => {
     $e.parentNode.classList.add('embed-banner');
   });
-  
-  decorateImages();
-  decoratePullQuotes();
-  addTargetToExternalLinks();
 }
 
 
@@ -264,7 +327,14 @@ function decorateImages() {
         $next.innerHTML=inner.substr(1);
       }
 
-      if ((punctCount<=1 && inner.length<200 && inner.endsWith('.')) || italicMarker) {
+      let maxlength=200;
+
+      // date cutoff for italic only image captions
+      if (new Date(window.blog.date)>=new Date('August 21, 2020')) {
+        maxlength=0;
+      }
+
+      if ((punctCount<=1 && inner.length<maxlength && inner.endsWith('.')) || italicMarker) {
         if (!slashMarker) $next.classList.add('legend');
       }
     }
@@ -477,6 +547,9 @@ function shapeBanners() {
 window.addEventListener('load', async function() {
   decoratePostPage();
   handleImmediateMetadata();
+  decorateImages();
+  decorateTables();
+  addTargetToExternalLinks();
   fixLinks();
   addPredictedPublishURL();
   addCategory();

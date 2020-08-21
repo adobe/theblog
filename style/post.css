@@ -185,6 +185,11 @@
   text-align: center;
 }
 
+.post-page main>div.post-body .post-blocks {
+  margin-bottom: 64px;
+  margin-top: 64px;
+}
+
 .post-page .topics a {
   letter-spacing: .1em;
   text-transform: uppercase;
@@ -253,26 +258,23 @@
   margin-top: 32px;
 }
 
-.post-page main .pullquote {
+.post-body .pull-quote  {
   border-left: 3px solid #367ea8;
   padding: 12px 24px;
+  margin: 64px 0;
 }
 
-.post-page main>div.post-body .pullquote h2 {
-  color: #367ea8;
-  margin-top: 12px;
-}
-
-.post-page main>div.post-body .pullquote .images {
-  margin: 0;
-}
-
-.post-page main>div.post-body .pullquote .images img {
+.post-body .pull-quote img {
   height: 96px;
   width: 96px;
   object-fit: cover;
   border-radius: 100%;
   margin: 0;
+}
+
+.post-page main>div.post-body .pull-quote h2, .post-page main>div.post-body .pull-quote h3 {
+  margin-top: 32px;
+  color: #367ea8;
 }
 
 .post-page .products a {
@@ -538,6 +540,28 @@
   .post-page main>div.post-body>.embed.embed-internal-promotions.embed-banner,
   .post-page main>div.post-body>.embed.embed-internal-undefined.embed-banner {
     max-width: 800px;
+  }
+
+  .post-page main>div.post-body .post-blocks {
+    margin-left: 0px;
+    margin-right: 0px;
+    max-width: 800px;  
+  }
+  .post-page main>div.post-body .post-block {
+    flex-wrap: nowrap;
+    display: flex;
+  }
+
+  .post-page main>div.post-body .post-block .image-50 {
+    flex: 1;
+  }
+
+  .post-page main>div.post-body .post-block>div {
+    margin-left: 32px;
+  }
+
+  .post-page main>div.post-body .post-block>div:first-of-type {
+    margin-left: 0px;
   }
 
   .post-page main>div.post-body>p.images {
