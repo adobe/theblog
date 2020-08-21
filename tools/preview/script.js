@@ -6,7 +6,7 @@
   if (hostSegments.length > 1) {
     c.ref = hostSegments.length === 3 ? hostSegments.shift() : null;
     c.repo = hostSegments.shift();
-    c.owner = hostSegments.shift();
+    c.owner = hostSegments.shift().split('.')[0];
   }
   c.ref = c.ref || 'master';
   if (!c.owner || !c.repo || !c.outerHost) {
