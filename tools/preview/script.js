@@ -2,9 +2,16 @@
   const $script = document.scripts[document.scripts.length - 1];
   const c = JSON.parse($script.getAttribute('data-config'));
   c.project = c.project || 'your Helix Pages project';
-  c.ref = c.ref || 'main';
+  const hostSegments = c.innerHost.split('--');
+  if (hostSegments.length > 1) {
+    c.ref = hostSegments.length === 3 ? hostSegments.shift() : null;
+    c.repo = hostSegments.shift();
+    c.owner = hostSegments.shift();
+  }
+  c.ref = c.ref || 'master';
   if (!c.owner || !c.repo || !c.outerHost) {
-    alert(`Helix Pages Preview Bookmarklet misconfigured for ${project}.`);
+    alert(`Helix Pages Preview Bookmarklet misconfigured for ${c.project}.`);
+    return;
   }
   let loc = window.location;
   const $test=document.getElementById('test_location');
@@ -13,6 +20,7 @@
       loc = new URL($test.value);
     } catch (e) {
       alert(`Malformed Test URL: ${$tst.value}`);
+      return;
     }
   }
   const currentHost=loc.hostname;
@@ -20,7 +28,6 @@
 
   c.id = `hlxPreview-${c.ref}--${c.repo}--${c.owner}`;
   c.innerHost=`${c.ref !== 'master' && c.ref !== 'main' ? `${c.ref}--` : ''}${c.repo}--${c.owner}.hlx.page`;
-  const showHelp = () => { alert(`Helix Pages Preview Bookmarklet allows you to preview pages on ${c.project}.\n\nTry it on a valid source document, or any page on:\nhttps://${c.innerHost}/\nhttps://${c.outerHost}/`) };
   if (/.*\.sharepoint\.com/.test(currentHost)
     || currentHost.startsWith('https://docs.google.com')) {
     // source document, open window with staging url
@@ -46,7 +53,7 @@
         break;
       }
       default: {
-        showHelp();
+        alert(`Helix Pages Preview Bookmarklet allows you to preview pages on ${c.project}.\n\nTry it on a valid source document, or any page on:\nhttps://${c.innerHost}/\nhttps://${c.outerHost}/`);
       }
     }
   }

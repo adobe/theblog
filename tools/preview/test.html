@@ -45,13 +45,11 @@
                   document.getElementById('test_location').value = p.get('url');
                   const config = {
                     project: p.get('project') || 'Adobe Blog',
-                    owner: p.get('owner') || 'adobe',
-                    repo: p.get('repo') || 'theblog',
-                    ref: p.get('ref') || 'master',
+                    innerHost: window.location.host,
                     outerHost: p.get('outerHost') || 'blog.adobe.com',
                   };
                   const configStr = JSON.stringify(config);
-                  document.getElementById('bookmarklet').setAttribute('href', `javascript:(()=>{const script=document.createElement('script');script.setAttribute('data-config','${configStr}');script.src='https://${config.ref}--${config.repo}--${config.owner}.hlx.page/tools/preview/script.js';document.body.appendChild(script);})();`);
+                  document.getElementById('bookmarklet').setAttribute('href', `javascript:(()=>{const script=document.createElement('script');script.setAttribute('data-config','${configStr}');script.src='//${window.location.host}/tools/preview/script.js';document.body.appendChild(script);})();`);
                 </script>
                 </p>
         </div>
