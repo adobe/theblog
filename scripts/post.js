@@ -143,16 +143,6 @@ async function handleAsyncMetadata() {
   window.blog.tags = Array.from(new Set(window.blog.tags));
 }
 
-function addTargetToExternalLinks() {
-  document.querySelectorAll('main a[href]').forEach(($a) => {
-    const href=$a.getAttribute('href');
-    if (href.indexOf('//')>=0) {
-      $a.setAttribute('rel','noopener');
-      $a.setAttribute('target','_blank');
-    }
-  })
-}
-
 function addPredictedPublishURL() {
   const segs=window.location.pathname.split('/');
   if (segs[2]=='drafts') {
@@ -342,14 +332,26 @@ function decorateImages() {
 }
 
 /**
- * Fixes accidental relative links
+ * Checks for accidental relative links and makes sure
+ * external URLs open in a new window with no opener
+ * (security best practice).
  */
-function fixLinks() {
+function handleLinks() {
   document.querySelectorAll('main a').forEach((a) => {
     const href = a.getAttribute('href');
     if (!href) return;
-    if (!href.startsWith('http') && !href.startsWith('#')) {
-      a.href = `https://${href}`;
+    // sanity check URL
+    if (!href.startsWith('https://')
+      && !href.startsWith('http://')
+      && !href.startsWith('ftp://')
+      && !href.startsWith('mailto:')
+      && !href.startsWith('#')) {
+      a.setAttribute('href', `https://${href}`);
+    }
+    // absolute URL opens in new tab with no opener
+    if (href.includes('//')) {
+      a.setAttribute('rel','noopener');
+      a.setAttribute('target','_blank');
     }
   });
 }
@@ -549,8 +551,7 @@ window.addEventListener('load', async function() {
   handleImmediateMetadata();
   decorateImages();
   decorateTables();
-  addTargetToExternalLinks();
-  fixLinks();
+  handleLinks();
   addPredictedPublishURL();
   addCategory();
   fetchAuthor();
