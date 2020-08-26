@@ -1,0 +1,37 @@
+on: push
+  paths:
+    - 'scripts*'
+    - 'style*'
+  branches:
+    - 'master'
+
+jobs:
+  my-job:
+    name: Purge Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Purge Code
+        run: |
+          host="https://blog.adobe.com"
+          files=(
+            "/scripts.js"
+            "/scripts/author.js"
+            "/scripts/blank.js"
+            "/scripts/common.js"
+            "/scripts/filters.js"
+            "/scripts/home.js"
+            "/scripts/post.js"
+            "/scripts/taxonomy.js"
+            "/scripts/topic.js"
+            "/style.css"
+            "/style/author.css"
+            "/style/blank.css"
+            "/style/filters.css"
+            "/style/home.css"
+            "/style/post.css"
+            "/style/topic.css"
+          )
+          for file in "${files[@]}"
+          do
+            curl -X HLXPURGE ${host}${file}
+          done
