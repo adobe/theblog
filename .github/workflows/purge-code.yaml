@@ -1,9 +1,10 @@
-on: push
-  paths:
-    - 'scripts*'
-    - 'style*'
-  branches:
-    - 'master'
+on:
+  push:
+    paths:
+      - 'scripts*'
+      - 'style*'
+    branches:
+      - 'master'
 
 jobs:
   my-job:
