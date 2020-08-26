@@ -24,8 +24,14 @@ export async function getTaxonomy() {
       dataContainer.innerHTML = data.replace(/<(\/)?strong>/gm, '');
 
       dataContainer.querySelectorAll('li').forEach((e, i) => {
-        if (e.firstChild) {
-          e.setAttribute('data-topic', e.firstChild.textContent);
+        if (e.firstChild && e.firstChild.textContent) {
+          let topic = e.firstChild.textContent;
+          if (topic.indexOf('*') !== -1) {
+            e.setAttribute('data-nuft', 'true');
+            topic = topic.replace(/\*/gm, '');
+          }
+
+          e.setAttribute('data-topic', topic.trim());
         }
       });
 
@@ -67,7 +73,7 @@ export async function getTaxonomy() {
         isUFT: function (topic) {
           try {
             let n = this.node.querySelector(`[data-type="${CATEGORIES}"] [data-topic="${escapeTopic(topic)}"]`);
-            return !!n;
+            return n && n.getAttribute('data-nuft') !== 'true';
           } catch (error) {
             console.error(`isUFT error with topic "${topic}"`, error);
             return false;
@@ -80,7 +86,7 @@ export async function getTaxonomy() {
             let n = this.node.querySelector(`[data-topic="${escapeTopic(topic)}"]`);
             while (n) {
               const parentTopic = n.getAttribute('data-topic');
-              if (parentTopic) {
+              if (parentTopic && this.isUFT(parentTopic)) {
                 parents.push(parentTopic);
               }
               n = n.parentElement;

@@ -73,16 +73,32 @@
       background-color: #0d66d0;
     }
 
+    .tag.cat-0.nuft {
+      background-color: #86b2e7;
+    }
+
     .tag.cat-1 {
       background-color: #d7373f;
+    }
+
+    .tag.cat-1.nuft {
+      background-color: #eb9b9f;
     }
 
     .tag.cat-2 {
       background-color: #12805c;
     }
 
+    .tag.cat-2.nuft {
+      background-color: #88bfad;
+    }
+
     .tag.cat-3 {
       background-color: #d2b200;
+    }
+
+    .tag.cat-3.nuft {
+      background-color: #e8d87f;
     }
 
 
@@ -225,7 +241,7 @@
       });
 
       tags.forEach((tagInfo) => {
-        html += `<span data-target="${tagInfo.id}" onclick="remove(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}">${tagInfo.tag}</span></span> `;
+        html += `<span data-target="${tagInfo.id}" onclick="remove(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}${tagInfo.nuft ? ' nuft' : ''}">${tagInfo.label}</span></span> `;
         if (1 === CATEGORIES.indexOf(tagInfo.category)) products += tagInfo.tag + ', ';
         else topics += tagInfo.tag + ', ';
       });
@@ -270,19 +286,23 @@
       var tagInfo;
       var e = document.getElementById(id);
       if (e.firstChild && e.firstChild.textContent) {
-        var tag = e.firstChild.textContent;
+        var label = e.firstChild.textContent;
         var path = '';
         var parent = e.parentNode.parentNode;
+        var nuft = label.indexOf('*') !== -1;
+        var tag = label.replace(/\*/gm, '').trim();
         while (parent.nodeName == 'LI') {
-          var label = getLabel(parent);
-          label = label.trim();
-          path = label + (path ? ' / ' : ' ') + path;
+          var parentLabel = getLabel(parent);
+          parentLabel = parentLabel.trim();
+          path = parentLabel + (path ? ' / ' : ' ') + path;
           parent = parent.parentNode.parentNode;
         }
         var cat = getLabel(parent);
         tagInfo = {
-          tag: tag,
-          path: path,
+          tag,
+          label,
+          nuft,
+          path,
           category: cat,
           id
         };
@@ -300,15 +320,15 @@
         document.querySelectorAll(`#tags-data #cat-${index} li`).forEach((e) => {
           var tagInfo = fetchTag(e.id);
           if (tagInfo) {
-            var tag = tagInfo.tag;
-            var offset = tag.toLowerCase().indexOf(searchTerm);
+            var label = tagInfo.label;
+            var offset = label.toLowerCase().indexOf(searchTerm);
 
             if (offset >= 0) {
-              before = tag.substr(0, offset);
-              term = tag.substr(offset, searchTerm.length);
-              after = tag.substr(offset + searchTerm.length);
+              before = label.substr(0, offset);
+              term = label.substr(offset, searchTerm.length);
+              after = label.substr(offset + searchTerm.length);
 
-              html += `<span data-target="${e.id}" onclick="add(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}">${before}<span class="highlight">${term}</span>${after}</span></span> `;
+              html += `<span data-target="${e.id}" onclick="add(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}${tagInfo.nuft ? ' nuft' : ''}">${before}<span class="highlight">${term}</span>${after}</span></span> `;
             }
           }
         })

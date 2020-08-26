@@ -132,7 +132,7 @@ async function handleAsyncMetadata() {
   // handle parents afterward so that all leafs stay first
   topics.forEach((topic) => {
     const parents = taxonomy.getParents(topic);
-    if (taxonomy.isUFT(topic)) {
+    if (parents && parents.length > 0) {
       window.blog.topics = window.blog.topics.concat(parents);
     }
     window.blog.tags = window.blog.tags.concat(parents);
