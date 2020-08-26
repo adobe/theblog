@@ -364,7 +364,7 @@
       })
       .then((data) => {
         document.getElementById('tags-data').innerHTML = data.replace(/<(\/)?strong>/gm, '');
-        flagCategories();
+        findCategories();
         generateTagIDs();
         filter();
 
