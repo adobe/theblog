@@ -139,12 +139,7 @@
     }
   </style>
   <script>
-    const CATEGORIES = [
-      'Categories',
-      'Products',
-      /*'Industries',*/
-      'Internals'
-    ];
+    const CATEGORIES = [];
 
     (function (d) {
       var config = {
@@ -364,7 +359,7 @@
       })
       .then((data) => {
         document.getElementById('tags-data').innerHTML = data.replace(/<(\/)?strong>/gm, '');
-        flagCategories();
+        findCategories();
         generateTagIDs();
         filter();
 
