@@ -473,6 +473,14 @@ function loadGetSocial() {
   });
 }
 
+function decorateGifyuLinks() {
+  document.querySelectorAll('a[href^="https://s8.gifyu.com/images"]').forEach(($a) => {
+    const href=$a.getAttribute('href');
+    $a.parentNode.className='images';
+    $a.parentNode.replaceChild(createTag('img', {'src': href }), $a);
+  });
+}
+
 /**
  * Shapes promotional banners
  */
@@ -549,6 +557,7 @@ function shapeBanners() {
 window.addEventListener('load', async function() {
   decoratePostPage();
   handleImmediateMetadata();
+  decorateGifyuLinks();
   decorateImages();
   decorateTables();
   handleLinks();
