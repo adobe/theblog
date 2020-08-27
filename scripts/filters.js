@@ -108,36 +108,20 @@ function filterFilters(event) {
     event.stopPropagation();
   }
   const value = event ? event.target.value : '';
-  document.querySelectorAll('.filter-wrapper input[type="checkbox"]').forEach((filter) => {
-    if (value && !filter.name.toLowerCase().includes(value)) {
+  const options = document.querySelector('.filter-wrapper .options');
+  document.querySelectorAll('.filter-wrapper .option input[type="checkbox"]').forEach((filter) => {
+    if (value && !filter.name.toLowerCase().includes(value.toLowerCase())) {
       filter.checked = false; // deselect if hidden
       filter.parentNode.classList.add('hide');
     } else {
       filter.parentNode.classList.remove('hide');
     }
   });
-  // hide legends without visible options
-  document.querySelectorAll('.filter-wrapper legend').forEach((legend) => {
-    if (value) {
-      let elem = legend;
-      let hasVisibleOptions = false;
-      while (elem.nextElementSibling) {
-        elem = elem.nextElementSibling;
-        if (elem.tagName === 'LEGEND') break;
-        if (!elem.classList.contains('hide')) {
-          hasVisibleOptions = true;
-          break;
-        }
-      }
-      if (hasVisibleOptions) {
-        legend.classList.remove('hide');
-      } else {
-        legend.classList.add('hide');
-      }
-    } else {
-      legend.classList.remove('hide');
-    }
-  });
+  if (value) {
+    options.classList.add('filtered');
+  } else {
+    options.classList.remove('filtered');
+  }
 }
 
 function initFilterActions(callback) {
@@ -243,15 +227,15 @@ async function drawFilterBar() {
     $productsAndTech.querySelectorAll(':scope>ul>li').forEach((l) => {
       filterBarHTML += `<div class="option option">
         <input type="checkbox" id="${l.firstChild.textContent}" name="${l.firstChild.textContent}">
-        <label for="${l.firstChild.textContent}">${l.firstChild.textContent}</label>`;
+        <label for="${l.firstChild.textContent}">${l.firstChild.textContent}</label>
+      </div>`;
       
       l.querySelectorAll(':scope>ul>li').forEach((p) => {
-        filterBarHTML+=`<div class="option option-indent">
+        filterBarHTML+=`<div class="option option-nested">
         <input type="checkbox" id="${p.firstChild.textContent}" name="${p.firstChild.textContent}">
         <label for="${p.firstChild.textContent}">${p.firstChild.textContent}</label>
       </div>`
       });
-      filterBarHTML += '</div>';
     })
     document.querySelector('.filter-wrapper .options').innerHTML = filterBarHTML;
   }

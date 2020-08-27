@@ -212,8 +212,12 @@
   margin-top: 12px;
 }
 
-.dropdown-menu .option-indent {
-  margin-left: 32px;
+.dropdown-menu .option-nested {
+  margin-left: 2rem;
+}
+
+.dropdown-menu .options.filtered .option-nested {
+  margin-left: 0;
 }
 
 .dropdown-menu .option:first-child {
@@ -319,6 +323,14 @@
 
   .dropdown-menu .option {
     margin-top: 0;
+  }
+
+  .dropdown-menu .option label {
+    margin-left: 0;
+  }
+
+  .dropdown-menu .option-nested {
+    margin-left: 1.25rem;
   }
 
   .dropdown-menu .category {
