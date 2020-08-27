@@ -49,3 +49,31 @@ a.action.load-more::before {
 .language-Navigation_subheading::before {
   content: "Durch das Auswählen einer Region werden Sprache und/oder Inhalt der Website von Adobe geändert.";
 }
+
+.blank-page.error-404 main h2::before {
+  content: 'Die Seite wurde leider nicht gefunden.';
+}
+
+.blank-page.error-404 main p.detail::before {
+  content: "";
+}
+
+.blank-page.error-404 main .gotohome::before {
+  content: 'Zur Homepage ›';
+}
+
+.blank-page.error-404 main .searchadobe::before {
+  content: 'Adobe.com durchsuchen ›';
+}
+
+.filter-wrapper a.action.apply::before {
+  content: "Anwenden";
+}
+
+.filter-wrapper a.action.clear::before {
+  content: "Zurücksetzen";
+}
+
+.filter-wrapper a.action.clear-all::before {
+  content: "Alle löschen";
+}
