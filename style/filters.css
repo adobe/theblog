@@ -209,9 +209,11 @@
 .dropdown-menu .option {
   font-size: 0.9rem;
   font-weight: normal;
-  display: flex;
-  align-items: center;
   margin-top: 12px;
+}
+
+.dropdown-menu .option-indent {
+  margin-left: 32px;
 }
 
 .dropdown-menu .option:first-child {
@@ -246,7 +248,7 @@
 }
 
 .filter-wrapper a.action.clear::before {
-  content: "Clear";
+  content: "Reset";
 }
 
 .filter-wrapper a.action.clear-all {

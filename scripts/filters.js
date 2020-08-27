@@ -40,16 +40,9 @@ function handleDropdownButtons() {
               if(isOpen && clickInDropdown !== true) {
                   toggleDropdown(dropdownContainer, body);
                   document.removeEventListener('click', documentClick, false);
-                  clearCurrentFiltersButton.removeEventListener('click', clearCurrentFiltersClick, false);
               }
           }
-          // Set up clearCurrentFiltersButton click event.
-          const clearCurrentFiltersClick = (event) => {
-              const currentFilterOptions = dropdownContainer.querySelectorAll('input:checked');
-              clearCurrentFilters(currentFilterOptions);
-          }
           document.addEventListener('click', documentClick, false);
-          clearCurrentFiltersButton.addEventListener('click', clearCurrentFiltersClick, false);
       });
   });
 }
@@ -64,6 +57,9 @@ function toggleDropdown(dropdownContainer, body) {
   if (!dropdownContainer.classList.contains('is-open')) {
     dropdownContainer.querySelector('.filter-btn').focus();
   }
+  // clear search
+  document.querySelector('.filter-wrapper input[type="search"]').value = '';
+  filterFilters();
 }
 
 /**
@@ -90,7 +86,7 @@ function clearCurrentFilters(currentFilterOptions) {
 /**
  * Apply current selected filters.
  */
-function applyCurrentFilters(callback) {
+function applyCurrentFilters(callback, closeDropdown) {
   const filters = [];
   document.querySelectorAll('.filter-wrapper input[type="checkbox"]').forEach((filter) => {
     if (filter.checked) filters.push(filter.name);
@@ -102,16 +98,18 @@ function applyCurrentFilters(callback) {
     clearAllBtn.classList.add('hide');
   }
   callback(filters);
-  toggleDropdown(document.querySelector('.dropdown'), document.body);
+  if (closeDropdown) {
+    toggleDropdown(document.querySelector('.dropdown'), document.body);
+  }
 }
 
 function filterFilters(event) {
-  const value = event.target.value;
-  if (event.key !== 'Escape') {
+  if (event && event.key !== 'Escape') {
     event.stopPropagation();
   }
+  const value = event ? event.target.value : '';
   document.querySelectorAll('.filter-wrapper input[type="checkbox"]').forEach((filter) => {
-    if (!filter.name.toLowerCase().includes(value)) {
+    if (value && !filter.name.toLowerCase().includes(value)) {
       filter.checked = false; // deselect if hidden
       filter.parentNode.classList.add('hide');
     } else {
@@ -144,28 +142,28 @@ function filterFilters(event) {
 
 function initFilterActions(callback) {
   const dropdownContainer = document.querySelector('.dropdown');
+  const clearAllBtnInBar = document.querySelector('.filter-bar > a.action.clear-all');
   if (typeof callback !== 'function') callback = function() {}; 
   handleDropdownButtons();
   // Clear all button
-  document.querySelector('.filter-bar > a.action.clear-all').addEventListener('click', (event) => {
+  clearAllBtnInBar.addEventListener('click', (event) => {
     event.stopPropagation();
     const allFilterOptions = document.querySelectorAll('.dropdown-menu');
     clearAllFilters(allFilterOptions);
-    event.target.classList.add('hide');
-    callback([]);
+    applyCurrentFilters(callback);
   });
 
-  // Clear button
+  // Reset button
   document.querySelector('.filter-bar a.action.clear').addEventListener('click', (event) => {
-      event.stopPropagation();
-      const allFilterOptions = document.querySelectorAll('.dropdown-menu');
-      clearAllFilters(allFilterOptions);
-    });
+    event.stopPropagation();
+    const allFilterOptions = document.querySelectorAll('.dropdown-menu');
+    clearAllFilters(allFilterOptions);
+  });
 
   // Apply button
   document.querySelector('.filter-bar .action.apply').addEventListener('click', (event) => {
     event.stopPropagation();
-    applyCurrentFilters(callback);
+    applyCurrentFilters(callback, true);
   });
 
   // Search field
@@ -243,14 +241,17 @@ async function drawFilterBar() {
   let filterBarHTML = '';
   if ($productsAndTech) {
     $productsAndTech.querySelectorAll(':scope>ul>li').forEach((l) => {
-      filterBarHTML += `<legend>${l.firstChild.textContent}</legend>`;
+      filterBarHTML += `<div class="option option">
+        <input type="checkbox" id="${l.firstChild.textContent}" name="${l.firstChild.textContent}">
+        <label for="${l.firstChild.textContent}">${l.firstChild.textContent}</label>`;
       
       l.querySelectorAll(':scope>ul>li').forEach((p) => {
-        filterBarHTML+=`<div class="option">
+        filterBarHTML+=`<div class="option option-indent">
         <input type="checkbox" id="${p.firstChild.textContent}" name="${p.firstChild.textContent}">
         <label for="${p.firstChild.textContent}">${p.firstChild.textContent}</label>
       </div>`
-      })
+      });
+      filterBarHTML += '</div>';
     })
     document.querySelector('.filter-wrapper .options').innerHTML = filterBarHTML;
   }
