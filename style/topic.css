@@ -38,7 +38,7 @@
 .topic-page main div.topic-title h1 {
   color: white;
   width: calc(100% - 64px);
-  max-width: 379px;
+  max-width: 378px;
   margin: 0 auto;
   align-self: center;
 }
@@ -105,20 +105,21 @@
   }
 
   .topic-page main div.topic-title h1 {
-    width: 100%;
-    max-width: 912px;
-    padding-left: 64px;
-    padding-right:64px;
+    width: calc(100% - 64px);
+    max-width: 790px;
   }
 
 }
 
-@media (min-width:1100px) {
+@media (min-width:1200px) {
 
   .topic-page main div.topic-title h1 {
     max-width: 1200px;
-    padding-left: 32px;
-    padding-right: 32px;
+  }
+
+  .topic-page main div.topic-title h1,
+  .topic-page .deck {
+    min-width: 1168px;
   }
 
   .topic-page .card {

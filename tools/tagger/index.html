@@ -69,19 +69,19 @@
       background-color: #888888;
     }
 
-    .tag.categories {
+    .tag.cat-0 {
       background-color: #0d66d0;
     }
 
-    .tag.products {
+    .tag.cat-1 {
       background-color: #d7373f;
     }
 
-    .tag.industries {
+    .tag.cat-2 {
       background-color: #12805c;
     }
 
-    .tag.internals {
+    .tag.cat-3 {
       background-color: #d2b200;
     }
 
@@ -142,7 +142,7 @@
     const CATEGORIES = [
       'Categories',
       'Products',
-      'Industries',
+      /*'Industries',*/
       'Internals'
     ];
 
@@ -169,10 +169,11 @@
       });
     }
 
-    function flagCategories() {
+    function findCategories() {
       document.querySelectorAll('#tags-data > div ').forEach((e, i) => {
         if (i === 0) return; // ignore first div
-        e.setAttribute('id', `cat-${CATEGORIES[i - 1]}`);
+        e.setAttribute('id', `cat-${i-1}`);
+        CATEGORIES.push(e.firstElementChild.textContent);
       });
     }
 
@@ -229,8 +230,8 @@
       });
 
       tags.forEach((tagInfo) => {
-        html += `<span data-target="${tagInfo.id}" onclick="remove(this)" class="path">${tagInfo.path}<span class="tag ${tagInfo.category.toLowerCase()}">${tagInfo.tag}</span></span> `;
-        if ('Products' === tagInfo.category) products += tagInfo.tag + ', ';
+        html += `<span data-target="${tagInfo.id}" onclick="remove(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}">${tagInfo.tag}</span></span> `;
+        if (1 === CATEGORIES.indexOf(tagInfo.category)) products += tagInfo.tag + ', ';
         else topics += tagInfo.tag + ', ';
       });
 
@@ -299,9 +300,9 @@
 
       let html = '';
 
-      CATEGORIES.forEach((cat) => {
+      CATEGORIES.forEach((cat, index) => {
         html += `<h1>${cat}</h1>`;
-        document.querySelectorAll(`#tags-data #cat-${cat} li`).forEach((e) => {
+        document.querySelectorAll(`#tags-data #cat-${index} li`).forEach((e) => {
           var tagInfo = fetchTag(e.id);
           if (tagInfo) {
             var tag = tagInfo.tag;
@@ -312,7 +313,7 @@
               term = tag.substr(offset, searchTerm.length);
               after = tag.substr(offset + searchTerm.length);
 
-              html += `<span data-target="${e.id}" onclick="add(this)" class="path">${tagInfo.path}<span class="tag ${tagInfo.category.split(' ')[0].toLowerCase()}">${before}<span class="highlight">${term}</span>${after}</span></span> `;
+              html += `<span data-target="${e.id}" onclick="add(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}">${before}<span class="highlight">${term}</span>${after}</span></span> `;
             }
           }
         })
@@ -362,7 +363,7 @@
         return response.text();
       })
       .then((data) => {
-        document.getElementById('tags-data').innerHTML = data;
+        document.getElementById('tags-data').innerHTML = data.replace(/<(\/)?strong>/gm, '');
         flagCategories();
         generateTagIDs();
         filter();

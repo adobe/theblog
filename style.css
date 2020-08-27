@@ -259,15 +259,15 @@
  .deck {
    margin: 0 auto;
    padding: 48px 32px 0 32px;
-   min-width: 300px;
+   max-width: 443px;
    display: flex;
    flex-flow: row wrap;
  }
  
  .card {
    width: 100%;
-   min-width: 220px;
-   max-width: 379px;
+   min-width: 268px;
+   max-width: 378px;
    margin-bottom: 24px;
    border-radius: 4px;
    border: solid 1px #eaeaea;
@@ -420,9 +420,11 @@
    }
  
    .deck {
-     padding-left:64px;
-     padding-right:64px;
-     max-width: 912px;
+     padding-left:0;
+     padding-right:0;
+     width: calc(100% - 64px);
+     min-width: 568px;
+     max-width: 790px;
    }
  
    .card {
@@ -469,12 +471,10 @@
  
  }
  
- @media (min-width:1100px) {
+ @media (min-width:1200px) {
  
    .deck {
      max-width: 1200px;
-     padding-left: 32px;
-     padding-right: 32px;
    }
  
    .card {

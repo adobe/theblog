@@ -21,7 +21,7 @@ export async function getTaxonomy() {
     })
     .then((data) => {
       const dataContainer = document.createElement('div');
-      dataContainer.innerHTML = data;
+      dataContainer.innerHTML = data.replace(/<(\/)?strong>/gm, '');
 
       dataContainer.querySelectorAll('li').forEach((e, i) => {
         if (e.firstChild) {
