@@ -109,7 +109,7 @@ export function addClass(selector, cssClass, parent) {
 export function setAttributes(selector, attributes) {
   document.querySelectorAll(selector).forEach((el) => {
     Object.entries(attributes).forEach(([key, value]) => {
-      el.setAttribute(key, value);
+      el.setAttribute(key, typeof value === 'function' ? value(el) : value);
     });
   });
 }

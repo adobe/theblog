@@ -487,9 +487,25 @@ function addSchema() {
   setAttributes('.post-header .post-title', { itemprop: 'headline' });
   setAttributes('.post-body', { itemprop: 'articleBody' });
 
+  // Embeds
+  setAttributes('.post-body .embed', { itemprop: 'sharedContent', itemscope: '', itemtype: 'http://schema.org/CreativeWork' });
+  setAttributes('.post-body .embed img', { itemprop: 'image', content: (el) => el.dataset.src });
+  setAttributes('.post-body .embed h1, .post-body .embed h3, .post-body .embed .title', { itemprop: 'headline' });
+  setAttributes('.post-body .embed .banner-right p:first-child, .post-body .embed h3 + p', { itemprop: 'abstract' });
+  setAttributes('.post-body .embed a[target="_blank"]', { itemprop: 'url' });
+
+  setAttributes('.post-body .embed-vimeo, .post-body .embed-youtube', { itemprop: 'sharedContent', itemscope: '', itemtype: 'http://schema.org/VideoObject' });
+  setAttributes('.post-body .embed-vimeo .title, .post-body .embed-youtube .title', { itemprop: 'name' });
+  
+  // Testimonies
+  setAttributes('.post-body .pullquote', { itemprop: 'review', itemscope: '', itemtype: 'http://schema.org/Review' });
+  setAttributes('.post-body .pullquote h2', { itemprop: 'reviewBody' });
+  setAttributes('.post-body .pullquote .images img', { itemprop: 'image', content: (el) => el.dataset.src });
+  setAttributes('.post-body .pullquote .legend', { itemprop: 'abstract' });
+
   // Hero
   setAttributes('.hero-image', { itemprop: 'image', itemscope: '', itemtype: 'http://schema.org/ImageObject' });
-  setAttributes('.hero-image img', { itemprop: 'url' });
+  setAttributes('.hero-image img', { itemprop: 'url', content: (el) => el.getAttribute('src') });
   setAttributes('.hero-image p:last-child', { itemprop: 'caption' });
 
   // Topics
