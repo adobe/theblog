@@ -473,11 +473,21 @@ function loadGetSocial() {
   });
 }
 
-function decorateGifyuLinks() {
-  document.querySelectorAll('a[href^="https://s8.gifyu.com/images"]').forEach(($a) => {
+function decorateAnimations() {
+  document.querySelectorAll('.animation a[href^="https://hlx.blob.core.windows.net/external/"]').forEach(($a) => {
     const href=$a.getAttribute('href');
-    $a.parentNode.className='images';
-    $a.parentNode.replaceChild(createTag('img', {'src': href }), $a);
+    const url=new URL(href);
+    const helixId=url.pathname.split('/')[2];
+    $a.parentNode.classList.add('images');
+
+    if (href.endsWith('.mp4')) {
+      const $video=createTag('video', {playsinline:'', autoplay:'', loop:'', muted:''});
+      $video.innerHTML=`<source src="${href}" type="video/mp4">`;
+      $a.parentNode.replaceChild($video, $a);  
+    }
+    if (href.endsWith('.gif')) {
+      $a.parentNode.replaceChild(createTag('img',{src: `/hlx_${helixId}.gif`}), $a);  
+    }
   });
 }
 
@@ -557,9 +567,9 @@ function shapeBanners() {
 window.addEventListener('load', async function() {
   decoratePostPage();
   handleImmediateMetadata();
-  decorateGifyuLinks();
   decorateImages();
   decorateTables();
+  decorateAnimations();
   handleLinks();
   addPredictedPublishURL();
   addCategory();
