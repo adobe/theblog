@@ -496,6 +496,7 @@ function addSchema() {
 
   setAttributes('.post-body .embed-vimeo, .post-body .embed-youtube', { itemprop: 'sharedContent', itemscope: '', itemtype: 'http://schema.org/VideoObject' });
   setAttributes('.post-body .embed-vimeo .title, .post-body .embed-youtube .title', { itemprop: 'name' });
+  setAttributes('.post-body .embed a[target="_blank"]', { itemprop: 'contentUrl' });
   
   // Testimonies
   setAttributes('.post-body .pullquote', { itemprop: 'review', itemscope: '', itemtype: 'http://schema.org/Review' });
