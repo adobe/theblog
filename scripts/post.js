@@ -483,7 +483,9 @@ function decorateAnimations() {
     if (href.endsWith('.mp4')) {
       const $video=createTag('video', {playsinline:'', autoplay:'', loop:'', muted:''});
       $video.innerHTML=`<source src="${href}" type="video/mp4">`;
-      $a.parentNode.replaceChild($video, $a);  
+      $a.parentNode.replaceChild($video, $a);
+      $video.addEventListener('canplay', (evt) => { 
+        $video.play() });
     }
     if (href.endsWith('.gif')) {
       $a.parentNode.replaceChild(createTag('img',{src: `/hlx_${helixId}.gif`}), $a);  
