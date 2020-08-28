@@ -485,6 +485,7 @@ function decorateAnimations() {
       $video.innerHTML=`<source src="${href}" type="video/mp4">`;
       $a.parentNode.replaceChild($video, $a);
       $video.addEventListener('canplay', (evt) => { 
+        $video.muted=true;
         $video.play() });
     }
     if (href.endsWith('.gif')) {
