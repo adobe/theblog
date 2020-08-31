@@ -489,14 +489,11 @@ function addSchema() {
 
   // Embeds
   setAttributes('.post-body .embed', { itemprop: 'sharedContent', itemscope: '', itemtype: 'http://schema.org/CreativeWork' });
-  setAttributes('.post-body .embed img', { itemprop: 'image', content: (el) => el.dataset.src });
-  setAttributes('.post-body .embed h1, .post-body .embed h3, .post-body .embed .title', { itemprop: 'headline' });
-  setAttributes('.post-body .embed .banner-right p:first-child, .post-body .embed h3 + p', { itemprop: 'abstract' });
-  setAttributes('.post-body .embed a[target="_blank"]', { itemprop: 'url' });
-
+  setAttributes('.post-body .embed iframe', { itemprop: 'contentUrl' });
+  setAttributes('.post-body .embed-soundcloud', { itemprop: 'sharedContent', itemscope: '', itemtype: 'http://schema.org/AudioObject' });
   setAttributes('.post-body .embed-vimeo, .post-body .embed-youtube', { itemprop: 'sharedContent', itemscope: '', itemtype: 'http://schema.org/VideoObject' });
-  setAttributes('.post-body .embed-vimeo .title, .post-body .embed-youtube .title', { itemprop: 'name' });
-  setAttributes('.post-body .embed a[target="_blank"]', { itemprop: 'contentUrl' });
+  setAttributes('.post-body .embed-slideshare', { itemprop: 'sharedContent', itemscope: '', itemtype: 'http://schema.org/DigitalDocument' });
+  setAttributes('.post-body .embed-slideshare iframe', { itemprop: 'url' });
   
   // Testimonies
   setAttributes('.post-body .pullquote', { itemprop: 'review', itemscope: '', itemtype: 'http://schema.org/Review' });
