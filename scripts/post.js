@@ -473,6 +473,18 @@ function loadGetSocial() {
   });
 }
 
+function decorateLinkedImages() {
+  document.querySelectorAll('.linked-image img').forEach(($img) => {
+    const $div=$img.closest('.linked-image');
+    const $p=$img.parentNode;
+    const $a=$div.querySelector('a');
+    $a.innerHTML='';
+    $a.appendChild($img);
+    $p.remove();
+    $div.className='images';
+  });
+}
+
 function decorateAnimations() {
   document.querySelectorAll('.animation a[href^="https://hlx.blob.core.windows.net/external/"]').forEach(($a) => {
     const href=$a.getAttribute('href');
@@ -573,6 +585,7 @@ window.addEventListener('load', async function() {
   decorateImages();
   decorateTables();
   decorateAnimations();
+  decorateLinkedImages();
   handleLinks();
   addPredictedPublishURL();
   addCategory();
