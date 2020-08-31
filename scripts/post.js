@@ -494,6 +494,13 @@ function addSchema() {
   setAttributes('.post-body .embed-vimeo, .post-body .embed-youtube', { itemprop: 'sharedContent', itemscope: '', itemtype: 'http://schema.org/VideoObject' });
   setAttributes('.post-body .embed-slideshare', { itemprop: 'sharedContent', itemscope: '', itemtype: 'http://schema.org/DigitalDocument' });
   setAttributes('.post-body .embed-slideshare iframe', { itemprop: 'url' });
+  const embeds = document.querySelectorAll('.post-body .embed');
+  [...embeds].forEach((el) => {
+    const title = el.querySelector('iframe').title;
+    const titleEl = document.createElement('div');
+    titleEl.innerHTML = `<div itemprop="name" content="${title}" style="display:none"></div>`;
+    el.appendChild(titleEl.firstChild);
+  })
   
   // Testimonies
   setAttributes('.post-body .pullquote', { itemprop: 'review', itemscope: '', itemtype: 'http://schema.org/Review' });
