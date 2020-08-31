@@ -496,11 +496,22 @@ function addSchema() {
   setAttributes('.post-body .embed-slideshare iframe', { itemprop: 'url' });
   const embeds = document.querySelectorAll('.post-body .embed');
   [...embeds].forEach((el) => {
-    const title = el.querySelector('iframe').title;
-    const titleEl = document.createElement('div');
-    titleEl.innerHTML = `<div itemprop="name" style="display:none">${title}</div>`;
+    const iframeEl = el.querySelector('iframe');
+    const tempEl = document.createElement('div');
+    const title = iframeEl.title;
+    let thumbnailUrl = '';
+    if (el.classList.contains('embed-youtube')) {
+      const videoId = iframeEl.src.split(/[/?]/)[4];
+      thumbnailUrl = `http://img.youtube.com/vi/${videoId}/0.jpg`;
+    }
+    tempEl.innerHTML = `<div style="display:none">
+      <div itemprop="name">${title}</div>
+      <div itemprop="description"></div>
+      <img itemprop="thumbnailUrl" src="${thumbnailUrl}" content="${thumbnailUrl}"/>
+      <div itemprop="uploadDate" content=""></div>
+    </div>`;
     el.appendChild(titleEl.firstChild);
-  })
+  });
   
   // Testimonies
   setAttributes('.post-body .pullquote', { itemprop: 'review', itemscope: '', itemtype: 'http://schema.org/Review' });
