@@ -246,10 +246,12 @@ async function drawFilterBar() {
       filterBarHTML += `<legend>${l.firstChild.textContent}</legend>`;
       
       l.querySelectorAll(':scope>ul>li').forEach((p) => {
-        filterBarHTML+=`<div class="option">
-        <input type="checkbox" id="${p.firstChild.textContent}" name="${p.firstChild.textContent}">
-        <label for="${p.firstChild.textContent}">${p.firstChild.textContent}</label>
-      </div>`
+        if (taxonomy.isUFT(p.firstChild.textContent)) {
+          filterBarHTML+=`<div class="option">
+            <input type="checkbox" id="${p.firstChild.textContent}" name="${p.firstChild.textContent}">
+            <label for="${p.firstChild.textContent}">${p.firstChild.textContent}</label>
+          </div>`;
+        }
       })
     })
     document.querySelector('.filter-wrapper .options').innerHTML = filterBarHTML;

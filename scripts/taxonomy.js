@@ -72,7 +72,7 @@ export async function getTaxonomy() {
 
         isUFT: function (topic) {
           try {
-            let n = this.node.querySelector(`[data-type="${CATEGORIES}"] [data-topic="${escapeTopic(topic)}"]`);
+            let n = this.node.querySelector(`[data-topic="${escapeTopic(topic)}"]`);
             return n && n.getAttribute('data-nuft') !== 'true';
           } catch (error) {
             console.error(`isUFT error with topic "${topic}"`, error);
