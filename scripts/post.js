@@ -510,7 +510,7 @@ function addSchema() {
       <img itemprop="thumbnailUrl" src="${thumbnailUrl}" content="${thumbnailUrl}"/>
       <div itemprop="uploadDate" content=""></div>
     </div>`;
-    el.appendChild(titleEl.firstChild);
+    el.appendChild(tempEl.firstChild);
   });
   
   // Testimonies
