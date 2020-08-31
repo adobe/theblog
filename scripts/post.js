@@ -498,7 +498,7 @@ function addSchema() {
   [...embeds].forEach((el) => {
     const title = el.querySelector('iframe').title;
     const titleEl = document.createElement('div');
-    titleEl.innerHTML = `<div itemprop="name" content="${title}" style="display:none"></div>`;
+    titleEl.innerHTML = `<div itemprop="name" style="display:none">${title}</div>`;
     el.appendChild(titleEl.firstChild);
   })
   
