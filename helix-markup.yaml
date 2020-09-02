@@ -1,6 +1,6 @@
 version: 1
 markup:
   client-embeds:
-    type: markdown
-    match: embed
+    type: html
+    match: div.embed
     wrap: pre
