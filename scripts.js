@@ -121,8 +121,7 @@ function getOtDomainId() {
 };
 
 // Prep images for lazy loading and use adequate sizes
-const imgWidth = window.innerWidth === 375 ? 750 : // double size for retina
-              window.innerWidth < 900 ? 900 : 2048;
+const imgWidth = (window.innerWidth < 1000 ? window.innerWidth : 1000) * window.devicePixelRatio;
 let imgCount = 0;
 
 const observer = new MutationObserver(mutations => {
