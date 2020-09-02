@@ -38,11 +38,21 @@
     }
 
     #results {
-      overflow: scroll;
-      user-select: none;
+      display: flex;
+      flex-wrap: wrap;
     }
 
-    main>div>span {
+    #results > .category {
+      user-select: none;
+      
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+      min-width: 400px;
+    }
+
+    main > div > span,
+    main > div > div > span {
       white-space: nowrap;
       margin: 10px;
     }
@@ -260,7 +270,7 @@
       var copybuffer = document.getElementById('copybuffer');
       copybuffer.value = `---\r\n\r\nTopics: ${topics}\r\nProducts: ${products}\r\n\r\n`
 
-      document.querySelectorAll('#results>span').forEach((e) => {
+      document.querySelectorAll('#results>.category>span').forEach((e) => {
         if (selected.indexOf(e.getAttribute('data-target')) < 0) {
           e.classList.remove('selected');
           e.setAttribute('onclick', 'add(this)');
@@ -316,6 +326,7 @@
       let html = '';
 
       CATEGORIES.forEach((cat, index) => {
+        html += `<div class="category">`;
         html += `<h1>${cat}</h1>`;
         document.querySelectorAll(`#tags-data #cat-${index} li`).forEach((e) => {
           var tagInfo = fetchTag(e.id);
@@ -332,6 +343,7 @@
             }
           }
         })
+        html += `</div>`;
       });
       var results = document.getElementById('results');
       results.innerHTML = html;
