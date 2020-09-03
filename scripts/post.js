@@ -253,7 +253,8 @@ function decoratePostPage(){
 
   wrap('post-header',['main>div.category','main>div.post-title']);
 
-  document.querySelectorAll('.embed-internal-undefined>div:not(.banner), .embed-internal-promotions>div:not(.banner)').forEach(($e) => {
+  document.querySelectorAll('.post-body .embed-internal>div:not(.banner)').forEach(($e) => {
+    $e.parentNode.classList.add('embed-internal-promotions');
     const children = Array.from($e.childNodes);
     children.shift();
     const parent = createTag('div', { 'class' : 'embed-promotions-text' });
