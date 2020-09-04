@@ -25,7 +25,7 @@ export async function getTaxonomy() {
 
       dataContainer.querySelectorAll('li').forEach((e, i) => {
         if (e.firstChild && e.firstChild.textContent) {
-          let topic = e.firstChild.textContent;
+          let topic = e.firstChild.textContent.trim();
           if (topic.indexOf('*') !== -1) {
             e.setAttribute('data-nuft', 'true');
             topic = topic.replace(/\*/gm, '');
