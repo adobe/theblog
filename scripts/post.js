@@ -501,6 +501,7 @@ function addSchema() {
   const embeds = document.querySelectorAll('.post-body .embed');
   [...embeds].forEach((el) => {
     const iframeEl = el.querySelector('iframe');
+    if (!iframeEl) { return; }
     const tempEl = document.createElement('div');
     const title = iframeEl.title;
     let thumbnailUrl = '';
