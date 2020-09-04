@@ -225,17 +225,19 @@ async function drawFilterBar() {
   let filterBarHTML = '';
   if ($productsAndTech) {
     $productsAndTech.querySelectorAll(':scope>ul>li').forEach((l) => {
-      if (taxonomy.isUFT(l.firstChild.textContent)) {
+      if (l.firstChild.textContent) {
+        const lname = l.firstChild.textContent.replace(/\*/gm, '');
         filterBarHTML += `<div class="option option">
-          <input type="checkbox" id="${l.firstChild.textContent}" name="${l.firstChild.textContent}">
-          <label for="${l.firstChild.textContent}">${l.firstChild.textContent}</label>
+          <input type="checkbox" id="${lname}" name="${lname}">
+          <label for="${lname}">${lname}</label>
         </div>`;
       
         l.querySelectorAll(':scope>ul>li').forEach((p) => {
-          if (taxonomy.isUFT(p.firstChild.textContent)) {
+          if (p.firstChild.textContent) {
+            const pname = p.firstChild.textContent.replace(/\*/gm, '');
             filterBarHTML+=`<div class="option option-nested">
-              <input type="checkbox" id="${p.firstChild.textContent}" name="${p.firstChild.textContent}">
-              <label for="${p.firstChild.textContent}">${p.firstChild.textContent}</label>
+              <input type="checkbox" id="${pname}" name="${pname}">
+              <label for="${pname}">${pname}</label>
             </div>`;
           }
         });
