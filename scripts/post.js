@@ -505,7 +505,7 @@ function addSchema() {
     const tempEl = document.createElement('div');
     const title = iframeEl.title;
     let thumbnailUrl = '';
-    if (el.classList.contains('embed-youtube')) {
+    if (el.classList.contains('embed-youtube') || el.classList.contains('embed-youtu')) {
       const videoId = iframeEl.src.split(/[/?]/)[4];
       thumbnailUrl = `http://img.youtube.com/vi/${videoId}/0.jpg`;
     }
