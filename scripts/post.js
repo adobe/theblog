@@ -253,7 +253,8 @@ function decoratePostPage(){
 
   wrap('post-header',['main>div.category','main>div.post-title']);
 
-  document.querySelectorAll('.embed-internal-promotions>div:not(.banner)').forEach(($e) => {
+  document.querySelectorAll('.post-body .embed-internal>div:not(.banner)').forEach(($e) => {
+    $e.parentNode.classList.add('embed-internal-promotions');
     const children = Array.from($e.childNodes);
     children.shift();
     const parent = createTag('div', { 'class' : 'embed-promotions-text' });
@@ -473,6 +474,39 @@ function loadGetSocial() {
   });
 }
 
+function decorateLinkedImages() {
+  document.querySelectorAll('.linked-image img').forEach(($img) => {
+    const $div=$img.closest('.linked-image');
+    const $p=$img.parentNode;
+    const $a=$div.querySelector('a');
+    $a.innerHTML='';
+    $a.appendChild($img);
+    $p.remove();
+    $div.className='images';
+  });
+}
+
+function decorateAnimations() {
+  document.querySelectorAll('.animation a[href^="https://hlx.blob.core.windows.net/external/"]').forEach(($a) => {
+    const href=$a.getAttribute('href');
+    const url=new URL(href);
+    const helixId=url.pathname.split('/')[2];
+    $a.parentNode.classList.add('images');
+
+    if (href.endsWith('.mp4')) {
+      const $video=createTag('video', {playsinline:'', autoplay:'', loop:'', muted:''});
+      $video.innerHTML=`<source src="${href}" type="video/mp4">`;
+      $a.parentNode.replaceChild($video, $a);
+      $video.addEventListener('canplay', (evt) => { 
+        $video.muted=true;
+        $video.play() });
+    }
+    if (href.endsWith('.gif')) {
+      $a.parentNode.replaceChild(createTag('img',{src: `/hlx_${helixId}.gif`}), $a);  
+    }
+  });
+}
+
 /**
  * Shapes promotional banners
  */
@@ -551,6 +585,8 @@ window.addEventListener('load', async function() {
   handleImmediateMetadata();
   decorateImages();
   decorateTables();
+  decorateAnimations();
+  decorateLinkedImages();
   handleLinks();
   addPredictedPublishURL();
   addCategory();

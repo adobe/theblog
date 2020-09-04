@@ -84,8 +84,11 @@
   margin: 20px auto 0 auto;
 }
 
-.post-page main>div.post-body .images img, .embed {
+.post-page main>div.post-body .images img,
+.post-page main>div.post-body .images video,
+.embed {
   margin-top: 64px;
+  max-width: 100%;
 }
 
 .post-page main>div.post-body p.legend {
@@ -564,7 +567,7 @@
     margin-left: 0px;
   }
 
-  .post-page main>div.post-body>p.images {
+  .post-page main>div.post-body>.images {
     margin-left: 0px;
     margin-right: 0px;
     text-align: center;
@@ -577,7 +580,8 @@
     max-width: 600px;
   }
 
-  .post-page main>div.post-body>p.images>img {
+  .post-page main>div.post-body>.images>img,
+  .post-page main>div.post-body .images video {
     max-width: 100%;
     display: block;
     margin-left: auto;
