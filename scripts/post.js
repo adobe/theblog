@@ -510,10 +510,10 @@ function addSchema() {
       thumbnailUrl = `http://img.youtube.com/vi/${videoId}/0.jpg`;
     }
     tempEl.innerHTML = `<div style="display:none">
-      <div itemprop="name">${title}</div>
-      <div itemprop="description"></div>
-      <img itemprop="thumbnailUrl" src="${thumbnailUrl}" content="${thumbnailUrl}"/>
-      <div itemprop="uploadDate" content=""></div>
+      <meta itemprop="name" content="${title}"/>
+      <meta itemprop="description" content="${title}"/>
+      <link itemprop="thumbnailUrl" href="${thumbnailUrl}"/>
+      <meta itemprop="uploadDate" content="${window.blog.date}"></div>
     </div>`;
     el.appendChild(tempEl.firstChild);
   });
@@ -539,10 +539,9 @@ function addSchema() {
   const publisherUrl = document.querySelector('link[rel="publisher"]');
   const publisherEl = document.createElement('div');
   publisherEl.innerHTML = `<div itemprop="publisher" itemscope itemtype="http://schema.org/Organization" style="display:none">
-    <a itemprop="url" href="${publisherUrl && publisherUrl.href}">
-      <span itemprop="name">${publisherName && publisherName.getAttribute('content')}</span>
-    </a>
-    <img itemprop="logo" src="https://www.adobe.com/content/dam/cc/icons/Adobe_Corporate_Horizontal_Red_HEX.svg"/>
+    <link itemprop="url" href="${publisherUrl && publisherUrl.href}"/>
+    <meta itemprop="name" content="${publisherName && publisherName.getAttribute('content')}"/>
+    <link itemprop="logo" href="https://www.adobe.com/content/dam/cc/icons/Adobe_Corporate_Horizontal_Red_HEX.svg"/>
   </div>`;
   document.querySelector('main').appendChild(publisherEl.firstChild);
 }
