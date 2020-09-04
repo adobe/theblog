@@ -25,7 +25,7 @@ export async function getTaxonomy() {
 
       dataContainer.querySelectorAll('li').forEach((e, i) => {
         if (e.firstChild) {
-          e.setAttribute('data-topic', e.firstChild.textContent);
+          e.setAttribute('data-topic', e.firstChild.textContent ? e.firstChild.textContent.trim() : '');
         }
       });
 
