@@ -490,8 +490,12 @@ function addSchema() {
   // Embeds
   setAttributes('.post-body .embed', { itemprop: 'sharedContent', itemscope: '', itemtype: 'http://schema.org/CreativeWork' });
   setAttributes('.post-body .embed iframe', { itemprop: 'contentUrl' });
+  setAttributes('.post-body .embed-internal h1, .post-body .embed-internal h3', { itemprop: 'name' });
+  setAttributes('.post-body .embed-internal p:last-of-type, .post-body .embed-internal h3 + p', { itemprop: 'description' });
+  setAttributes('.post-body .embed-internal img', { itemprop: 'image', content: (el) => el.dataset.src });
+  setAttributes('.post-body .embed-internal a[target="_blank"]', { itemprop: 'url', content: (el) => el.href });
   setAttributes('.post-body .embed-soundcloud', { itemprop: 'sharedContent', itemscope: '', itemtype: 'http://schema.org/AudioObject' });
-  setAttributes('.post-body .embed-vimeo, .post-body .embed-youtube', { itemprop: 'sharedContent', itemscope: '', itemtype: 'http://schema.org/VideoObject' });
+  setAttributes('.post-body .embed-vimeo, .post-body .embed-youtube, .post-body .embed-youtu', { itemprop: 'sharedContent', itemscope: '', itemtype: 'http://schema.org/VideoObject' });
   setAttributes('.post-body .embed-slideshare', { itemprop: 'sharedContent', itemscope: '', itemtype: 'http://schema.org/DigitalDocument' });
   setAttributes('.post-body .embed-slideshare iframe', { itemprop: 'url' });
   const embeds = document.querySelectorAll('.post-body .embed');
