@@ -43,9 +43,9 @@ export async function getTaxonomy() {
       const INDUSTRIES = 'industries';
       const INTERNALS = 'internals';
 
-      if (dataContainer.firstElementChild && dataContainer.firstElementChild.nextElementSibling) {
-        let div = dataContainer.firstElementChild.nextElementSibling;
-        // second div contains Categories
+      if (dataContainer.firstElementChild) {
+        let div = dataContainer.firstElementChild;
+        // first div contains Categories
         div.setAttribute('data-type', CATEGORIES);
         div = div.nextElementSibling;
         if (div) {
