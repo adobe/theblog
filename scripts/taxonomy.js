@@ -23,9 +23,18 @@ export async function getTaxonomy() {
       const dataContainer = document.createElement('div');
       dataContainer.innerHTML = data.replace(/<(\/)?strong>/gm, '');
 
+      // remove first div which contains the intro text
+      dataContainer.querySelector('div').remove();
+
       dataContainer.querySelectorAll('li').forEach((e, i) => {
-        if (e.firstChild) {
-          e.setAttribute('data-topic', e.firstChild.textContent ? e.firstChild.textContent.trim() : '');
+        if (e.firstChild && e.firstChild.textContent) {
+          let topic = e.firstChild.textContent.trim();
+          if (topic.indexOf('*') !== -1) {
+            e.setAttribute('data-nuft', 'true');
+            topic = topic.replace(/\*/gm, '');
+          }
+
+          e.setAttribute('data-topic', topic.trim());
         }
       });
 
@@ -34,9 +43,9 @@ export async function getTaxonomy() {
       const INDUSTRIES = 'industries';
       const INTERNALS = 'internals';
 
-      if (dataContainer.firstElementChild && dataContainer.firstElementChild.nextElementSibling) {
-        let div = dataContainer.firstElementChild.nextElementSibling;
-        // second div contains Categories
+      if (dataContainer.firstElementChild) {
+        let div = dataContainer.firstElementChild;
+        // first div contains Categories
         div.setAttribute('data-type', CATEGORIES);
         div = div.nextElementSibling;
         if (div) {
@@ -66,8 +75,8 @@ export async function getTaxonomy() {
 
         isUFT: function (topic) {
           try {
-            let n = this.node.querySelector(`[data-type="${CATEGORIES}"] [data-topic="${escapeTopic(topic)}"]`);
-            return !!n;
+            let n = this.node.querySelector(`[data-topic="${escapeTopic(topic)}"]`);
+            return n && n.getAttribute('data-nuft') !== 'true';
           } catch (error) {
             console.error(`isUFT error with topic "${topic}"`, error);
             return false;
@@ -80,7 +89,7 @@ export async function getTaxonomy() {
             let n = this.node.querySelector(`[data-topic="${escapeTopic(topic)}"]`);
             while (n) {
               const parentTopic = n.getAttribute('data-topic');
-              if (parentTopic) {
+              if (parentTopic && this.isUFT(parentTopic)) {
                 parents.push(parentTopic);
               }
               n = n.parentElement;

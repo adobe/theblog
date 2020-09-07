@@ -10,6 +10,10 @@
       font-family: 'Adobe Clean';
     }
 
+    main .intro {
+      font-size: 1rem;
+    }
+
     main input {
       width: 100%;
       font-size: 2rem;
@@ -20,7 +24,7 @@
     }
 
     main .filter {
-      padding: 0px 10px 20px 10px;
+      padding: 20px 10px 20px 10px;
     }
 
     main #selected {
@@ -38,11 +42,21 @@
     }
 
     #results {
-      overflow: scroll;
-      user-select: none;
+      display: flex;
+      flex-wrap: wrap;
+      padding-bottom: 150px;
     }
 
-    main>div>span {
+    #results > .category {
+      user-select: none;
+      
+      display: flex;
+      flex-direction: column;
+      flex-wrap: wrap;
+    }
+
+    main > div > span,
+    main > div > div > span {
       white-space: nowrap;
       margin: 10px;
     }
@@ -65,30 +79,46 @@
       padding-top: 5px;
     }
 
-    .selected span.tag {
+    .selected span.tag, 
+    .selected span.tag.nuft {
       background-color: #888888;
+      color: lightgrey;
     }
 
     .tag.cat-0 {
       background-color: #0d66d0;
     }
 
+    .tag.cat-0.nuft {
+      background-color: #86b2e7;
+    }
+
     .tag.cat-1 {
       background-color: #d7373f;
+    }
+
+    .tag.cat-1.nuft {
+      background-color: #eb9b9f;
     }
 
     .tag.cat-2 {
       background-color: #12805c;
     }
 
+    .tag.cat-2.nuft {
+      background-color: #88bfad;
+    }
+
     .tag.cat-3 {
       background-color: #d2b200;
     }
 
+    .tag.cat-3.nuft {
+      background-color: #e8d87f;
+    }
 
-    #selected .tag {
-      color: white;
-      font-weight: 700;
+    span.tag.nuft {
+      color: lightslategrey
     }
 
     span.tag .highlight {
@@ -99,7 +129,7 @@
     span.path {
       border-radius: 10px;
       border: 1px dashed black;
-      padding: 4px 0px 2px 20px;
+      padding: 4px 10px 2px 10px;
       font-size: 10px;
     }
 
@@ -156,7 +186,7 @@
       document.querySelectorAll('#tags-data li').forEach((e, i) => {
         if (e.firstChild && e.firstChild.textContent) {
           e.setAttribute('id', 'tag-' + i);
-          e.setAttribute('data-name', e.firstChild.textContent);
+          e.setAttribute('data-name', e.firstChild.textContent.trim());
         } else {
           // useless element
           e.remove();
@@ -164,11 +194,18 @@
       });
     }
 
+    function insertIntro() {
+      // first div is the intro
+      const intro = document.querySelector('#tags-data > div');
+      intro.classList.add('intro');
+      const filter = document.querySelector('div.filter');
+      filter.parentNode.insertBefore(intro, filter);
+    }
+
     function findCategories() {
       document.querySelectorAll('#tags-data > div ').forEach((e, i) => {
-        if (i === 0) return; // ignore first div
-        e.setAttribute('id', `cat-${i-1}`);
-        CATEGORIES.push(e.firstElementChild.textContent);
+        e.setAttribute('id', `cat-${i}`);
+        CATEGORIES.push(e.firstElementChild.textContent.trim());
       });
     }
 
@@ -225,7 +262,7 @@
       });
 
       tags.forEach((tagInfo) => {
-        html += `<span data-target="${tagInfo.id}" onclick="remove(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}">${tagInfo.tag}</span></span> `;
+        html += `<span data-target="${tagInfo.id}" onclick="remove(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}${tagInfo.nuft ? ' nuft' : ''}">${tagInfo.label}</span></span> `;
         if (1 === CATEGORIES.indexOf(tagInfo.category)) products += tagInfo.tag + ', ';
         else topics += tagInfo.tag + ', ';
       });
@@ -244,7 +281,7 @@
       var copybuffer = document.getElementById('copybuffer');
       copybuffer.value = `---\r\n\r\nTopics: ${topics}\r\nProducts: ${products}\r\n\r\n`
 
-      document.querySelectorAll('#results>span').forEach((e) => {
+      document.querySelectorAll('#results>.category>span').forEach((e) => {
         if (selected.indexOf(e.getAttribute('data-target')) < 0) {
           e.classList.remove('selected');
           e.setAttribute('onclick', 'add(this)');
@@ -259,7 +296,7 @@
       var label = '';
       node.childNodes.forEach((c) => {
         if (c.nodeName != 'UL') {
-          label += c.textContent + ' ';
+          label += c.textContent.trim() + ' ';
         }
       })
       label = label.trim();
@@ -270,19 +307,23 @@
       var tagInfo;
       var e = document.getElementById(id);
       if (e.firstChild && e.firstChild.textContent) {
-        var tag = e.firstChild.textContent;
+        var label = e.firstChild.textContent.trim();
         var path = '';
         var parent = e.parentNode.parentNode;
+        var nuft = label.indexOf('*') !== -1;
+        var tag = label.replace(/\*/gm, '').trim();
         while (parent.nodeName == 'LI') {
-          var label = getLabel(parent);
-          label = label.trim();
-          path = label + (path ? ' / ' : ' ') + path;
+          var parentLabel = getLabel(parent);
+          parentLabel = parentLabel.trim();
+          path = parentLabel + (path ? ' / ' : ' ') + path;
           parent = parent.parentNode.parentNode;
         }
         var cat = getLabel(parent);
         tagInfo = {
-          tag: tag,
-          path: path,
+          tag,
+          label,
+          nuft,
+          path,
           category: cat,
           id
         };
@@ -296,22 +337,24 @@
       let html = '';
 
       CATEGORIES.forEach((cat, index) => {
-        html += `<h1>${cat}</h1>`;
+        html += `<div class="category">`;
+        html += `<h2>${cat}</h2>`;
         document.querySelectorAll(`#tags-data #cat-${index} li`).forEach((e) => {
           var tagInfo = fetchTag(e.id);
           if (tagInfo) {
-            var tag = tagInfo.tag;
-            var offset = tag.toLowerCase().indexOf(searchTerm);
+            var label = tagInfo.label;
+            var offset = label.toLowerCase().indexOf(searchTerm);
 
             if (offset >= 0) {
-              before = tag.substr(0, offset);
-              term = tag.substr(offset, searchTerm.length);
-              after = tag.substr(offset + searchTerm.length);
+              before = label.substr(0, offset);
+              term = label.substr(offset, searchTerm.length);
+              after = label.substr(offset + searchTerm.length);
 
-              html += `<span data-target="${e.id}" onclick="add(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}">${before}<span class="highlight">${term}</span>${after}</span></span> `;
+              html += `<span data-target="${e.id}" onclick="add(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}${tagInfo.nuft ? ' nuft' : ''}">${before}<span class="highlight">${term}</span>${after}</span></span> `;
             }
           }
         })
+        html += `</div>`;
       });
       var results = document.getElementById('results');
       results.innerHTML = html;
@@ -358,7 +401,11 @@
         return response.text();
       })
       .then((data) => {
-        document.getElementById('tags-data').innerHTML = data.replace(/<(\/)?strong>/gm, '');
+        document.getElementById('tags-data').innerHTML = data;
+        insertIntro();
+
+        // remove now all <strong> tags (cause issues)
+        document.getElementById('tags-data').innerHTML = document.getElementById('tags-data').innerHTML.replace(/<(\/)?strong>/gm, '');
         findCategories();
         generateTagIDs();
         filter();

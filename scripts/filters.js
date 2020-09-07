@@ -225,17 +225,23 @@ async function drawFilterBar() {
   let filterBarHTML = '';
   if ($productsAndTech) {
     $productsAndTech.querySelectorAll(':scope>ul>li').forEach((l) => {
-      filterBarHTML += `<div class="option option">
-        <input type="checkbox" id="${l.firstChild.textContent}" name="${l.firstChild.textContent}">
-        <label for="${l.firstChild.textContent}">${l.firstChild.textContent}</label>
-      </div>`;
+      if (l.firstChild.textContent) {
+        const lname = l.firstChild.textContent.replace(/\*/gm, '');
+        filterBarHTML += `<div class="option option">
+          <input type="checkbox" id="${lname}" name="${lname}">
+          <label for="${lname}">${lname}</label>
+        </div>`;
       
-      l.querySelectorAll(':scope>ul>li').forEach((p) => {
-        filterBarHTML+=`<div class="option option-nested">
-        <input type="checkbox" id="${p.firstChild.textContent}" name="${p.firstChild.textContent}">
-        <label for="${p.firstChild.textContent}">${p.firstChild.textContent}</label>
-      </div>`
-      });
+        l.querySelectorAll(':scope>ul>li').forEach((p) => {
+          if (p.firstChild.textContent) {
+            const pname = p.firstChild.textContent.replace(/\*/gm, '');
+            filterBarHTML+=`<div class="option option-nested">
+              <input type="checkbox" id="${pname}" name="${pname}">
+              <label for="${pname}">${pname}</label>
+            </div>`;
+          }
+        });
+      }
     })
     document.querySelector('.filter-wrapper .options').innerHTML = filterBarHTML;
   }
