@@ -23,6 +23,9 @@ export async function getTaxonomy() {
       const dataContainer = document.createElement('div');
       dataContainer.innerHTML = data.replace(/<(\/)?strong>/gm, '');
 
+      // remove first div which contains the intro text
+      dataContainer.querySelector('div').remove();
+
       dataContainer.querySelectorAll('li').forEach((e, i) => {
         if (e.firstChild && e.firstChild.textContent) {
           let topic = e.firstChild.textContent.trim();
