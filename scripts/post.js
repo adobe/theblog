@@ -333,29 +333,36 @@ function decorateImages() {
 }
 
 /**
- * Loops through a list of keywords and looks for matches in paragraph texts.
- * Every first occurrence of a keyword is replaced with a link.
+ * Loops through a list of keywords and looks for matches in the article text.
+ * The first occurrence of each keyword will be replaced with a link.
  */
 async function addInterLinks() {
-  const response = await fetch('/en/drafts/rofe/interlink.json');
+  const response = await fetch('/en/keywords.json');
   if (response.ok) { 
     const json = await response.json();
-    const links = Array.isArray(json) ? json : json.data;
-    document.querySelectorAll('main p').forEach((p, num) => {
-      if (links.length === 0) return;
+    let bStart = Date.now();
+    const keywords = (Array.isArray(json) ? json : json.data)
+      // scan article to filter keywords down to relevant ones
+      .filter(({ Keyword }) => document.querySelector('main').textContent.toLowerCase().indexOf(Keyword) !== -1);
+    console.log(`keywords: filtering down from ${json.length} to ${keywords.length} took ${Date.now() - bStart}ms`);
+
+    // find exact text node matches and insert links (exclude headings and anchors)
+    bStart = Date.now();
+    document.querySelectorAll('main > div :not(h1):not(h2):not(h3):not(h4):not(h5):not(a)').forEach((p, num) => {
+      if (keywords.length === 0) return;
       const textNodes = Array.from(p.childNodes)
         // filter out non text nodes  
         .filter(node => node.nodeType === Node.TEXT_NODE)
         .forEach((textNode) => {
           const matches = [];
           // find case-insensitive matches inside text node
-          links.forEach((link, index) => {
-            const start = textNode.nodeValue.toLowerCase().indexOf(link.title.toLowerCase());
-            if (start >= 0) {
+          keywords.forEach((item, index) => {
+            const match = new RegExp(`\\b(${item.Keyword})\\b`, 'iu').exec(textNode.nodeValue);
+            if (match) {
               matches.push({
-                link,
-                start,
-                end: start + link.title.length,
+                item,
+                start: match.index,
+                end: match.index + item.Keyword.length,
               });
             }
           });
@@ -365,18 +372,24 @@ async function addInterLinks() {
               return a.start < b.start ? 1 : -1;
             })
             // split text node and insert link with matched text
-            .forEach(({ link, start, end }) => {
+            .forEach(({ item, start, end }) => {
               const text = textNode.nodeValue;
-              const a = createTag('a', link);
+              const a = createTag('a', {
+                title: item.Keyword,
+                href: item.URL,
+              });
               a.appendChild(document.createTextNode(text.substring(start, end)));
               p.insertBefore(a, textNode.nextSibling);
               p.insertBefore(document.createTextNode(text.substring(end)), a.nextSibling);
               textNode.nodeValue = text.substring(0, start);
+              console.log(`  keyword '${item.Keyword}' replaced with link to '${item.URL}'`);
               // remove matched link from interlinks
-              links.splice(links.indexOf(link), 1);
+              keywords.splice(keywords.indexOf(item), 1);
             });
         });
     });
+    console.log(`keywords: DOM manipulation took ${Date.now() - bStart}ms.`);
+    console.log(`keywords: ${keywords.length} false positive${keywords.length !== 1 ? 's' : ''}: ${keywords.map(item => item.Keyword).join(';')}`);
   }
 }
 
