@@ -333,6 +333,57 @@ function decorateImages() {
 }
 
 /**
+ * Loops through a list of keywords and looks for matches in paragraph texts.
+ * Every first occurrence of a keyword is replaced with a link.
+ */
+async function addInterLinks() {
+  const response = await fetch('/en/drafts/rofe/interlink.json');
+  if (response.ok) { 
+    const json = await response.json();
+    const links = Array.isArray(json) ? json : json.data;
+    document.querySelectorAll('main p').forEach((p, num) => {
+      if (links.length === 0) return;
+      const textNodes = Array.from(p.childNodes)
+        // filter out non text nodes  
+        .filter(node => node.nodeType === Node.TEXT_NODE)
+        .forEach((textNode) => {
+          const matches = [];
+          // find case-insensitive matches inside text node
+          links.forEach((link, index) => {
+            const start = textNode.nodeValue.toLowerCase().indexOf(link.title.toLowerCase());
+            if (start >= 0) {
+              matches.push({
+                link,
+                start,
+                end: start + link.title.length,
+              });
+            }
+          });
+          matches
+            // sort matches descending
+            .sort((a, b) => {
+              return a.start < b.start ? 1 : -1;
+            })
+            // split text node and insert link with matched text
+            .forEach(({ link, start, end }) => {
+              const text = textNode.nodeValue;
+              console.log(text, start, end, text.substring(start, end), text.substring(end));
+              const a = createTag('a', link);
+              a.appendChild(document.createTextNode(text.substring(start, end)));
+              p.insertBefore(a, textNode.nextSibling);
+              p.insertBefore(document.createTextNode(text.substring(end)), a.nextSibling);
+              textNode.nodeValue = text.substring(0, start);
+              // remove matched link from interlinks
+              links.splice(links.indexOf(link), 1);
+            });
+        });
+    });
+  }
+}
+
+
+
+/**
  * Checks for accidental relative links and makes sure
  * external URLs open in a new window with no opener
  * (security best practice).
@@ -587,7 +638,7 @@ window.addEventListener('load', async function() {
   decorateTables();
   decorateAnimations();
   decorateLinkedImages();
-  handleLinks();
+  addInterLinks().then(() => handleLinks());
   addPredictedPublishURL();
   addCategory();
   fetchAuthor();
