@@ -355,15 +355,17 @@ async function addInterLinks() {
         .filter(node => node.nodeType === Node.TEXT_NODE)
         .forEach((textNode) => {
           const matches = [];
+          const deduper = [];
           // find case-insensitive matches inside text node
           keywords.forEach((item, index) => {
             const match = new RegExp(`\\b(${item.Keyword})\\b`, 'iu').exec(textNode.nodeValue);
-            if (match) {
+            if (match && !deduper.includes(match.index)) {
               matches.push({
                 item,
                 start: match.index,
                 end: match.index + item.Keyword.length,
               });
+              deduper.push(match.index);
             }
           });
           matches
