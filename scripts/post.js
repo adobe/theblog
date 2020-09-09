@@ -367,7 +367,6 @@ async function addInterLinks() {
             // split text node and insert link with matched text
             .forEach(({ link, start, end }) => {
               const text = textNode.nodeValue;
-              console.log(text, start, end, text.substring(start, end), text.substring(end));
               const a = createTag('a', link);
               a.appendChild(document.createTextNode(text.substring(start, end)));
               p.insertBefore(a, textNode.nextSibling);
