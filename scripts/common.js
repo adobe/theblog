@@ -149,7 +149,14 @@ export function getSection(index) {
  */
 export function getLink(type, name) {
   if (!type.endsWith('s')) type += 's';
-  return `${window.blog.context}${window.blog.language}/${type}/${name.replace(/\s/gm, '-').replace(/\&amp;/gm,'').replace(/\&/gm,'').replace(/\./gm,'').toLowerCase()}.html`;
+  const fileName = name
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // remove diacritics
+    .replace(/\s/gm, '-') // replace whitespace with -
+    .replace(/\&amp;/gm,'') // remove encoded ampersands
+    .replace(/\&/gm,'')  // remove unencoded ampersands
+    .replace(/\./gm,''); // remove dots
+  return `${window.blog.context}${window.blog.language}/${type}/${fileName}.html`;
 }
 
 /**
