@@ -390,7 +390,7 @@ async function addInterLinks() {
       // prepare regexps
       .map((item) => {
         return {
-          regexp: new RegExp(`\\b(${item.Keyword.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})\\b`, 'iu'),
+          regexp: new RegExp(`\\b(${item.Keyword.replace(/[\/\\^$*+?.()|[\]{}]/g, '\\$&')})\\b`, 'iu'),
           ...item,
         }
       });
