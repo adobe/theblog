@@ -408,7 +408,7 @@ function addCategory() {
   const topic = window.blog.topics[0];
   const categoryWrap = document.createElement('div');
   const href = getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
-  categoryWrap.className = 'default category';
+  categoryWrap.className = 'category';
   categoryWrap.innerHTML = `<a href="${href}" title="${topic}">${topic}</a>`;
   document.querySelector('main .post-header').prepend(categoryWrap);
 }
@@ -418,7 +418,7 @@ function addCategory() {
  */
 function addTopics() {
   if (!window.blog.topics || window.blog.topics.length === 0) return;
-  const topicsWrap = createTag('div', { 'class' : 'default topics' });
+  const topicsWrap = createTag('div', { 'class' : 'topics' });
   window.blog.topics.forEach((topic) => {
     const btn = createTag('a', {
       href: getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase()),
@@ -436,7 +436,7 @@ function addTopics() {
 function addProducts() {
   if (!window.blog.products || window.blog.products.length === 0) return;
   let html='<div class="prod-design">';
-  const productsWrap = createTag('div', { 'class': 'default products' });
+  const productsWrap = createTag('div', { 'class': 'products' });
   window.blog.products.forEach((product) => {
     const productRef = product.replace(/\s/gm, '-').toLowerCase();
     html += `<div>

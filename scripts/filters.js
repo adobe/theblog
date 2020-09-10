@@ -180,7 +180,6 @@ async function drawFilterBar() {
     // topic has no filter bar
     return null;
   }
-  filterBar.classList.remove('default');
   let html = `<div class="filter-layout container">
     <div class="filter-bar">
       <div class="filter">
