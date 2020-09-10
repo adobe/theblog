@@ -348,7 +348,7 @@ async function addInterLinks() {
 
     // find exact text node matches and insert links (exclude headings and anchors)
     bStart = Date.now();
-    document.querySelectorAll('main > div :not(h1):not(h2):not(h3):not(h4):not(h5):not(a)').forEach((p, num) => {
+    document.querySelectorAll('main > div :not(h1):not(h2):not(h3):not(h4):not(h5):not(a)').forEach((p) => {
       if (keywords.length === 0) return;
       const textNodes = Array.from(p.childNodes)
         // filter out non text nodes  
@@ -357,7 +357,7 @@ async function addInterLinks() {
           const matches = [];
           const deduper = [];
           // find case-insensitive matches inside text node
-          keywords.forEach((item, index) => {
+          keywords.forEach((item) => {
             const match = new RegExp(`\\b(${item.Keyword})\\b`, 'iu').exec(textNode.nodeValue);
             if (match && !deduper.includes(match.index)) {
               matches.push({
@@ -371,7 +371,7 @@ async function addInterLinks() {
           matches
             // sort matches descending
             .sort((a, b) => {
-              return a.start < b.start ? 1 : -1;
+              return b.start - a.start;
             })
             // split text node and insert link with matched text
             .forEach(({ item, start, end }) => {
