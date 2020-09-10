@@ -333,6 +333,49 @@ function decorateImages() {
 }
 
 /**
+ * Checks if a given match intersects with an existing match
+ * before adding it to the list of matches. In case of an 
+ * intersection, the more specific (i.e. longer) match wins.
+ * @param {array} matches The existing matches
+ * @param {object} contender The match to check and add
+ */
+function checkAndAddMatch(matches, contender) {
+  const collisions = matches
+    // check for intersections
+    .filter((match) => {
+      if ( contender.start > match.end ||
+        (contender.start < match.start && contender.end < match.end)) {
+        // no intersection with existing match
+        return false;
+      }
+      if (contender.start >= match.start && contender.start < match.end) {
+        // contender starts within existing match
+        return true;
+      }
+      if (contender.end > match.start && contender.end <= match.end) {
+        // contender ends within existing match
+        return true;
+      }
+    })
+    // check for specificity
+    .filter((match) => {
+      if (contender.item.Keyword.length > match.item.Keyword.length) {
+        // drop existing match in favor of more specific contender
+        matches.splice(matches.indexOf(match), 1);
+        return false;
+      } else {
+        // keep more specific existing match
+        return true;
+      }
+    });
+  if (collisions.length === 0) {
+    // no intersecting existing matches, add contender
+    matches.push(contender);
+  }
+}
+
+
+/**
  * Loops through a list of keywords and looks for matches in the article text.
  * The first occurrence of each keyword will be replaced with a link.
  */
@@ -362,17 +405,15 @@ async function addInterLinks() {
         .filter(node => node.nodeType === Node.TEXT_NODE)
         .forEach((textNode) => {
           const matches = [];
-          const deduper = [];
           // find case-insensitive matches inside text node
           keywords.forEach((item) => {
             const match = item.regexp.exec(textNode.nodeValue);
-            if (match && !deduper.includes(match.index)) {
-              matches.push({
+            if (match) {
+              checkAndAddMatch(matches, {
                 item,
                 start: match.index,
                 end: match.index + item.Keyword.length,
               });
-              deduper.push(match.index);
             }
           });
           matches
@@ -391,14 +432,14 @@ async function addInterLinks() {
               p.insertBefore(a, textNode.nextSibling);
               p.insertBefore(document.createTextNode(text.substring(end)), a.nextSibling);
               textNode.nodeValue = text.substring(0, start);
-              console.log(`  keyword '${item.Keyword}' replaced with link to '${item.URL}'`);
+              console.log(`keywords: linked '${item.Keyword}' to '${item.URL}'`);
               // remove matched link from interlinks
               keywords.splice(keywords.indexOf(item), 1);
             });
         });
     });
     console.log(`keywords: DOM manipulation took ${Date.now() - bStart}ms.`);
-    console.log(`keywords: ${keywords.length} false positive${keywords.length !== 1 ? 's' : ''}: ${keywords.map(item => item.Keyword).join(';')}`);
+    console.log(`keywords: ${keywords.length} unused keyword${keywords.length !== 1 ? 's' : ''} left\n  ${keywords.map(item => item.Keyword).join('\n  ')}`);
   }
 }
 
