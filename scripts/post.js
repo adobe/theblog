@@ -343,7 +343,14 @@ async function addInterLinks() {
     let bStart = Date.now();
     const keywords = (Array.isArray(json) ? json : json.data)
       // scan article to filter keywords down to relevant ones
-      .filter(({ Keyword }) => document.querySelector('main').textContent.toLowerCase().indexOf(Keyword) !== -1);
+      .filter(({ Keyword }) => document.querySelector('main').textContent.toLowerCase().indexOf(Keyword) !== -1)
+      // prepare regexps
+      .map((item) => {
+        return {
+          regexp: new RegExp(`\\b(${item.Keyword})\\b`, 'iu'),
+          ...item,
+        }
+      });
     console.log(`keywords: filtering down from ${json.length} to ${keywords.length} took ${Date.now() - bStart}ms`);
 
     // find exact text node matches and insert links (exclude headings and anchors)
@@ -358,7 +365,7 @@ async function addInterLinks() {
           const deduper = [];
           // find case-insensitive matches inside text node
           keywords.forEach((item) => {
-            const match = new RegExp(`\\b(${item.Keyword})\\b`, 'iu').exec(textNode.nodeValue);
+            const match = item.regexp.exec(textNode.nodeValue);
             if (match && !deduper.includes(match.index)) {
               matches.push({
                 item,
