@@ -343,19 +343,12 @@ function checkAndAddMatch(matches, contender) {
   const collisions = matches
     // check for intersections
     .filter((match) => {
-      if ( contender.start > match.end ||
-        (contender.start < match.start && contender.end < match.end)) {
+      if (contender.end < match.start || contender.start > match.end) {
         // no intersection with existing match
         return false;
       }
-      if (contender.start >= match.start && contender.start < match.end) {
-        // contender starts within existing match
-        return true;
-      }
-      if (contender.end > match.start && contender.end <= match.end) {
-        // contender ends within existing match
-        return true;
-      }
+      // contender starts or ends within existing match
+      return true;
     })
     // check for specificity
     .filter((match) => {
@@ -363,10 +356,9 @@ function checkAndAddMatch(matches, contender) {
         // drop existing match in favor of more specific contender
         matches.splice(matches.indexOf(match), 1);
         return false;
-      } else {
-        // keep more specific existing match
-        return true;
       }
+      // keep more specific existing match
+      return true;
     });
   if (collisions.length === 0) {
     // no intersecting existing matches, add contender
