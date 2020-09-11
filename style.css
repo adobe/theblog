@@ -199,7 +199,7 @@
  
  a.action.primary:hover,
  a.action.primary:focus {
-    color: white;
+   color: white;
    background-color: #505050;
  }
  
@@ -226,11 +226,17 @@
  
  a.action.quiet {
    color: #747474;
- }
+   border: solid transparent 1px;
+  }
  
- a.action.quiet:hover {
+ a.action.quiet:hover,
+ a.action.quiet:focus {
    color: #505050;
  }
+
+ a.action.quiet:focus {
+  border-color: #747474;
+}
 
  a.action.call-to-action {
    border: solid #1673e6 2px;
@@ -238,10 +244,14 @@
    background-color: #1673e6;
  }
  
- a.action.call-to-action:hover,
- a.action.call-to-action:focus {
+ a.action.call-to-action:hover {
    color: white;
    background-color: #0e65d0;
+ }
+
+ a.action.call-to-action:focus {
+   color: #0e65d0;
+   background-color: white;
  }
  
  a.action.call-to-action:active {
