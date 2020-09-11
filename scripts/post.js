@@ -375,7 +375,6 @@ async function addInterLinks() {
   const response = await fetch('/en/keywords.json');
   if (response.ok) { 
     const json = await response.json();
-    let bStart = Date.now();
     const keywords = (Array.isArray(json) ? json : json.data)
       // scan article to filter keywords down to relevant ones
       .filter(({ Keyword }) => document.querySelector('main').textContent.toLowerCase().indexOf(Keyword) !== -1)
@@ -386,10 +385,8 @@ async function addInterLinks() {
           ...item,
         }
       });
-    console.log(`keywords: filtering down from ${json.length} to ${keywords.length} took ${Date.now() - bStart}ms`);
 
     // find exact text node matches and insert links (exclude headings and anchors)
-    bStart = Date.now();
     document.querySelectorAll('main > div :not(h1):not(h2):not(h3):not(h4):not(h5):not(a)').forEach((p) => {
       if (keywords.length === 0) return;
       const textNodes = Array.from(p.childNodes)
@@ -424,14 +421,11 @@ async function addInterLinks() {
               p.insertBefore(a, textNode.nextSibling);
               p.insertBefore(document.createTextNode(text.substring(end)), a.nextSibling);
               textNode.nodeValue = text.substring(0, start);
-              console.log(`keywords: linked '${item.Keyword}' to '${item.URL}'`);
               // remove matched link from interlinks
               keywords.splice(keywords.indexOf(item), 1);
             });
         });
     });
-    console.log(`keywords: DOM manipulation took ${Date.now() - bStart}ms.`);
-    console.log(`keywords: ${keywords.length} unused keyword${keywords.length !== 1 ? 's' : ''} left\n  ${keywords.map(item => item.Keyword).join('\n  ')}`);
   }
 }
 
