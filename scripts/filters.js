@@ -168,11 +168,11 @@ function handleClearAll(callback) {
  
 }
 
-function getDrowdownHTML(category, title) {
+function getDrowdownHTML(taxonomy, category) {
   return `
   <div id="${category}" class="dropdown">
     <button role="button" tabindex="0" aria-haspopup="true" class="btn filter-btn" type="button">
-      ${title}
+      ${taxonomy.getCategoryTitle(category)}
       <span class="arrow">
         <span></span>
         <span></span>
@@ -208,7 +208,8 @@ async function drawFilterBar(callback) {
   let html = `<div class="filter-layout container">
     <div class="filter-bar">
       <div class="filter">
-        ${getDrowdownHTML(taxonomy.PRODUCTS, taxonomy.getCategoryTitle(taxonomy.PRODUCTS))}
+        ${getDrowdownHTML(taxonomy, taxonomy.PRODUCTS)}
+        ${getDrowdownHTML(taxonomy, taxonomy.INDUSTRIES)}
       </div>
       <a href="#" class="hide action quiet clear-all"></a>
     </div>

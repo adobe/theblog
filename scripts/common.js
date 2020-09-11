@@ -434,7 +434,15 @@ export async function fetchArticles({
     if (currentTopic.includes('Adobe ')) topics = topics.concat(taxonomy.getChildren(currentTopic.replace('Adobe ', '')));
     filters.topics = topics;
     if (window.blog.userFilters) {
-      filters = Object.assign(filters, window.blog.userFilters);
+      Object.keys(window.blog.userFilters).forEach((cat) => {
+        if (cat === taxonomy.PRODUCTS) {
+          // special handling for products category
+          filters.products = (filters.products || []).concat(window.blog.userFilters[cat]);
+        } else {
+          // add all others as topics
+          filters.topics = (filters.topics || []).concat(window.blog.userFilters[cat]);
+        }
+      });
     }
   } else if (window.blog.pageType === window.blog.TYPE.AUTHOR) {
     filters.author = document.title.split(',')[0];
