@@ -433,8 +433,8 @@ export async function fetchArticles({
     let topics = [currentTopic].concat(taxonomy.getChildren(currentTopic));
     if (currentTopic.includes('Adobe ')) topics = topics.concat(taxonomy.getChildren(currentTopic.replace('Adobe ', '')));
     filters.topics = topics;
-    if (window.blog.productFilters) {
-      filters.products=window.blog.productFilters;
+    if (window.blog.userFilters) {
+      filters = Object.assign(filters, window.blog.userFilters);
     }
   } else if (window.blog.pageType === window.blog.TYPE.AUTHOR) {
     filters.author = document.title.split(',')[0];
@@ -458,15 +458,12 @@ export async function fetchArticles({
  * Applies the specified filters to the query result
  * @param {array} filters The filters to apply
  */
-export function applyFilters(products) {
-  
-  window.blog.cursor=0;
+export function applyFilters(filters) {
+  window.blog.cursor = 0;
   let $deck = document.querySelector('.articles .deck');
   if ($deck) $deck.parentNode.remove();
-  window.blog.productFilters=products.length?products:false;
-  
+  window.blog.userFilters = Object.keys(filters).length ? filters : false;
   fetchArticles();
-
 }
 
 window.addEventListener('load', function() {
