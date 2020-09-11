@@ -225,16 +225,18 @@ async function drawFilterBar() {
   let filterBarHTML = '';
   if ($productsAndTech) {
     $productsAndTech.querySelectorAll(':scope>ul>li').forEach((l) => {
-      if (l.firstChild.textContent) {
-        const lname = l.firstChild.textContent.replace(/\*/gm, '');
+      let lname = l.getAttribute('data-topic');
+      if (lname) {
+        lname = lname.replace(/\*/gm, '');
         filterBarHTML += `<div class="option option">
           <input type="checkbox" id="${lname}" name="${lname}">
           <label for="${lname}">${lname}</label>
         </div>`;
       
         l.querySelectorAll(':scope>ul>li').forEach((p) => {
-          if (p.firstChild.textContent) {
-            const pname = p.firstChild.textContent.replace(/\*/gm, '');
+          let pname = p.getAttribute('data-topic');
+          if (pname) {
+            pname = pname.replace(/\*/gm, '');
             filterBarHTML+=`<div class="option option-nested">
               <input type="checkbox" id="${pname}" name="${pname}">
               <label for="${pname}">${pname}</label>
