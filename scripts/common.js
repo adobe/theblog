@@ -151,7 +151,7 @@ export function getLink(type, name) {
   if (!type.endsWith('s')) type += 's';
   const fileName = name
     .toLowerCase()
-    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // remove diacritics
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove diacritics
     .replace(/\s/gm, '-') // replace whitespace with -
     .replace(/\&amp;/gm,'') // remove encoded ampersands
     .replace(/\&/gm,'')  // remove unencoded ampersands
