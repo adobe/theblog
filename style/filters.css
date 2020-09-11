@@ -64,7 +64,7 @@
 .container {
   margin: 0 auto;
   width: calc(100% - 64px);
-  max-width: 379px;
+  max-width: 378px;
 }
 
 .dropdown .btn {
@@ -300,10 +300,8 @@
   }
 
   .container {
-    width: 100%;
-    padding-left: 64px;
-    padding-right: 64px;
-    max-width: 912px;
+    width: calc(100% - 64px);
+    max-width: 790px;
   }
 
   .page-overlay:before {
@@ -348,8 +346,6 @@
 @media (min-width:1200px) {
 
   .container {
-    padding-left: 32px;
-    padding-right: 32px;
     max-width: 1200px;
   }
 }

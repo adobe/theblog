@@ -117,11 +117,6 @@
     max-width: 1200px;
   }
 
-  .topic-page main div.topic-title h1,
-  .topic-page .deck {
-    min-width: 1168px;
-  }
-
   .topic-page .card {
       width: calc(100%/4 - 24px);
   }
