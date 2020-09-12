@@ -11,7 +11,7 @@
  */
 
 import {
-  getTaxonomy
+  getTaxonomy,
 } from '/scripts/taxonomy.js';
 
 /**
@@ -59,10 +59,12 @@ function toggleDropdown(dropdownContainer, body) {
 }
 
 /**
-* Clear filters in dropdowns.
-* @param {array} dropdowns The dropdowns to clear filters in
+* Clear filters in dropdown(s).
 */
-function clearFilters(dropdowns) {
+function clearFilters(dropdown) {
+  const dropdowns = dropdown instanceof HTMLElement
+    ? [dropdown] 
+    : document.querySelectorAll('.dropdown');
   dropdowns.forEach((dropdown) => {
       const selectedFilters = dropdown.querySelectorAll('input:checked');
       selectedFilters.forEach((filter) => {
@@ -86,13 +88,33 @@ function applyCurrentFilters(callback, closeDropdown) {
       toggleDropdown(dropdown, document.body);
     }
   });
-  const clearAllBtn = document.querySelector('.filter-bar > a.action.clear-all')
-  if (Object.keys(filters).length > 0) {
+  // show/hide selected filters
+  let userFilters = '';
+  Object.keys(filters).forEach((cat) => {
+    filters[cat].forEach((filter, i) => userFilters += `<span>${filter}</span>`);
+  });
+  const selection = document.querySelector('.selection');
+  const clearAllBtn = document.querySelector('.filter-bar > a.action.clear-all');
+  selection.innerHTML = userFilters;
+  if (userFilters.length > 0) {
+    selection.classList.remove('hide');
     clearAllBtn.classList.remove('hide');
   } else {
+    selection.classList.add('hide');
     clearAllBtn.classList.add('hide');
   }
+  
+  // apply filters
   callback(filters);
+}
+
+/**
+ * Clear filters in dropdowns and apply empty
+ */
+export function clearAllFilters(callback) {
+  event.stopPropagation();
+  clearFilters();
+  applyCurrentFilters(callback);
 }
 
 function filterFilters(event) {
@@ -125,7 +147,7 @@ function initFilterActions(dropdownContainer, callback) {
   // Reset button
   dropdownContainer.querySelector('a.action.clear').addEventListener('click', (event) => {
     event.stopPropagation();
-    clearFilters([dropdownContainer]);
+    clearFilters(dropdownContainer);
   });
 
   // Apply button
@@ -158,14 +180,27 @@ function initFilterActions(dropdownContainer, callback) {
 }
 
 function handleClearAll(callback) {
-    // Clear all button
-    const clearAllBtn = document.querySelector('.filter-bar > a.action.clear-all');
-    clearAllBtn.addEventListener('click', (event) => {
-      event.stopPropagation();
-      clearFilters(document.querySelectorAll('.dropdown'));
-      applyCurrentFilters(callback);
-    });
- 
+  const clearAllBtn = document.querySelector('.filter-bar > a.action.clear-all');
+  clearAllBtn.addEventListener('click', (event) => {
+    event.stopPropagation();
+    clearAllFilters(callback);
+  });
+  clearAllBtn.addEventListener('keyup', (event) => {
+    event.stopPropagation();
+    if (event.key === 'Enter') {
+      clearAllFilters(callback);
+    }
+  });
+}
+
+
+function addButtonTitles() {
+  document.querySelectorAll('.filter-bar a.action').forEach((btn) => {
+    const title = window.getComputedStyle(btn, ':before').getPropertyValue('content');
+    if (title !== 'normal' && title !== 'none') {
+      btn.setAttribute('title', title.substring(1, title.length-1));
+    }
+  });
 }
 
 function getDrowdownHTML(taxonomy, category) {
@@ -190,8 +225,8 @@ function getDrowdownHTML(taxonomy, category) {
         <div class="options"></div>
       </fieldset>
       <div class="footer">
-        <a href="#" class="action quiet clear" title="Clear"></a>
-        <a href="#" class="action call-to-action apply" title="Apply"></a>
+        <a href="#" class="action quiet clear"></a>
+        <a href="#" class="action call-to-action apply"></a>
       </div>
     </div>
   </div>`;
@@ -201,10 +236,9 @@ async function drawFilterBar(callback) {
   const filterBar = document.querySelector('.filter-wrapper');
   if (!filterBar) {
     // topic has no filter bar
-    return null;
+    return false;
   }
   const taxonomy = await getTaxonomy();
-  filterBar.classList.remove('default');
   let html = `<div class="filter-layout container">
     <div class="filter-bar">
       <div class="filter">
@@ -212,8 +246,8 @@ async function drawFilterBar(callback) {
         ${getDrowdownHTML(taxonomy, taxonomy.INDUSTRIES)}
       </div>
       <a href="#" class="hide action quiet clear-all"></a>
+      <div class="selection hide"></div>
     </div>
-    <span class="results"></span>
   </div>`;
 
   filterBar.innerHTML = html;
@@ -250,12 +284,15 @@ async function drawFilterBar(callback) {
 
   handleClearAll(callback);
 
-  return document.querySelector('main').appendChild(filterBar);
+  document.querySelector('main').appendChild(filterBar);
+  setTimeout(() => addButtonTitles(), 200);
+  return true;
 }
 
 export async function addFilters(callback) {
   if (await drawFilterBar(callback)) {
     loadCSS('/style/filters.css');
+    setTimeout(() => document.querySelector('.filter-wrapper').classList.remove('hide'), 200);
   }
 }
 

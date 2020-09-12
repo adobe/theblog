@@ -367,15 +367,20 @@ async function fetchHits(filters, limit, cursor) {
       if (filters.topics) {
         filters.topics = Array.isArray(filters.topics) ? filters.topics : [filters.topics];
         // find intersection between filter.topics and current e.topics
-        if (filters.topics.filter((t) => {
+        const matchedTopics = filters.topics.filter((t) => {
           // quick fix to get caseless comparison working with minimum impact
           // should be rewritten more efficiently
           const ltopics=e.topics.map(item => item.toLowerCase())
           const lt=t.toLowerCase();
           if(ltopics.includes(lt) || e.products.includes(t.replace('Adobe ', ''))) return true;
           else return false;
-        } ).length === 0) matched=false;
-      } 
+        });
+        // main topic must match
+        if (!matchedTopics.includes(filters.topics[0])) matched = false;
+        //  must match at least one additional topic
+        if (filters.topics.length > 1 && matchedTopics.length < 2) matched = false;
+      }
+
       if (filters.author && (e.author!=filters.author)) matched=false;
 
       if (filters.products) {
@@ -383,8 +388,9 @@ async function fetchHits(filters, limit, cursor) {
         filters.products.forEach((p) => {
           if (e.products.includes(p)) productsMatched=true;
         })
-        if (!productsMatched) matched=false;
       }
+      // match at least one selected product
+      if (filters.products && !productsMatched) matched=false;
 
       //check if path is already in a card
       if (document.querySelector(`.card a[href='/${e.path}']`)) matched=false;

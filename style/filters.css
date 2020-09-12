@@ -31,15 +31,13 @@
 
 .filter-bar {
   display: flex;
-  flex-wrap: nowrap;
-  justify-content: center;
+  flex-flow: row wrap;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
 }
 
 .filter {
-  font-weight: 600;
-  flex: 1 1 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -49,16 +47,39 @@
   justify-content: start;
 }
 
-.filter:first-child:before {
-  content: "Filters";
-  display: inline-block;
-  font-size: 1rem;
-  margin-right: 16px;
+.selection {
+  margin-top: 16px;
+  width: 100%;
+  color: #505050;
+  display: flex;
+  flex-flow: row wrap;
+  font-size: 0.8rem;
+  font-style: italic;
+  line-height:1.25rem;
+}
+
+.selection::before {
+  content: "Showing articles for: ";
+  margin-right: 4px;
+}
+
+.selection span {
+  margin: 0 4px 4px 0;
+}
+
+.selection span:not(:last-child)::after {
+  content: ", "
 }
 
 .filter .dropdown {
   display: inline-block;
   position: relative;
+  font-size: 0.9em;
+  margin-left: 8px;
+}
+
+.filter .dropdown:first-child {
+  margin-left: 0;
 }
 
 .container {
@@ -259,29 +280,21 @@
 }
 
 .filter-wrapper a.action.clear-all::before {
-  content: "Clear All";
+  content: "✕";
 }
 
 @media (min-width:600px) {
-
-  .filter .dropdown {
-    position: relative;
-  }
 
   .filter-layout {
     flex-wrap: nowrap;
     justify-content: space-between;
   }
 
-  .filter-bar {
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    width: auto;
+  .selection {
+    width: 100%;
   }
 
   .filter {
-    flex: 1 1 auto;
-    margin-right: 8px;
     margin-bottom: 0;
     display: block;
     position: relative;
@@ -307,6 +320,14 @@
     background-color: rgba(255, 255, 255, 0.5);
   }
 
+  .filter:first-child::before {
+    content: "Filters";
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-right: 16px;
+  }
+  
   .dropdown-menu {
     position: absolute;
     top: 100%;
@@ -339,6 +360,10 @@
 
   .dropdown-menu .footer .filter-clear {
     display: none;
+  }
+
+  .filter-wrapper a.action.clear-all::before {
+    content: "Clear all";
   }
 }
 
