@@ -51,7 +51,7 @@ a.action.load-more::before {
 }
 
 .blank-page.error-404 main h2::before {
-  content: 'Die Seite wurde leider nicht gefunden.';
+  content: "Die Seite wurde leider nicht gefunden.";
 }
 
 .blank-page.error-404 main p.detail::before {
@@ -74,6 +74,29 @@ a.action.load-more::before {
   content: "Zurücksetzen";
 }
 
-.filter-wrapper a.action.clear-all::before {
+.filter-wrapper .selection::before {
+  content: "Artikel anzeigen mit: ";
+}
+
+.topic-page .articles-empty.user-filters::before {
+  content: "Tut uns leid, es gab keine Treffer";
+}
+
+.topic-page .articles-empty.user-filters .user-help:before {
+  content: "Bitte versuchen Sie es mit weniger Filtern, oder löschen Sie alle.";
+}
+
+.articles-empty.user-filters a.action.clear-all::before {
   content: "Alle löschen";
+}
+
+@media (min-width:600px) {
+  .filter-wrapper .filter:first-child:before {
+    content: "Filter";
+  }
+
+  .filter-wrapper .filter-bar a.action.clear-all::before {
+    content: "Alle löschen";
+  }
+  
 }
