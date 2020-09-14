@@ -149,7 +149,14 @@ export function getSection(index) {
  */
 export function getLink(type, name) {
   if (!type.endsWith('s')) type += 's';
-  return `${window.blog.context}${window.blog.language}/${type}/${name.replace(/\s/gm, '-').replace(/\&amp;/gm,'').replace(/\&/gm,'').replace(/\./gm,'').toLowerCase()}.html`;
+  const fileName = name
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove diacritics
+    .replace(/\s/gm, '-') // replace whitespace with -
+    .replace(/\&amp;/gm,'') // remove encoded ampersands
+    .replace(/\&/gm,'')  // remove unencoded ampersands
+    .replace(/\./gm,''); // remove dots
+  return `${window.blog.context}${window.blog.language}/${type}/${fileName}.html`;
 }
 
 /**
@@ -286,17 +293,26 @@ async function translateTable(pages, index) {
   const taxonomy = await getTaxonomy();
   pages.forEach((e) => {
     let r=e;
-    r.products=JSON.parse(r.products);
+    let products=JSON.parse(r.products);
     let topics=JSON.parse(r.topics);
-    if (!r.products) r.products=[];
+    if (!products) r.products=[];
     if (!topics) topics=[];
     // also append parents
+    
     r.topics = topics;
     topics.forEach((topic) => {
       r.topics = r.topics.concat(taxonomy.getParents(topic));
     });
+
+    r.products = products;
+    products.forEach((product) => {
+      r.products = r.products.concat(taxonomy.getParents(product));
+    });
+
+
     // filter duplicates
     r.topics = Array.from(new Set(r.topics));
+    r.products = Array.from(new Set(r.products));
 
     index.pathLookup[r.path]=r;
     index.articles.push (r);
