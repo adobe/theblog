@@ -122,7 +122,7 @@ export async function getTaxonomy() {
         },
 
         getCategoryTitle: function (cat) {
-          return this.node.querySelector(`[data-type="${cat}"] > p`).innerText;
+          return this.node.querySelector(`[data-type="${cat}"] > p`).innerText.trim();
         }
       };
       return window.blog.taxonomy;
