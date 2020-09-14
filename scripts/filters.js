@@ -238,12 +238,16 @@ async function drawFilterBar(callback) {
     // topic has no filter bar
     return false;
   }
+  // get filter config
+  const filterList = filterBar.querySelectorAll('li');
+  const categories = filterList
+    ? Array.from(filterList).map((cat) => cat.innerText.trim())
+    : [taxonomy.PRODUCTS]; // default to products filter
   const taxonomy = await getTaxonomy();
   let html = `<div class="filter-layout container">
     <div class="filter-bar">
       <div class="filter">
-        ${getDrowdownHTML(taxonomy, taxonomy.PRODUCTS)}
-        ${getDrowdownHTML(taxonomy, taxonomy.INDUSTRIES)}
+        ${categories.map(cat => getDrowdownHTML(taxonomy, cat)).join('')}
       </div>
       <a href="#" class="hide action quiet clear-all"></a>
       <div class="selection hide"></div>
