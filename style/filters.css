@@ -15,6 +15,7 @@
 */
 .filter-wrapper {
   display: block;
+  padding: 0;
   border-top: 1px solid #eaeaea;
   border-bottom: 1px solid #eaeaea;
   position: relative;
@@ -100,6 +101,8 @@
 .dropdown.is-open .filter-btn {
   background-color: #F4F4F4;
   border-color: #eaeaea;
+  font-family: adobe-clean,sans-serif;
+  font-size: 0.875rem;
 }
 
 .dropdown .btn:hover, .downdown .btn:focus {
@@ -197,10 +200,11 @@
 
 .search-icon {
   position: absolute;
-  top: 50%;
+  top: 48%;
   left: 22px;
   height: 18px;
   transform: translateY(-17px) rotateY(180deg);
+  fill: #959595;
 }
 
 .dropdown-menu .search input {
@@ -208,10 +212,15 @@
   border-radius: .25rem;
   padding: 8px 8px 8px 28px;
   width: 100%;
+  font-family: adobe-clean, sans-serif;
+  font-style: italic;
+  color: #959595;
 }
 
-.dropdown-menu .search input:focus {
-  outline-color: #505050;
+/* used for i18n placeholder text */
+.dropdown-menu .search input::after  {
+  content: "Search...";
+  display: none;
 }
 
 .dropdown-menu fieldset {
@@ -284,6 +293,17 @@
 }
 
 @media (min-width:600px) {
+
+  .dropdown.is-open .filter-btn {
+    position: relative;
+    z-index: 12;
+    color: #1473e6;
+    border-color: #1473e6;
+  }
+
+  .dropdown.is-open .filter-btn:focus {
+    outline-color: #1473e6;
+  }
 
   .filter-layout {
     flex-wrap: nowrap;

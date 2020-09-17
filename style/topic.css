@@ -48,10 +48,6 @@
   align-items: center;
 }
 
-.articles-empty a.action.clear-all {
-  margin-top: 8px;
-}
-
 .articles-empty a.action.clear-all::before {
   content: "Clear all";
 }

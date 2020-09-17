@@ -66,11 +66,15 @@ a.action.load-more::before {
   content: 'Adobe.com durchsuchen ›';
 }
 
-.filter-wrapper a.action.apply::before {
+.topic-page .dropdown-menu .search input::after  {
+  content: "Durchsuchen...";
+}
+
+.topic-page .filter-wrapper a.action.apply::before {
   content: "Anwenden";
 }
 
-.filter-wrapper a.action.clear::before {
+.topic-page .filter-wrapper a.action.clear::before {
   content: "Zurücksetzen";
 }
 
