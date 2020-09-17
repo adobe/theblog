@@ -295,7 +295,7 @@ async function translateTable(pages, index) {
     let r=e;
     let products=JSON.parse(r.products);
     let topics=JSON.parse(r.topics);
-    if (!products) r.products=[];
+    if (!products) products=[];
     if (!topics) topics=[];
     // also append parents
     
