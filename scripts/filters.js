@@ -259,11 +259,11 @@ async function drawFilterBar(callback) {
     return false;
   }
   // get filter config
+  const taxonomy = await getTaxonomy();
   const filterList = filterBar.querySelectorAll('li');
-  const categories = filterList
+  const categories = filterList.length > 0
     ? Array.from(filterList).map((cat) => cat.innerText.trim())
     : [taxonomy.PRODUCTS]; // default to products filter
-  const taxonomy = await getTaxonomy();
   let html = `<div class="filter-layout container">
     <div class="filter-bar">
       <div class="filter">
