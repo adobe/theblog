@@ -92,6 +92,8 @@
 .dropdown .btn {
   padding: 11px;
   color: #505050;
+  font-family: adobe-clean,sans-serif;
+  font-size: 0.875rem;
   border: 1px solid #eaeaea;
   background-color: #ffffff;
   border-radius: .25rem;
@@ -101,8 +103,6 @@
 .dropdown.is-open .filter-btn {
   background-color: #F4F4F4;
   border-color: #eaeaea;
-  font-family: adobe-clean,sans-serif;
-  font-size: 0.875rem;
 }
 
 .dropdown .btn:hover, .downdown .btn:focus {
