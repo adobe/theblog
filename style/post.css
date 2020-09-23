@@ -89,6 +89,7 @@
 .embed {
   margin-top: 64px;
   max-width: 100%;
+  margin-bottom: 64px;
 }
 
 .post-page main>div.post-body p.legend {
