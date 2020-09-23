@@ -226,17 +226,13 @@
  
  a.action.quiet {
    color: #747474;
-   border: solid transparent 1px;
-  }
+ }
  
  a.action.quiet:hover,
  a.action.quiet:focus {
    color: #505050;
+   text-decoration: underline;
  }
-
- a.action.quiet:focus {
-  border-color: #747474;
-}
 
  a.action.call-to-action {
    border: solid #1673e6 2px;
@@ -275,7 +271,7 @@
  
  .articles-empty {
    width: 100%;
-   margin-bottom: 48px;
+   margin: 80px 0;
    text-align: middle;
  }
  
@@ -419,7 +415,7 @@
  }
  
  .hide {
-   display: none;
+   display: none !important;
  }
  
  @media (min-width:600px) {
