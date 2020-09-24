@@ -188,6 +188,7 @@ export function getPostPaths(el, parent, removeContainer) {
         p.splice(2, 0, 'publish');
         path = p.join('/');
       }
+      if (!path.endsWith('.html')) path+='.html'; 
       paths.push(path);
     });
     if (removeContainer) {
@@ -326,6 +327,7 @@ export async function fetchArticleIndex(offset) {
   // console.log(`fetching article index: at ${index.articles.length} entries, new offset=${offset}`)
   if (index.done) return;
   let indexUrl;
+  
   if (isLocalhost()) {
     indexUrl=`/query-index-${offset}.json`;
   } else {
@@ -352,14 +354,22 @@ async function fetchHits(filters, limit, cursor) {
   const articles=window.blog.articleIndex.articles;
   const pathLookup=window.blog.articleIndex.pathLookup;
 
-  let i=cursor;
   let hits=[];
   if (filters.paths) {
-    filters.paths.forEach((p) => {
+    for (let j=0; j<filters.paths.length; j++) {
+      const p=filters.paths[j];
+
+      /* extending articles recommended articles */
+      if (filters.pathsOnly) {
+        while (!index.done && (articles[articles.length-1].path>p.substring(1))) {
+          await fetchArticleIndex(articles.length);
+        }  
+      }
      if (pathLookup[p.substring(1)]) hits.push(pathLookup[p.substring(1)]);
-   });
+   };
   }
 
+  let i=cursor;
   if (!filters.pathsOnly) {
     for (;i<articles.length;i++) {
       const e=articles[i];
