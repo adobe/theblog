@@ -41,6 +41,15 @@ function formatLocalDate(date) {
 }
 
 /**
+ * Adds meta tags to the head element.
+ */
+function addMetaTags(md) {
+  const frag = document.createDocumentFragment();
+  md.forEach(meta => frag.appendChild(createTag('meta', meta)));
+  document.head.append(frag);
+}
+
+/**
  * Extracts metadata from the page and adds it to the head. No fetch or async task running.
  */
 function handleImmediateMetadata() {
@@ -72,7 +81,7 @@ function handleImmediateMetadata() {
 
   window.blog.topics = topics;
 
-  // store products
+  // store products as topics
   let products, productContainer;
   Array.from(last.children).forEach((i) => {
     const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
@@ -81,9 +90,9 @@ function handleImmediateMetadata() {
       productContainer = i;
     }
   });
-  products = products
-  ? products.filter((product) => product.length > 0)
-  : [];
+  window.blog.topics = window.blog.topics.concat(products
+    ? products.filter((product) => product.length > 0)
+    : []);
   if (productContainer) {
     productContainer.remove();
   }
@@ -91,58 +100,51 @@ function handleImmediateMetadata() {
     last.remove(); // remove empty last div
   }
 
-  const md = [{
+  addMetaTags([{
     property: 'og:locale',
     content: window.blog.language,
   },{
     property: 'article:published_time',
     content: window.blog.date ? new Date(window.blog.date).toISOString() : '',
-  }];
-  // add topics and products as article:tags
-  [...window.blog.topics].forEach((topic) => md.push({
-      property: 'article:tag',
-      content: topic,
-  }));
-  products.forEach((product) => md.push({
-    property: 'article:tag',
-    content: `Adobe ${product}`,
-  }));
-  // merge products into topics
-  window.blog.topics = [...window.blog.topics, ...products];
-  // add meta tags to DOM
-  const frag = document.createDocumentFragment();
-  md.forEach((meta) => {
-    frag.appendChild(createTag('meta', { property: meta.property, content: meta.content }));
-  });
-  document.head.append(frag);
+  }]);
 }
 
-async function handleAsyncMetadata() {
-  const topics = window.blog.topics;
-
-  const taxonomy = await getTaxonomy();
-  window.blog.topics = []; // UFT + parents only
-  window.blog.tags = []; // UFT and NUFT + parents
-
-  topics.forEach((topic) => {
-    if (taxonomy.isUFT(topic)) {
-      window.blog.topics.push(topic);
-    }
-    window.blog.tags.push(topic);
-  });
-
-  // handle parents afterward so that all leafs stay first
+/**
+ * Retrieves parents of specified topic from the taxonomy.
+ */
+function getParentTopics(taxonomy, topics) {
+  let parentTopics = [];
   topics.forEach((topic) => {
     const parents = taxonomy.getParents(topic);
     if (parents && parents.length > 0) {
-      window.blog.topics = window.blog.topics.concat(parents);
+      parentTopics = parentTopics.concat(parents);
     }
-    window.blog.tags = window.blog.tags.concat(parents);
   });
+  return parentTopics;
+}
 
-  // remove duplicates
-  window.blog.topics = Array.from(new Set(window.blog.topics));
-  window.blog.tags = Array.from(new Set(window.blog.tags));
+/**
+ * Finds user facing topics to display, and adds both user and non user facing topics as meta tags.
+ */
+async function handleAsyncMetadata() {
+  const taxonomy = await getTaxonomy();
+  
+  // de-dupe UFT, NUFT + parents
+  const allTopics = Array.from(new Set([
+    ...window.blog.topics,
+    ...getParentTopics(taxonomy, window.blog.topics),
+  ]));
+
+  // add all topics as article:tags
+  addMetaTags(allTopics.map((topic) => {
+    return {
+      property: 'article:tag',
+      content: topic,
+    }
+  }));
+
+  // filter out NUFT
+  window.blog.topics = allTopics.filter(topic => taxonomy.isUFT(topic));
 }
 
 function addPredictedPublishURL() {
