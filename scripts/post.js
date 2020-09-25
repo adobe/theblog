@@ -499,7 +499,7 @@ function decorateLinkedImages() {
 }
 
 function decorateAnimations() {
-  document.querySelectorAll('.animation a[href^="https://hlx.blob.core.windows.net/external/"]').forEach(($a) => {
+  document.querySelectorAll('.animation a[href]').forEach(($a) => {
     const href=$a.getAttribute('href');
     const url=new URL(href);
     const helixId=url.pathname.split('/')[2];
@@ -517,6 +517,20 @@ function decorateAnimations() {
       $a.parentNode.replaceChild(createTag('img',{src: `/hlx_${helixId}.gif`}), $a);  
     }
   });
+
+  const $heroAnimation = document.querySelector('.hero-animation a[href]');
+  if ($heroAnimation) {
+    const href=$heroAnimation.getAttribute('href');
+    const $video=createTag('video', {playsinline:'', autoplay:'', loop:'', muted:''});
+    $video.innerHTML=`<source src="${href}" type="video/mp4">`;
+    $heroAnimation.parentElement.remove();
+    const $heroImg=document.querySelector('main .hero-image img');
+    $heroImg.parentNode.replaceChild($video, $heroImg);
+
+    $video.addEventListener('canplay', (evt) => { 
+      $video.muted=true;
+      $video.play() });
+  }
 }
 
 /**
