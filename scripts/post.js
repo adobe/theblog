@@ -81,7 +81,7 @@ function handleImmediateMetadata() {
       productContainer = i;
     }
   });
-  window.blog.products = products
+  products = products
   ? products.filter((product) => product.length > 0)
   : [];
   if (productContainer) {
@@ -103,10 +103,12 @@ function handleImmediateMetadata() {
       property: 'article:tag',
       content: topic,
   }));
-  [...window.blog.products].forEach((product) => md.push({
+  products.forEach((product) => md.push({
     property: 'article:tag',
     content: `Adobe ${product}`,
   }));
+  // merge products into topics
+  window.blog.topics = [...window.blog.topics, ...products];
   // add meta tags to DOM
   const frag = document.createDocumentFragment();
   md.forEach((meta) => {
@@ -440,27 +442,6 @@ function addTopics() {
     topicsWrap.appendChild(btn);
   });
   document.querySelector('main').appendChild(topicsWrap);
-}
-
-/**
- * Adds product details to the post.
- */
-function addProducts() {
-  if (!window.blog.products || window.blog.products.length === 0) return;
-  let html='<div class="prod-design">';
-  const productsWrap = createTag('div', { 'class': 'default products' });
-  window.blog.products.forEach((product) => {
-    const productRef = product.replace(/\s/gm, '-').toLowerCase();
-    html += `<div>
-    <a title=Adobe ${product} href="https://www.adobe.com/${productRef}.html"><img alt={product} src="/icons/${productRef}.svg"></a>
-    <p>Adobe ${product}</p>
-    <p><a class="learn-more" href="https://www.adobe.com/${productRef}.html"></a></p>
-    </div>`;
-
-  });
-  html += '</div>';
-  productsWrap.innerHTML = html;
-  document.querySelector('main').appendChild(productsWrap);
 }
 
 /**
