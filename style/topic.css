@@ -10,22 +10,55 @@
  * governing permissions and limitations under the License.
  */
 
+ .topic-page {
+  /* header bg colors */
+  --bg1: #2c0167;
+  --bg2: #fd8467;
+  --bg3: #83106a;
+}
+
 .topic-page header,
 .topic-page main,
 .topic-page footer {
   visibility: visible;
 }
 
-.topic-page main .default:not(.articles) {
-  padding: 0;
-}
-
 .topic-page  .articles {
   background-color: white;
 }
 
+.topic-page .articles-empty {
+  visibility: hidden;
+}
+
 .topic-page .articles-empty::before {
   content: 'No articles found in this category';
+}
+
+.topic-page .articles-empty.user-filters {
+  visibility: visible;
+}
+
+.topic-page .articles-empty.user-filters::before {
+  content: "Sorry, no matching results";
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.topic-page .articles-empty .user-help {
+  display:flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+.articles-empty a.action.clear-all::before {
+  content: "Clear all";
+}
+
+
+.topic-page .articles-empty .user-help:before {
+  content: "Please try again selecting fewer filters or clearing all selections.";
+  font-size: 1rem;
 }
 
 .topic-page {
@@ -35,12 +68,18 @@
   --bg3: #83106a;
 }
 
-.topic-page main div.topic-title h1 {
+.topic-page main div.topic-title > h1,
+.topic-page main div.topic-title > p {
   color: white;
   width: calc(100% - 64px);
   max-width: 378px;
-  margin: 0 auto;
   align-self: center;
+}
+
+.topic-page main div.topic-title > p {
+  padding-top: 8px;
+  margin: 0;
+  font-size: 1.125rem;
 }
 
 .topic-page main div.topic-title img {
@@ -52,7 +91,9 @@
   padding: 0;
   background-color: var(--bg1); /* fallback bg color */
   display: flex;
-  justify-content: start;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
   background:
     radial-gradient(
       350px 100px at bottom left,
@@ -73,7 +114,6 @@
 @media (min-width:600px) {
 
   .topic-page main div.topic-title {
-    padding: 0;
     height: 220px;
     background:
       radial-gradient(
@@ -104,7 +144,8 @@
       );
   }
 
-  .topic-page main div.topic-title h1 {
+  .topic-page main div.topic-title > h1,
+  .topic-page main div.topic-title > p {
     width: calc(100% - 64px);
     max-width: 790px;
   }
@@ -113,8 +154,9 @@
 
 @media (min-width:1200px) {
 
-  .topic-page main div.topic-title h1 {
-    max-width: 1200px;
+  .topic-page main div.topic-title > h1,
+  .topic-page main div.topic-title > p {
+      max-width: 1200px;
   }
 
   .topic-page .card {

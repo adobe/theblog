@@ -396,7 +396,11 @@
   <textarea class="offscreen" id="copybuffer"></textarea>
 
   <script>
-    fetch('/en/topics/_taxonomy.plain.html')
+    const params=new URLSearchParams(window.location.search);
+    let lang=params.get('lang');
+    if (!lang) lang='en';
+
+    fetch(`/${lang}/topics/_taxonomy.plain.html`)
       .then((response) => {
         return response.text();
       })

@@ -89,6 +89,7 @@
 .embed {
   margin-top: 64px;
   max-width: 100%;
+  margin-bottom: 64px;
 }
 
 .post-page main>div.post-body p.legend {
@@ -533,6 +534,10 @@
 
   .post-page main>div.post-body>.embed {
     max-width: 800px;
+  }
+
+  .post-page main>div.post-body>.embed-instagram {
+    max-width: fit-content;
   }
 
   .post-page main>div.post-body>.embed.embed-internal-promotions,
