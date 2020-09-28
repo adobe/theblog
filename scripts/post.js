@@ -604,7 +604,6 @@ window.addEventListener('load', async function() {
   fetchAuthor();
   await handleAsyncMetadata();
   addTopics();
-  // addProducts();
   loadGetSocial();
   shapeBanners();
   fetchArticles();
