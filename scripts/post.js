@@ -333,41 +333,6 @@ function decorateImages() {
 }
 
 /**
- * Checks if a given match intersects with an existing match
- * before adding it to the list of matches. In case of an 
- * intersection, the more specific (i.e. longer) match wins.
- * @param {array} matches The existing matches
- * @param {object} contender The match to check and add
- */
-function checkAndAddMatch(matches, contender) {
-  const collisions = matches
-    // check for intersections
-    .filter((match) => {
-      if (contender.end < match.start || contender.start > match.end) {
-        // no intersection with existing match
-        return false;
-      }
-      // contender starts or ends within existing match
-      return true;
-    })
-    // check for specificity
-    .filter((match) => {
-      if (contender.item.Keyword.length > match.item.Keyword.length) {
-        // drop existing match in favor of more specific contender
-        matches.splice(matches.indexOf(match), 1);
-        return false;
-      }
-      // keep more specific existing match
-      return true;
-    });
-  if (collisions.length === 0) {
-    // no intersecting existing matches, add contender
-    matches.push(contender);
-  }
-}
-
-
-/**
  * Loops through a list of keywords and looks for matches in the article text.
  * The first occurrence of each keyword will be replaced with a link.
  */
@@ -378,6 +343,10 @@ async function addInterLinks() {
     const keywords = (Array.isArray(json) ? json : json.data)
       // scan article to filter keywords down to relevant ones
       .filter(({ Keyword }) => document.querySelector('main').textContent.toLowerCase().indexOf(Keyword) !== -1)
+      // sort matches by length descending
+      .sort((a, b) => {
+        return b.length - a.length;
+      })
       // prepare regexps
       .map((item) => {
         return {
@@ -398,7 +367,7 @@ async function addInterLinks() {
           keywords.forEach((item) => {
             const match = item.regexp.exec(textNode.nodeValue);
             if (match) {
-              checkAndAddMatch(matches, {
+              matches.push({
                 item,
                 start: match.index,
                 end: match.index + item.Keyword.length,
@@ -406,7 +375,7 @@ async function addInterLinks() {
             }
           });
           matches
-            // sort matches descending
+            // sort matches by start index descending
             .sort((a, b) => {
               return b.start - a.start;
             })
