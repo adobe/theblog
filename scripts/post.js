@@ -143,8 +143,10 @@ async function handleAsyncMetadata() {
     }
   }));
 
-  // filter out NUFT
-  window.blog.topics = allTopics.filter(topic => taxonomy.isUFT(topic));
+  // filter out NUFT and sort alphabetically
+  window.blog.topics = allTopics
+    .filter(topic => taxonomy.isUFT(topic))
+    .sort((a, b) => a.localeCompare(b));
 }
 
 function addPredictedPublishURL() {
