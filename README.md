@@ -1,7 +1,3 @@
-# EXPERIMENTAL BRANCH
-
-**Note, this is an experimental branch by the helix team. please ignore**
-
 # The Blog
 
 ## What
