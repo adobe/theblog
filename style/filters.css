@@ -15,6 +15,7 @@
 */
 .filter-wrapper {
   display: block;
+  padding: 0;
   border-top: 1px solid #eaeaea;
   border-bottom: 1px solid #eaeaea;
   position: relative;
@@ -31,15 +32,13 @@
 
 .filter-bar {
   display: flex;
-  flex-wrap: nowrap;
-  justify-content: center;
+  flex-flow: row wrap;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
 }
 
 .filter {
-  font-weight: 600;
-  flex: 1 1 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -49,27 +48,52 @@
   justify-content: start;
 }
 
-.filter:first-child:before {
-  content: "Filters";
-  display: inline-block;
-  font-size: 1rem;
-  margin-right: 16px;
+.selection {
+  margin-top: 16px;
+  width: 100%;
+  color: #505050;
+  display: flex;
+  flex-flow: row wrap;
+  font-size: 0.8rem;
+  font-style: italic;
+  line-height:1.25rem;
+}
+
+.selection::before {
+  content: "Showing articles for: ";
+  margin-right: 4px;
+}
+
+.selection span {
+  margin: 0 4px 4px 0;
+}
+
+.selection span:not(:last-child)::after {
+  content: ", "
 }
 
 .filter .dropdown {
   display: inline-block;
   position: relative;
+  font-size: 0.9em;
+  margin-left: 8px;
+}
+
+.filter .dropdown:first-child {
+  margin-left: 0;
 }
 
 .container {
   margin: 0 auto;
   width: calc(100% - 64px);
-  max-width: 379px;
+  max-width: 378px;
 }
 
 .dropdown .btn {
   padding: 11px;
   color: #505050;
+  font-family: adobe-clean,sans-serif;
+  font-size: 0.875rem;
   border: 1px solid #eaeaea;
   background-color: #ffffff;
   border-radius: .25rem;
@@ -157,6 +181,10 @@
   align-items: center;
 }
 
+.dropdown-menu .footer .action {
+  margin-left: 8px;
+}
+
 .page-overlay:before {
   content: "";
   position: fixed;
@@ -172,10 +200,11 @@
 
 .search-icon {
   position: absolute;
-  top: 50%;
+  top: 48%;
   left: 22px;
   height: 18px;
   transform: translateY(-17px) rotateY(180deg);
+  fill: #959595;
 }
 
 .dropdown-menu .search input {
@@ -183,10 +212,15 @@
   border-radius: .25rem;
   padding: 8px 8px 8px 28px;
   width: 100%;
+  font-family: adobe-clean, sans-serif;
+  font-style: italic;
+  color: #959595;
 }
 
-.dropdown-menu .search input:focus {
-  outline-color: #505050;
+/* used for i18n placeholder text */
+.dropdown-menu .search input::after  {
+  content: "Search...";
+  display: none;
 }
 
 .dropdown-menu fieldset {
@@ -244,7 +278,6 @@
 .filter-wrapper a.action {
   font-size: 0.8rem;
   padding: 0 12px;
-  border-width: 2px;
 }
 
 .filter-wrapper a.action.apply::before {
@@ -255,18 +288,21 @@
   content: "Reset";
 }
 
-.filter-wrapper a.action.clear-all {
-  padding: 0;
-}
-
 .filter-wrapper a.action.clear-all::before {
-  content: "Clear All";
+  content: "✕";
 }
 
 @media (min-width:600px) {
 
-  .filter .dropdown {
+  .dropdown.is-open .filter-btn {
     position: relative;
+    z-index: 12;
+    color: #1473e6;
+    border-color: #1473e6;
+  }
+
+  .dropdown.is-open .filter-btn:focus {
+    outline-color: #1473e6;
   }
 
   .filter-layout {
@@ -274,15 +310,11 @@
     justify-content: space-between;
   }
 
-  .filter-bar {
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    width: auto;
+  .selection {
+    width: 100%;
   }
 
   .filter {
-    flex: 1 1 auto;
-    margin-right: 16px;
     margin-bottom: 0;
     display: block;
     position: relative;
@@ -300,16 +332,22 @@
   }
 
   .container {
-    width: 100%;
-    padding-left: 64px;
-    padding-right: 64px;
-    max-width: 912px;
+    width: calc(100% - 64px);
+    max-width: 790px;
   }
 
   .page-overlay:before {
     background-color: rgba(255, 255, 255, 0.5);
   }
 
+  .filter:first-child::before {
+    content: "Filters";
+    display: inline-block;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-right: 16px;
+  }
+  
   .dropdown-menu {
     position: absolute;
     top: 100%;
@@ -343,13 +381,15 @@
   .dropdown-menu .footer .filter-clear {
     display: none;
   }
+
+  .filter-wrapper a.action.clear-all::before {
+    content: "Clear all";
+  }
 }
 
 @media (min-width:1200px) {
 
   .container {
-    padding-left: 32px;
-    padding-right: 32px;
     max-width: 1200px;
   }
 }

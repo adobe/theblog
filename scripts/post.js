@@ -41,14 +41,23 @@ function formatLocalDate(date) {
 }
 
 /**
+ * Adds meta tags to the head element.
+ */
+function addMetaTags(md) {
+  const frag = document.createDocumentFragment();
+  md.forEach(meta => frag.appendChild(createTag('meta', meta)));
+  document.head.append(frag);
+}
+
+/**
  * Extracts metadata from the page and adds it to the head. No fetch or async task running.
  */
 function handleImmediateMetadata() {
   // store author and date
   const authorSection = document.querySelector('.post-author');
   if (authorSection) {
-    const r = /^By (.*)\n*(.*)$/gmi.exec(authorSection.innerText);
-    window.blog.author = r && r.length > 0 ? r[1] : '';
+    const r = /^[bB]y(.*)\n*(.*)$/gmi.exec(authorSection.innerText);
+    window.blog.author = r && r.length > 0 ? r[1].trim() : '';
     const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
     window.blog.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
     if (window.blog.date) window.blog.rawDate = d[0];
@@ -72,7 +81,7 @@ function handleImmediateMetadata() {
 
   window.blog.topics = topics;
 
-  // store products
+  // store products as topics
   let products, productContainer;
   Array.from(last.children).forEach((i) => {
     const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
@@ -81,9 +90,9 @@ function handleImmediateMetadata() {
       productContainer = i;
     }
   });
-  window.blog.products = products
-  ? products.filter((product) => product.length > 0)
-  : [];
+  window.blog.topics = window.blog.topics.concat(products
+    ? products.filter((product) => product.length > 0)
+    : []);
   if (productContainer) {
     productContainer.remove();
   }
@@ -91,56 +100,53 @@ function handleImmediateMetadata() {
     last.remove(); // remove empty last div
   }
 
-  const md = [{
+  addMetaTags([{
     property: 'og:locale',
     content: window.blog.language,
   },{
     property: 'article:published_time',
     content: window.blog.date ? new Date(window.blog.date).toISOString() : '',
-  }];
-  // add topics and products as article:tags
-  [...window.blog.topics].forEach((topic) => md.push({
-      property: 'article:tag',
-      content: topic,
-  }));
-  [...window.blog.products].forEach((product) => md.push({
-    property: 'article:tag',
-    content: `Adobe ${product}`,
-  }));
-  // add meta tags to DOM
-  const frag = document.createDocumentFragment();
-  md.forEach((meta) => {
-    frag.appendChild(createTag('meta', { property: meta.property, content: meta.content }));
-  });
-  document.head.append(frag);
+  }]);
 }
 
-async function handleAsyncMetadata() {
-  const topics = window.blog.topics;
-
-  const taxonomy = await getTaxonomy();
-  window.blog.topics = []; // UFT + parents only
-  window.blog.tags = []; // UFT and NUFT + parents
-
-  topics.forEach((topic) => {
-    if (taxonomy.isUFT(topic)) {
-      window.blog.topics.push(topic);
-    }
-    window.blog.tags.push(topic);
-  });
-
-  // handle parents afterward so that all leafs stay first
+/**
+ * Retrieves parents of specified topic from the taxonomy.
+ */
+function getParentTopics(taxonomy, topics) {
+  let parentTopics = [];
   topics.forEach((topic) => {
     const parents = taxonomy.getParents(topic);
     if (parents && parents.length > 0) {
-      window.blog.topics = window.blog.topics.concat(parents);
+      parentTopics = parentTopics.concat(parents);
     }
-    window.blog.tags = window.blog.tags.concat(parents);
   });
+  return parentTopics;
+}
 
-  // remove duplicates
-  window.blog.topics = Array.from(new Set(window.blog.topics));
-  window.blog.tags = Array.from(new Set(window.blog.tags));
+/**
+ * Finds user facing topics to display, and adds both user and non user facing topics as meta tags.
+ */
+async function handleAsyncMetadata() {
+  const taxonomy = await getTaxonomy();
+  
+  // de-dupe UFT, NUFT + parents
+  const allTopics = Array.from(new Set([
+    ...window.blog.topics,
+    ...getParentTopics(taxonomy, window.blog.topics),
+  ]));
+
+  // add all topics as article:tags
+  addMetaTags(allTopics.map((topic) => {
+    return {
+      property: 'article:tag',
+      content: topic,
+    }
+  }));
+
+  // filter out NUFT and sort alphabetically
+  window.blog.topics = allTopics
+    .filter(topic => taxonomy.isUFT(topic))
+    .sort((a, b) => a.localeCompare(b));
 }
 
 function addPredictedPublishURL() {
@@ -361,11 +367,23 @@ function handleLinks() {
  * Fetches the author details from the author page and adds them to the post header
  */
 function fetchAuthor() {
-  if (!window.blog.author) return;
+  if (!window.blog.author && !window.blog.date) return;
   const authorSection = document.querySelector('.post-author');
   if (authorSection) {
     // clear the content of the div and replace by avatar and text
     authorSection.innerHTML = '';
+
+    if (!window.blog.author) {
+      const authorDiv = document.createElement('div');
+      authorDiv.innerHTML = `<div class="author-summary">
+        <div><span class="post-author"></span>
+        <span class="post-date">${window.blog.date}</span></div></div>`;
+      authorDiv.classList.add('author');
+      authorSection.appendChild(authorDiv);
+      authorSection.classList.remove('hide');
+      return;
+    }
+
     const xhr = new XMLHttpRequest();
     const fileName = window.blog.author.replace(/\s/gm, '-').toLowerCase();
     const pageURL = getLink(window.blog.TYPE.AUTHOR, window.blog.author);
@@ -384,7 +402,7 @@ function fetchAuthor() {
             const authorDiv = document.createElement('div');
             authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" alt="${window.blog.author}" title="${window.blog.author}" data-src="${avatarURL}?width=128&crop=1:1&auto=webp">
               <div><span class="post-author"><a href="${pageURL}">${window.blog.author}</a></span>
-              <span class="post-date">${window.blog.date}</span></div></div>`;
+              <span class="post-date">${window.blog.date || ''}</span></div></div>`;
             authorDiv.classList.add('author');
             authorSection.appendChild(authorDiv);
             authorSection.classList.remove('hide');
@@ -431,27 +449,6 @@ function addTopics() {
 }
 
 /**
- * Adds product details to the post.
- */
-function addProducts() {
-  if (!window.blog.products || window.blog.products.length === 0) return;
-  let html='<div class="prod-design">';
-  const productsWrap = createTag('div', { 'class': 'products' });
-  window.blog.products.forEach((product) => {
-    const productRef = product.replace(/\s/gm, '-').toLowerCase();
-    html += `<div>
-    <a title=Adobe ${product} href="https://www.adobe.com/${productRef}.html"><img alt={product} src="/icons/${productRef}.svg"></a>
-    <p>Adobe ${product}</p>
-    <p><a class="learn-more" href="https://www.adobe.com/${productRef}.html"></a></p>
-    </div>`;
-
-  });
-  html += '</div>';
-  productsWrap.innerHTML = html;
-  document.querySelector('main').appendChild(productsWrap);
-}
-
-/**
  * Loads the GetSocial sharing tool
  */
 function loadGetSocial() {
@@ -487,7 +484,7 @@ function decorateLinkedImages() {
 }
 
 function decorateAnimations() {
-  document.querySelectorAll('.animation a[href^="https://hlx.blob.core.windows.net/external/"]').forEach(($a) => {
+  document.querySelectorAll('.animation a[href]').forEach(($a) => {
     const href=$a.getAttribute('href');
     const url=new URL(href);
     const helixId=url.pathname.split('/')[2];
@@ -505,6 +502,20 @@ function decorateAnimations() {
       $a.parentNode.replaceChild(createTag('img',{src: `/hlx_${helixId}.gif`}), $a);  
     }
   });
+
+  const $heroAnimation = document.querySelector('.hero-animation a[href]');
+  if ($heroAnimation) {
+    const href=$heroAnimation.getAttribute('href');
+    const $video=createTag('video', {playsinline:'', autoplay:'', loop:'', muted:''});
+    $video.innerHTML=`<source src="${href}" type="video/mp4">`;
+    $heroAnimation.parentElement.remove();
+    const $heroImg=document.querySelector('main .hero-image img');
+    $heroImg.parentNode.replaceChild($video, $heroImg);
+
+    $video.addEventListener('canplay', (evt) => { 
+      $video.muted=true;
+      $video.play() });
+  }
 }
 
 /**
@@ -593,7 +604,6 @@ window.addEventListener('load', async function() {
   fetchAuthor();
   await handleAsyncMetadata();
   addTopics();
-  // addProducts();
   loadGetSocial();
   shapeBanners();
   fetchArticles();

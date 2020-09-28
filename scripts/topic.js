@@ -14,9 +14,11 @@ import {
   fetchArticles,
   applyFilters,
   wrapNodes,
+  createTag,
 } from '/scripts/common.js';
 import {
   addFilters,
+  clearAllFilters,
 } from '/scripts/filters.js';
 
 /**
@@ -40,6 +42,30 @@ function decorateTopicPage() {
 
 window.addEventListener('load', async function() {
   decorateTopicPage();
-  await addFilters(applyFilters);
+  await addFilters((filters) => {
+    // apply selected filters
+    applyFilters(filters);
+    // decorate empty page
+    setTimeout(() => {
+      const empty = document.querySelector('.articles-empty');
+      if (empty && window.blog.userFilters) {
+        const clearAllBtn = document.querySelector('.filter-bar > a.action.clear-all').cloneNode();
+        empty.classList.add('user-filters');
+        empty
+          .appendChild(createTag('div', { class: 'user-help' }))
+          .appendChild(clearAllBtn);
+          clearAllBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            clearAllFilters(applyFilters);
+          });
+          clearAllBtn.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+              clearAllFilters(applyFilters);
+            }
+          });
+          clearAllBtn.focus();
+        }
+    }, 250);
+  });
   fetchArticles();
 });

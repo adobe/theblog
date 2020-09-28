@@ -149,7 +149,14 @@ export function getSection(index) {
  */
 export function getLink(type, name) {
   if (!type.endsWith('s')) type += 's';
-  return `${window.blog.context}${window.blog.language}/${type}/${name.replace(/\s/gm, '-').replace(/\&amp;/gm,'').replace(/\&/gm,'').replace(/\./gm,'').toLowerCase()}.html`;
+  const fileName = name
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // remove diacritics
+    .replace(/\s/gm, '-') // replace whitespace with -
+    .replace(/\&amp;/gm,'') // remove encoded ampersands
+    .replace(/\&/gm,'')  // remove unencoded ampersands
+    .replace(/\./gm,''); // remove dots
+  return `${window.blog.context}${window.blog.language}/${type}/${fileName}.html`;
 }
 
 /**
@@ -181,6 +188,7 @@ export function getPostPaths(el, parent, removeContainer) {
         p.splice(2, 0, 'publish');
         path = p.join('/');
       }
+      if (!path.endsWith('.html')) path+='.html'; 
       paths.push(path);
     });
     if (removeContainer) {
@@ -286,17 +294,26 @@ async function translateTable(pages, index) {
   const taxonomy = await getTaxonomy();
   pages.forEach((e) => {
     let r=e;
-    r.products=JSON.parse(r.products);
+    let products=JSON.parse(r.products);
     let topics=JSON.parse(r.topics);
-    if (!r.products) r.products=[];
-    if (!topics) topics=[];
+    if (!Array.isArray(products)) products=[];
+    if (!Array.isArray(topics)) topics=[];
     // also append parents
+    
     r.topics = topics;
     topics.forEach((topic) => {
       r.topics = r.topics.concat(taxonomy.getParents(topic));
     });
+
+    r.products = products;
+    products.forEach((product) => {
+      r.products = r.products.concat(taxonomy.getParents(product));
+    });
+
+
     // filter duplicates
     r.topics = Array.from(new Set(r.topics));
+    r.products = Array.from(new Set(r.products));
 
     index.pathLookup[r.path]=r;
     index.articles.push (r);
@@ -310,6 +327,7 @@ export async function fetchArticleIndex(offset) {
   // console.log(`fetching article index: at ${index.articles.length} entries, new offset=${offset}`)
   if (index.done) return;
   let indexUrl;
+  
   if (isLocalhost()) {
     indexUrl=`/query-index-${offset}.json`;
   } else {
@@ -336,14 +354,22 @@ async function fetchHits(filters, limit, cursor) {
   const articles=window.blog.articleIndex.articles;
   const pathLookup=window.blog.articleIndex.pathLookup;
 
-  let i=cursor;
   let hits=[];
   if (filters.paths) {
-    filters.paths.forEach((p) => {
+    for (let j=0; j<filters.paths.length; j++) {
+      const p=filters.paths[j];
+
+      /* extending articles recommended articles */
+      if (filters.pathsOnly) {
+        while (!index.done && (articles[articles.length-1].path>p.substring(1))) {
+          await fetchArticleIndex(articles.length);
+        }  
+      }
      if (pathLookup[p.substring(1)]) hits.push(pathLookup[p.substring(1)]);
-   });
+   };
   }
 
+  let i=cursor;
   if (!filters.pathsOnly) {
     for (;i<articles.length;i++) {
       const e=articles[i];
@@ -351,15 +377,20 @@ async function fetchHits(filters, limit, cursor) {
       if (filters.topics) {
         filters.topics = Array.isArray(filters.topics) ? filters.topics : [filters.topics];
         // find intersection between filter.topics and current e.topics
-        if (filters.topics.filter((t) => {
+        const matchedTopics = filters.topics.filter((t) => {
           // quick fix to get caseless comparison working with minimum impact
           // should be rewritten more efficiently
           const ltopics=e.topics.map(item => item.toLowerCase())
           const lt=t.toLowerCase();
           if(ltopics.includes(lt) || e.products.includes(t.replace('Adobe ', ''))) return true;
           else return false;
-        } ).length === 0) matched=false;
-      } 
+        });
+        // main topic must match
+        if (!matchedTopics.includes(filters.topics[0])) matched = false;
+        //  must match at least one additional topic
+        if (filters.topics.length > 1 && matchedTopics.length < 2) matched = false;
+      }
+
       if (filters.author && (e.author!=filters.author)) matched=false;
 
       if (filters.products) {
@@ -367,8 +398,9 @@ async function fetchHits(filters, limit, cursor) {
         filters.products.forEach((p) => {
           if (e.products.includes(p)) productsMatched=true;
         })
-        if (!productsMatched) matched=false;
       }
+      // match at least one selected product
+      if (filters.products && !productsMatched) matched=false;
 
       //check if path is already in a card
       if (document.querySelector(`.card a[href='/${e.path}']`)) matched=false;
@@ -417,8 +449,16 @@ export async function fetchArticles({
     let topics = [currentTopic].concat(taxonomy.getChildren(currentTopic));
     if (currentTopic.includes('Adobe ')) topics = topics.concat(taxonomy.getChildren(currentTopic.replace('Adobe ', '')));
     filters.topics = topics;
-    if (window.blog.productFilters) {
-      filters.products=window.blog.productFilters;
+    if (window.blog.userFilters) {
+      Object.keys(window.blog.userFilters).forEach((cat) => {
+        if (cat === taxonomy.PRODUCTS) {
+          // special handling for products category
+          filters.products = (filters.products || []).concat(window.blog.userFilters[cat]);
+        } else {
+          // add all others as topics
+          filters.topics = (filters.topics || []).concat(window.blog.userFilters[cat]);
+        }
+      });
     }
   } else if (window.blog.pageType === window.blog.TYPE.AUTHOR) {
     filters.author = document.title.split(',')[0];
@@ -442,15 +482,12 @@ export async function fetchArticles({
  * Applies the specified filters to the query result
  * @param {array} filters The filters to apply
  */
-export function applyFilters(products) {
-  
-  window.blog.cursor=0;
+export function applyFilters(filters) {
+  window.blog.cursor = 0;
   let $deck = document.querySelector('.articles .deck');
   if ($deck) $deck.parentNode.remove();
-  window.blog.productFilters=products.length?products:false;
-  
+  window.blog.userFilters = Object.keys(filters).length ? filters : false;
   fetchArticles();
-
 }
 
 window.addEventListener('load', function() {

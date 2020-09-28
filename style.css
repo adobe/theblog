@@ -180,7 +180,7 @@
  
  a.action.primary:hover,
  a.action.primary:focus {
-    color: white;
+   color: white;
    background-color: #505050;
  }
  
@@ -209,8 +209,10 @@
    color: #747474;
  }
  
- a.action.quiet:hover {
+ a.action.quiet:hover,
+ a.action.quiet:focus {
    color: #505050;
+   text-decoration: underline;
  }
 
  a.action.call-to-action {
@@ -219,10 +221,14 @@
    background-color: #1673e6;
  }
  
- a.action.call-to-action:hover,
- a.action.call-to-action:focus {
+ a.action.call-to-action:hover {
    color: white;
    background-color: #0e65d0;
+ }
+
+ a.action.call-to-action:focus {
+   color: #0e65d0;
+   background-color: white;
  }
  
  a.action.call-to-action:active {
@@ -246,7 +252,7 @@
  
  .articles-empty {
    width: 100%;
-   margin-bottom: 48px;
+   margin: 80px 0;
    text-align: middle;
  }
  
@@ -390,7 +396,7 @@
  }
  
  .hide {
-   display: none;
+   display: none !important;
  }
  
  @media (min-width:600px) {

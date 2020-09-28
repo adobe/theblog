@@ -11,63 +11,73 @@
  */
 
 import {
-  getTaxonomy
+  getTaxonomy,
 } from '/scripts/taxonomy.js';
 
 /**
- * Get filter buttons.
- * Set up a click event to show/hide dropdown menu.
+ * Set up a click event on filter button to show/hide dropdown menu.
  */
-function handleDropdownButtons() {
-  const getFilterButtons = document.querySelectorAll('.filter-btn');
-  const body = document.querySelector('body');
-  getFilterButtons.forEach((filterButton) => {
-      filterButton.addEventListener('click', (event) => {
-          event.stopPropagation();
-          const currentDropdown =  event.currentTarget;
-          const dropdownContainer = currentDropdown.parentElement;
-          const categoryTitleName = currentDropdown.textContent;
-          const categoryTitle = dropdownContainer.querySelector('.category h2');
-          const clearCurrentFiltersButton = dropdownContainer.querySelector('.action.clear')
-          // Populate category title.
-          categoryTitle.textContent = categoryTitleName;
-          // toggle dropdown menu open
-          toggleDropdown(dropdownContainer, body);
-          // Set up document click event to close dropdowns.
-          const documentClick = (event) => {
-              const clickInDropdown = dropdownContainer.contains(event.target);
-              const isOpen = dropdownContainer.classList.contains('is-open');
-              if(isOpen && clickInDropdown !== true) {
-                  toggleDropdown(dropdownContainer, body);
-                  document.removeEventListener('click', documentClick, false);
-              }
+function handleDropdownButton(container) {
+  const filterButton = container.querySelector('.filter-btn');
+  filterButton.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const currentDropdown =  event.currentTarget;
+      const dropdownContainer = currentDropdown.parentElement;
+      const categoryTitleName = currentDropdown.textContent;
+      const categoryTitle = dropdownContainer.querySelector('.category h2');
+      const clearCurrentFiltersButton = dropdownContainer.querySelector('.action.clear')
+      // Populate category title.
+      categoryTitle.textContent = categoryTitleName;
+      // toggle dropdown menu open
+      toggleDropdown(dropdownContainer);
+      // Set up document click event to close dropdowns.
+      const documentClick = (event) => {
+          const clickInDropdown = dropdownContainer.contains(event.target);
+          const isOpen = dropdownContainer.classList.contains('is-open');
+          if(isOpen && clickInDropdown !== true) {
+              toggleDropdown();
+              document.removeEventListener('click', documentClick, false);
           }
-          document.addEventListener('click', documentClick, false);
-      });
+      }
+      document.addEventListener('click', documentClick, false);
   });
 }
 
 /**
-* Toggle dropddown
+* Toggle dropddown (and close others)
 */
-function toggleDropdown(dropdownContainer, body) {
-  dropdownContainer.classList.toggle('is-open');
-  body.classList.toggle('page-overlay');
-  // place tab focus on dropdown button after closing dropdown
-  if (!dropdownContainer.classList.contains('is-open')) {
-    dropdownContainer.querySelector('.filter-btn').focus();
+function toggleDropdown(dropdownToToggle) {
+  document.querySelectorAll('.dropdown').forEach((dropdown) => {
+    if (dropdown === dropdownToToggle) {
+      dropdown.classList.toggle('is-open');
+      // place tab focus on dropdown button after closing dropdown
+      if (!dropdown.classList.contains('is-open')) {
+        dropdown.querySelector('.filter-btn').focus();
+      }
+    } else {
+      dropdown.classList.remove('is-open');
+    }
+  });
+  // toggle page overlay
+  if (dropdownToToggle) {
+    document.body.classList.toggle('page-overlay');
+  } else {
+    document.body.classList.remove('page-overlay');
   }
-  // clear search
-  document.querySelector('.filter-wrapper input[type="search"]').value = '';
+  // clear searches and filtered options
+  document.querySelectorAll('.dropdown input[type="search"]').forEach(search => search.value = '');
   filterFilters();
 }
 
 /**
-* Clear ALL selected filters.
+* Clear filters in dropdown(s).
 */
-function clearAllFilters(allFilterOptions) {
-  allFilterOptions.forEach((option) => {
-      const selectedFilters = option.querySelectorAll('input:checked');
+function clearFilters(dropdown) {
+  const dropdowns = dropdown instanceof HTMLElement
+    ? [dropdown] 
+    : document.querySelectorAll('.dropdown');
+  dropdowns.forEach((dropdown) => {
+      const selectedFilters = dropdown.querySelectorAll('input:checked');
       selectedFilters.forEach((filter) => {
           filter.checked = false;
       });
@@ -75,32 +85,47 @@ function clearAllFilters(allFilterOptions) {
 }
 
 /**
-* Clear current selected filters.
-*/
-function clearCurrentFilters(currentFilterOptions) {
-  currentFilterOptions.forEach((option) => {
-      option.checked = false;
+ * Apply currently selected filters in all dropdowns.
+ */
+function applyCurrentFilters(callback, closeDropdown) {
+  const filters = {};
+  document.querySelectorAll('.dropdown').forEach((dropdown) => {
+    const subFilters = [];
+    dropdown.querySelectorAll('.option input[type="checkbox"]').forEach((filter) => {
+      if (filter.checked) subFilters.push(filter.name);
+    });
+    if (subFilters.length) filters[dropdown.id] = subFilters;
+    if (closeDropdown && dropdown.classList.contains('is-open')) {
+      toggleDropdown();
+    }
   });
+  // show/hide selected filters
+  let userFilters = '';
+  Object.keys(filters).forEach((cat) => {
+    filters[cat].forEach((filter, i) => userFilters += `<span>${filter}</span>`);
+  });
+  const selection = document.querySelector('.selection');
+  const clearAllBtn = document.querySelector('.filter-bar > a.action.clear-all');
+  selection.innerHTML = userFilters;
+  if (userFilters.length > 0) {
+    selection.classList.remove('hide');
+    clearAllBtn.classList.remove('hide');
+  } else {
+    selection.classList.add('hide');
+    clearAllBtn.classList.add('hide');
+  }
+  
+  // apply filters
+  callback(filters);
 }
 
 /**
- * Apply current selected filters.
+ * Clear filters in dropdowns and apply empty
  */
-function applyCurrentFilters(callback, closeDropdown) {
-  const filters = [];
-  document.querySelectorAll('.filter-wrapper input[type="checkbox"]').forEach((filter) => {
-    if (filter.checked) filters.push(filter.name);
-  });
-  const clearAllBtn = document.querySelector('.filter-bar > a.action.clear-all')
-  if (filters.length > 0) {
-    clearAllBtn.classList.remove('hide');
-  } else {
-    clearAllBtn.classList.add('hide');
-  }
-  callback(filters);
-  if (closeDropdown) {
-    toggleDropdown(document.querySelector('.dropdown'), document.body);
-  }
+export function clearAllFilters(callback) {
+  event.stopPropagation();
+  clearFilters();
+  applyCurrentFilters(callback);
 }
 
 function filterFilters(event) {
@@ -108,8 +133,8 @@ function filterFilters(event) {
     event.stopPropagation();
   }
   const value = event ? event.target.value : '';
-  const options = document.querySelector('.filter-wrapper .options');
-  document.querySelectorAll('.filter-wrapper .option input[type="checkbox"]').forEach((filter) => {
+  const container = event ? event.target.parentNode.parentNode.parentNode : document.querySelector('.filter-bar');
+  container.querySelectorAll('.option input[type="checkbox"]').forEach((filter) => {
     if (value && !filter.name.toLowerCase().includes(value.toLowerCase())) {
       filter.checked = false; // deselect if hidden
       filter.parentNode.classList.add('hide');
@@ -117,41 +142,33 @@ function filterFilters(event) {
       filter.parentNode.classList.remove('hide');
     }
   });
-  if (value) {
-    options.classList.add('filtered');
-  } else {
-    options.classList.remove('filtered');
-  }
+  container.querySelectorAll('.options').forEach((optionContainer) => {
+    if (value) {
+      optionContainer.classList.add('filtered');
+    } else {
+      optionContainer.classList.remove('filtered');
+    }
+  });
 }
 
-function initFilterActions(callback) {
-  const dropdownContainer = document.querySelector('.dropdown');
-  const clearAllBtnInBar = document.querySelector('.filter-bar > a.action.clear-all');
+function initFilterActions(dropdownContainer, callback) {
   if (typeof callback !== 'function') callback = function() {}; 
-  handleDropdownButtons();
-  // Clear all button
-  clearAllBtnInBar.addEventListener('click', (event) => {
-    event.stopPropagation();
-    const allFilterOptions = document.querySelectorAll('.dropdown-menu');
-    clearAllFilters(allFilterOptions);
-    applyCurrentFilters(callback);
-  });
+  handleDropdownButton(dropdownContainer);
 
   // Reset button
-  document.querySelector('.filter-bar a.action.clear').addEventListener('click', (event) => {
+  dropdownContainer.querySelector('a.action.clear').addEventListener('click', (event) => {
     event.stopPropagation();
-    const allFilterOptions = document.querySelectorAll('.dropdown-menu');
-    clearAllFilters(allFilterOptions);
+    clearFilters(dropdownContainer);
   });
 
   // Apply button
-  document.querySelector('.filter-bar .action.apply').addEventListener('click', (event) => {
+  dropdownContainer.querySelector('.action.apply').addEventListener('click', (event) => {
     event.stopPropagation();
     applyCurrentFilters(callback, true);
   });
 
   // Search field
-  const searchField = document.querySelector('.filter-wrapper input[type="search"]');
+  const searchField = dropdownContainer.querySelector('input[type="search"]');
   searchField.addEventListener('search', filterFilters);
   searchField.addEventListener('keyup', filterFilters);
 
@@ -159,11 +176,11 @@ function initFilterActions(callback) {
   document.body.addEventListener('keyup', (event) => {
     if (event.key === 'Escape') {
       if (dropdownContainer.classList.contains('is-open')) {
-        toggleDropdown(dropdownContainer, document.body);
+        toggleDropdown();
       }
     }
   });
-  document.querySelector('.dropdown-menu').addEventListener('keyup', (event) => {
+  dropdownContainer.querySelector('.dropdown-menu').addEventListener('keyup', (event) => {
     if (event.key === 'Enter') {
       if (dropdownContainer.classList.contains('is-open')) {
         event.stopPropagation();
@@ -171,87 +188,135 @@ function initFilterActions(callback) {
       }
     }
   });
-
 }
 
-async function drawFilterBar() {
+function handleClearAll(callback) {
+  const clearAllBtn = document.querySelector('.filter-bar > a.action.clear-all');
+  clearAllBtn.addEventListener('click', (event) => {
+    event.stopPropagation();
+    clearAllFilters(callback);
+  });
+  clearAllBtn.addEventListener('keyup', (event) => {
+    event.stopPropagation();
+    if (event.key === 'Enter') {
+      clearAllFilters(callback);
+    }
+  });
+}
+
+
+function i18n() {
+  // add button titles
+  document.querySelectorAll('.filter-bar a.action').forEach((btn) => {
+    const title = window.getComputedStyle(btn, ':before').getPropertyValue('content');
+    if (title !== 'normal' && title !== 'none') {
+      btn.setAttribute('title', title.substring(1, title.length-1));
+    }
+  });
+  // add search placeholder
+  document.querySelectorAll('.dropdown-menu .search input').forEach((search) => {
+    const placeholder = window.getComputedStyle(search, ':after').getPropertyValue('content');
+    if (placeholder !== 'normal' && placeholder !== 'none') {
+      search.setAttribute('placeholder', placeholder.substring(1, placeholder.length-1));
+      search.setAttribute('aria-label', placeholder.substring(1, placeholder.length-1));
+    }
+  });
+}
+
+function getDrowdownHTML(taxonomy, category) {
+  return `
+  <div id="${category}" class="dropdown">
+    <button role="button" tabindex="0" aria-haspopup="true" class="btn filter-btn" type="button">
+      ${taxonomy.getCategoryTitle(category)}
+      <span class="arrow">
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+    <div class="dropdown-menu">
+      <div class="search">
+        <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" width="20" height="20" viewBox="0 0 24 24" focusable="false"><path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path></svg>
+        <input type="search">
+      </div>
+      <div class="category">
+        <h2>Category</h2>
+      </div>
+      <fieldset>
+        <div class="options"></div>
+      </fieldset>
+      <div class="footer">
+        <a href="#" class="action quiet clear"></a>
+        <a href="#" class="action call-to-action apply"></a>
+      </div>
+    </div>
+  </div>`;
+}
+
+async function drawFilterBar(callback) {
   const filterBar = document.querySelector('.filter-wrapper');
   if (!filterBar) {
     // topic has no filter bar
-    return null;
+    return false;
   }
+  // get filter config
+  const taxonomy = await getTaxonomy();
+  const filterList = filterBar.querySelectorAll('li');
+  const categories = filterList.length > 0
+    ? Array.from(filterList).map((cat) => cat.innerText.trim())
+    : [taxonomy.PRODUCTS]; // default to products filter
   let html = `<div class="filter-layout container">
     <div class="filter-bar">
       <div class="filter">
-        <div class="dropdown">
-          <button role="button" tabindex="0" aria-haspopup="true" class="btn filter-btn" type="button">
-            Products &amp; Technology
-            <span class="arrow">
-              <span></span>
-              <span></span>
-            </span>
-          </button>
-          <div class="dropdown-menu">
-              <div class="search">
-                <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" width="20" height="20" viewBox="0 0 24 24" focusable="false"><path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path></svg>
-                <input type="search" aria-label="Search" placeholder="Search...">
-              </div>
-              <div class="category">
-                <h2>Category</h2>
-              </div>
-              <fieldset>
-                <div class="options">`;
-                
-  html+= `</div>
-              </fieldset>
-              <div class="footer">
-                <a href="#" class="action quiet clear" title="Clear"></a>
-                <a href="#" class="action call-to-action apply" title="Apply"></a>
-              </div>
-          </div>
-        </div>
+        ${categories.map(cat => getDrowdownHTML(taxonomy, cat)).join('')}
       </div>
       <a href="#" class="hide action quiet clear-all"></a>
+      <div class="selection hide"></div>
     </div>
-    <span class="results"></span>
   </div>`;
 
   filterBar.innerHTML = html;
 
-  const taxonomy = await getTaxonomy();
-  const $productsAndTech = taxonomy.getCategory(taxonomy.PRODUCTS);
+  filterBar.querySelectorAll('.dropdown').forEach((dropdown) => {
+    const $cat = taxonomy.getCategory(dropdown.id);
+    let optionsHTML = '';
+    if ($cat) {
+      $cat.querySelectorAll(':scope>ul>li').forEach((l) => {
+        let lname = l.getAttribute('data-topic');
+        if (lname) {
+          lname = lname.replace(/\*/gm, '');
+          optionsHTML += `<div class="option option">
+            <input type="checkbox" id="${lname}" name="${lname}">
+            <label for="${lname}">${lname}</label>
+          </div>`;
+        
+          l.querySelectorAll(':scope>ul>li').forEach((p) => {
+            let pname = p.getAttribute('data-topic');
+            if (pname) {
+              pname = pname.replace(/\*/gm, '');
+              optionsHTML+=`<div class="option option-nested">
+                <input type="checkbox" id="${pname}" name="${pname}">
+                <label for="${pname}">${pname}</label>
+              </div>`;
+            }
+          });
+        }
+      })
+      dropdown.querySelector('.options').innerHTML = optionsHTML;
+      initFilterActions(dropdown, callback);
+    }
+  });
 
-  let filterBarHTML = '';
-  if ($productsAndTech) {
-    $productsAndTech.querySelectorAll(':scope>ul>li').forEach((l) => {
-      if (l.firstChild.textContent) {
-        const lname = l.firstChild.textContent.replace(/\*/gm, '');
-        filterBarHTML += `<div class="option option">
-          <input type="checkbox" id="${lname}" name="${lname}">
-          <label for="${lname}">${lname}</label>
-        </div>`;
-      
-        l.querySelectorAll(':scope>ul>li').forEach((p) => {
-          if (p.firstChild.textContent) {
-            const pname = p.firstChild.textContent.replace(/\*/gm, '');
-            filterBarHTML+=`<div class="option option-nested">
-              <input type="checkbox" id="${pname}" name="${pname}">
-              <label for="${pname}">${pname}</label>
-            </div>`;
-          }
-        });
-      }
-    })
-    document.querySelector('.filter-wrapper .options').innerHTML = filterBarHTML;
-  }
+  handleClearAll(callback);
 
-  return document.querySelector('main').appendChild(filterBar);
+  document.querySelector('main').appendChild(filterBar);
+  setTimeout(() => i18n(), 500);
+  return true;
 }
 
 export async function addFilters(callback) {
-  if (await drawFilterBar()) {
+  if (await drawFilterBar(callback)) {
     loadCSS('/style/filters.css');
-    initFilterActions(callback);
+    setTimeout(() => document.querySelector('.filter-wrapper').classList.remove('hide'), 200);
   }
 }
 
