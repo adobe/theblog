@@ -354,7 +354,7 @@
   line-height: 0;
 }
 
-.embed-internal-promotions>div.default>p img {
+.embed-internal-promotions>div>p img {
   width: 182px;
   max-width: unset;
 }
@@ -546,8 +546,7 @@
     max-width: fit-content;
   }
 
-  .post-page main>div.post-body>.embed.embed-internal-promotions,
-  .post-page main>div.post-body>.embed.embed-internal-undefined {
+  .post-page main>div.post-body>.embed.embed-internal-promotions {
     max-width: 600px;
   }
 
