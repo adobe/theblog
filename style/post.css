@@ -353,7 +353,7 @@
 }
 
 .embed-internal-promotions>div.default>p img {
-  width: 182px;
+  width: 100px;
   max-width: unset;
 }
 
@@ -487,6 +487,10 @@
 
 
 @media (min-width:700px) {
+
+  .embed-internal-promotions>div.default>p img {
+    width: 182px;
+  }  
 
   .post-page main>div.topics {
     margin-bottom: 80px;
