@@ -10,7 +10,7 @@
   --bg3: #83106a;
 }
 
-.topic-page main div.default:first-child h1 {
+.topic-page main > div:first-child h1 {
   color: white;
   width: 100%;
   max-width: 378px;
@@ -18,7 +18,7 @@
   align-self: center;
 }
 
-.topic-page main div.default:first-child {
+.topic-page main > div:first-child {
   height: 220px;
   background-color: var(--bg1); /* fallback bg color */
   display: flex;
@@ -38,7 +38,7 @@
 
 @media (min-width:600px) {
 
-  .topic-page main div.default:first-child {
+  .topic-page main > div:first-child {
     height: 220px;
     background:
       radial-gradient(
@@ -69,16 +69,18 @@
       );
   }
 
-  .topic-page main div.default:first-child h1 {
+  .topic-page main > div:first-child h1 {
     width: calc(100% - 64px);
     max-width: 790px;
+    padding-left: 64px;
+    padding-right:64px;
   }
 
 }
 
 @media (min-width: 1200px) {
 
-  .topic-page main div.default:first-child h1 {
+  .topic-page main > div:first-child h1 {
     max-width: 1200px;
   }
 
