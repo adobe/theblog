@@ -253,11 +253,18 @@ function getDrowdownHTML(taxonomy, category) {
 }
 
 async function drawFilterBar(callback) {
-  const filterBar = document.querySelector('.filter-wrapper');
+  /* transitional selector during roll-out of new filter components */
+  const filterBar = document.querySelector('.filter-wrapper,.embed-internal-filters2,.embed-internal-filtersfull2,.embed-internal-filters,.embed-internal-filtersfull');
+
+  /* permanent selector for post rollout */
+  //const filterBar = document.querySelector('.embed-internal-filters,.embed-internal-filtersfull');
+  
   if (!filterBar) {
     // topic has no filter bar
     return false;
   }
+  filterBar.className='filter-wrapper hide';
+
   // get filter config
   const taxonomy = await getTaxonomy();
   const filterList = filterBar.querySelectorAll('li');
