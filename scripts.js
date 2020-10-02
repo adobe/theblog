@@ -130,9 +130,10 @@ const observer = new MutationObserver(mutations => {
       // only handle images with src=/hlx_*
       if (node.tagName === 'IMG' && /\/hlx_/.test(node.src)) {
         const img = node;
+        const forceJpeg=imgCount?false:true;
         if (!/\?width\=\d/.test(img.src)) {
           // add reasonable width if missing
-          img.setAttribute('src', `${img.src}?width=${imgWidth}&auto=webp`);
+          img.setAttribute('src', `${img.src}?width=${imgWidth}&auto=webp${forceJpeg?'&format=pjpg&optimize=medium':''}`);
         }
         if (imgCount > 0) {
           // skip lazyloading for hero image
