@@ -345,7 +345,7 @@ async function addInterLinks() {
       .filter(({ Keyword }) => document.querySelector('main').textContent.toLowerCase().indexOf(Keyword) !== -1)
       // sort matches by length descending
       .sort((a, b) => {
-        return b.length - a.length;
+        return b.Keyword.length - a.Keyword.length;
       })
       // prepare regexps
       .map((item) => {
