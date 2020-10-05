@@ -263,7 +263,7 @@ async function drawFilterBar(callback) {
     // topic has no filter bar
     return false;
   }
-  filterBar.className='filter-wrapper hide';
+  filterBar.className='filter-wrapper';
 
   // get filter config
   const taxonomy = await getTaxonomy();
@@ -323,7 +323,6 @@ async function drawFilterBar(callback) {
 export async function addFilters(callback) {
   if (await drawFilterBar(callback)) {
     loadCSS('/style/filters.css');
-    setTimeout(() => document.querySelector('.filter-wrapper').classList.remove('hide'), 200);
   }
 }
 
