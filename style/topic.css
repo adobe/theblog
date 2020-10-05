@@ -159,6 +159,10 @@
       max-width: 1200px;
   }
 
+  .topic-page .deck {
+    min-width: 1168px;
+  }
+
   .topic-page .card {
       width: calc(100%/4 - 24px);
   }
