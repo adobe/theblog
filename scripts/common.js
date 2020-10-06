@@ -385,11 +385,14 @@ async function fetchHits(filters, limit, cursor) {
           if(ltopics.includes(lt) || e.products.includes(t.replace('Adobe ', ''))) return true;
           else return false;
         });
-        // main topic must match
-        if (!matchedTopics.includes(filters.topics[0])) matched = false;
-        //  must match at least one additional topic
-        if (filters.topics.length > 1 && matchedTopics.length < 2) matched = false;
+        // main topic (or child topics) must match
+        if (matchedTopics.length === 0) continue;
       }
+      //  must match at least one user selected topic
+      if (filters.userTopics) {
+        const userMatches = filters.userTopics.filter(userTopic => e.topics.includes(userTopic));
+        matched = userMatches.length > 0;
+      } 
 
       if (filters.author && (e.author!=filters.author)) matched=false;
 
@@ -455,8 +458,8 @@ export async function fetchArticles({
           // special handling for products category
           filters.products = (filters.products || []).concat(window.blog.userFilters[cat]);
         } else {
-          // add all others as topics
-          filters.topics = (filters.topics || []).concat(window.blog.userFilters[cat]);
+          // add all others as userTopics
+          filters.userTopics = window.blog.userFilters[cat];
         }
       });
     }
