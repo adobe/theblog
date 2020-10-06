@@ -370,9 +370,10 @@ async function addInterLinks() {
   const response = await fetch('/en/keywords.json');
   if (response.ok) { 
     const json = await response.json();
+    const articleBody = document.querySelector('main').textContent.toLowerCase();
     const keywords = (Array.isArray(json) ? json : json.data)
       // scan article to filter keywords down to relevant ones
-      .filter(({ Keyword }) => document.querySelector('main').textContent.toLowerCase().indexOf(Keyword) !== -1)
+      .filter(({ Keyword }) => articleBody.indexOf(Keyword.toLowerCase()) !== -1)
       // sort matches by length descending
       .sort((a, b) => {
         return b.Keyword.length - a.Keyword.length;
