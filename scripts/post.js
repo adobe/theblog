@@ -338,6 +338,98 @@ function decorateImages() {
   })
 }
 
+/**	
+ * Checks if a given match intersects with an existing match	
+ * before adding it to the list of matches. In case of an 	
+ * intersection, the more specific (i.e. longer) match wins.	
+ * @param {array} matches The existing matches	
+ * @param {object} contender The match to check and add	
+ */	
+function checkAndAddMatch(matches, contender) {	
+  const collisions = matches	
+    // check for intersections	
+    .filter((match) => {	
+      if (contender.end < match.start || contender.start > match.end) {	
+        // no intersection with existing match	
+        return false;	
+      }	
+      // contender starts or ends within existing match	
+      return true;	
+    });	
+  if (collisions.length === 0) {	
+    // no intersecting existing matches, add contender	
+    matches.push(contender);	
+  }	
+}
+
+/**
+ * Loops through a list of keywords and looks for matches in the article text.
+ * The first occurrence of each keyword will be replaced with a link.
+ */
+async function addInterLinks() {
+  const response = await fetch('/en/keywords.json');
+  if (response.ok) { 
+    const json = await response.json();
+    const keywords = (Array.isArray(json) ? json : json.data)
+      // scan article to filter keywords down to relevant ones
+      .filter(({ Keyword }) => document.querySelector('main').textContent.toLowerCase().indexOf(Keyword) !== -1)
+      // sort matches by length descending
+      .sort((a, b) => {
+        return b.Keyword.length - a.Keyword.length;
+      })
+      // prepare regexps
+      .map((item) => {
+        return {
+          regexp: new RegExp(`\\b(${item.Keyword.replace(/[\/\\^$*+?.()|[\]{}]/g, '\\$&')})\\b`, 'iu'),
+          ...item,
+        }
+      });
+
+    // find exact text node matches and insert links (exclude headings and anchors)
+    document.querySelectorAll('main > div :not(h1):not(h2):not(h3):not(h4):not(h5):not(a)').forEach((p) => {
+      if (keywords.length === 0) return;
+      const textNodes = Array.from(p.childNodes)
+        // filter out non text nodes  
+        .filter(node => node.nodeType === Node.TEXT_NODE)
+        .forEach((textNode) => {
+          const matches = [];
+          // find case-insensitive matches inside text node
+          keywords.forEach((item) => {
+            const match = item.regexp.exec(textNode.nodeValue);
+            if (match) {
+              checkAndAddMatch(matches, {
+                item,
+                start: match.index,
+                end: match.index + item.Keyword.length,
+              });
+            }
+          });
+          matches
+            // sort matches by start index descending
+            .sort((a, b) => {
+              return b.start - a.start;
+            })
+            // split text node and insert link with matched text
+            .forEach(({ item, start, end }) => {
+              const text = textNode.nodeValue;
+              const a = createTag('a', {
+                title: item.Keyword,
+                href: item.URL,
+              });
+              a.appendChild(document.createTextNode(text.substring(start, end)));
+              p.insertBefore(a, textNode.nextSibling);
+              p.insertBefore(document.createTextNode(text.substring(end)), a.nextSibling);
+              textNode.nodeValue = text.substring(0, start);
+              // remove matched link from interlinks
+              keywords.splice(keywords.indexOf(item), 1);
+            });
+        });
+    });
+  }
+}
+
+
+
 /**
  * Checks for accidental relative links and makes sure
  * external URLs open in a new window with no opener
@@ -598,7 +690,7 @@ window.addEventListener('load', async function() {
   decorateTables();
   decorateAnimations();
   decorateLinkedImages();
-  handleLinks();
+  addInterLinks().then(() => handleLinks());
   addPredictedPublishURL();
   addCategory();
   fetchAuthor();
