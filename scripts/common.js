@@ -204,6 +204,8 @@ export function getPostPaths(el, parent, removeContainer) {
  * @returns {object} The processed query hit object
  */
 export function itemTransformer(item) {
+  let path=!window.location.hostname.endsWith('.page') && !isLocalhost() ? item.path.replace('/publish/', '/') : item.path;
+  path = path.toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
   const itemParams = {
     hero: item.hero ? `${item.hero}?height=512&crop=3:2&auto=webp` : '#',
     date: new Date(item.date * 1000).toLocaleDateString('en-US', {
@@ -215,7 +217,7 @@ export function itemTransformer(item) {
     authorUrl: item.author ? getLink(window.blog.TYPE.AUTHOR, item.author) : '',
     topic: item.topics.length > 0 ? item.topics[0] : '',
     topicUrl: item.topics.length > 0 ? getLink(window.blog.TYPE.TOPIC, item.topics[0]) : '',
-    path: !window.location.hostname.endsWith('.page') && !isLocalhost() ? item.path.replace('/publish/', '/') : item.path,
+    path
   }
   return Object.assign({}, item, itemParams);
 };
