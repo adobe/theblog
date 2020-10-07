@@ -26,7 +26,7 @@ import {
   wrapNodes 
 } from '/scripts/common.js';
 
-const DEFAULT_AVATAR = 'https://hlx.blob.core.windows.net/external/942ea2ad17270c65cda838d52145ec5b26704d41';
+const DEFAULT_AVATAR = '/hlx_942ea2ad17270c65cda838d52145ec5b26704d41.png';
 
 /**
  * Reformats a date string from "01-15-2020" to "January 15, 2020"
@@ -472,7 +472,7 @@ function fetchAuthor() {
       const authorDiv = document.createElement('div');
       authorDiv.innerHTML = `<div class="author-summary">
         <div><span class="post-author"></span>
-        <span class="post-date">${window.blog.date}</span></div></div>`;
+        <span class="post-date">${window.blog.date || ''}</span></div></div>`;
       authorDiv.classList.add('author');
       authorSection.appendChild(authorDiv);
       authorSection.classList.remove('hide');
@@ -484,30 +484,31 @@ function fetchAuthor() {
     const pageURL = getLink(window.blog.TYPE.AUTHOR, window.blog.author);
     xhr.open('GET', pageURL);
     xhr.onload = function() {
-      if (xhr.status != 200 || xhr.status != 304) {
-        try {
-          // try to get <main> elements and find author image
-          const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText);
-          if (!groups) return;
-          let main = groups.length > 2 ? groups[2] : null;
-          if (main) {
-            main = main.replace(fileName, '../authors/' + fileName);
-
-            const img = /<img src="(.*?)"/.exec(main);
-            const avatarURL = img && img.length > 0 && img[1] ? img[1] : DEFAULT_AVATAR;
-            const authorDiv = document.createElement('div');
-            authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" alt="${window.blog.author}" title="${window.blog.author}" data-src="${avatarURL}?width=128&crop=1:1&auto=webp">
-              <div><span class="post-author"><a href="${pageURL}">${window.blog.author}</a></span>
-              <span class="post-date">${window.blog.date || ''}</span></div></div>`;
-            authorDiv.classList.add('author');
-            authorSection.appendChild(authorDiv);
-            authorSection.classList.remove('hide');
+      try {
+        let avatarURL = DEFAULT_AVATAR;
+        // try to get <main> elements and find author image
+        const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText) || [];
+        let main = groups.length > 2 ? groups[2] : null;
+        if (main) {
+          main = main.replace(fileName, '../authors/' + fileName);
+          const img = /<img src="(.*?)"/.exec(main);
+          if (img && img.length > 0 && img[1]) {
+            avatarURL = img[1];
           }
-        } catch(e) {
-          console.error('Error while extracting author info', e);
         }
-      } else {
-        console.log('Author not found...', xhr.response);
+        const authorDiv = document.createElement('div');
+        authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" alt="${window.blog.author}" title="${window.blog.author}" data-src="${avatarURL}?width=128&crop=1:1&auto=webp">
+          <div><span class="post-author">
+            ${xhr.status < 400 ? `<a href="${pageURL}" title="${window.blog.author}">` : ''}
+              ${window.blog.author}
+            ${xhr.status < 400 ? '</a>' : ''}
+          </span>
+          <span class="post-date">${window.blog.date || ''}</span></div></div>`;
+        authorDiv.classList.add('author');
+        authorSection.appendChild(authorDiv);
+        authorSection.classList.remove('hide');
+      } catch(e) {
+        console.error('Error while extracting author info', e);
       }
     };
     xhr.send();
