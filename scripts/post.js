@@ -26,6 +26,8 @@ import {
   wrapNodes 
 } from '/scripts/common.js';
 
+const DEFAULT_AVATAR = 'https://hlx.blob.core.windows.net/external/942ea2ad17270c65cda838d52145ec5b26704d41';
+
 /**
  * Reformats a date string from "01-15-2020" to "January 15, 2020"
  * @param {string} date The date string to format
@@ -491,7 +493,8 @@ function fetchAuthor() {
           if (main) {
             main = main.replace(fileName, '../authors/' + fileName);
 
-            const avatarURL = /<img src="(.*?)"/.exec(main)[1];
+            const img = /<img src="(.*?)"/.exec(main);
+            const avatarURL = img && img.length > 0 && img[1] ? img[1] : DEFAULT_AVATAR;
             const authorDiv = document.createElement('div');
             authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" alt="${window.blog.author}" title="${window.blog.author}" data-src="${avatarURL}?width=128&crop=1:1&auto=webp">
               <div><span class="post-author"><a href="${pageURL}">${window.blog.author}</a></span>
