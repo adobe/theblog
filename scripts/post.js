@@ -582,13 +582,16 @@ function decorateLinkedImages() {
 
 function decorateAnimations() {
   document.querySelectorAll('.animation a[href]').forEach(($a) => {
-    const href=$a.getAttribute('href');
+    let href=$a.getAttribute('href');
     const url=new URL(href);
     const helixId=url.pathname.split('/')[2];
     $a.parentNode.classList.add('images');
 
     if (href.endsWith('.mp4')) {
       const $video=createTag('video', {playsinline:'', autoplay:'', loop:'', muted:''});
+      if (href.startsWith('https://hlx.blob.core.windows.net/external/')) {
+        href='/hlx_'+href.split('/')[4].replace('#image','');
+      }
       $video.innerHTML=`<source src="${href}" type="video/mp4">`;
       $a.parentNode.replaceChild($video, $a);
       $video.addEventListener('canplay', (evt) => { 
