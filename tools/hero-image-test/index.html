@@ -4,7 +4,10 @@
         <style>
             body {
                 font-family: Arial, Helvetica, sans-serif;
-                font-weight: 700;
+            }
+            p {
+                max-width: 900px;
+                margin: 30px auto;
             }
             .wrapper {
                 width: 1000px;
@@ -18,7 +21,6 @@
             .grid.highlight {
                 border: 3px solid green;
             }
-
             .grid {
                 position: absolute;
                 display: grid;
@@ -64,10 +66,13 @@
     <body>
         <main>
             <h1>blog.adobe.com Hero Image Tester</h1>
-            <p>Drag your image here to see what it is going to look.</p>
+            <p>Drag your image into the rectangle below to see what it will look like on the blog.</p>
             <div class="wrapper">
                 <img src="https://blog.adobe.com/hlx_15a3d894e3eca7719f8652a88c28230707a33aae.png?width=2000&auto=webp">
             </div>
+            <p>
+                The <b>Hero</b> size is what will be on the article itself, the <b>Card</b> size is a cut down version that will be seen on the home page, category pages, and in the recommended articles section.
+            </p>
         </main>
         <script>
             function addGrid($wrapper, $img, name, width, height, limit) {
