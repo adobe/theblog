@@ -390,7 +390,7 @@ async function addInterLinks() {
       });
 
     // find exact text node matches and insert links (exclude headings and anchors)
-    document.querySelectorAll('main > div :not(h1):not(h2):not(h3):not(h4):not(h5):not(a)').forEach((p) => {
+    document.querySelectorAll('main > div > *:not(h1):not(h2):not(h3):not(h4):not(h5):not(a)').forEach((p) => {
       if (keywords.length === 0) return;
       const textNodes = Array.from(p.childNodes)
         // filter out non text nodes  
