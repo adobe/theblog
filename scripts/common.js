@@ -204,6 +204,8 @@ export function getPostPaths(el, parent, removeContainer) {
  * @returns {object} The processed query hit object
  */
 export function itemTransformer(item) {
+  let path=!window.location.hostname.endsWith('.page') && !isLocalhost() ? item.path.replace('/publish/', '/') : item.path;
+  path = path.toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
   const itemParams = {
     hero: item.hero ? `${item.hero}?height=512&crop=3:2&auto=webp` : '#',
     date: new Date(item.date * 1000).toLocaleDateString('en-US', {
@@ -215,7 +217,7 @@ export function itemTransformer(item) {
     authorUrl: item.author ? getLink(window.blog.TYPE.AUTHOR, item.author) : '',
     topic: item.topics.length > 0 ? item.topics[0] : '',
     topicUrl: item.topics.length > 0 ? getLink(window.blog.TYPE.TOPIC, item.topics[0]) : '',
-    path: !window.location.hostname.endsWith('.page') && !isLocalhost() ? item.path.replace('/publish/', '/') : item.path,
+    path
   }
   return Object.assign({}, item, itemParams);
 };
@@ -385,11 +387,14 @@ async function fetchHits(filters, limit, cursor) {
           if(ltopics.includes(lt) || e.products.includes(t.replace('Adobe ', ''))) return true;
           else return false;
         });
-        // main topic must match
-        if (!matchedTopics.includes(filters.topics[0])) matched = false;
-        //  must match at least one additional topic
-        if (filters.topics.length > 1 && matchedTopics.length < 2) matched = false;
+        // main topic (or child topics) must match
+        if (matchedTopics.length === 0) continue;
       }
+      //  must match at least one user selected topic
+      if (filters.userTopics) {
+        const userMatches = filters.userTopics.filter(userTopic => e.topics.includes(userTopic));
+        matched = userMatches.length > 0;
+      } 
 
       if (filters.author && (e.author!=filters.author)) matched=false;
 
@@ -455,8 +460,8 @@ export async function fetchArticles({
           // special handling for products category
           filters.products = (filters.products || []).concat(window.blog.userFilters[cat]);
         } else {
-          // add all others as topics
-          filters.topics = (filters.topics || []).concat(window.blog.userFilters[cat]);
+          // add all others as userTopics
+          filters.userTopics = window.blog.userFilters[cat];
         }
       });
     }

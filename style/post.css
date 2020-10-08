@@ -334,6 +334,7 @@
   float: left;
   padding-right: 16px;
   margin: 0;
+  width: unset;
 }
 
 .embed img {

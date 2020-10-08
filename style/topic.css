@@ -61,13 +61,6 @@
   font-size: 1rem;
 }
 
-.topic-page {
-  /* header bg colors */
-  --bg1: #2c0167;
-  --bg2: #fd8467;
-  --bg3: #83106a;
-}
-
 .topic-page main div.topic-title > h1,
 .topic-page main div.topic-title > p {
   color: white;
@@ -109,6 +102,10 @@
 
 .topic-page .deck {
   padding-top: 32px;
+}
+
+.filter-wrapper {
+  display: none; /* hide until filters.css is loaded */
 }
 
 @media (min-width:600px) {
@@ -157,6 +154,10 @@
   .topic-page main div.topic-title > h1,
   .topic-page main div.topic-title > p {
       max-width: 1200px;
+  }
+
+  .topic-page .deck {
+    min-width: 1168px;
   }
 
   .topic-page .card {

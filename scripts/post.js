@@ -26,7 +26,7 @@ import {
   wrapNodes 
 } from '/scripts/common.js';
 
-const DEFAULT_AVATAR = 'https://hlx.blob.core.windows.net/external/942ea2ad17270c65cda838d52145ec5b26704d41';
+const DEFAULT_AVATAR = '/hlx_942ea2ad17270c65cda838d52145ec5b26704d41.png';
 
 /**
  * Reformats a date string from "01-15-2020" to "January 15, 2020"
@@ -162,7 +162,8 @@ function addPredictedPublishURL() {
       }
     }
     const $predURL=createTag('div', {class:'predicted-url'});
-    const url=`https://blog.adobe.com/${segs[1]}${datePath}/${segs[segs.length-1].split('.')[0]}.html`;
+    const filename=(segs[segs.length-1].split('.')[0]).toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
+    const url=`https://blog.adobe.com/${segs[1]}${datePath}/${filename}.html`;
     $predURL.innerHTML=`Predicted Publish URL: ${url}`;
     document.querySelector('main').insertBefore($predURL, getSection(0));
   }
@@ -340,6 +341,99 @@ function decorateImages() {
   })
 }
 
+/**	
+ * Checks if a given match intersects with an existing match	
+ * before adding it to the list of matches. In case of an 	
+ * intersection, the more specific (i.e. longer) match wins.	
+ * @param {array} matches The existing matches	
+ * @param {object} contender The match to check and add	
+ */	
+function checkAndAddMatch(matches, contender) {	
+  const collisions = matches	
+    // check for intersections	
+    .filter((match) => {	
+      if (contender.end < match.start || contender.start > match.end) {	
+        // no intersection with existing match	
+        return false;	
+      }	
+      // contender starts or ends within existing match	
+      return true;	
+    });	
+  if (collisions.length === 0) {	
+    // no intersecting existing matches, add contender	
+    matches.push(contender);	
+  }	
+}
+
+/**
+ * Loops through a list of keywords and looks for matches in the article text.
+ * The first occurrence of each keyword will be replaced with a link.
+ */
+async function addInterLinks() {
+  const response = await fetch('/en/keywords.json');
+  if (response.ok) { 
+    const json = await response.json();
+    const articleBody = document.querySelector('main').textContent.toLowerCase();
+    const keywords = (Array.isArray(json) ? json : json.data)
+      // scan article to filter keywords down to relevant ones
+      .filter(({ Keyword }) => articleBody.indexOf(Keyword.toLowerCase()) !== -1)
+      // sort matches by length descending
+      .sort((a, b) => {
+        return b.Keyword.length - a.Keyword.length;
+      })
+      // prepare regexps
+      .map((item) => {
+        return {
+          regexp: new RegExp(`\\b(${item.Keyword.replace(/[\/\\^$*+?.()|[\]{}]/g, '\\$&')})\\b`, 'iu'),
+          ...item,
+        }
+      });
+
+    // find exact text node matches and insert links (exclude headings and anchors)
+    document.querySelectorAll('main > div > *:not(h1):not(h2):not(h3):not(h4):not(h5):not(a)').forEach((p) => {
+      if (keywords.length === 0) return;
+      const textNodes = Array.from(p.childNodes)
+        // filter out non text nodes  
+        .filter(node => node.nodeType === Node.TEXT_NODE)
+        .forEach((textNode) => {
+          const matches = [];
+          // find case-insensitive matches inside text node
+          keywords.forEach((item) => {
+            const match = item.regexp.exec(textNode.nodeValue);
+            if (match) {
+              checkAndAddMatch(matches, {
+                item,
+                start: match.index,
+                end: match.index + item.Keyword.length,
+              });
+            }
+          });
+          matches
+            // sort matches by start index descending
+            .sort((a, b) => {
+              return b.start - a.start;
+            })
+            // split text node and insert link with matched text
+            .forEach(({ item, start, end }) => {
+              const text = textNode.nodeValue;
+              const a = createTag('a', {
+                title: item.Keyword,
+                href: item.URL,
+              });
+              a.appendChild(document.createTextNode(text.substring(start, end)));
+              p.insertBefore(a, textNode.nextSibling);
+              p.insertBefore(document.createTextNode(text.substring(end)), a.nextSibling);
+              textNode.nodeValue = text.substring(0, start);
+              // remove matched link from interlinks
+              keywords.splice(keywords.indexOf(item), 1);
+            });
+        });
+    });
+  }
+}
+
+
+
 /**
  * Checks for accidental relative links and makes sure
  * external URLs open in a new window with no opener
@@ -379,7 +473,7 @@ function fetchAuthor() {
       const authorDiv = document.createElement('div');
       authorDiv.innerHTML = `<div class="author-summary">
         <div><span class="post-author"></span>
-        <span class="post-date">${window.blog.date}</span></div></div>`;
+        <span class="post-date">${window.blog.date || ''}</span></div></div>`;
       authorDiv.classList.add('author');
       authorSection.appendChild(authorDiv);
       authorSection.classList.remove('hide');
@@ -391,30 +485,31 @@ function fetchAuthor() {
     const pageURL = getLink(window.blog.TYPE.AUTHOR, window.blog.author);
     xhr.open('GET', pageURL);
     xhr.onload = function() {
-      if (xhr.status != 200 || xhr.status != 304) {
-        try {
-          // try to get <main> elements and find author image
-          const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText);
-          if (!groups) return;
-          let main = groups.length > 2 ? groups[2] : null;
-          if (main) {
-            main = main.replace(fileName, '../authors/' + fileName);
-
-            const img = /<img src="(.*?)"/.exec(main);
-            const avatarURL = img && img.length > 0 && img[1] ? img[1] : DEFAULT_AVATAR;
-            const authorDiv = document.createElement('div');
-            authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" alt="${window.blog.author}" title="${window.blog.author}" data-src="${avatarURL}?width=128&crop=1:1&auto=webp">
-              <div><span class="post-author"><a href="${pageURL}">${window.blog.author}</a></span>
-              <span class="post-date">${window.blog.date || ''}</span></div></div>`;
-            authorDiv.classList.add('author');
-            authorSection.appendChild(authorDiv);
-            authorSection.classList.remove('hide');
+      try {
+        let avatarURL = DEFAULT_AVATAR;
+        // try to get <main> elements and find author image
+        const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText) || [];
+        let main = groups.length > 2 ? groups[2] : null;
+        if (main) {
+          main = main.replace(fileName, '../authors/' + fileName);
+          const img = /<img src="(.*?)"/.exec(main);
+          if (img && img.length > 0 && img[1]) {
+            avatarURL = img[1];
           }
-        } catch(e) {
-          console.error('Error while extracting author info', e);
         }
-      } else {
-        console.log('Author not found...', xhr.response);
+        const authorDiv = document.createElement('div');
+        authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" alt="${window.blog.author}" title="${window.blog.author}" data-src="${avatarURL}?width=128&crop=1:1&auto=webp">
+          <div><span class="post-author">
+            ${xhr.status < 400 ? `<a href="${pageURL}" title="${window.blog.author}">` : ''}
+              ${window.blog.author}
+            ${xhr.status < 400 ? '</a>' : ''}
+          </span>
+          <span class="post-date">${window.blog.date || ''}</span></div></div>`;
+        authorDiv.classList.add('author');
+        authorSection.appendChild(authorDiv);
+        authorSection.classList.remove('hide');
+      } catch(e) {
+        console.error('Error while extracting author info', e);
       }
     };
     xhr.send();
@@ -488,13 +583,16 @@ function decorateLinkedImages() {
 
 function decorateAnimations() {
   document.querySelectorAll('.animation a[href]').forEach(($a) => {
-    const href=$a.getAttribute('href');
+    let href=$a.getAttribute('href');
     const url=new URL(href);
     const helixId=url.pathname.split('/')[2];
     $a.parentNode.classList.add('images');
 
     if (href.endsWith('.mp4')) {
       const $video=createTag('video', {playsinline:'', autoplay:'', loop:'', muted:''});
+      if (href.startsWith('https://hlx.blob.core.windows.net/external/')) {
+        href='/hlx_'+href.split('/')[4].replace('#image','');
+      }
       $video.innerHTML=`<source src="${href}" type="video/mp4">`;
       $a.parentNode.replaceChild($video, $a);
       $video.addEventListener('canplay', (evt) => { 
@@ -601,7 +699,7 @@ window.addEventListener('load', async function() {
   decorateTables();
   decorateAnimations();
   decorateLinkedImages();
-  handleLinks();
+  addInterLinks().then(() => handleLinks());
   addPredictedPublishURL();
   addCategory();
   fetchAuthor();

@@ -1,0 +1,184 @@
+<html>
+    <head>
+        <title>blog.adobe.com Hero Image Tester</title>
+        <style>
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+                font-weight: 700;
+            }
+            .wrapper {
+                width: 1000px;
+                position: relative;
+                margin: auto;
+            }
+            .wrapper>img {
+                width: 100%;
+            }
+
+            .grid.highlight {
+                border: 3px solid green;
+            }
+
+            .grid {
+                position: absolute;
+                display: grid;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
+            .grid>.safe {
+                border-width: 2px;
+                border-style: solid;
+                border-color: red;
+                background-color: #ff000040;
+                text-shadow: 0px 0px 2px red;
+                padding: 10px;
+
+            }
+
+            .grid.card>.safe{
+                border-color: green;
+                background-color: #00ff0040;
+                text-shadow: 0px 0px 2px green;
+            }
+
+
+
+            .grid>div {
+                overflow:hidden;
+                display: flex;
+                align-items: top;
+                justify-content: left;
+                font-size: 1.5em;
+                color: white;
+                }
+
+            main {
+                text-align: center;
+            }
+
+        </style>
+ 
+    </head>
+    <body>
+        <main>
+            <h1>blog.adobe.com Hero Image Tester</h1>
+            <p>Drag your image here to see what it is going to look.</p>
+            <div class="wrapper">
+                <img src="https://blog.adobe.com/hlx_15a3d894e3eca7719f8652a88c28230707a33aae.png?width=2000&auto=webp">
+            </div>
+        </main>
+        <script>
+            function addGrid($wrapper, $img, name, width, height, limit) {
+                const $grid=document.createElement('div');
+                $grid.className=`grid ${name.toLowerCase()}`;
+                $grid.innerHTML=`
+                    <div class="unsafe"></div>
+                    <div class="unsafe"></div>
+                    <div class="unsafe"></div>
+                    <div class="unsafe"></div>
+                    <div class="safe">${name}</div>
+                    <div class="unsafe"></div>
+                    <div class="unsafe"></div>
+                    <div class="unsafe"></div>
+                    <div class="unsafe"></div>
+                `;
+
+                let h, w;
+                console.log($img.height);
+
+                if ($img.width/$img.height>width/height) {
+                    if (!(limit=='height')) {
+                        h=$img.height;
+                        w=$img.height/height*width;
+                    } else {
+                        h=$img.height;
+                        w=$img.width;
+                    }
+                } else {
+                    w=$img.width
+                    h=$img.width/width*height;
+                }
+
+                console.log(`${w}:${h}`)
+
+                const style=$grid.style;
+                style.gridTemplateRows=`1fr ${h}px 1fr`;
+                style.gridTemplateColumns=`1fr ${w}px 1fr`;
+                $wrapper.appendChild($grid);
+
+            }
+            function recalculate() {
+                const $wrapper=document.querySelector('.wrapper');
+
+                const $img=document.querySelector('.wrapper img');
+                console.log($img);
+
+                addGrid($wrapper, $img, 'Card', 3, 2);
+                addGrid($wrapper, $img, 'Hero', 1000, 438, 'height');
+
+            }
+
+
+let dropArea = document.querySelector('.wrapper');
+
+// Prevent default drag behaviors
+;['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+  dropArea.addEventListener(eventName, preventDefaults, false)   
+  document.body.addEventListener(eventName, preventDefaults, false)
+})
+
+// Highlight drop area when item is dragged over it
+;['dragenter', 'dragover'].forEach(eventName => {
+  dropArea.addEventListener(eventName, highlight, false)
+})
+
+;['dragleave', 'drop'].forEach(eventName => {
+  dropArea.addEventListener(eventName, unhighlight, false)
+})
+
+// Handle dropped files
+dropArea.addEventListener('drop', handleDrop, false)
+
+function preventDefaults (e) {
+  e.preventDefault()
+  e.stopPropagation()
+}
+
+function highlight(e) {
+  dropArea.classList.add('highlight')
+}
+
+function unhighlight(e) {
+  dropArea.classList.remove('highlight')
+}
+
+function handleDrop(e) {
+  var dt = e.dataTransfer
+  var files = dt.files
+
+  handleFiles(files)
+}
+
+
+function handleFiles(files) {
+  files = [...files]
+  files.forEach(previewFile)
+}
+
+function previewFile(file) {
+  let reader = new FileReader()
+  reader.readAsDataURL(file)
+  reader.onloadend = function() {
+    const $wrapper=document.querySelector('.wrapper');
+    $wrapper.innerHTML=`<img src="${reader.result}">`;
+    setTimeout(recalculate, 100);
+    }
+}
+
+window.onload = recalculate;
+
+        </script>
+    </body>
+</html>
