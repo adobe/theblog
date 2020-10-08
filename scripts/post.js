@@ -440,7 +440,7 @@ async function addInterLinks() {
  * (security best practice).
  */
 function handleLinks() {
-  document.querySelectorAll('main a').forEach((a) => {
+  document.querySelectorAll('main .post-body a').forEach((a) => {
     const href = a.getAttribute('href');
     if (!href) return;
     // sanity check URL
