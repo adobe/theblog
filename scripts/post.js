@@ -448,8 +448,9 @@ function handleLinks() {
       && !href.startsWith('http://')
       && !href.startsWith('ftp://')
       && !href.startsWith('mailto:')
-      && !href.startsWith('#')) {
-      a.setAttribute('href', `https://${href}`);
+      && !href.startsWith('#')
+      && !href.startsWith('/')) {
+          a.setAttribute('href', `https://${href}`);
     }
     // absolute URL opens in new tab with no opener
     if (href.includes('//')) {
