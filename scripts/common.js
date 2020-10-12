@@ -207,7 +207,7 @@ export function itemTransformer(item) {
   let path=!window.location.hostname.endsWith('.page') && !isLocalhost() ? item.path.replace('/publish/', '/') : item.path;
   path = path.toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
   const itemParams = {
-    hero: item.hero ? `${item.hero}?height=512&crop=3:2&auto=webp` : '#',
+    hero: item.hero ? `${item.hero}?height=512&crop=3:2&auto=webp&format=pjpg&optimize=medium` : '#',
     date: new Date(item.date * 1000).toLocaleDateString('en-US', {
       day: '2-digit',
       month: '2-digit',

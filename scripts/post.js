@@ -499,7 +499,7 @@ function fetchAuthor() {
           }
         }
         const authorDiv = document.createElement('div');
-        authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" alt="${window.blog.author}" title="${window.blog.author}" data-src="${avatarURL}?width=128&crop=1:1&auto=webp">
+        authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" alt="${window.blog.author}" title="${window.blog.author}" data-src="${avatarURL}?width=128&crop=1:1&auto=webp&format=pjpg&optimize=medium">
           <div><span class="post-author">
             ${xhr.status < 400 ? `<a href="${pageURL}" title="${window.blog.author}">` : ''}
               ${window.blog.author}
