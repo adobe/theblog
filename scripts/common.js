@@ -387,8 +387,6 @@ async function fetchHits(filters, limit, cursor) {
           if(ltopics.includes(lt) || e.products.includes(t.replace('Adobe ', ''))) return true;
           else return false;
         });
-        // main topic (or child topics) must match
-        if (matchedTopics.length === 0) continue;
       }
       //  must match at least one user selected topic
       if (filters.userTopics) {
