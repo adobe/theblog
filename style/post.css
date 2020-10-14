@@ -489,7 +489,7 @@
   text-align: left;
 }
 
-.post-page main>div.post-body>.images {
+.post-page main>div.post-body>.images, .post-page main>div.post-body>.embed {
   text-align: center;
 }
 
