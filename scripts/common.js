@@ -207,7 +207,7 @@ export function itemTransformer(item) {
   let path=!window.location.hostname.endsWith('.page') && !isLocalhost() ? item.path.replace('/publish/', '/') : item.path;
   path = path.toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
   const itemParams = {
-    hero: item.hero ? `${item.hero}?height=512&crop=3:2&auto=webp` : '#',
+    hero: item.hero ? `${item.hero}?height=512&crop=3:2&auto=webp&format=pjpg&optimize=medium` : '#',
     date: new Date(item.date * 1000).toLocaleDateString('en-US', {
       day: '2-digit',
       month: '2-digit',
@@ -328,15 +328,8 @@ export async function fetchArticleIndex(offset) {
   var index=window.blog.articleIndex;
   // console.log(`fetching article index: at ${index.articles.length} entries, new offset=${offset}`)
   if (index.done) return;
-  let indexUrl;
-  
-  if (isLocalhost()) {
-    indexUrl=`/query-index-${offset}.json`;
-  } else {
-    indexUrl=`/${window.blog.language}/query-index.json?limit=256&offset=${offset}`;
-  }
 
-  let response=await fetch(indexUrl);
+  let response=await fetch(`/${window.blog.language}/query-index.json?limit=256&offset=${offset}`);
 
   if (response.ok) { 
     const json = await response.json();
@@ -388,7 +381,7 @@ async function fetchHits(filters, limit, cursor) {
           else return false;
         });
         // main topic (or child topics) must match
-        if (matchedTopics.length === 0) continue;
+        if (matchedTopics.length === 0) matched = false;
       }
       //  must match at least one user selected topic
       if (filters.userTopics) {
@@ -402,7 +395,7 @@ async function fetchHits(filters, limit, cursor) {
         var productsMatched=false;
         filters.products.forEach((p) => {
           if (e.products.includes(p)) productsMatched=true;
-        })
+        });
       }
       // match at least one selected product
       if (filters.products && !productsMatched) matched=false;
@@ -421,7 +414,7 @@ async function fetchHits(filters, limit, cursor) {
         await fetchArticleIndex(articles.length);
       }
     }
-  
+
   }
 
   let result={hits: hits};
