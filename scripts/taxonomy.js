@@ -15,7 +15,7 @@ export async function getTaxonomy() {
     return window.blog.taxonomy;
   }
 
-  return fetch('/en/topics/_taxonomy.plain.html')
+  return fetch(`/${window.blog.language}/topics/_taxonomy.plain.html`)
     .then((response) => {
       return response.text();
     })
