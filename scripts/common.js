@@ -330,7 +330,7 @@ export async function fetchArticleIndex(offset) {
   if (index.done) return;
   let indexUrl;
   
-  if (isLocalhost()) {
+  if (isLocalhost() && window.localStorage.getItem('localIndex')) {
     indexUrl=`/query-index-${offset}.json`;
   } else {
     indexUrl=`/${window.blog.language}/query-index.json?limit=256&offset=${offset}`;
@@ -387,6 +387,8 @@ async function fetchHits(filters, limit, cursor) {
           if(ltopics.includes(lt) || e.products.includes(t.replace('Adobe ', ''))) return true;
           else return false;
         });
+        // main topic (or child topics) must match
+        if (matchedTopics.length === 0) matched = false;
       }
       //  must match at least one user selected topic
       if (filters.userTopics) {
@@ -400,7 +402,7 @@ async function fetchHits(filters, limit, cursor) {
         var productsMatched=false;
         filters.products.forEach((p) => {
           if (e.products.includes(p)) productsMatched=true;
-        })
+        });
       }
       // match at least one selected product
       if (filters.products && !productsMatched) matched=false;
@@ -419,7 +421,7 @@ async function fetchHits(filters, limit, cursor) {
         await fetchArticleIndex(articles.length);
       }
     }
-  
+
   }
 
   let result={hits: hits};
