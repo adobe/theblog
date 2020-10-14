@@ -489,6 +489,11 @@
   text-align: left;
 }
 
+.post-page main>div.post-body>.images {
+  text-align: center;
+}
+
+
 
 
 @media (min-width:700px) {
@@ -586,7 +591,6 @@
   .post-page main>div.post-body>.images {
     margin-left: 0px;
     margin-right: 0px;
-    text-align: center;
     max-width: 800px;
   }
 
