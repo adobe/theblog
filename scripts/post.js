@@ -615,7 +615,9 @@ function decorateAnimations() {
     let href=$a.getAttribute('href');
     const url=new URL(href);
     const helixId=url.pathname.split('/')[2];
-    $a.parentNode.classList.add('images');
+    const $parent=$a.parentNode;
+
+    $parent.classList.add('images');
 
     if (href.endsWith('.mp4')) {
       const $video=createTag('video', {playsinline:'', autoplay:'', loop:'', muted:''});
@@ -631,6 +633,9 @@ function decorateAnimations() {
     if (href.endsWith('.gif')) {
       $a.parentNode.replaceChild(createTag('img',{src: `/hlx_${helixId}.gif`}), $a);  
     }
+
+    const $next=$parent.nextElementSibling;
+    if ($next && $next.tagName=='P' && $next.innerHTML.trim().startsWith('<em>')) $next.classList.add('legend');
   });
 
   const $heroAnimation = document.querySelector('.hero-animation a[href]');
