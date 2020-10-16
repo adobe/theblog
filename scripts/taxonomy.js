@@ -33,6 +33,10 @@ export async function getTaxonomy() {
             e.setAttribute('data-nuft', 'true');
             topic = topic.replace(/\*/gm, '');
           }
+          if (topic.indexOf('#') !== -1) {
+            e.setAttribute('data-skip-meta', 'true');
+            topic = topic.replace(/\#/gm, '');
+          }
 
           e.setAttribute('data-topic', topic.trim());
         }
@@ -42,6 +46,7 @@ export async function getTaxonomy() {
       const PRODUCTS = 'products';
       const INDUSTRIES = 'industries';
       const INTERNALS = 'internals';
+      const NO_INTERLINKS = 'no-interlinks';
 
       if (dataContainer.firstElementChild) {
         let div = dataContainer.firstElementChild;
@@ -72,6 +77,7 @@ export async function getTaxonomy() {
         PRODUCTS,
         INDUSTRIES,
         INTERNALS,
+        NO_INTERLINKS,
 
         isUFT: function (topic) {
           try {
@@ -79,6 +85,16 @@ export async function getTaxonomy() {
             return n && n.getAttribute('data-nuft') !== 'true';
           } catch (error) {
             console.error(`isUFT error with topic "${topic}"`, error);
+            return false;
+          }
+        },
+
+        skipMeta: function (topic) {
+          try {
+            let n = this.node.querySelector(`[data-topic="${escapeTopic(topic)}"]`);
+            return !n || n.getAttribute('data-skip-meta') === 'true';
+          } catch (error) {
+            console.error(`skipMeta error with topic "${topic}"`, error);
             return false;
           }
         },
