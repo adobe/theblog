@@ -582,12 +582,41 @@ function decorateLinkedImages() {
   });
 }
 
+function decorateEmbeds() {
+  document.querySelectorAll('.block-embed a[href]').forEach(($a) => {
+    const url=new URL($a.href);
+    const usp=new URLSearchParams(url.search);
+    let embedHTML='';
+    let type='';
+
+    if ($a.href.startsWith('https://www.youtube.com/watch')) {
+      const vid=usp.get('v');
+      
+      type='youtube';
+      embedHTML=`<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+        <iframe src="https://www.youtube.com/embed/${vid}?rel=0&amp;v=${vid}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" scrolling="no" allow="encrypted-media; accelerometer; gyroscope; picture-in-picture" title="content from youtube" loading="lazy"></iframe>
+        </div>
+      `;
+    }
+
+    if (type) {
+      const $embed=createTag('div', {class: `embed embed-oembed embed-${type}`});
+      const $div=$a.closest('div');
+      $embed.innerHTML=embedHTML;
+      $div.parentElement.replaceChild($embed, $div);
+    }
+    
+  })
+}
+
 function decorateAnimations() {
   document.querySelectorAll('.animation a[href]').forEach(($a) => {
     let href=$a.getAttribute('href');
     const url=new URL(href);
     const helixId=url.pathname.split('/')[2];
-    $a.parentNode.classList.add('images');
+    const $parent=$a.parentNode;
+
+    $parent.classList.add('images');
 
     if (href.endsWith('.mp4')) {
       const $video=createTag('video', {playsinline:'', autoplay:'', loop:'', muted:''});
@@ -603,6 +632,9 @@ function decorateAnimations() {
     if (href.endsWith('.gif')) {
       $a.parentNode.replaceChild(createTag('img',{src: `/hlx_${helixId}.gif`}), $a);  
     }
+
+    const $next=$parent.nextElementSibling;
+    if ($next && $next.tagName=='P' && $next.innerHTML.trim().startsWith('<em>')) $next.classList.add('legend');
   });
 
   const $heroAnimation = document.querySelector('.hero-animation a[href]');
@@ -699,6 +731,7 @@ window.addEventListener('load', async function() {
   decorateImages();
   decorateTables();
   decorateAnimations();
+  decorateEmbeds();
   decorateLinkedImages();
   addInterLinks().then(() => handleLinks());
   addPredictedPublishURL();

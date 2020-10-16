@@ -364,6 +364,7 @@
 
 .embed-internal-promotions .embed-promotions-text {
   padding-left: 32px;
+  text-align: left;
 }
 
 .embed-promotions-text h1, .embed-promotions-text h2, .embed-promotions-text h3, .embed-promotions-text h4, .embed-promotions-text h5 {
@@ -489,7 +490,7 @@
   text-align: left;
 }
 
-.post-page main>div.post-body>.images {
+.post-page main>div.post-body>.images, .post-page main>div.post-body>.embed {
   text-align: center;
 }
 
