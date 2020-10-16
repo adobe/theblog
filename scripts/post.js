@@ -138,12 +138,14 @@ async function handleAsyncMetadata() {
   ]));
 
   // add all topics as article:tags
-  addMetaTags(allTopics.map((topic) => {
-    return {
-      property: 'article:tag',
-      content: topic,
-    }
-  }));
+  addMetaTags(allTopics
+    .filter((topic) => !taxonomy.skipMeta(topic))
+    .map((topic) => {
+      return {
+        property: 'article:tag',
+        content: topic,
+      }
+    }));
 
   // filter out NUFT and sort alphabetically
   window.blog.topics = allTopics
@@ -370,6 +372,7 @@ function checkAndAddMatch(matches, contender) {
  * The first occurrence of each keyword will be replaced with a link.
  */
 async function addInterLinks() {
+  if (window.blog.topics.includes('no-interlinks')) return;
   const response = await fetch('/en/keywords.json');
   if (response.ok) { 
     const json = await response.json();
