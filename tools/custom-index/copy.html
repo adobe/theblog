@@ -45,6 +45,7 @@
                 <script>
                   const href = [
                     'javascript:(() => {',
+                    'try {',
                         'const buffer = document.createElement("textarea");',
                         'document.body.appendChild(buffer);',
                         'buffer.value = [',
@@ -62,6 +63,10 @@
                         'buffer.setSelectionRange(0, 99999);',
                         'document.execCommand("copy");',
                         'buffer.remove();',
+                        'alert("Article data copied to clipboard");',
+                    '} catch (e) {',
+                        'alert(`Error while copying article data: ${e}`);',
+                    '}',
                     '})();',
                   ].join('');
                   document.getElementById('bookmarklet').setAttribute('href', href);
