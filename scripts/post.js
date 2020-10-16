@@ -591,7 +591,6 @@ function decorateEmbeds() {
 
     if ($a.href.startsWith('https://www.youtube.com/watch')) {
       const vid=usp.get('v');
-      console.log(vid);
       
       type='youtube';
       embedHTML=`<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
