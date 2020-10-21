@@ -92,6 +92,7 @@
 .home-page .featured-placeholder {
   grid-area: featured;
   height: 550px;
+  display: block;
 }
 
 .home-page main .news-box {
