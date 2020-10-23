@@ -89,13 +89,23 @@
 .embed {
   margin-top: 64px;
   max-width: 100%;
-  margin-bottom: 64px;
   max-height: 600px;
   width: unset;
 }
 
+.post-page main>div.post-body .images + *,
+.post-page main>div.post-body .images + *,
+.embed + * {
+  margin-top: 64px;
+}
+
+.post-page main>div.post-body .images + p.legend,
+.post-page main>div.post-body .images + p.legend,
+.embed + p.legend {
+  margin-top: 16px;
+}
+
 .post-page main>div.post-body p.legend {
-  margin-top: 1em;
   font-style: italic;
   font-size: 14px;
   color: #4b4b4b
