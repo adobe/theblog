@@ -117,12 +117,24 @@ function setDocumentLanguage() {
 /**
  * Removes header and footer if empty.
  */
-function removeHeaderAndFooter () {
+function removeHeaderAndFooter() {
   // workaound until the ESI is fixed
   const header = document.querySelector("header");
   const footer = document.querySelector("footer");
   if (header.innerHTML == "/header.plain.html") header.innerHTML = "";
   if (footer.innerHTML == "/footer.plain.html") footer.innerHTML = "";
+}
+
+/**
+ * Transforms a given path for use on a card.
+ * @param {string} path The original path
+ * @returns {string} The card path
+ */
+function getCardPath(path) {
+  path = path.toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
+  return !window.location.hostname.endsWith('.page') && !isLocalhost()
+    ? path.replace('/publish/', '/')
+    : path;
 }
 
 /**
@@ -204,8 +216,7 @@ export function getPostPaths(el, parent, removeContainer) {
  * @returns {object} The processed query hit object
  */
 export function itemTransformer(item) {
-  let path=!window.location.hostname.endsWith('.page') && !isLocalhost() ? item.path.replace('/publish/', '/') : item.path;
-  path = path.toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
+  const path = getCardPath(item.path);
   const itemParams = {
     hero: item.hero ? `${item.hero}?height=512&crop=3:2&auto=webp&format=pjpg&optimize=medium` : '#',
     date: new Date(item.date * 1000).toLocaleDateString('en-US', {
@@ -217,7 +228,7 @@ export function itemTransformer(item) {
     authorUrl: item.author ? getLink(window.blog.TYPE.AUTHOR, item.author) : '',
     topic: item.topics.length > 0 ? item.topics[0] : '',
     topicUrl: item.topics.length > 0 ? getLink(window.blog.TYPE.TOPIC, item.topics[0]) : '',
-    path
+    path,
   }
   return Object.assign({}, item, itemParams);
 };
@@ -401,7 +412,7 @@ async function fetchHits(filters, limit, cursor) {
       if (filters.products && !productsMatched) matched=false;
 
       //check if path is already in a card
-      if (document.querySelector(`.card a[href='/${e.path}']`)) matched=false;
+      if (document.querySelector(`.card a[href='/${getCardPath(e.path)}']`)) matched=false;
       if (hits.find(h => h.path == e.path)) matched=false;
   
       if (matched) {
