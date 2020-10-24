@@ -167,7 +167,8 @@ export function getLink(type, name) {
     .replace(/\s/gm, '-') // replace whitespace with -
     .replace(/\&amp;/gm,'') // remove encoded ampersands
     .replace(/\&/gm,'')  // remove unencoded ampersands
-    .replace(/\./gm,''); // remove dots
+    .replace(/\./gm,'') // remove dots
+    .replace(/\-\-+/g,'-'); // remove multiple dashes
   return `${window.blog.context}${window.blog.language}/${type}/${fileName}.html`;
 }
 
