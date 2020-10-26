@@ -77,6 +77,7 @@ async function setupHomepage() {
 
   const newsdeck=document.querySelector('.news-box .deck');
   news.map(itemTransformer).forEach((n) => {
+    n.hero= getOptimizedImageUrl(n.hero, { height: 260 });
     addCard(n, newsdeck)
   });
 
@@ -89,7 +90,7 @@ async function setupHomepage() {
         if ($firstCard) {
           $firstCard.classList.add('featured');
           const hero = $firstCard.querySelector('.hero img');
-          hero.setAttribute('data-src', hero.getAttribute('data-src').replace('?height=512&crop=3:2', '?height=640'));
+          hero.setAttribute('data-src', getOptimizedImageUrl(hero.getAttribute('data-src'), { height: 640, crop: '' }));
           const $main=document.querySelector('main');
           $main.insertBefore($firstCard,featuredPlaceholder);
           featuredPlaceholder.remove();
