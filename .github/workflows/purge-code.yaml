@@ -1,8 +1,5 @@
 on:
   push:
-    paths:
-      - 'scripts*'
-      - 'style*'
     branches:
       - master
 
