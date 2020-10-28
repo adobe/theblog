@@ -173,6 +173,25 @@ export function getLink(type, name) {
 }
 
 /**
+ * Retrieves an index path from an element.
+ * @param {element} el The element
+ */
+export function getIndexPath(el) {
+  if (typeof el === 'string') {
+    el = document.querySelector(el);
+  }
+  // fall back to last section
+  el = el || getSection();
+
+  const r = /^Index\: ?(.*)$/gmi.exec(el.innerText);
+  if (r && r.length > 0) {
+    el.remove();
+    return r[1].trim();
+  }
+  return null;
+}
+
+/**
  * Retrieves article paths from an element or one of its parent elements.
  * @param {element} el The element
  * @param {number} parent The number of parent elements to climb
@@ -341,7 +360,11 @@ export async function fetchArticleIndex(offset) {
   // console.log(`fetching article index: at ${index.articles.length} entries, new offset=${offset}`)
   if (index.done) return;
 
-  let response=await fetch(`/${window.blog.language}/query-index.json?limit=256&offset=${offset}`);
+  const indexPath = window.blog.indexPath || `/${window.blog.language}/query-index.json`;
+  const queryParams = new URLSearchParams(indexPath.split('?')[1]);
+  queryParams.set('limit', 256);
+  queryParams.set('offset', offset);
+  let response=await fetch(`${indexPath.split('?')[0]}?${queryParams.toString()}`);
 
   if (response.ok) { 
     const json = await response.json();
