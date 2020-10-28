@@ -229,16 +229,15 @@ const observer = new MutationObserver(mutations => {
         let width;
         if (window.blog.pageType === window.blog.TYPE.TOPIC) {
           // full width topic banner
-          width = window.innerWidth;
+          width = window.innerWidth <= 600 ? 600 :
+            window.innerWidth <= 1200 ? 1200 : 2000;
         } else if (window.blog.pageType === window.blog.TYPE.AUTHOR) {
           // author pic
-          width = window.innerWidth < 1200 ? 124 : 224;
+          width = window.innerWidth <= 1200 ? 124 : 224;
         } else {
           // post: hero vs body images
-          width = imgCount > 0 ? 800 : 1000;
-          if (window.innerWidth < width) {
-            width = window.innerWidth;
-          }
+          width = window.innerWidth <= 600 ? 600 :
+            imgCount > 0 ? 800 : 1000;
         }            
         width *= window.devicePixelRatio;
         const imgUrl = getOptimizedImageUrl(img.src, { width });
