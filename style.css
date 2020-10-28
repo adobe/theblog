@@ -163,10 +163,6 @@ main > div img {
    display: none;
  }
  
- a.learn-more::before {
-   content: "Learn more >"
- }
- 
  a.action {
    width: fit-content;
    border-radius: 22px;
@@ -252,10 +248,6 @@ main > div img {
    margin: 0 auto 2rem auto;
  }
  
- a.action.load-more::before {
-   content: "Load more articles"
- }
- 
  .articles {
    background-color: #eaeaea;
    text-align: center;
@@ -269,7 +261,6 @@ main > div img {
  }
  
  .articles-empty::before {
-   content: "No articles found";
    display: inline;
    margin: 0 auto;
  }
