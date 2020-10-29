@@ -39,7 +39,7 @@ a.action.load-more::before {
 }
 
 .social::before {
-  content: "Folge mir auf";
+  content: "Folgen Sie mir auf";
 }
 
 .blank-page.error-404 main h2::before {
