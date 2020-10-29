@@ -12,6 +12,7 @@
 import {
   getSection,
   addClass,
+  getIndexPath,
   getPostPaths,
   wrapNodes,
   createTag,
@@ -32,6 +33,8 @@ async function setupHomepage() {
   if (titleSection.innerText.trim() === document.title) {
     titleSection.remove();
   }
+
+  window.blog.indexPath = getIndexPath();
 
   // add featured placeholder
   const featuredPlaceholder = createTag('div', { 'class': 'featured-placeholder' });

@@ -27,14 +27,6 @@
   background-color: white;
 }
 
-.topic-page .articles-empty {
-  visibility: hidden;
-}
-
-.topic-page .articles-empty.user-filters {
-  visibility: visible;
-}
-
 .topic-page .articles-empty.user-filters::before {
   font-size: 1.125rem;
   font-weight: 700;

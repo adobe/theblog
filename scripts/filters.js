@@ -254,11 +254,8 @@ function getDrowdownHTML(taxonomy, category) {
 
 async function drawFilterBar(callback) {
   /* transitional selector during roll-out of new filter components */
-  const filterBar = document.querySelector('.filter-wrapper,.embed-internal-filters2,.embed-internal-filtersfull2,.embed-internal-filters,.embed-internal-filtersfull');
+  const filterBar = document.querySelector('.filter-wrapper,.embed-internal-components');
 
-  /* permanent selector for post rollout */
-  //const filterBar = document.querySelector('.embed-internal-filters,.embed-internal-filtersfull');
-  
   if (!filterBar) {
     // topic has no filter bar
     return false;
