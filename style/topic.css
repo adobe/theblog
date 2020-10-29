@@ -27,16 +27,8 @@
   background-color: white;
 }
 
-.topic-page .articles-empty {
-  visibility: hidden;
-}
-
 .topic-page .articles-empty::before {
   content: 'No articles found in this category';
-}
-
-.topic-page .articles-empty.user-filters {
-  visibility: visible;
 }
 
 .topic-page .articles-empty.user-filters::before {
