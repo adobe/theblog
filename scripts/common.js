@@ -295,6 +295,7 @@ function addArticlesToDeck(hits, omitEmpty, transformer, hasMore, setFocus) {
       }
     } else {
       // add hits to card container
+      if (!window.blog.page) $deck.innerHTML = '';
       hits
         .map(transformer)
         .forEach((hit, i) => {
