@@ -91,7 +91,7 @@ a.action.load-more::before {
 }
 
 .filter-wrapper .filter:first-child:before {
-  content: "Filters";
+  content: "Filter";
 }
 
 @media (min-width:600px) {
