@@ -60,16 +60,11 @@
 }
 
 .selection::before {
-  content: "Showing articles for: ";
   margin-right: 4px;
 }
 
 .selection span {
   margin: 0 4px 4px 0;
-}
-
-.selection span:not(:last-child)::after {
-  content: ", "
 }
 
 .filter .dropdown {
@@ -219,7 +214,6 @@
 
 /* used for i18n placeholder text */
 .dropdown-menu .search input::after  {
-  content: "Search...";
   display: none;
 }
 
@@ -280,14 +274,6 @@
   padding: 0 12px;
 }
 
-.filter-wrapper a.action.apply::before {
-  content: "Apply";
-}
-
-.filter-wrapper a.action.clear::before {
-  content: "Reset";
-}
-
 .filter-wrapper a.action.clear-all::before {
   content: "✕";
 }
@@ -341,7 +327,6 @@
   }
 
   .filter:first-child::before {
-    content: "Filters";
     display: inline-block;
     font-size: 1rem;
     font-weight: 700;
@@ -380,10 +365,6 @@
 
   .dropdown-menu .footer .filter-clear {
     display: none;
-  }
-
-  .filter-wrapper a.action.clear-all::before {
-    content: "Clear all";
   }
 }
 

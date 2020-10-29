@@ -20,10 +20,6 @@
   background-color: white;
 }
 
-.author-page .articles-empty::before {
-  content: 'No articles found by this author';
-}
-
 .author-page main > div:first-of-type {
   background-color: #f4f4f4;
   padding:0;
@@ -58,7 +54,6 @@
 }
 
 .social::before {
-  content: "Follow me on";
   margin-right: 16px;
 }
 

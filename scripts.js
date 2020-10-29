@@ -231,7 +231,5 @@ loadCSS(`/style/${window.blog.pageType}.css`);
 loadJSModule(`/scripts/${window.blog.pageType}.js`);
 
 // Load language specific CSS overlays
-if (window.blog.language !== window.blog.LANG.EN) { // skip for en
-  loadCSS(`/dict.${window.blog.language}.css`);
-}
+loadCSS(`/dict.${window.blog.language}.css`);
 
