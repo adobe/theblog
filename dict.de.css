@@ -90,10 +90,6 @@ a.action.load-more::before {
   content: "Alle löschen";
 }
 
-.filter-wrapper .filter:first-child:before {
-  content: "Filter";
-}
-
 @media (min-width:600px) {
   .filter-wrapper .filter:first-child::before {
     content: "Filter";
