@@ -27,7 +27,10 @@ async function sendPurge(path) {
     });
     const json=await resp.json();
     console.log(JSON.stringify(json));
-    return(json);
+    if (!resp.ok || json.status !== 'ok') {
+        alert(`Failed to purge ${path} from the cache. Please try again later.\n\nCheck your browser console for more details.`);
+    }
+    return json;
 }
 
 purge();

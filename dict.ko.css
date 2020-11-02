@@ -10,93 +10,93 @@
  * governing permissions and limitations under the License.
  */
 
-a.learn-more::before {
-  content: "Mehr erfahren >"
+ a.learn-more::before {
+  content: "Learn more >"
 }
 
 a.action.load-more::before {
-  content: "Mehr Artikel laden"
+  content: "Load more articles"
 }
 
 .post-page .articles::before {
-  content: "Für Sie empfohlen";
+  content: "Recommended for you";
 }
 
 .articles-empty::before {
-  content: "Keine Artikel gefunden"
+  content: "No articles found";
 }
 
 .author-page .articles-empty::before {
-  content: 'Dieser Autor hat noch keine Artikel publiziert';
+  content: 'No articles found by this author';
 }
 
 .topic-page .articles-empty::before {
-  content: 'Keine Artikel in dieser Kategorie gefunden';
+  content: 'No articles found in this category';
 }
 
 .post-page .products::before {
-  content: "Adobe-Produkte in diesem Artikel";
+    content: "Adobe products in this article";
 }
 
 .social::before {
-  content: "Folgen Sie mir auf";
+  content: "Follow me on";
 }
 
 .blank-page.error-404 main h2::before {
-  content: "Die Seite wurde leider nicht gefunden.";
+  content: 'These are uncharted waters.';
 }
 
 .blank-page.error-404 main p.detail::before {
-  content: "";
+  content: "Sorry, that page can't be found.";
 }
 
 .blank-page.error-404 main .gotohome::before {
-  content: 'Zur Homepage ›';
+  content: 'Go to homepage ›';
 }
 
 .blank-page.error-404 main .searchadobe::before {
-  content: 'Adobe.com durchsuchen ›';
+  content: 'Search Adobe.com ›';
 }
 
 .topic-page .dropdown-menu .search input::after  {
-  content: "Durchsuchen...";
+  content: "Search...";
 }
 
 .topic-page .filter-wrapper a.action.apply::before {
-  content: "Anwenden";
+  content: "Apply";
 }
 
 .topic-page .filter-wrapper a.action.clear::before {
-  content: "Zurücksetzen";
+  content: "Reset";
 }
 
-.filter-wrapper .selection::before {
-  content: "Artikel anzeigen mit: ";
+.selection::before {
+  content: "Showing articles for: ";
 }
 
-.filter-wrapper .selection span:not(:last-child)::after {
+.selection span:not(:last-child)::after {
   content: ", "
 }
 
 .topic-page .articles-empty.user-filters::before {
-  content: "Tut uns leid, es gab keine Treffer";
+  content: "Sorry, no matching results";
 }
 
 .topic-page .articles-empty.user-filters .user-help:before {
-  content: "Bitte versuchen Sie es mit weniger Filtern, oder löschen Sie alle.";
+  content: "Please try again selecting fewer filters or clearing all selections.";
 }
 
 .articles-empty.user-filters a.action.clear-all::before {
-  content: "Alle löschen";
+  content: "Clear all";
 }
 
 @media (min-width:600px) {
   .filter-wrapper .filter:first-child::before {
-    content: "Filter";
+    content: "Filters";
   }
 
   .filter-wrapper .filter-bar a.action.clear-all::before {
-    content: "Alle löschen";
+    content: "Clear all";
   }
   
 }

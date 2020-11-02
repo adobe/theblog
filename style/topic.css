@@ -27,20 +27,7 @@
   background-color: white;
 }
 
-.topic-page .articles-empty {
-  visibility: hidden;
-}
-
-.topic-page .articles-empty::before {
-  content: 'No articles found in this category';
-}
-
-.topic-page .articles-empty.user-filters {
-  visibility: visible;
-}
-
 .topic-page .articles-empty.user-filters::before {
-  content: "Sorry, no matching results";
   font-size: 1.125rem;
   font-weight: 700;
 }
@@ -51,13 +38,8 @@
   align-items: center;
 }
 
-.articles-empty a.action.clear-all::before {
-  content: "Clear all";
-}
-
 
 .topic-page .articles-empty .user-help:before {
-  content: "Please try again selecting fewer filters or clearing all selections.";
   font-size: 1rem;
 }
 

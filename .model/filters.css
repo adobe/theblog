@@ -45,7 +45,6 @@
 }
 
 .filter:first-child:before {
-  content: "Filters";
   display: inline-block;
   margin-right: 16px;
 }

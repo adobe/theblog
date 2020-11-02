@@ -311,7 +311,7 @@
         var path = '';
         var parent = e.parentNode.parentNode;
         var nuft = label.indexOf('*') !== -1;
-        var tag = label.replace(/\*/gm, '').trim();
+        var tag = label.replace(/[\*|\#]/gm, '').trim();
         while (parent.nodeName == 'LI') {
           var parentLabel = getLabel(parent);
           parentLabel = parentLabel.trim();

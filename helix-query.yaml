@@ -86,3 +86,9 @@ indices:
     include:
       - de/publish/*/*/*/*.(md|docx)
     target: https://adobe.sharepoint.com/:x:/r/sites/TheBlog/Shared%20Documents/theblog/de/query-index.xlsx?d=w7e4e8437735540cf9a632f486c42c865&csf=1&web=1&e=w3EocR
+
+  korean:
+    <<: *default
+    include:
+      - ko/publish/*/*/*/*.(md|docx)
+    target: https://adobe.sharepoint.com/:x:/r/sites/TheBlog/Shared%20Documents/theblog/ko/query-index.xlsx?d=wd29a640f97104e3b8ece1d5b89aba0be&csf=1&web=1&e=K3fruX

@@ -39,19 +39,3 @@
   font-style: normal;
   font-size: 12px;
 }
-
-.blank-page.error-404 main h2::before {
-  content: 'These are uncharted waters.';
-}
-
-.blank-page.error-404 main p.detail::before {
-  content: "Sorry, that page can't be found.";
-}
-
-.blank-page.error-404 main .gotohome::before {
-  content: 'Go to homepage ›';
-}
-
-.blank-page.error-404 main .searchadobe::before {
-  content: 'Search Adobe.com ›';
-}

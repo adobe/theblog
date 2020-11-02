@@ -35,13 +35,13 @@ function loadCSS(href) {
 
 function checkDX(tags) {
   const dxtags=`Experience Cloud, Experience Manager, Magento Commerce, Marketo Engage, Target, Commerce Cloud, Campaign, Audience Manager, Analytics, Advertising Cloud,
-      Travel & Hospitality, Media & Entertainment, Financial Services, Government, Non-profits, Other, Healthcare, High Tech, Retail, Telecom, Manufacturing, Education, 
+      Travel & Hospitality, Media & Entertainment, Financial Services, Government, Non-profits, Other, Healthcare, High Tech, Retail, Telecom, Manufacturing, Education,
       B2B, Social, Personalization, Campaign Management, Content Management, Email Marketing, Commerce, Analytics, Advertising, Digital Transformation`;
   const dx=dxtags.split(',').map(e => e.trim());
   let found=false;
   tags.split(',').forEach((p) => {
     p=p.trim();
-    if (dx.includes(p)) found=true; 
+    if (dx.includes(p)) found=true;
   });
   return found;
 }
@@ -198,7 +198,7 @@ window.blog = function() {
     }
   }
   if (window.isErrorPage) {
-    pageType = TYPE.BLANK; 
+    pageType = TYPE.BLANK;
   }
   return { context, language, pageType, TYPE, LANG };
 }();
@@ -211,6 +211,7 @@ window.fedsConfig = {
   },
   search: {
     context: 'blogs',
+    passExperienceName: true,
   },
   disableSticky: false,
   privacy: {
@@ -230,7 +231,5 @@ loadCSS(`/style/${window.blog.pageType}.css`);
 loadJSModule(`/scripts/${window.blog.pageType}.js`);
 
 // Load language specific CSS overlays
-if (window.blog.language !== window.blog.LANG.EN) { // skip for en
-  loadCSS(`/dict.${window.blog.language}.css`);
-}
+loadCSS(`/dict.${window.blog.language}.css`);
 
