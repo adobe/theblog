@@ -4,32 +4,13 @@ on:
       - master
 
 jobs:
-  my-job:
-    name: Purge Code
+  ci_trigger:
     runs-on: ubuntu-latest
+    name: Clear helix pages cache
     steps:
-      - name: Purge Code
-        run: |
-          host="https://blog.adobe.com"
-          files=(
-            "/scripts.js"
-            "/scripts/author.js"
-            "/scripts/blank.js"
-            "/scripts/common.js"
-            "/scripts/filters.js"
-            "/scripts/home.js"
-            "/scripts/post.js"
-            "/scripts/taxonomy.js"
-            "/scripts/topic.js"
-            "/style.css"
-            "/style/author.css"
-            "/style/blank.css"
-            "/style/filters.css"
-            "/style/home.css"
-            "/style/post.css"
-            "/style/topic.css"
-          )
-          for file in "${files[@]}"
-          do
-            curl -X HLXPURGE ${host}${file}
-          done
+      - name: Trigger
+        id: trigger
+        uses: adobe-rnd/github-purge-cache-action@master
+        with:
+          helix-url: https://blog.adobe.com/
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
