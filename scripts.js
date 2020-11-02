@@ -120,33 +120,26 @@ function getOtDomainId() {
   return `${domains[currentDomain] || domains[Object.keys(domains)[0]]}`;
 };
 
-// Prep images for lazy loading and use adequate sizes
-const imgWidth = (window.innerWidth < 1000 ? window.innerWidth : 1000) * window.devicePixelRatio;
-let imgCount = 0;
-
-const observer = new MutationObserver(mutations => {
-  mutations.forEach(mutation => {
-    mutation.addedNodes.forEach(node => {
-      // only handle images with src=/hlx_*
-      if (node.tagName === 'IMG' && /\/hlx_/.test(node.src)) {
-        const img = node;
-        const forceJpeg=true;
-        if (!/\?width\=\d/.test(img.src)) {
-          // add reasonable width if missing
-          img.setAttribute('src', `${img.src}?width=${imgWidth}&auto=webp${forceJpeg?'&format=pjpg&optimize=medium':''}`);
-        }
-        if (imgCount > 0) {
-          // skip lazyloading for hero image
-          img.setAttribute('data-src', img.src);
-          img.removeAttribute('src');
-          img.classList.add('lazyload');
-        }
-        imgCount++;
-      }
-    });
-  });
-});
-observer.observe(document, { childList: true, subtree: true });
+/**
+ * Returns an image URL with optimization parameters
+ * @param {string} url The image URL
+ * @param {object} options The configuration options
+ */
+function getOptimizedImageUrl(url, config) {
+  const [path, query] = url.split('?');
+  if (!path.endsWith('.gif')) {
+    // apply defaults
+    config =  {
+      auto: 'webp',
+      format: 'pjpg',
+      optimize: 'medium',
+      ...config,
+    }
+  }
+  const opts = new URLSearchParams(query);
+  Object.keys(config).forEach(key => config[key] ? opts.set(key, config[key]) : null); 
+  return `${path}?${opts.toString()}`;
+}
 
 // Blog config
 window.blog = function() {
@@ -225,6 +218,44 @@ window.adobeid = {
   scope: 'AdobeID,openid',
   locale: window.blog.language,
 };
+
+// Prep images for lazy loading and use adequate sizes
+let imgCount = 0;
+const observer = new MutationObserver(mutations => {
+  mutations.forEach(mutation => {
+    mutation.addedNodes.forEach(node => {
+      // only handle images with src=/hlx_*
+      if (node.tagName === 'IMG' && /\/hlx_/.test(node.src)) {
+        const img = node;
+        let width;
+        if (window.blog.pageType === window.blog.TYPE.TOPIC) {
+          // full width topic banner
+          width = window.innerWidth <= 600 ? 600 :
+            window.innerWidth <= 1200 ? 1200 : 2000;
+        } else if (window.blog.pageType === window.blog.TYPE.AUTHOR) {
+          // author pic
+          width = window.innerWidth <= 1200 ? 124 : 224;
+        } else {
+          // post: hero vs body images
+          width = window.innerWidth <= 600 ? 600 :
+            imgCount > 0 ? 800 : 1000;
+        }            
+        width *= window.devicePixelRatio;
+        const imgUrl = getOptimizedImageUrl(img.src, { width });
+        if (imgCount === 0) {
+          img.setAttribute('src', imgUrl);
+        } else {
+          // lazyload all but hero image
+          img.setAttribute('data-src', imgUrl);
+          img.removeAttribute('src');
+          img.classList.add('lazyload');
+        }
+        imgCount++;
+      }
+    });
+  });
+});
+observer.observe(document, { childList: true, subtree: true });
 
 // Load page specific code
 loadCSS(`/style/${window.blog.pageType}.css`);
