@@ -91,4 +91,4 @@ indices:
     <<: *default
     include:
       - ko/publish/*/*/*/*.(md|docx)
-    target: https://adobe.sharepoint.com/:x:/r/sites/TheBlog/_layouts/15/Doc.aspx?sourcedoc=%7BD29A640F-9710-4E3B-8ECE-1D5B89ABA0BE%7D&file=query-index.xlsx
+    target: https://adobe.sharepoint.com/:x:/r/sites/TheBlog/Shared%20Documents/theblog/ko/query-index.xlsx?d=wd29a640f97104e3b8ece1d5b89aba0be&csf=1&web=1&e=K3fruX
