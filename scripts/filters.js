@@ -123,12 +123,6 @@ function applyCurrentFilters(callback, closeDropdown) {
       event.stopPropagation();
       clearAllFilters(callback);
     });
-    clearAllBtn.addEventListener('keyup', (event) => {
-      event.stopPropagation();
-      if (event.key === 'Enter') {
-        clearAllFilters(callback);
-      }
-    });
     // handle filter links
     document.querySelectorAll('.selection a.user-filter').forEach((filter) => {
       // remove filter action
@@ -136,12 +130,6 @@ function applyCurrentFilters(callback, closeDropdown) {
         clearFilters(null, event.target.textContent);
         applyCurrentFilters(callback);
       });
-      // filter.addEventListener('keyup', (event) => {
-      //   event.stopPropagation();
-      //   if (event.key === 'Enter') {
-      //     clearAllFilters(callback);
-      //   }
-      // });
       const title = window.getComputedStyle(filter, ':before').getPropertyValue('content');
       if (title !== 'normal' && title !== 'none') {
         filter.setAttribute('title', title.substring(1, title.length-1).replace('$1', filter.textContent));
