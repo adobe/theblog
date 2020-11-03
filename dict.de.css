@@ -74,8 +74,8 @@ a.action.load-more::before {
   content: "Artikel anzeigen mit";
 }
 
-.filter-wrapper .selection span:not(:last-child)::after {
-  content: ", "
+.topic-page .selection a.user-filter::before {
+  content: "$1 entfernen";
 }
 
 .topic-page .articles-empty.user-filters::before {

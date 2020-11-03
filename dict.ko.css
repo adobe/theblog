@@ -74,8 +74,8 @@ a.action.load-more::before {
   content: "Showing articles for";
 }
 
-.selection span:not(:last-child)::after {
-  content: ", "
+.topic-page .selection a.user-filter::before {
+  content: "Remove $1";
 }
 
 .topic-page .articles-empty.user-filters::before {
