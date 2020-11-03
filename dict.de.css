@@ -71,7 +71,7 @@ a.action.load-more::before {
 }
 
 .filter-wrapper .selection::before {
-  content: "Artikel anzeigen mit: ";
+  content: "Artikel anzeigen mit";
 }
 
 .filter-wrapper .selection span:not(:last-child)::after {
@@ -86,17 +86,10 @@ a.action.load-more::before {
   content: "Bitte versuchen Sie es mit weniger Filtern, oder löschen Sie alle.";
 }
 
-.articles-empty.user-filters a.action.clear-all::before {
+.topic-page .selection a.action.clear-all::before {
   content: "Alle löschen";
 }
 
-@media (min-width:600px) {
-  .filter-wrapper .filter:first-child::before {
-    content: "Filter";
-  }
-
-  .filter-wrapper .filter-bar a.action.clear-all::before {
-    content: "Alle löschen";
-  }
-  
+.filter-wrapper .filter:first-child::before {
+  content: "Filter";
 }

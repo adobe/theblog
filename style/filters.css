@@ -44,27 +44,69 @@
   align-items: center;
 }
 
-.filter:first-child {
+.filter:first-child::before {
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-right: 16px;
   justify-content: start;
 }
 
+.selection-wrapper {
+  padding: 24px 0 0 0;
+}
+
 .selection {
-  margin-top: 16px;
   width: 100%;
   color: #505050;
   display: flex;
   flex-flow: row wrap;
-  font-size: 0.8rem;
-  font-style: italic;
-  line-height:1.25rem;
 }
 
 .selection::before {
+  font-family: adobe-clean,sans-serif;
+  font-size: 0.75rem;
+  line-height:24px;
+  width: 100%;
   margin-right: 4px;
 }
 
-.selection span {
-  margin: 0 4px 4px 0;
+.selection a.user-filter {
+  margin-right: 8px;
+  font-size: 0.75rem;
+  line-height: 24px;
+  color: #747474;
+  border: 1px solid #959595;
+  border-radius: 4px;
+  text-decoration: none;
+  padding-left: 8px;
+  margin-top: 8px;
+}
+
+.selection a.user-filter:hover {
+  border-color: #323232;
+}
+
+.selection a.user-filter:focus {
+  outline: #378EF0 auto 1px;
+}
+
+.selection a.user-filter::before {
+  display: none;
+}
+
+.selection a.user-filter::after {
+  margin: 0 8px;
+  content: "✕";
+}
+
+.selection a.action.clear-all {
+  font-size: 0.875rem;
+  line-height: 24px;
+  color: #378EF0;
+  padding: 0;
+  padding: 0 8px;
+  margin-top: 8px;
 }
 
 .filter .dropdown {
@@ -274,10 +316,6 @@
   padding: 0 12px;
 }
 
-.filter-wrapper a.action.clear-all::before {
-  content: "✕";
-}
-
 @media (min-width:600px) {
 
   .dropdown.is-open .filter-btn {
@@ -296,8 +334,18 @@
     justify-content: space-between;
   }
 
-  .selection {
+  .selection-wrapper {
+    padding-top: 16px;
+  }
+    .selection {
     width: 100%;
+  }
+
+  .selection::before {
+    width: unset;
+    line-height: 24px;
+    margin-top: 9px;
+    margin-right: 8px;
   }
 
   .filter {
@@ -324,13 +372,6 @@
 
   .page-overlay:before {
     background-color: rgba(255, 255, 255, 0.5);
-  }
-
-  .filter:first-child::before {
-    display: inline-block;
-    font-size: 1rem;
-    font-weight: 700;
-    margin-right: 16px;
   }
   
   .dropdown-menu {
