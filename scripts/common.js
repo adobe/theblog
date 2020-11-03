@@ -447,9 +447,9 @@ async function fetchHits(filters, limit, cursor) {
         filters.products.forEach((p) => {
           if (e.products.includes(p)) productsMatched = true;
         });
+        // match at least one selected product
+        if (filters.products && !productsMatched) matched = false;
       }
-      // match at least one selected product
-      if (filters.products && !productsMatched) matched = false;
 
       //check if path is already in a card
       if (document.querySelector(`.card a[href='/${getCardPath(e.path)}']`)) matched=false;
