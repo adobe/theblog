@@ -39,6 +39,13 @@ export async function getTaxonomy() {
           }
 
           e.setAttribute('data-topic', topic.trim());
+          if (e.firstChild.nodeName === 'A') {
+            // topic could be a link
+            const link = e.firstChild.getAttribute('href');
+            if (link) {
+              e.setAttribute('data-topic-link', link);
+            }
+          }
         }
       });
 
@@ -97,6 +104,22 @@ export async function getTaxonomy() {
             console.error(`skipMeta error with topic "${topic}"`, error);
             return false;
           }
+        },
+
+        getLink: function (topic) {
+          try {
+            const n = this.node.querySelector(`[data-topic="${escapeTopic(topic)}"]`);
+            const link = n ? n.getAttribute('data-topic-link') : null;
+            if (link) {
+              // adapt host to current browser host
+              const u = new URL(link);
+              const current = new URL(window.location.href);
+              return `${current.origin}${u.pathname}`;
+            }
+          } catch (error) {
+            console.error(`getLink error with topic "${topic}"`, error);
+          }
+          return null;
         },
 
         getParents: function (topic) {
