@@ -71,11 +71,11 @@ a.action.load-more::before {
 }
 
 .selection::before {
-  content: "Showing articles for: ";
+  content: "Showing articles for";
 }
 
-.selection span:not(:last-child)::after {
-  content: ", "
+.topic-page .selection a.user-filter::before {
+  content: "Remove $1";
 }
 
 .topic-page .articles-empty.user-filters::before {
@@ -86,17 +86,10 @@ a.action.load-more::before {
   content: "Please try again selecting fewer filters or clearing all selections.";
 }
 
-.articles-empty.user-filters a.action.clear-all::before {
+.topic-page .selection a.action.clear-all::before {
   content: "Clear all";
 }
 
-@media (min-width:600px) {
-  .filter-wrapper .filter:first-child::before {
-    content: "Filters";
-  }
-
-  .filter-wrapper .filter-bar a.action.clear-all::before {
-    content: "Clear all";
-  }
-  
+.filter-wrapper .filter:first-child::before {
+  content: "Filters";
 }
