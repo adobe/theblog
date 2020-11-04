@@ -61,12 +61,13 @@
   color: #505050;
   display: flex;
   flex-flow: row wrap;
+  font-weight:400;
 }
 
 .selection::before {
-  font-family: adobe-clean,sans-serif;
   font-size: 0.75rem;
   line-height:24px;
+  color: #505050;
   width: 100%;
   margin-right: 4px;
 }
