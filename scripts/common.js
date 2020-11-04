@@ -121,8 +121,8 @@ function removeHeaderAndFooter() {
   // workaound until the ESI is fixed
   const header = document.querySelector("header");
   const footer = document.querySelector("footer");
-  if (header.innerHTML == "/header.plain.html") header.innerHTML = "";
-  if (footer.innerHTML == "/footer.plain.html") footer.innerHTML = "";
+  if (header && header.innerHTML == "/header.plain.html") header.innerHTML = "";
+  if (footer && footer.innerHTML == "/footer.plain.html") footer.innerHTML = "";
 }
 
 /**
