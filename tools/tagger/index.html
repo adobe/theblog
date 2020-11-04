@@ -511,24 +511,6 @@
     let lang=params.get('lang');
     if (!lang) lang='en';
 
-    fetch(`/${lang}/topics/_taxonomy.plain.html`)
-      .then((response) => {
-        return response.text();
-      })
-      .then((data) => {
-        document.getElementById('tags-data').innerHTML = data;
-        insertIntro();
-
-        // remove now all <strong> tags (cause issues)
-        document.getElementById('tags-data').innerHTML = document.getElementById('tags-data').innerHTML.replace(/<(\/)?strong>/gm, '');
-        findCategories();
-        generateTagIDs();
-        filter();
-
-        document.addEventListener('paste', handlePaste);
- 
-      });
-
     const asyncForEach = async (array, callback) => {
       for (let index = 0; index < array.length; index += 1) {
         await callback(array[index], index, array);
@@ -607,9 +589,25 @@
       });
     }
 
-    if (checkLinks) {
-      window.addEventListener("DOMContentLoaded", runLinkchecker);
-    }
+    fetch(`/${lang}/topics/_taxonomy.plain.html`)
+      .then((response) => {
+        return response.text();
+      })
+      .then(async (data) => {
+        document.getElementById('tags-data').innerHTML = data;
+        insertIntro();
+
+        // remove now all <strong> tags (cause issues)
+        document.getElementById('tags-data').innerHTML = document.getElementById('tags-data').innerHTML.replace(/<(\/)?strong>/gm, '');
+        findCategories();
+        generateTagIDs();
+        filter();
+
+        document.addEventListener('paste', handlePaste);
+
+        await runLinkchecker();
+ 
+      });
     
   </script>
 </body>
