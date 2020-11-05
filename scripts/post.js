@@ -525,11 +525,12 @@ function fetchAuthor() {
 /**
  * Adds the primary topic as category to the post header
  */
-function addCategory() {
+async function addCategory() {
   if (!window.blog.topics || window.blog.topics.length === 0) return;
   const topic = window.blog.topics[0];
   const categoryWrap = document.createElement('div');
-  const href = getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
+  const taxonomy = await getTaxonomy();
+  const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
   categoryWrap.className = 'category';
   categoryWrap.innerHTML = `<a href="${href}" title="${topic}">${topic}</a>`;
   document.querySelector('main .post-header').prepend(categoryWrap);
@@ -538,12 +539,14 @@ function addCategory() {
 /**
  * Adds buttons for all topics to the bottom of the post
  */
-function addTopics() {
+async function addTopics() {
   if (!window.blog.topics || window.blog.topics.length === 0) return;
   const topicsWrap = createTag('div', { 'class' : 'topics' });
+  const taxonomy = await getTaxonomy();
   window.blog.topics.forEach((topic) => {
+    const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
     const btn = createTag('a', {
-      href: getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase()),
+      href,
       title: topic,
     });
     btn.innerText = topic;
@@ -740,10 +743,10 @@ window.addEventListener('load', async function() {
   decorateLinkedImages();
   addInterLinks().then(() => handleLinks());
   addPredictedPublishURL();
-  addCategory();
+  await addCategory();
   fetchAuthor();
   await handleAsyncMetadata();
-  addTopics();
+  await addTopics();
   loadGetSocial();
   shapeBanners();
   fetchArticles();
