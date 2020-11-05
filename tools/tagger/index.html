@@ -569,7 +569,7 @@
                 window.open(link);
               });
 
-              const res = await fetch(link);
+              const res = await fetch(link, { method: 'HEAD' });
               if (!res.ok) {
                 icon.innerHTML = ERROR_ICON;
                 icon.title = `${link} does not exist.`
@@ -605,7 +605,9 @@
 
         document.addEventListener('paste', handlePaste);
 
-        await runLinkchecker();
+        if (checkLinks) {
+          await runLinkchecker();
+        }
  
       });
     
