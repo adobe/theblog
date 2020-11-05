@@ -167,6 +167,115 @@
       position: absolute;
       top: -1000px;
     }
+
+    /* link checker styles */
+    .lcIcon {
+      float: right;
+      padding: 2px;
+      color: rgb(14, 173, 105);
+    }
+
+    .gg-spinner,
+    .gg-spinner::after,
+    .gg-spinner::before {
+        box-sizing: border-box;
+        position: relative;
+        display: block;
+        width: 20px;
+        height: 20px
+    }
+    .gg-spinner::after,
+    .gg-spinner::before {
+        content: "";
+        position: absolute;
+        border-radius: 100px
+    }
+    .gg-spinner::before {
+        animation: spinner 1s
+        cubic-bezier(.6,0,.4,1) infinite;
+        border: 3px solid transparent;
+        border-top-color: currentColor
+    }
+    .gg-spinner::after {
+        border: 3px solid;
+        opacity: .2
+    }
+    @keyframes spinner {
+        0% { transform: rotate(0deg) }
+        to { transform: rotate(359deg) }
+    }
+
+    .gg-check-o {
+      box-sizing: border-box;
+      position: relative;
+      display: block;
+      width: 22px;
+      height: 22px;
+      border: 2px solid;
+      border-radius: 100px
+    }
+    .gg-check-o::after {
+        content: "";
+        display: block;
+        box-sizing: border-box;
+        position: absolute;
+        left: 3px;
+        top: -1px;
+        width: 6px;
+        height: 10px;
+        border-color: currentColor;
+        border-width: 0 2px 2px 0;
+        border-style: solid;
+        transform-origin: bottom left;
+        transform: rotate(45deg)
+    }
+
+    .gg-danger {
+      box-sizing: border-box;
+      position: relative;
+      display: block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid;
+      border-radius: 40px
+    }
+    .gg-danger::after,
+    .gg-danger::before {
+        content: "";
+        display: block;
+        box-sizing: border-box;
+        position: absolute;
+        border-radius: 3px;
+        width: 2px;
+        background: currentColor;
+        left: 7px
+    }
+    .gg-danger::after {
+        top: 2px;
+        height: 8px
+    }
+    .gg-danger::before {
+        height: 2px;
+        bottom: 2px
+    }
+
+    .gg-danger.error {
+      color: rgb(95, 25, 221);
+    }
+
+    .gg-danger.fix {
+      color: rgb(224, 26, 79);
+    }
+
+    .gg-danger.ok {
+      color: rgb(60, 72, 82);
+    }
+
+    #lcResults {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+    }
   </style>
   <script>
     const CATEGORIES = [];
@@ -187,6 +296,13 @@
         if (e.firstChild && e.firstChild.textContent) {
           e.setAttribute('id', 'tag-' + i);
           e.setAttribute('data-name', e.firstChild.textContent.trim());
+          if (e.firstChild.nodeName === 'A') {
+            // topic could be a link
+            const link = e.firstChild.getAttribute('href');
+            if (link) {
+              e.setAttribute('data-link', link);
+            }
+          }
         } else {
           // useless element
           e.remove();
@@ -318,6 +434,7 @@
           path = parentLabel + (path ? ' / ' : ' ') + path;
           parent = parent.parentNode.parentNode;
         }
+        const link = e.getAttribute('data-link');
         var cat = getLabel(parent);
         tagInfo = {
           tag,
@@ -325,7 +442,8 @@
           nuft,
           path,
           category: cat,
-          id
+          id,
+          link
         };
       }
       return tagInfo;
@@ -392,6 +510,10 @@
     </div>
     <div id="results"></div>
     <div id="selected" class="hidden">test</div>
+    <div id="linkchecker" class="hidden">
+      <h1>Linkchecker report</h1>
+      <div id="lcResults"></div>
+    </div>
   </main>
   <textarea class="offscreen" id="copybuffer"></textarea>
 
@@ -400,11 +522,105 @@
     let lang=params.get('lang');
     if (!lang) lang='en';
 
+    const asyncForEach = async (array, callback) => {
+      for (let index = 0; index < array.length; index += 1) {
+        await callback(array[index], index, array);
+      }
+    };
+
+    const checkLinks = params.get('checkLinks') || false;
+
+    let lcRunning = false;
+    const runLinkchecker = async () => {
+      if (lcRunning) return;
+      lcRunning = true;
+
+      document.getElementById('linkchecker').classList.remove('hidden');
+
+      const LOADING_ICON = '<i class="gg-spinner"></i>';
+      const OK_ICON = '<i class="gg-check-o"></i>';
+      const ERROR_ICON = '<i class="gg-danger error"></i>';
+      const MISSING_OK_ICON = '<i class="gg-danger ok"></i>';
+      const MISSING_FIX_ICON = '<i class="gg-danger fix"></i>';
+
+      window.blog = {
+        language: lang,
+        context: '/'
+      };
+      
+      const { getLink } = await import('/scripts/common.js');
+
+      const computeLink = (tagInfo) => {
+        const { link } = tagInfo;
+        if (link) {
+          // adapt host to current browser host
+          const u = new URL(link);
+          const current = new URL(window.location.href);
+          return `${current.origin}${u.pathname}`;
+        } else {
+          return getLink('topic', tagInfo.tag.replace(/\s/gm, '-').toLowerCase());
+        }
+      };
+      
+      const resultsPanel = document.getElementById('lcResults');
+      asyncForEach(CATEGORIES, async (cat, index) => {
+        asyncForEach(document.querySelectorAll(`#tags-data #cat-${index} li`), async (e) => {
+          const tagInfo = fetchTag(e.id);
+          if (tagInfo) {
+            const { tag, nuft } = tagInfo;
+            const link = computeLink(tagInfo);
+
+            if (link) {
+              console.log(`checking link ${tag}: ${link}`, tagInfo);
+              const ui = document.querySelector(`#results [data-target="${e.id}"]`);
+              const icon = document.createElement('span');
+              icon.classList = 'lcIcon';
+              icon.innerHTML = LOADING_ICON;
+              icon.title = `Checking if ${link} exists.`
+              ui.append(icon);
+              icon.addEventListener('click', (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                window.open(link);
+              });
+
+              const res = await fetch(link);
+              if (!res.ok) {
+                if (res.status === 404) {
+                  if (!nuft) {
+                    icon.innerHTML = MISSING_FIX_ICON;
+                    icon.title = `${link} does not exist.`
+                    
+                    const result = document.createElement('span');
+                    resultsPanel.appendChild(result);
+                    result.innerHTML = `Missing visible category page: <a href='${link}'>${link}</a>`;
+                  } else {
+                    icon.innerHTML = MISSING_OK_ICON;
+                    icon.title = `${link} does not exist but category page should not be visibile anyway.`
+                  }
+                } else {
+                  icon.innerHTML = ERROR_ICON;
+                  icon.title = `Something went wrong with ${link}.`
+
+                  const result = document.createElement('span');
+                  resultsPanel.appendChild(result);
+                  result.innerHTML = `Something went wrong with <a href='${link}'>${link}</a>. Open page to know if this is a temporary issue or something that needs attention.`;
+                }
+              } else {
+                icon.innerHTML = OK_ICON;
+                icon.title = `${link} exists.`;
+              }
+            }
+          }
+        });
+      });
+    }
+
     fetch(`/${lang}/topics/_taxonomy.plain.html`)
       .then((response) => {
         return response.text();
       })
-      .then((data) => {
+      .then(async (data) => {
         document.getElementById('tags-data').innerHTML = data;
         insertIntro();
 
@@ -415,8 +631,13 @@
         filter();
 
         document.addEventListener('paste', handlePaste);
+
+        if (checkLinks) {
+          await runLinkchecker();
+        }
  
       });
+    
   </script>
 </body>
 </html>

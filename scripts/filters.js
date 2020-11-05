@@ -13,6 +13,9 @@
 import {
   getTaxonomy,
 } from '/scripts/taxonomy.js';
+import {
+  createTag,
+} from '/scripts/common.js';
 
 /**
  * Set up a click event on filter button to show/hide dropdown menu.
@@ -70,16 +73,16 @@ function toggleDropdown(dropdownToToggle) {
 }
 
 /**
-* Clear filters in dropdown(s).
+* Clear one or all filters in dropdown(s).
 */
-function clearFilters(dropdown) {
+function clearFilters(dropdown, filterToClear) {
   const dropdowns = dropdown instanceof HTMLElement
     ? [dropdown] 
     : document.querySelectorAll('.dropdown');
   dropdowns.forEach((dropdown) => {
       const selectedFilters = dropdown.querySelectorAll('input:checked');
       selectedFilters.forEach((filter) => {
-          filter.checked = false;
+        filter.checked = filterToClear ? filter.name !== filterToClear : false;
       });
   });
 }
@@ -99,20 +102,41 @@ function applyCurrentFilters(callback, closeDropdown) {
       toggleDropdown();
     }
   });
-  // show/hide selected filters
-  let userFilters = '';
-  Object.keys(filters).forEach((cat) => {
-    filters[cat].forEach((filter, i) => userFilters += `<span>${filter}</span>`);
-  });
-  const selection = document.querySelector('.selection');
-  const clearAllBtn = document.querySelector('.filter-bar > a.action.clear-all');
-  selection.innerHTML = userFilters;
-  if (userFilters.length > 0) {
-    selection.classList.remove('hide');
-    clearAllBtn.classList.remove('hide');
+  let selection = document.querySelector('.selection');
+  if (Object.keys(filters).length > 0) {
+    let userFilters = '';
+    // filter links
+    Object.keys(filters).forEach((cat) => {
+      filters[cat].forEach((filter, i) => userFilters += `<a href="#" class="user-filter" tabindex="0">${filter}</>`);
+    });
+    userFilters += '<a href="#" class="action quiet clear-all"></a>';
+    if (!selection) {
+      selection = createTag('div', { class: 'selection container' });
+      const selectionWrapper = createTag('div', { class: 'selection-wrapper' });
+      selectionWrapper.appendChild(selection);
+      document.querySelector('main').insertBefore(selectionWrapper, document.querySelector('articles'));
+    }
+    selection.innerHTML = userFilters;
+    // handle clear all button
+    const clearAllBtn = document.querySelector('.selection a.action.clear-all');
+    clearAllBtn.addEventListener('click', (event) => {
+      event.stopPropagation();
+      clearAllFilters(callback);
+    });
+    // handle filter links
+    document.querySelectorAll('.selection a.user-filter').forEach((filter) => {
+      // remove filter action
+      filter.addEventListener('click', (event) => {
+        clearFilters(null, event.target.textContent);
+        applyCurrentFilters(callback);
+      });
+      const title = window.getComputedStyle(filter, ':before').getPropertyValue('content');
+      if (title !== 'normal' && title !== 'none') {
+        filter.setAttribute('title', title.substring(1, title.length-1).replace('$1', filter.textContent));
+      }
+    });
   } else {
-    selection.classList.add('hide');
-    clearAllBtn.classList.add('hide');
+    if (selection) selection.parentElement.remove();
   }
   
   // apply filters
@@ -123,7 +147,6 @@ function applyCurrentFilters(callback, closeDropdown) {
  * Clear filters in dropdowns and apply empty
  */
 export function clearAllFilters(callback) {
-  event.stopPropagation();
   clearFilters();
   applyCurrentFilters(callback);
 }
@@ -189,21 +212,6 @@ function initFilterActions(dropdownContainer, callback) {
     }
   });
 }
-
-function handleClearAll(callback) {
-  const clearAllBtn = document.querySelector('.filter-bar > a.action.clear-all');
-  clearAllBtn.addEventListener('click', (event) => {
-    event.stopPropagation();
-    clearAllFilters(callback);
-  });
-  clearAllBtn.addEventListener('keyup', (event) => {
-    event.stopPropagation();
-    if (event.key === 'Enter') {
-      clearAllFilters(callback);
-    }
-  });
-}
-
 
 function i18n() {
   // add button titles
@@ -273,8 +281,6 @@ async function drawFilterBar(callback) {
       <div class="filter">
         ${categories.map(cat => getDrowdownHTML(taxonomy, cat)).join('')}
       </div>
-      <a href="#" class="hide action quiet clear-all"></a>
-      <div class="selection hide"></div>
     </div>
   </div>`;
 
@@ -309,8 +315,6 @@ async function drawFilterBar(callback) {
       initFilterActions(dropdown, callback);
     }
   });
-
-  handleClearAll(callback);
 
   document.querySelector('main').appendChild(filterBar);
   setTimeout(() => i18n(), 500);

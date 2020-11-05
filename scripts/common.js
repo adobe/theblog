@@ -121,8 +121,8 @@ function removeHeaderAndFooter() {
   // workaound until the ESI is fixed
   const header = document.querySelector("header");
   const footer = document.querySelector("footer");
-  if (header.innerHTML == "/header.plain.html") header.innerHTML = "";
-  if (footer.innerHTML == "/footer.plain.html") footer.innerHTML = "";
+  if (header && header.innerHTML == "/header.plain.html") header.innerHTML = "";
+  if (footer && footer.innerHTML == "/footer.plain.html") footer.innerHTML = "";
 }
 
 /**
@@ -238,7 +238,12 @@ export function getPostPaths(el, parent, removeContainer) {
 export function itemTransformer(item) {
   const path = getCardPath(item.path);
   const itemParams = {
-    hero: item.hero ? `${item.hero}?height=512&crop=3:2&auto=webp&format=pjpg&optimize=medium` : '#',
+    hero: item.hero
+      ? getOptimizedImageUrl(item.hero, {
+        height: 512,
+        crop: '3:2',
+      })
+      : '#',
     date: new Date(item.date * 1000).toLocaleDateString('en-US', {
       day: '2-digit',
       month: '2-digit',
@@ -324,6 +329,20 @@ function addArticlesToDeck(hits, omitEmpty, transformer, hasMore, setFocus) {
     }
 }
 
+/**
+ * Check for matches between base topics and topics to match.
+ * The topics to match will be lowercased before matching.
+ * @param {array} baseTopics The base topics
+ * @param {array} topicsToMatch The topics to match
+ * @return {boolean} <code>true</code> if there are matching topics,
+ * else <code>false</code>
+ */
+function matchTopics(baseTopics, topicsToMatch) {
+  return topicsToMatch.filter((t) => {
+    return baseTopics.includes(t.toLowerCase());
+  }).length > 0;
+}
+
 async function translateTable(pages, index) {
   const taxonomy = await getTaxonomy();
   pages.forEach((e) => {
@@ -403,38 +422,34 @@ async function fetchHits(filters, limit, cursor) {
   let i=cursor;
   if (!filters.pathsOnly) {
     for (;i<articles.length;i++) {
-      const e=articles[i];
-      let matched=true;
+      const e = articles[i];
+      const articleTopics = Array.isArray(e.topics) ? e.topics.map(t => t.toLowerCase()) : [];
+      let matched = true;
+
+      if (filters.author && (e.author!=filters.author)) {
+        matched = false;
+      }
+
       if (filters.topics) {
         filters.topics = Array.isArray(filters.topics) ? filters.topics : [filters.topics];
-        // find intersection between filter.topics and current e.topics
-        const matchedTopics = filters.topics.filter((t) => {
-          // quick fix to get caseless comparison working with minimum impact
-          // should be rewritten more efficiently
-          const ltopics=e.topics.map(item => item.toLowerCase())
-          const lt=t.toLowerCase();
-          if(ltopics.includes(lt) || e.products.includes(t.replace('Adobe ', ''))) return true;
-          else return false;
-        });
-        // main topic (or child topics) must match
-        if (matchedTopics.length === 0) matched = false;
+        matched = matchTopics(articleTopics, filters.topics);
       }
-      //  must match at least one user selected topic
-      if (filters.userTopics) {
-        const userMatches = filters.userTopics.filter(userTopic => e.topics.includes(userTopic));
-        matched = userMatches.length > 0;
-      } 
 
-      if (filters.author && (e.author!=filters.author)) matched=false;
+      if (filters.userTopics) {
+        // either main topic (or child topics) or author must have matched
+        if ((filters.author || filters.topics) && matched) {
+          matched = matchTopics(articleTopics, filters.userTopics);
+        }
+      }
 
       if (filters.products) {
-        var productsMatched=false;
+        let productsMatched = false;
         filters.products.forEach((p) => {
-          if (e.products.includes(p)) productsMatched=true;
+          if (e.products.includes(p)) productsMatched = true;
         });
+        // match at least one selected product
+        if (filters.products && !productsMatched) matched = false;
       }
-      // match at least one selected product
-      if (filters.products && !productsMatched) matched=false;
 
       //check if path is already in a card
       if (document.querySelector(`.card a[href='/${getCardPath(e.path)}']`)) matched=false;

@@ -443,7 +443,7 @@ async function addInterLinks() {
  * (security best practice).
  */
 function handleLinks() {
-  document.querySelectorAll('main .post-body a').forEach((a) => {
+  document.querySelectorAll('main .post-body a, main .hero-image a').forEach((a) => {
     const href = a.getAttribute('href');
     if (!href) return;
     // sanity check URL
@@ -501,8 +501,10 @@ function fetchAuthor() {
             avatarURL = img[1];
           }
         }
+        avatarURL = getOptimizedImageUrl(avatarURL, { width: 128, crop: '1:1' });
         const authorDiv = document.createElement('div');
-        authorDiv.innerHTML = `<div class="author-summary"><img class="lazyload" alt="${window.blog.author}" title="${window.blog.author}" data-src="${avatarURL}?width=128&crop=1:1&auto=webp&format=pjpg&optimize=medium">
+        authorDiv.innerHTML = `<div class="author-summary">
+          <img class="lazyload" alt="${window.blog.author}" title="${window.blog.author}" data-src="${avatarURL}">
           <div><span class="post-author">
             ${xhr.status < 400 ? `<a href="${pageURL}" title="${window.blog.author}">` : ''}
               ${window.blog.author}
@@ -523,11 +525,12 @@ function fetchAuthor() {
 /**
  * Adds the primary topic as category to the post header
  */
-function addCategory() {
+async function addCategory() {
   if (!window.blog.topics || window.blog.topics.length === 0) return;
   const topic = window.blog.topics[0];
   const categoryWrap = document.createElement('div');
-  const href = getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
+  const taxonomy = await getTaxonomy();
+  const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
   categoryWrap.className = 'category';
   categoryWrap.innerHTML = `<a href="${href}" title="${topic}">${topic}</a>`;
   document.querySelector('main .post-header').prepend(categoryWrap);
@@ -536,12 +539,14 @@ function addCategory() {
 /**
  * Adds buttons for all topics to the bottom of the post
  */
-function addTopics() {
+async function addTopics() {
   if (!window.blog.topics || window.blog.topics.length === 0) return;
   const topicsWrap = createTag('div', { 'class' : 'topics' });
+  const taxonomy = await getTaxonomy();
   window.blog.topics.forEach((topic) => {
+    const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
     const btn = createTag('a', {
-      href: getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase()),
+      href,
       title: topic,
     });
     btn.innerText = topic;
@@ -738,10 +743,10 @@ window.addEventListener('load', async function() {
   decorateLinkedImages();
   addInterLinks().then(() => handleLinks());
   addPredictedPublishURL();
-  addCategory();
+  await addCategory();
   fetchAuthor();
   await handleAsyncMetadata();
-  addTopics();
+  await addTopics();
   loadGetSocial();
   shapeBanners();
   fetchArticles();

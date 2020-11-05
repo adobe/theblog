@@ -57,20 +57,8 @@ window.addEventListener('load', async function() {
         && node.classList.contains('articles-empty')) {
         // decorate empty page if there are user filters set
         node.classList.add('user-filters');
-        const clearAllBtn = document.querySelector('.filter-bar > a.action.clear-all').cloneNode();
-        node
-          .appendChild(createTag('div', { class: 'user-help' }))
-          .appendChild(clearAllBtn);
-        clearAllBtn.addEventListener('click', (event) => {
-          event.stopPropagation();
-          clearAllFilters(applyFilters);
-        });
-        clearAllBtn.addEventListener('keyup', (event) => {
-          if (event.key === 'Enter') {
-            clearAllFilters(applyFilters);
-          }
-        });
-        clearAllBtn.focus();
+        node.appendChild(createTag('div', { class: 'user-help' }));
+
       }
     });
   });
