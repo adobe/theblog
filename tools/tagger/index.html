@@ -231,7 +231,6 @@
     }
 
     .gg-danger {
-      color: rgb(224, 26, 79);
       box-sizing: border-box;
       position: relative;
       display: block;
@@ -258,6 +257,18 @@
     .gg-danger::before {
         height: 2px;
         bottom: 2px
+    }
+
+    .gg-danger.error {
+      color: rgb(95, 25, 221);
+    }
+
+    .gg-danger.fix {
+      color: rgb(224, 26, 79);
+    }
+
+    .gg-danger.ok {
+      color: rgb(60, 72, 82);
     }
 
     #lcResults {
@@ -528,7 +539,9 @@
 
       const LOADING_ICON = '<i class="gg-spinner"></i>';
       const OK_ICON = '<i class="gg-check-o"></i>';
-      const ERROR_ICON = '<i class="gg-danger"></i>';
+      const ERROR_ICON = '<i class="gg-danger error"></i>';
+      const MISSING_OK_ICON = '<i class="gg-danger ok"></i>';
+      const MISSING_FIX_ICON = '<i class="gg-danger fix"></i>';
 
       window.blog = {
         language: lang,
@@ -550,8 +563,8 @@
       };
       
       const resultsPanel = document.getElementById('lcResults');
-      await asyncForEach(CATEGORIES, async (cat, index) => {
-        await asyncForEach(document.querySelectorAll(`#tags-data #cat-${index} li`), async (e) => {
+      asyncForEach(CATEGORIES, async (cat, index) => {
+        asyncForEach(document.querySelectorAll(`#tags-data #cat-${index} li`), async (e) => {
           const tagInfo = fetchTag(e.id);
           if (tagInfo) {
             const { tag, nuft } = tagInfo;
@@ -565,19 +578,33 @@
               icon.innerHTML = LOADING_ICON;
               icon.title = `Checking if ${link} exists.`
               ui.append(icon);
-              icon.addEventListener('click', () => {
+              icon.addEventListener('click', (event) => {
+                event.stopPropagation();
+                event.preventDefault();
                 window.open(link);
               });
 
-              const res = await fetch(link, { method: 'HEAD' });
+              const res = await fetch(link);
               if (!res.ok) {
-                icon.innerHTML = ERROR_ICON;
-                icon.title = `${link} does not exist.`
+                if (res.status === 404) {
+                  if (!nuft) {
+                    icon.innerHTML = MISSING_FIX_ICON;
+                    icon.title = `${link} does not exist.`
+                    
+                    const result = document.createElement('span');
+                    resultsPanel.appendChild(result);
+                    result.innerHTML = `Missing visible category page: <a href='${link}'>${link}</a>`;
+                  } else {
+                    icon.innerHTML = MISSING_OK_ICON;
+                    icon.title = `${link} does not exist but category page should not be visibile anyway.`
+                  }
+                } else {
+                  icon.innerHTML = ERROR_ICON;
+                  icon.title = `Something went wrong with ${link}.`
 
-                if (!nuft) {
                   const result = document.createElement('span');
-                  result.innerHTML = `Missing visible category page: ${link}`;
                   resultsPanel.appendChild(result);
+                  result.innerHTML = `Something went wrong with <a href='${link}'>${link}</a>. Open page to know if this is a temporary issue or something that needs attention.`;
                 }
               } else {
                 icon.innerHTML = OK_ICON;
