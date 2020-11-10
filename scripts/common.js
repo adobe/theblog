@@ -451,12 +451,21 @@ async function fetchHits(filters, limit, cursor) {
 
       if ((filters.author || filters.topics) && matched) {
         // main topic, child topics or author must have matched
-        // before refining with user topics or products 
+        // before refining with user topics or products
+        let userTopicsMatched = false;
+        let productsMatched = false;
         if (filters.userTopics) {
-          matched = findMatches(articleTopics, [], filters.userTopics);
+          productsMatched = findMatches(articleTopics, [], filters.userTopics);
         }
         if (filters.products) {
-          matched = findMatches([], articleProducts, filters.products);
+          userTopicsMatched = findMatches([], articleProducts, filters.products);
+        }
+        if (filters.userTopics && filters.products) {
+          // if user topics AND products, both must match
+          matched = userTopicsMatched && productsMatched;
+        } else if (filters.userTopics || filters.products) {
+          // if user topics OR products, one of them must match 
+          matched = userTopicsMatched || productsMatched;;
         }
       }
 
