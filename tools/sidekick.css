@@ -1,0 +1,194 @@
+/*
+ * Copyright 2020 Adobe. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+:root {
+  --ui-bg: #eaeaea;
+  --ui-color: #505050;
+  --ui-border: none;
+  --ui-border-radius: 10px;
+  --ui-font-size: 0.875rem;
+  --ui-line-height: 1rem;
+  --ui-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.02), 0 10px 20px 0 rgba(0, 0, 0, 0.2);
+  --button-color: #707070;
+  --button-bg: transparent;
+  --button-border: var(--ui-border);
+  --button-font-size: 0.75rem;
+  --button-font-weight: 500;
+  --button-padding: 5px 8px;
+  --button-hover-bg: #505050;
+  --button-hover-color: white;
+  --button-border-radius: 6px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ui-bg: #505050;
+    --ui-color: #eaeaea;
+  }
+}
+
+.hlx-sidekick {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  background-color: var(--ui-bg);
+  color: var(--ui-color);
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  font-size: var(--ui-font-size);
+  box-shadow: var(--ui-shadow);
+}
+
+.hlx-sidekick::before {
+  cursor: pointer;
+  content: "<";
+}
+
+.hlx-sidekick.hidden {
+  display:none;
+}
+
+.hlx-sidekick.closed > div {
+  display: none;
+}
+
+.hlx-sidekick.closed::before {
+  content: "˃";
+}
+
+.hlx-sidekick > div::before {
+  width: 100%;
+}
+
+@media (min-width:1000px) {
+
+  .hlx-sidekick {
+    top: 40px;
+    left: 40px;
+    flex-direction: row;
+    width: calc(100% - 80px);
+    border: var(--ui-border);
+    border-radius: var(--ui-border-radius);
+  }
+
+  .hlx-sidekick.closed {
+    width: 50px;
+    display: block;
+  }
+
+
+  .hlx-sidekick button {
+    background-color: transparent;
+    border: var(--button-border);
+    color: #707070;
+    font-size: var(--button-font-size);
+    line-height: var(--ui-line-height);
+    font-weight: var(--button-font-weight);
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: var(--button-padding);
+    cursor: pointer;
+    outline: none;
+  }
+
+  .hlx-sidekick button:hover,
+  .hlx-sidekick button.pressed {
+    background-color: var(--button-hover-bg);
+    border-color: var(--button-hover-bg);
+    color: var(--button-hover-color);
+  }
+
+  .hlx-sidekick > div::before {
+    margin-right: 10px;
+  }
+
+  /* section: preview */
+
+  .hlx-sidekick .preview {
+    background-color: bisque;
+  }
+
+  .hlx-sidekick .preview::before {
+    content: 'Preview',
+  }
+
+  .hlx-sidekick .preview button::before {
+    content: 'Preview',
+  }
+
+  /* section: test card */
+
+  .hlx-sidekick .test-card {
+    width:30%;
+    text-align: right;
+    align-self: flex-end;
+  }
+
+  .hlx-sidekick .test-card::before {
+    content: '';
+  }
+
+  .hlx-sidekick .test-card > button:not(:first-of-type) {
+    border-left-width: 0;
+  }
+
+  .hlx-sidekick .test-card > button:first-of-type {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+
+  .hlx-sidekick .test-card > button:last-child {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+
+  .hlx-sidekick .test-card button::before {
+    content: 'Preview Card';
+  }
+
+  /* section: predicted url */
+
+  .hlx-sidekick .predicted-url {
+    width: 60%;
+  }
+
+  .hlx-sidekick .predicted-url::before {
+    content: 'Predicted Publish URL';
+  }
+
+  .hlx-sidekick .predicted-url > input {
+    background-color: rgba(255, 255, 255, 0.5);
+    width: calc(100% - 200px);
+    border: solid 1px #707070;
+    border-radius: 8px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    padding: 5px 8px;
+    line-height: 16px;
+    outline: none;
+  }
+
+  .hlx-sidekick .predicted-url > button {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-left-width: 0;
+  }
+
+  .hlx-sidekick .predicted-url > button::before {
+    content: 'Copy';  
+  }
+}
