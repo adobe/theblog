@@ -496,11 +496,7 @@ export async function fetchArticles({
     const taxonomy = await getTaxonomy();
     const currentTopic = document.title.trim();
     let topics = [currentTopic].concat(taxonomy.getChildren(currentTopic));
-    if (currentTopic.includes('Adobe ')) {
-      topics = topics.concat(taxonomy.getChildren(currentTopic.replace('Adobe ', '')));
-      topics.push(currentTopic.replace('Adobe ', ''));
-    }
-    
+    if (currentTopic.includes('Adobe ')) topics = topics.concat(taxonomy.getChildren(currentTopic.replace('Adobe ', '')));
     filters.topics = topics;
     if (window.blog.userFilters) {
       Object.keys(window.blog.userFilters).forEach((cat) => {
