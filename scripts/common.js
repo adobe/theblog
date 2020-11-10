@@ -455,10 +455,10 @@ async function fetchHits(filters, limit, cursor) {
         let userTopicsMatched = false;
         let productsMatched = false;
         if (filters.userTopics) {
-          productsMatched = findMatches(articleTopics, [], filters.userTopics);
+          userTopicsMatched = findMatches(articleTopics, [], filters.userTopics);
         }
         if (filters.products) {
-          userTopicsMatched = findMatches([], articleProducts, filters.products);
+          productsMatched = findMatches([], articleProducts, filters.products);
         }
         if (filters.userTopics && filters.products) {
           // if user topics AND products, both must match
