@@ -330,17 +330,26 @@ function addArticlesToDeck(hits, omitEmpty, transformer, hasMore, setFocus) {
 }
 
 /**
- * Check for matches between base topics and topics to match.
- * The topics to match will be lowercased before matching.
+ * Find overlaps between base topics or products and topics to match.
  * @param {array} baseTopics The base topics
+ * @param {array} baseProducts The base products
  * @param {array} topicsToMatch The topics to match
  * @return {boolean} <code>true</code> if there are matching topics,
  * else <code>false</code>
  */
-function matchTopics(baseTopics, topicsToMatch) {
-  return topicsToMatch.filter((t) => {
-    return baseTopics.includes(t.toLowerCase());
-  }).length > 0;
+function findMatches(baseTopics, baseProducts, topicsToMatch) {
+  // try matching product names with and without adobe prefix, de-duped
+  const productsToMatch = Array.from(new Set(topicsToMatch
+    .concat(topicsToMatch
+      .map(product => product.replace('adobe ', '')))));
+
+  const matchedTopics = baseTopics
+    .filter(topic => topicsToMatch.includes(topic));
+  const matchedProducts = baseProducts
+    .filter(product => productsToMatch.includes(product));
+
+    // return true if match(es) found in either base topics or products
+  return matchedProducts.length > 0 || matchedTopics.length > 0;
 }
 
 async function translateTable(pages, index) {
@@ -423,7 +432,12 @@ async function fetchHits(filters, limit, cursor) {
   if (!filters.pathsOnly) {
     for (;i<articles.length;i++) {
       const e = articles[i];
-      const articleTopics = Array.isArray(e.topics) ? e.topics.map(t => t.toLowerCase()) : [];
+      const articleTopics = Array.isArray(e.topics)
+        ? e.topics.map(t => t.toLowerCase())
+        : [];
+      const articleProducts = Array.isArray(e.products)
+        ? e.products.map(p => p.toLowerCase())
+        : [];
       let matched = true;
 
       if (filters.author && (e.author!=filters.author)) {
@@ -432,23 +446,27 @@ async function fetchHits(filters, limit, cursor) {
 
       if (filters.topics) {
         filters.topics = Array.isArray(filters.topics) ? filters.topics : [filters.topics];
-        matched = matchTopics(articleTopics, filters.topics);
+        matched = findMatches(articleTopics, articleProducts, filters.topics);
       }
 
-      if (filters.userTopics) {
-        // either main topic (or child topics) or author must have matched
-        if ((filters.author || filters.topics) && matched) {
-          matched = matchTopics(articleTopics, filters.userTopics);
-        }
-      }
-
-      if (filters.products) {
+      if ((filters.author || filters.topics) && matched) {
+        // main topic, child topics or author must have matched
+        // before refining with user topics or products
+        let userTopicsMatched = false;
         let productsMatched = false;
-        filters.products.forEach((p) => {
-          if (e.products.includes(p)) productsMatched = true;
-        });
-        // match at least one selected product
-        if (filters.products && !productsMatched) matched = false;
+        if (filters.userTopics) {
+          userTopicsMatched = findMatches(articleTopics, [], filters.userTopics);
+        }
+        if (filters.products) {
+          productsMatched = findMatches([], articleProducts, filters.products);
+        }
+        if (filters.userTopics && filters.products) {
+          // if user topics AND products, both must match
+          matched = userTopicsMatched && productsMatched;
+        } else if (filters.userTopics || filters.products) {
+          // if user topics OR products, one of them must match 
+          matched = userTopicsMatched || productsMatched;;
+        }
       }
 
       //check if path is already in a card
@@ -497,15 +515,17 @@ export async function fetchArticles({
     const currentTopic = document.title.trim();
     let topics = [currentTopic].concat(taxonomy.getChildren(currentTopic));
     if (currentTopic.includes('Adobe ')) topics = topics.concat(taxonomy.getChildren(currentTopic.replace('Adobe ', '')));
-    filters.topics = topics;
+    filters.topics = topics.map(topic => topic.toLowerCase());
     if (window.blog.userFilters) {
       Object.keys(window.blog.userFilters).forEach((cat) => {
+        // lowercase all user filters
+        const userFiltersByCategory = window.blog.userFilters[cat].map(prod => prod.toLowerCase());
         if (cat === taxonomy.PRODUCTS) {
           // special handling for products category
-          filters.products = (filters.products || []).concat(window.blog.userFilters[cat]);
+          filters.products = userFiltersByCategory;
         } else {
           // add all others as userTopics
-          filters.userTopics = window.blog.userFilters[cat];
+          filters.userTopics = (filters.userTopics || []).concat(userFiltersByCategory);
         }
       });
     }
