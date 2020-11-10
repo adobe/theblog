@@ -453,7 +453,7 @@ async function fetchHits(filters, limit, cursor) {
         // main topic, child topics or author must have matched
         // before refining with user topics or products 
         if (filters.userTopics) {
-          matched = findMatches(articleProducts, articleProducts, filters.userTopics);
+          matched = findMatches(articleTopics, [], filters.userTopics);
         }
         if (filters.products) {
           matched = findMatches([], articleProducts, filters.products);
