@@ -301,6 +301,7 @@ function decoratePullQuotes() {
   })
 }
 
+
 /**
  * Adds CSS classes to images appearing within text
  */
@@ -591,12 +592,22 @@ function decorateLinkedImages() {
 }
 
 function decorateEmbeds() {
+
   document.querySelectorAll('.block-embed a[href]').forEach(($a) => {
     const url=new URL($a.href);
     const usp=new URLSearchParams(url.search);
     let embedHTML='';
     let type='';
 
+    if ($a.href.startsWith('https://video.tv.adobe.com/v/')) {
+      embedHTML=`
+        <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+        <iframe src="${$a.href}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" scrolling="no" allow="encrypted-media" title="content from adobe" loading="lazy">
+        </iframe>
+        </div>`
+        type='adobe-tv';
+    }
+    
     if ($a.href.startsWith('https://www.youtube.com/watch')) {
       const vid=usp.get('v');
       
@@ -615,6 +626,17 @@ function decorateEmbeds() {
     }
     
   })
+
+  document.querySelectorAll('.post-page .post-body .embed').forEach(($e) => {
+    const $next=$e.nextElementSibling;
+    if ($next && $next.tagName=='P') {
+      const inner=$next.innerHTML.trim();
+      if (inner.startsWith('<em>')) {
+        $next.classList.add('legend');
+        }
+      }
+  })
+
 }
 
 function decorateAnimations() {
