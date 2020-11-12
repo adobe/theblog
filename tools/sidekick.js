@@ -132,7 +132,7 @@
      * @private
      */
     _loadCustomPlugins() {
-      if (!this.isHelix() || !this.config.innerHost) {
+      if (!(this.isHelix() || this.isEditor()) || !this.config.innerHost) {
         return;
       }
       Sidekick.appendTag(document.head, {
@@ -260,7 +260,7 @@
      * @param {string} msg The message to display
      * @param {number} level error (0), warning (1), of info (2) (default)
      */
-    nofify(msg, level) {
+    notify(msg, level) {
       this.showModal(msg, false, level);
     }
 
