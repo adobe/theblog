@@ -45,7 +45,7 @@
       action: () => {
         const { config, location } = sk;
         if (!config.innerHost) {
-          sk.notify(`Not configured for ${config.project}`, 0);
+          sk.notify(`Preview is not configured for ${config.project}`, 0);
           return;
         }
         // check if host is a URL
@@ -75,7 +75,7 @@
             case config.outerHost:
                 // staging, switch to production
               if (!config.host) {
-                sk.notify(`Production host name for ${config.project} unknown`);
+                sk.notify(`Production host for ${config.project} is unknown`);
                 return;
               }
               window.location.href = `https://${config.host}${currentPath.replace('/publish', '')}`;
@@ -86,7 +86,8 @@
               break;
             default:
               sk.hideModal();
-              sk.notify(`You can use the preview feature for ${config.project} here:\n\n- An editor window\n- https://${config.innerHost}/${config.host ? `\n- https://${config.host}/` : ''}`, 2);
+              sk.notify(`<p>Preview can be used for ${config.project} here:</p>`
+                `<p><ul><li>online document editors, or any page on<li>https://${config.innerHost}/${config.host ? `<li>https://${config.host}/` : ''}</ul><p>`, 2);
           }
         }
       },
@@ -120,7 +121,7 @@
         const input = evt.target.previousSibling;
         input.select();
         document.execCommand('copy');
-        sk.notify(`Predicted URL copied to clipboard:\n\n${input.value}`, 2);
+        sk.notify(`<p>Predicted URL copied to clipboard:</p><p>${input.value}</p>`);
       },
     },
     elements: [
@@ -162,7 +163,9 @@
     const ok = json.every(e => e.status === 'ok');
 
     if (!resp.ok || !ok) {
-      sk.notify(`Failed to purge ${path} from the cache. Please try again later.\n\nStatus: ${resp.status}\n\n${JSON.stringify(json)}`);
+      sk.notify(`<p>Failed to purge ${path} from the cache. Please try again later.</p>`
+        `<p>Status: ${resp.status}</p>`
+        `<p>${JSON.stringify(json)}</p>`);
     }
     return json;
   }
@@ -177,7 +180,7 @@
       action: async () => {
         const { config, location } = sk;
         if (!config.innerHost || !config.host) {
-          sk.notify(`Not configured for ${config.project}`, 0);
+          sk.notify(`Publish is not configured for ${config.project}`, 0);
           return;
         }
         sk.showModal('Publishing...', true);

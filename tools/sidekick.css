@@ -122,6 +122,7 @@
 }
 
 .hlx-sidekick-overlay {
+  z-index: 999;
   position: fixed;
   width: 100vw;
   height: 100vh;
@@ -141,6 +142,10 @@
   background-color: var(--ui-bg);
   color: var(--ui-color);
   box-shadow: var(--ui-shadow);
+}
+
+.hlx-sidekick-overlay .modal * {
+  font-size: var(--modal-font-size);
 }
 
 .hlx-sidekick-overlay .level-0 {

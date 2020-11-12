@@ -292,7 +292,7 @@
         const sk = this;
         window.setTimeout(() => {
           sk.hideModal();
-        }, 2500);
+        }, 3000);
       } else {
         this._modal.classList.add('wait');
       }
