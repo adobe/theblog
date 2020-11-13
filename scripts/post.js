@@ -599,25 +599,62 @@ function decorateEmbeds() {
     let embedHTML='';
     let type='';
 
-    if ($a.href.startsWith('https://video.tv.adobe.com/v/')) {
-      embedHTML=`
-        <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-        <iframe src="${$a.href}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" scrolling="no" allow="encrypted-media" title="content from adobe" loading="lazy">
-        </iframe>
-        </div>`
-        type='adobe-tv';
-    }
-    
     if ($a.href.startsWith('https://www.youtube.com/watch')) {
       const vid=usp.get('v');
-      
-      type='youtube';
       embedHTML=`<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
         <iframe src="https://www.youtube.com/embed/${vid}?rel=0&amp;v=${vid}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" scrolling="no" allow="encrypted-media; accelerometer; gyroscope; picture-in-picture" title="content from youtube" loading="lazy"></iframe>
         </div>
       `;
+      type = 'youtube';
     }
 
+    if($a.href.startsWith('https://w.soundcloud.com') || $a.href.startsWith('https://api.soundcloud.com')) {
+      const tracks = usp.get('tracks');
+      embedHTML=`
+      <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+      <iframe src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F${tracks}&amp;show_artwork=true" style="border: 0; width: 100%; height: 400px;" allowfullscreen="" allow="encrypted-media" title="content from soundcloud" loading="lazy">
+      </iframe>
+      </div>`
+      type='soundcloud'
+    }
+
+    if($a.href.startsWith('https://www.twitter.com')) {
+      const id = usp.get('id');
+      embedHTML=`
+      <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+      <iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="" style="position: static; visibility: visible; width: 550px; height: 476px; display: block; flex-grow: 1;" title="Twitter Tweet" src="https://platform.twitter.com/embed/index.html?creatorScreenName=Adobe&amp;dnt=true&amp;embedId=twitter-widget-0&amp;frame=false&amp;hideCard=false&amp;hideThread=false&amp;id=${id}&amp;lang=en&amp;origin=https%3A%2F%2Fblog.adobe.com%2Fen%2Fpublish%2F2017%2F08%2F28%2Fcreating-motion-graphics-templates-in-adobe-after-effects.html&amp;siteScreenName=Adobe&amp;theme=light&amp;widgetsVersion=ed20a2b%3A1601588405575&amp;width=550px" data-tweet-id="${id}">
+      </iframe>
+      </div>`
+      type='twitter'
+    }
+
+    if($a.href.startsWith('https://www.instagram.com/')) {
+      embedHTML=`
+        <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+        <iframe class="instagram-media instagram-media-rendered" id="instagram-embed-0" src="${url}" allowtransparency="true" allowfullscreen="true" frameborder="0" height="530" data-instgrm-payload-id="instagram-media-payload-0" scrolling="no" style="background: white; max-width: 658px; width: calc(100% - 2px); border-radius: 3px; border: 1px solid rgb(219, 219, 219); box-shadow: none; display: block; margin: 0px 0px 12px; min-width: 326px; padding: 0px;">
+        </iframe>
+        </div>`;
+      type='instagram';
+    }
+
+    if ($a.href.startsWith('https://player.vimeo.com/video/')) {
+      embedHTML=`
+        <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+        <iframe src="${url}?byline=0&badge=0&portrait=0&title=0" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" scrolling="no" allow="encrypted-media" title="content from vimeo" loading="lazy">
+        </iframe>
+        </div>`
+        type='vimeo-player';
+    }
+
+    if ($a.href.startsWith('https://video.tv.adobe.com/v/')) {
+      embedHTML=`
+        <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+        <iframe src="${url}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" scrolling="no" allow="encrypted-media" title="content from adobe" loading="lazy">
+        </iframe>
+        </div>`
+        type='adobe-tv';
+    }
+ 
     if (type) {
       const $embed=createTag('div', {class: `embed embed-oembed embed-${type}`});
       const $div=$a.closest('div');
