@@ -15,7 +15,7 @@
 
 (() => {
   /**
-   * A sidekick with helper tools.
+   * A sidekick with helper tools for authors.
    */
   class Sidekick {
     /**
@@ -32,8 +32,8 @@
       });
       this.location = Sidekick.getLocation();
       this.loadCSS();
-      if (cfg.plugins && Array.isArray(cfg.plugins)) {
-        cfg.plugins.forEach((plugin) => this.add(plugin));
+      if (this.config.plugins && Array.isArray(this.config.plugins)) {
+        this.config.plugins.forEach((plugin) => this.add(plugin));
       }
       this._loadCustomPlugins();
     }
@@ -314,7 +314,7 @@
 
     /**
      * Loads the specified default CSS file, or a sibling of the
-     * current JS file. E.g. when called without argument from
+     * current JS or HTML file. E.g. when called without argument from
      * /foo/bar.js, it will attempt to load /foo/bar.css.
      * @param {string} path The path to the CSS file (optional)
      * @returns {object} The sidekick
@@ -322,8 +322,14 @@
     loadCSS(path) {
       let href = path;
       if (!href) {
-        const scripts = document.head.getElementsByTagName('script');
-        href = scripts[scripts.length - 1].src.replace('.js', '.css');
+        const scripts = document.getElementsByTagName('script');
+        const lastScript = scripts[scripts.length - 1];
+        if (lastScript.src) {
+          href = lastScript.src.replace('.js', '.css');
+        } else {
+          const filePath = this.location.pathname;
+          href = `${filePath.substring(filePath.lastIndexOf('/') + 1).split('.')[0]}.css`;
+        }
       }
       Sidekick.appendTag(document.head, {
         tag: 'link',

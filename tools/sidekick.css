@@ -10,9 +10,9 @@
  * governing permissions and limitations under the License.
  */
 
-:root {
+ :root {
   --ui-bg: #dedede;
-  --ui-logo: url("/tools/helix-icon.png");
+  --ui-logo: url("../helix-icon.png");
   --ui-color: #505050;
   --ui-border: none;
   --ui-border-radius: 10px;
@@ -65,7 +65,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   background-color: var(--ui-bg);
-  background-image: url("/tools/helix-icon.png");
+  background-image: var(--ui-logo);
   background-repeat: no-repeat;
   background-position: 10px 14px;
   background-size: 22px;
