@@ -17,10 +17,30 @@ import {
   wrapNodes,
   createTag,
   addCard,
+  applyFilters,
   fetchArticles,
   fetchArticleIndex,
   itemTransformer,
 } from '/scripts/common.js';
+
+import {
+  getTaxonomy
+} from '/scripts/taxonomy.js';
+
+
+/**
+ * Retrieves parents of specified topic from the taxonomy.
+ */
+function getParentTopics(taxonomy, topics) {
+  let parentTopics = [];
+  topics.forEach((topic) => {
+    const parents = taxonomy.getParents(topic);
+    if (parents && parents.length > 0) {
+      parentTopics = parentTopics.concat(parents);
+    }
+  });
+  return parentTopics;
+}
 
 /**
  * Sets up the homepage
@@ -84,7 +104,49 @@ async function setupHomepage() {
     addCard(n, newsdeck)
   });
 
+  const filters = {};
+
+  // find topics
+  const last = getSection();
+  let topics, topicContainer;
+  Array.from(last.children).forEach((i) => {
+    const r = /^Topics\: ?(.*)$/gmi.exec(i.innerText);
+    if (r && r.length > 0) {
+      topics = r[1].split(/\,\s*/);
+      topicContainer = i;
+    }
+  });
+  topics = topics
+    ? topics.filter((topic) => topic.length > 0)
+    : [];
+  if (topicContainer) {
+    topicContainer.remove();
+  }
+
+  window.blog.topics = topics;
+
+  if (last.innerText.trim() === '') {
+    last.remove(); // remove empty last div
+  }
+
+  if (window.blog.topics && window.blog.topics.length > 0) {
+    const taxonomy = await getTaxonomy();
+    
+    // de-dupe UFT, NUFT + parents
+    const allTopics = Array.from(new Set([
+      ...window.blog.topics,
+      ...getParentTopics(taxonomy, window.blog.topics),
+    ]));
+
+    window.blog.topics = allTopics
+      .filter(topic => taxonomy.isUFT(topic))
+      .sort((a, b) => a.localeCompare(b));
+
+    filters.topics = window.blog.topics.map(t => t.toLowerCase());
+  };
+
   await fetchArticles({
+    filters,
     pageSize: 13,
     callback: () => {
       if (window.blog.page === 0) {
