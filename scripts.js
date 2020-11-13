@@ -198,8 +198,12 @@ window.blog = function() {
 }();
 
 // Adobe config
+window.fedsMapping = {
+  ko: 'kr'
+};
+
 window.fedsConfig = {
-  locale: window.blog.language,
+  locale: window.fedsMapping[window.blog.language] || window.blog.language,
   content: {
     experience: 'blog-gnav',
   },
