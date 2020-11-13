@@ -10,7 +10,8 @@
  * governing permissions and limitations under the License.
  */
 /* global window, document, HTMLElement */
-"use strict";
+
+'use strict';
 
 (() => {
   /**
@@ -279,14 +280,13 @@
             class: 'hlx-sidekick-overlay',
           },
         });
-        this._modal = Sidekick.appendTag($spinnerWrap, {tag: 'div'});
+        this._modal = Sidekick.appendTag($spinnerWrap, { tag: 'div' });
       } else {
         this._modal.parentNode.classList.remove('hidden');
       }
       if (msg) {
         this._modal.innerHTML = msg;
         this._modal.className = `modal${level < 2 ? ` level-${level}` : ''}`;
-
       }
       if (!sticky) {
         const sk = this;
