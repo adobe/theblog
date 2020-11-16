@@ -122,12 +122,6 @@
         sk.notify(`<p>Predicted URL copied to clipboard:</p><p>${input.value}</p>`);
       },
     },
-    callback: (sidekick, $plugin) => {
-      const { config, location } = sidekick;
-      // set predicted url as value of text field
-      const url = ;
-      $plugin.querySelector('input').value = url;
-    }
   });
 
   // PUBLISH ----------------------------------------------------------------------
