@@ -118,24 +118,14 @@
     button: {
       text: 'Copy Predicted URL',
       action: (evt) => {
-        const input = evt.target.previousSibling;
-        input.select();
-        document.execCommand('copy');
+        navigator.clipboard.writeText(predictUrl(config.host, location.pathname));
         sk.notify(`<p>Predicted URL copied to clipboard:</p><p>${input.value}</p>`);
       },
     },
-    elements: [
-      {
-        tag: 'input',
-        attrs: {
-          style: 'position:absolute;top:-100px;', // place off screen
-        },
-      },
-    ],
     callback: (sidekick, $plugin) => {
       const { config, location } = sidekick;
       // set predicted url as value of text field
-      const url = predictUrl(config.host, location.pathname);
+      const url = ;
       $plugin.querySelector('input').value = url;
     }
   });
@@ -163,9 +153,9 @@
     const ok = json.every(e => e.status === 'ok');
 
     if (!resp.ok || !ok) {
-      sk.notify(`<p>Failed to purge ${path} from the cache. Please try again later.</p>`
-        `<p>Status: ${resp.status}</p>`
-        `<p>${JSON.stringify(json)}</p>`);
+      sk.notify(`<p>Failed to purge ${path} from the cache. Please try again later.</p>` +
+        `<pre>Status: ${resp.status}</pre>` +
+        `<pre>${JSON.stringify(json)}</pre>`);
     }
     return json;
   }
@@ -202,4 +192,43 @@
       },
     },
   });
+
+// ARTICLE DATA -------------------------------------------------------------------
+
+sk.add({
+  id: 'article-data',
+  condition: (sidekick) => {
+    return sidekick.isHelix();
+  },
+  button: {
+    text: 'Copy Article Data',
+    action: async () => {
+      try {
+        navigator.clipboard.writeText([
+          window.blog.author,
+          new Date(window.blog.date).getTime()/1000,
+          `/hlx_${document.head.querySelector('meta[property="og:image"]')
+            .getAttribute("content").split("/hlx_")[1]}`,
+          (document.querySelector(".predicted-url")
+            ? document.querySelector(".predicted-url").textContent.substring(46)
+            : new URL(window.location).pathname.substring(1)).replace("en/202", "en/publish/202"),
+          "[]",
+          "0",
+          document.querySelector("main>div:nth-of-type(5)").textContent.trim().substring(0, 75),
+          document.title,
+          `["${window.blog.topics.join('\", \"')}"]`,
+        ].join("\\t"));
+        sk.notify("Article data copied to clipboard");
+      } catch (e) {
+        sk.notify('<p>Unable to copy article data:</p>' +
+          `<pre>${e}</pre>`, 0);
+      }
+    },
+  },
+});
+
+// CARD PREVIEW -------------------------------------------------------------------
+
+// todo
+
 })();
