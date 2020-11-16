@@ -118,8 +118,10 @@
     button: {
       text: 'Copy Predicted URL',
       action: (evt) => {
-        navigator.clipboard.writeText(predictUrl(config.host, location.pathname));
-        sk.notify(`<p>Predicted URL copied to clipboard:</p><p>${input.value}</p>`);
+        const { config, location } = sk;
+        const url = predictUrl(config.host, location.pathname);
+        navigator.clipboard.writeText(url);
+        sk.notify(`<p>Predicted URL copied to clipboard:</p><p>${url}</p>`);
       },
     },
   });
