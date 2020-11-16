@@ -202,17 +202,17 @@ sk.add({
           window.blog.author,
           new Date(window.blog.date).getTime()/1000,
           `/hlx_${document.head.querySelector('meta[property="og:image"]')
-            .getAttribute("content").split("/hlx_")[1]}`,
-          (document.querySelector(".predicted-url")
-            ? document.querySelector(".predicted-url").textContent.substring(46)
-            : new URL(window.location).pathname.substring(1)).replace("en/202", "en/publish/202"),
-          "[]",
-          "0",
-          document.querySelector("main>div:nth-of-type(5)").textContent.trim().substring(0, 75),
+            .getAttribute('content').split('/hlx_')[1]}`,
+          (document.querySelector('.predicted-url')
+            ? document.querySelector('.predicted-url').textContent.substring(46)
+            : new URL(window.location).pathname.substring(1)).replace('en/202', 'en/publish/202'),
+          '[]',
+          '0',
+          document.querySelector('main>div:nth-of-type(5)').textContent.trim().substring(0, 75),
           document.title,
           `["${window.blog.topics.join('\", \"')}"]`,
-        ].join("\\t"));
-        sk.notify("Article data copied to clipboard");
+        ].join('\t'));
+        sk.notify('Article data copied to clipboard');
       } catch (e) {
         sk.notify('<p>Unable to copy article data:</p>' +
           `<pre>${e}</pre>`, 0);
