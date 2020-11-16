@@ -12,7 +12,7 @@
 
 // This file contains the blog-specific plugins for the sidekick.
 (() => {
-  const sk = window.sidekick;
+  const sk = window.hlxSidekick;
   if (typeof sk !== 'object') return;
 
   // sk.loadCSS();

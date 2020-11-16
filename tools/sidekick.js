@@ -13,7 +13,7 @@
 
 'use strict';
 
- /* this file moved to: https://www.project-helix.io/bookmarklets/sidekick.js */
+/* this file will be moved to: https://www.project-helix.io/bookmarklets/sidekick.js */
 
 (() => {
   /**
@@ -32,12 +32,39 @@
           class: 'hlx-sidekick hidden',
         },
       });
+      this.addLoading();
       this.location = Sidekick.getLocation();
       this.loadCSS();
       if (this.config.plugins && Array.isArray(this.config.plugins)) {
         this.config.plugins.forEach((plugin) => this.add(plugin));
       }
       this._loadCustomPlugins();
+    }
+
+    /**
+     * Shows the loading indicator (for 10 seconds max).
+     * @private
+     */
+    addLoading() {
+      this._loading = Sidekick.appendTag(this.root, {
+        tag: 'div',
+        attrs: {
+          class: 'loading',
+        },
+      });
+      window.setTimeout((sk) => sk.removeLoading(), 1000, this);
+    }
+
+    /**
+     * Hides the loading indicator.
+     * @private
+     * @returns {object} The sidekcik
+     */
+    removeLoading() {
+      if (this._loading) {
+        this._loading.remove();
+        this._loading = null;
+      }
     }
 
     /**
@@ -165,6 +192,7 @@
      *     - {object} button      A button configuration object (optional)
      *       - {string}   text    The button text
      *       - {function} action  The click listener
+     *     - {boolean} override   True to replace an existing plugin (optional)
      *     - {array} elements An array of tag configuration objects (optional)
      *       A tag configuration object can have the following properties:
      *       - {string} tag    The tag name (mandatory)
@@ -175,18 +203,22 @@
      *       This function is expected to return a boolean when called with the sidekick as argument
      *     - {function} callback  A function called after adding the plugin (optional)
      *       This function is called with the sidekick and the newly added plugin as arguments
-     * @returns {HTMLElement} The plugin
+     * @returns {object} The sidekick
      */
     add(plugin) {
+      this.removeLoading();
       if (plugin instanceof HTMLElement) {
         this.root.appendChild(plugin);
       } else if (typeof plugin === 'string') {
         this.root.innerHTML += plugin;
       } else if (typeof plugin === 'function') {
-        this.add(plugin(this));
+        return this.add(plugin(this));
       } else if (typeof plugin === 'object') {
         if (typeof plugin.condition === 'function' && !plugin.condition(this)) {
-          return null;
+          return this;
+        }
+        if (plugin.override) {
+          this.remove(plugin.id);
         }
         const $plugin = Sidekick.appendTag(this.root, {
           tag: 'div',
@@ -210,7 +242,7 @@
           plugin.callback(this, $plugin);
         }
       }
-      return this.get(plugin.name);
+      return this;
     }
 
     /**
@@ -263,7 +295,7 @@
      * @param {string} msg The message to display
      * @param {number} level error (0), warning (1), of info (2) (default)
      */
-    notify(msg, level) {
+    notify(msg, level = 2) {
       this.showModal(msg, false, level);
     }
 
@@ -325,7 +357,7 @@
       let href = path;
       if (!href) {
         const script = Array.from(document.querySelectorAll('script[src]'))
-          .filter((script) => script.src.endsWith('sidekick.js'))[0];
+          .filter((include) => include.src.endsWith('sidekick.js'))[0];
         if (script) {
           href = script.src.replace('.js', '.css');
         } else {
@@ -345,7 +377,7 @@
   }
 
   // launch sidekick
-  if (!window.sidekick) {
-    window.sidekick = new Sidekick(window.sidekickConfig).toggle();
+  if (!window.hlxSidekick) {
+    window.hlxSidekick = new Sidekick(window.hlxSidekickConfig).toggle();
   }
 })();
