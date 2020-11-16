@@ -13,6 +13,8 @@
 
 'use strict';
 
+ /* this file moved to: https://www.project-helix.io/bookmarklets/sidekick.js */
+
 (() => {
   /**
    * A sidekick with helper tools for authors.
