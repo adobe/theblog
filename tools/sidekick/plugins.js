@@ -86,7 +86,7 @@
               break;
             default:
               sk.hideModal();
-              sk.notify(`<p>Preview can be used for ${config.project} here:</p>`
+              sk.notify(`<p>Preview can be used for ${config.project} here:</p>` +
                 `<p><ul><li>online document editors, or any page on<li>https://${config.innerHost}/${config.host ? `<li>https://${config.host}/` : ''}</ul><p>`, 2);
           }
         }
