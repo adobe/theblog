@@ -54,15 +54,21 @@ export async function getTaxonomy() {
         const H = HEADERS;
         let level1, level2;
         data.forEach(row => {
+          let level = 3;
           const level3 = escapeTopic(row[H.level3] !== '' ? row[H.level3] : null);
           if (!level3) {
+            level = 2;
             level2 = escapeTopic(row[H.level2] !== '' ? row[H.level2] : null);
             if (!level2) {
+              level = 1;
               level1 = escapeTopic(row[H.level1]);
             }
           }
 
           const name = level3 || level2 || level1
+
+          // skip duplicates
+          if (_taxonomy.topics[name]) return;
 
           let link = row[H.link] !== '' ? row[H.link] : null;
           if (link) {
@@ -73,6 +79,7 @@ export async function getTaxonomy() {
 
           const item = {
             name,
+            level,
             level1,
             level2,
             level3,

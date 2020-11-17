@@ -287,30 +287,27 @@ async function drawFilterBar(callback) {
   filterBar.innerHTML = html;
 
   filterBar.querySelectorAll('.dropdown').forEach((dropdown) => {
-    const $cat = taxonomy.getCategory(dropdown.id);
+    const cat = taxonomy.getCategory(dropdown.id);
     let optionsHTML = '';
-    if ($cat) {
-      $cat.querySelectorAll(':scope>ul>li').forEach((l) => {
-        let lname = l.getAttribute('data-topic');
-        if (lname) {
-          lname = lname.replace(/\*/gm, '');
+    if (cat) {
+      cat.forEach((l) => {
+        if (l.level === 1) {
+          const lname = l.name.replace(/\*/gm, '');
           optionsHTML += `<div class="option option">
             <input type="checkbox" id="${lname}" name="${lname}">
             <label for="${lname}">${lname}</label>
           </div>`;
-        
-          l.querySelectorAll(':scope>ul>li').forEach((p) => {
-            let pname = p.getAttribute('data-topic');
-            if (pname) {
-              pname = pname.replace(/\*/gm, '');
-              optionsHTML+=`<div class="option option-nested">
-                <input type="checkbox" id="${pname}" name="${pname}">
-                <label for="${pname}">${pname}</label>
-              </div>`;
-            }
+
+          const children = taxonomy.getChildren(l.name);
+          children.forEach((p) => {
+            const pname = p.replace(/\*/gm, '');
+            optionsHTML+=`<div class="option option-nested">
+              <input type="checkbox" id="${pname}" name="${pname}">
+              <label for="${pname}">${pname}</label>
+            </div>`;
           });
         }
-      })
+      });
       dropdown.querySelector('.options').innerHTML = optionsHTML;
       initFilterActions(dropdown, callback);
     }
