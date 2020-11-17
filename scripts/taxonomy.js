@@ -22,10 +22,10 @@ const HEADERS = {
 
 const NO_INTERLINKS = 'no-interlinks';
 
-const CATEGORIES = 'Categories';
-const PRODUCTS = 'Products';
-const INDUSTRIES = 'Industries';
-const INTERNALS = 'Internals';
+const CATEGORIES = 'categories';
+const PRODUCTS = 'products';
+const INDUSTRIES = 'industries';
+const INTERNALS = 'internals';
 
 export async function getTaxonomy() {
   if (window.blog.taxonomy) {
@@ -84,7 +84,7 @@ export async function getTaxonomy() {
             level2,
             level3,
             link,
-            category: row[H.type] ? row[H.type].trim() : INTERNALS,
+            category: row[H.type] ? row[H.type].trim().toLowerCase() : INTERNALS,
             hidden: row[H.hidden] && row[H.hidden].trim() !== '',
             skipMeta: row[H.excludeFromMetadata] && row[H.excludeFromMetadata].trim() !== '',
           }
@@ -153,11 +153,11 @@ export async function getTaxonomy() {
         },
 
         getCategory: function (cat) {
-          return _taxonomy.categories[cat] || [];
+          return _taxonomy.categories[cat.toLowerCase()] || [];
         },
 
         getCategoryTitle: function (cat) {
-          return cat;
+          return cat.charAt(0).toUpperCase() + cat.substring(1);
         }
       };
       return window.blog.taxonomy;
