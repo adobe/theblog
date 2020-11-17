@@ -40,6 +40,7 @@
     condition: (sidekick) => {
       return sidekick.isEditor() || sidekick.isHelix();
     },
+    override: true,
     button: {
       text: 'Preview',
       action: () => {
@@ -106,14 +107,17 @@
       }
     }
     const filename = (pathsplits[pathsplits.length-1].split('.')[0]).toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
-    return `https://${host}/${pathsplits[1]}${datePath}/${filename}.html`;
+    return `${host ? `https://${host}/` : ''}${pathsplits[1]}${datePath}/${filename}.html`;
   }
   
   sk.add({
     id: 'predicted-url',
     condition: (sidekick) => {
       const { config, location } = sidekick;
-      return sidekick.isHelix() && config.host && location.host != config.host;
+      return sidekick.isHelix()
+        && window.blog.pageType === window.blog.TYPE.POST
+        && config.host
+        && location.host != config.host;
     },
     button: {
       text: 'Copy Predicted URL',
@@ -122,6 +126,115 @@
         const url = predictUrl(config.host, location.pathname);
         navigator.clipboard.writeText(url);
         sk.notify(`<p>Predicted URL copied to clipboard:</p><p>${url}</p>`);
+      },
+    },
+  });
+
+  // CARD PREVIEW -------------------------------------------------------------------
+
+  function getCardData() {
+    const d = getArticleData();
+    return {
+      author: d[0],
+      date: d[1],
+      hero: d[2],
+      path: window.location.pathname.substring(1),
+      teaser: d[6],
+      title: d[7],
+      topics: [...window.blog.topics],
+    };
+  }
+
+  sk.add({
+    id: 'card-preview',
+    condition: (sidekick) => {
+      return sidekick.isHelix() && window.blog.pageType === window.blog.TYPE.POST;
+    },
+    button: {
+      text: 'Card Preview',
+      action: async (evt) => {
+        const {
+          addCard,
+          itemTransformer,
+        } = await import('/scripts/common.js');
+        const sk = window.hlxSidekick;
+        const btn = evt.target;
+        let $modal = document.querySelector('.modal');
+        if ($modal) {
+          sk.hideModal();
+          btn.classList.remove('pressed');
+        } else {
+          sk.showModal(addCard(itemTransformer(getCardData()),
+            document.createDocumentFragment()).outerHTML, true);
+          $modal = document.querySelector('.modal');
+          $modal.classList.remove('wait');
+          function hideCardPreview() {
+            sk.hideModal();
+            btn.classList.remove('pressed');
+          }
+          $modal.parentElement.onclick = (evt) => {
+            hideCardPreview();
+            evt.target.onclick = null;
+          };
+          document.body.onkeydown = (evt) => {
+            if (evt.key === 'Escape') {
+              hideCardPreview();
+              evt.target.onkeydown = null;
+            }
+          };
+        
+          const style = document.createElement('style');
+          style.textContent = `
+          .hlx-sk-overlay .card {
+            box-shadow: var(--hlx-sk-shadow);
+          }
+          .hlx-sk-overlay .modal {
+            text-align: center;
+            background-color: transparent;
+            box-shadow: none;
+          }
+          .hlx-sk-overlay .modal * {
+            font-size: unset;
+          }`;
+          $modal.appendChild(style);
+          btn.classList.add('pressed');
+        }
+      },
+    },
+  });
+
+  // ARTICLE DATA -------------------------------------------------------------------
+
+  function getArticleData() {
+    return [
+      window.blog.author,
+      new Date(window.blog.date).getTime()/1000,
+      `/hlx_${document.head.querySelector('meta[property="og:image"]')
+        .getAttribute('content').split('/hlx_')[1]}`,
+      predictUrl(null, sk.location.pathname),
+      '[]',
+      '0',
+      document.querySelector('main>div:nth-of-type(5)').textContent.trim().substring(0, 75),
+      document.title,
+      `["${window.blog.topics.join('\", \"')}"]`,
+    ]
+  }
+
+  sk.add({
+    id: 'article-data',
+    condition: (sidekick) => {
+      return sidekick.isHelix() && window.blog.pageType === window.blog.TYPE.POST;
+    },
+    button: {
+      text: 'Copy Article Data',
+      action: async () => {
+        try {
+          navigator.clipboard.writeText(getArticleData().join('\t'));
+          sk.notify('Article data copied to clipboard');
+        } catch (e) {
+          sk.notify('<p>Unable to copy article data:</p>' +
+            `<pre>${e}</pre>`, 0);
+        }
       },
     },
   });
@@ -161,6 +274,7 @@
     condition: (sidekick) => {
       return sidekick.isHelix() && !sidekick.location.pathname.includes('/drafts/');
     },
+    override: true,
     button: {
       text: 'Publish',
       action: async () => {
@@ -188,43 +302,5 @@
       },
     },
   });
-
-// ARTICLE DATA -------------------------------------------------------------------
-
-sk.add({
-  id: 'article-data',
-  condition: (sidekick) => {
-    return sidekick.isHelix();
-  },
-  button: {
-    text: 'Copy Article Data',
-    action: async () => {
-      try {
-        navigator.clipboard.writeText([
-          window.blog.author,
-          new Date(window.blog.date).getTime()/1000,
-          `/hlx_${document.head.querySelector('meta[property="og:image"]')
-            .getAttribute('content').split('/hlx_')[1]}`,
-          (document.querySelector('.predicted-url')
-            ? document.querySelector('.predicted-url').textContent.substring(46)
-            : new URL(window.location).pathname.substring(1)).replace('en/202', 'en/publish/202'),
-          '[]',
-          '0',
-          document.querySelector('main>div:nth-of-type(5)').textContent.trim().substring(0, 75),
-          document.title,
-          `["${window.blog.topics.join('\", \"')}"]`,
-        ].join('\t'));
-        sk.notify('Article data copied to clipboard');
-      } catch (e) {
-        sk.notify('<p>Unable to copy article data:</p>' +
-          `<pre>${e}</pre>`, 0);
-      }
-    },
-  },
-});
-
-// CARD PREVIEW -------------------------------------------------------------------
-
-// todo
 
 })();
