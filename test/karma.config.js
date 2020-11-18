@@ -16,7 +16,7 @@ module.exports = function (config) {
       reporters: ['mocha'],
       port: 9876,
       colors: true,
-      logLevel: config.LOG_INFO,
+      logLevel: config.LOG_DEBUG,
       browsers: ['ChromeHeadless' /*, 'ChromeDebugging'*/],
       singleRun: true,
       concurrency: Infinity,
