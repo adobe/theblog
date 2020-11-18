@@ -1,0 +1,92 @@
+[
+    {
+      "ExcludeFromMetadata": "",
+      "Hidden": "",
+      "Level 1": "Top100",
+      "Level 2": "",
+      "Level 3": "",
+      "Link": "",
+      "Type": "Categories"
+    },
+    {
+      "ExcludeFromMetadata": "",
+      "Hidden": "X",
+      "Level 1": "Top200",
+      "Level 2": "",
+      "Level 3": "",
+      "Link": "",
+      "Type": "Categories"
+    },
+    {
+      "ExcludeFromMetadata": "",
+      "Hidden": "",
+      "Level 1": "",
+      "Level 2": "Top210",
+      "Level 3": "",
+      "Link": "",
+      "Type": "Categories"
+    },
+    {
+      "ExcludeFromMetadata": "",
+      "Hidden": "",
+      "Level 1": "",
+      "Level 2": "",
+      "Level 3": "Top211",
+      "Link": "https://www.mydomain.com/alinktoTop211",
+      "Type": "Categories"
+    },
+    {
+      "ExcludeFromMetadata": "",
+      "Hidden": "",
+      "Level 1": "",
+      "Level 2": "",
+      "Level 3": "Top212",
+      "Link": "",
+      "Type": "Categories"
+    },
+    {
+      "ExcludeFromMetadata": "",
+      "Hidden": "",
+      "Level 1": "",
+      "Level 2": "Top220",
+      "Level 3": "",
+      "Link": "",
+      "Type": "Categories"
+    },
+    {
+      "ExcludeFromMetadata": "",
+      "Hidden": "",
+      "Level 1": "",
+      "Level 2": "Top230",
+      "Level 3": "",
+      "Link": "",
+      "Type": "Categories"
+    },
+    {
+      "ExcludeFromMetadata": "",
+      "Hidden": "",
+      "Level 1": "",
+      "Level 2": "Top240",
+      "Level 3": "",
+      "Link": "",
+      "Type": "Categories"
+    },
+    {
+      "ExcludeFromMetadata": "",
+      "Hidden": "",
+      "Level 1": "",
+      "Level 2": "",
+      "Level 3": "Top241",
+      "Link": "",
+      "Type": "Categories"
+    },
+    {
+      "ExcludeFromMetadata": "X",
+      "Hidden": "",
+      "Level 1": "Top300",
+      "Level 2": "",
+      "Level 3": "",
+      "Link": "",
+      "Type": "Internals"
+    }
+  ]
