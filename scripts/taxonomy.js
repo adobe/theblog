@@ -103,14 +103,18 @@ export async function getTaxonomy(lang, url) {
             if (!_data.children[level2]) {
               _data.children[level2] = [];
             }
-            _data.children[level2].push(level3);
+            if (_data.children[level2].indexOf(level3) === -1) {
+              _data.children[level2].push(level3);
+            }
           }
 
           if (level2) {
             if (!_data.children[level1]) {
               _data.children[level1] = [];
             }
-            _data.children[level1].push(level2);
+            if (_data.children[level1].indexOf(level2) === -1) {
+              _data.children[level1].push(level2);
+            }
           }
 
         });
