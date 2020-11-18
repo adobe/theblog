@@ -129,7 +129,7 @@ function getParentTopics(taxonomy, topics) {
  * Finds user facing topics to display, and adds both user and non user facing topics as meta tags.
  */
 async function handleAsyncMetadata() {
-  const taxonomy = await getTaxonomy();
+  const taxonomy = await getTaxonomy(window.blog.language);
   
   // de-dupe UFT, NUFT + parents
   const allTopics = Array.from(new Set([
@@ -530,7 +530,7 @@ async function addCategory() {
   if (!window.blog.topics || window.blog.topics.length === 0) return;
   const topic = window.blog.topics[0];
   const categoryWrap = document.createElement('div');
-  const taxonomy = await getTaxonomy();
+  const taxonomy = await getTaxonomy(window.blog.language);
   const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
   categoryWrap.className = 'category';
   categoryWrap.innerHTML = `<a href="${href}" title="${topic}">${topic}</a>`;
@@ -543,7 +543,7 @@ async function addCategory() {
 async function addTopics() {
   if (!window.blog.topics || window.blog.topics.length === 0) return;
   const topicsWrap = createTag('div', { 'class' : 'topics' });
-  const taxonomy = await getTaxonomy();
+  const taxonomy = await getTaxonomy(window.blog.language);
   window.blog.topics.forEach((topic) => {
     const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
     const btn = createTag('a', {

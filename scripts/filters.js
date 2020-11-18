@@ -11,6 +11,7 @@
  */
 
 import {
+  initTaxonomy,
   getTaxonomy,
 } from '/scripts/taxonomy.js';
 import {
@@ -271,7 +272,7 @@ async function drawFilterBar(callback) {
   filterBar.className='filter-wrapper';
 
   // get filter config
-  const taxonomy = await getTaxonomy();
+  const taxonomy = await getTaxonomy(window.blog.language);
   const filterList = filterBar.querySelectorAll('li');
   const categories = filterList.length > 0
     ? Array.from(filterList).map((cat) => cat.innerText.trim())

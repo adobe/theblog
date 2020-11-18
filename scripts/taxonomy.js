@@ -26,10 +26,11 @@ const CATEGORIES = 'categories';
 const PRODUCTS = 'products';
 const INDUSTRIES = 'industries';
 const INTERNALS = 'internals';
+let _taxonomy;
 
-export async function getTaxonomy() {
-  if (window.blog.taxonomy) {
-    return window.blog.taxonomy;
+export async function getTaxonomy(lang, url) {
+  if (_taxonomy) {
+    return _taxonomy;
   }
 
   const escapeTopic = (topic) => {
@@ -38,13 +39,15 @@ export async function getTaxonomy() {
   }
 
   // TODO restore
-  // return fetch(`/${window.blog.language}/_taxonomy.json`)
-  return fetch(`/en/drafts/alex/_taxonomy.json`)
+  // const target = url || `/${lang}/_taxonomy.json`;
+  const target = url || `/${lang}/drafts/alex/_taxonomy.json`;
+
+  return fetch(target)
     .then((response) => {
       return response.json();
     })
     .then((data) => {
-      const _taxonomy = {
+      const _data = {
         topics: {},
         categories: {},
         children: {}
@@ -68,7 +71,7 @@ export async function getTaxonomy() {
           const name = level3 || level2 || level1
 
           // skip duplicates
-          if (_taxonomy.topics[name]) return;
+          if (_data.topics[name]) return;
 
           let link = row[H.link] !== '' ? row[H.link] : null;
           if (link) {
@@ -85,35 +88,37 @@ export async function getTaxonomy() {
             level3,
             link,
             category: row[H.type] ? row[H.type].trim().toLowerCase() : INTERNALS,
-            hidden: row[H.hidden] && row[H.hidden].trim() !== '',
-            skipMeta: row[H.excludeFromMetadata] && row[H.excludeFromMetadata].trim() !== '',
+            hidden: row[H.hidden] ? row[H.hidden].trim() !== '' : false,
+            skipMeta: row[H.excludeFromMetadata] ? row[H.excludeFromMetadata].trim() !== '' : false,
           }
 
-          _taxonomy.topics[name] = item;
+          console.log(item);
+
+          _data.topics[name] = item;
           
-          if (!_taxonomy.categories[item.category]) {
-            _taxonomy.categories[item.category] = [];
+          if (!_data.categories[item.category]) {
+            _data.categories[item.category] = [];
           }
-          _taxonomy.categories[item.category].push(item);
+          _data.categories[item.category].push(item);
 
           if (level3) {
-            if (!_taxonomy.children[level2]) {
-              _taxonomy.children[level2] = [];
+            if (!_data.children[level2]) {
+              _data.children[level2] = [];
             }
-            _taxonomy.children[level2].push(level3);
+            _data.children[level2].push(level3);
           }
 
           if (level2) {
-            if (!_taxonomy.children[level1]) {
-              _taxonomy.children[level1] = [];
+            if (!_data.children[level1]) {
+              _data.children[level1] = [];
             }
-            _taxonomy.children[level1].push(level2);
+            _data.children[level1].push(level2);
           }
 
         });
       }
 
-      window.blog.taxonomy = {
+      _taxonomy = {
         CATEGORIES,
         PRODUCTS,
         INDUSTRIES,
@@ -121,20 +126,20 @@ export async function getTaxonomy() {
         NO_INTERLINKS,
 
         isUFT: function (topic) {
-          return _taxonomy.topics[topic] && !_taxonomy.topics[topic].hidden;
+          return _data.topics[topic] && !_data.topics[topic].hidden;
         },
 
         skipMeta: function (topic) {
-          return _taxonomy.topics[topic] && _taxonomy.topics[topic].skipMeta;
+          return _data.topics[topic] && _data.topics[topic].skipMeta;
         },
 
         getLink: function (topic) {
-          return _taxonomy.topics[topic] ? _taxonomy.topics[topic].link : null;
+          return _data.topics[topic] ? _data.topics[topic].link : null;
         },
 
         getParents: function (topic) {
           const parents = [];
-          const t = _taxonomy.topics[topic];
+          const t = _data.topics[topic];
           if(t) {
             if (t.level3) {
               parents.push(t.level2);
@@ -149,17 +154,17 @@ export async function getTaxonomy() {
         },
 
         getChildren: function (topic) {
-          return _taxonomy.children[topic] || [];
+          return _data.children[topic] || [];
         },
 
         getCategory: function (cat) {
-          return _taxonomy.categories[cat.toLowerCase()] || [];
+          return _data.categories[cat.toLowerCase()] || [];
         },
 
         getCategoryTitle: function (cat) {
           return cat.charAt(0).toUpperCase() + cat.substring(1);
         }
       };
-      return window.blog.taxonomy;
+      return _taxonomy;
     });
 }

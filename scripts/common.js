@@ -237,7 +237,7 @@ export function getPostPaths(el, parent, removeContainer) {
  */
 export async function itemTransformer(item) {
   const path = getCardPath(item.path);
-  const taxonomy = await getTaxonomy();
+  const taxonomy = await getTaxonomy(window.blog.language);
   const itemParams = {
     hero: item.hero
       ? getOptimizedImageUrl(item.hero, {
@@ -353,7 +353,7 @@ function findMatches(baseTopics, baseProducts, topicsToMatch) {
 }
 
 async function translateTable(pages, index) {
-  const taxonomy = await getTaxonomy();
+  const taxonomy = await getTaxonomy(window.blog.language);
   pages.forEach((e) => {
     let r=e;
     let products=JSON.parse(r.products);
@@ -511,7 +511,7 @@ export async function fetchArticles({
     filters.paths = getPostPaths('h2#featured-posts', 1, true);
     filters.pathsOnly = true;
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
-    const taxonomy = await getTaxonomy();
+    const taxonomy = await getTaxonomy(window.blog.language);
     const currentTopic = document.title.trim();
     let topics = [currentTopic].concat(taxonomy.getChildren(currentTopic));
     if (currentTopic.includes('Adobe ')) topics = topics.concat(taxonomy.getChildren(currentTopic.replace('Adobe ', '')));
