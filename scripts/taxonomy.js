@@ -92,8 +92,6 @@ export async function getTaxonomy(lang, url) {
             skipMeta: row[H.excludeFromMetadata] ? row[H.excludeFromMetadata].trim() !== '' : false,
           }
 
-          console.log(item);
-
           _data.topics[name] = item;
           
           if (!_data.categories[item.category]) {
