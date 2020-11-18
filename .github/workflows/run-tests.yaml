@@ -12,8 +12,9 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '12.x'
-    - run: cd test
     - run: npm install
+      working-directory: test
     - run: npm test
+      working-directory: test
       env:
         CI: true
