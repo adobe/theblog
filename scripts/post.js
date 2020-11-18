@@ -147,10 +147,9 @@ async function handleAsyncMetadata() {
       }
     }));
 
-  // filter out NUFT and sort alphabetically
+  // filter out NUFT
   window.blog.topics = allTopics
-    .filter(topic => taxonomy.isUFT(topic))
-    .sort((a, b) => a.localeCompare(b));
+    .filter(topic => taxonomy.isUFT(topic));
 }
 
 function addPredictedPublishURL() {
@@ -544,7 +543,8 @@ async function addTopics() {
   if (!window.blog.topics || window.blog.topics.length === 0) return;
   const topicsWrap = createTag('div', { 'class' : 'topics' });
   const taxonomy = await getTaxonomy();
-  window.blog.topics.forEach((topic) => {
+  // use alphabetically sorted copy
+  Array.from(window.blog.topics).sort((a, b) => a.localeCompare(b)).forEach((topic) => {
     const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
     const btn = createTag('a', {
       href,
