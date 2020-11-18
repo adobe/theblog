@@ -11,7 +11,6 @@
  */
 
 import {
-  initTaxonomy,
   getTaxonomy,
 } from '/scripts/taxonomy.js';
 import {
@@ -291,16 +290,16 @@ async function drawFilterBar(callback) {
     const cat = taxonomy.getCategory(dropdown.id);
     let optionsHTML = '';
     if (cat) {
-      cat.forEach((l) => {
-        if (l.level === 1) {
-          const lname = l.name.replace(/\*/gm, '');
+      cat.forEach((name) => {
+        const item = taxonomy.get(name);
+        if (item.level === 1) {
+          const lname = item.name.replace(/\*/gm, '');
           optionsHTML += `<div class="option option">
             <input type="checkbox" id="${lname}" name="${lname}">
             <label for="${lname}">${lname}</label>
           </div>`;
 
-          const children = taxonomy.getChildren(l.name);
-          children.forEach((p) => {
+          item.children.forEach((p) => {
             const pname = p.replace(/\*/gm, '');
             optionsHTML+=`<div class="option option-nested">
               <input type="checkbox" id="${pname}" name="${pname}">

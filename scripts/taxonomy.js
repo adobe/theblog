@@ -56,7 +56,7 @@ export async function getTaxonomy(lang, url) {
       if (data && data.length > 0) {
         const H = HEADERS;
         let level1, level2;
-        data.forEach(row => {
+        data.forEach((row, index) => {
           let level = 3;
           const level3 = escapeTopic(row[H.level3] !== '' ? row[H.level3] : null);
           if (!level3) {
@@ -97,7 +97,7 @@ export async function getTaxonomy(lang, url) {
           if (!_data.categories[item.category]) {
             _data.categories[item.category] = [];
           }
-          _data.categories[item.category].push(item);
+          _data.categories[item.category].push(item.name);
 
           if (level3) {
             if (!_data.children[level2]) {
@@ -126,6 +126,25 @@ export async function getTaxonomy(lang, url) {
         INDUSTRIES,
         INTERNALS,
         NO_INTERLINKS,
+
+        get: function(topic) {
+          const t = _data.topics[topic];
+          if (t) {
+            return {
+              name: t.name,
+              link: this.getLink(t.name),
+              isUFT: this.isUFT(t.name),
+              skipMeta: this.skipMeta(t.name),
+
+              level: t.level,
+              parents: this.getParents(t.name),
+              children: this.getChildren(t.name),
+
+              category: this.getCategoryTitle(t.category)
+            }
+          }
+          return null;
+        },
 
         isUFT: function (topic) {
           return _data.topics[topic] && !_data.topics[topic].hidden;
