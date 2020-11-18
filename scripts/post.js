@@ -147,10 +147,9 @@ async function handleAsyncMetadata() {
       }
     }));
 
-  // filter out NUFT and sort alphabetically
+  // filter out NUFT
   window.blog.topics = allTopics
-    .filter(topic => taxonomy.isUFT(topic))
-    .sort((a, b) => a.localeCompare(b));
+    .filter(topic => taxonomy.isUFT(topic));
 }
 
 function toClassName(name) {
@@ -282,6 +281,7 @@ function decoratePullQuotes() {
     } 
   })
 }
+
 
 /**
  * Adds CSS classes to images appearing within text
@@ -525,7 +525,8 @@ async function addTopics() {
   if (!window.blog.topics || window.blog.topics.length === 0) return;
   const topicsWrap = createTag('div', { 'class' : 'topics' });
   const taxonomy = await getTaxonomy();
-  window.blog.topics.forEach((topic) => {
+  // use alphabetically sorted copy
+  Array.from(window.blog.topics).sort((a, b) => a.localeCompare(b)).forEach((topic) => {
     const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
     const btn = createTag('a', {
       href,
@@ -573,12 +574,22 @@ function decorateLinkedImages() {
 }
 
 function decorateEmbeds() {
+
   document.querySelectorAll('.block-embed a[href]').forEach(($a) => {
     const url=new URL($a.href);
     const usp=new URLSearchParams(url.search);
     let embedHTML='';
     let type='';
 
+    if ($a.href.startsWith('https://video.tv.adobe.com/v/')) {
+      embedHTML=`
+        <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+        <iframe src="${$a.href}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" scrolling="no" allow="encrypted-media" title="content from adobe" loading="lazy">
+        </iframe>
+        </div>`
+        type='adobe-tv';
+    }
+    
     if ($a.href.startsWith('https://www.youtube.com/watch')) {
       const vid=usp.get('v');
       
@@ -597,6 +608,17 @@ function decorateEmbeds() {
     }
     
   })
+
+  document.querySelectorAll('.post-page .post-body .embed').forEach(($e) => {
+    const $next=$e.nextElementSibling;
+    if ($next && $next.tagName=='P') {
+      const inner=$next.innerHTML.trim();
+      if (inner.startsWith('<em>')) {
+        $next.classList.add('legend');
+        }
+      }
+  })
+
 }
 
 function decorateAnimations() {
