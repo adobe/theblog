@@ -37,10 +37,6 @@
     }
 
 
-    #tags-data {
-      display: none;
-    }
-
     #results {
       display: flex;
       flex-wrap: wrap;
@@ -278,7 +274,45 @@
     }
   </style>
   <script>
+    /* Logic */
+
+    let _taxonomy;
     const CATEGORIES = [];
+
+    var selected = [];
+
+    function initTaxonomy(taxonomy) {
+      _taxonomy = taxonomy;
+    }
+
+    function initCategories() {
+      CATEGORIES.push(_taxonomy.getCategoryTitle(_taxonomy.CATEGORIES));
+      CATEGORIES.push(_taxonomy.getCategoryTitle(_taxonomy.PRODUCTS));
+      CATEGORIES.push(_taxonomy.getCategoryTitle(_taxonomy.INDUSTRIES));
+      CATEGORIES.push(_taxonomy.getCategoryTitle(_taxonomy.INTERNALS));
+    }
+
+    function fetchTag(name) {
+      const item = _taxonomy.get(name);
+      if (item) {
+        const tag = name.replace(/[\*|\#]/gm, '').trim();
+
+        const parents = item.parents.slice().reverse();
+        const path = parents.join(' / ') + ' ';
+
+        return {
+          tag,
+          label: name,
+          nuft: !item.isUFT,
+          path,
+          category: item.category,
+          link: item.link
+        };
+      }
+      return null;
+    }
+
+    /* UI */
 
     (function (d) {
       var config = {
@@ -289,41 +323,6 @@
       },
         h = d.documentElement, t = setTimeout(function () { h.className = h.className.replace(/\bwf-loading\b/g, '') + ' wf-inactive'; }, config.scriptTimeout), tk = d.createElement('script'), f = false, s = d.getElementsByTagName('script')[0], a; h.className += ' wf-loading'; tk.src = 'https://use.typekit.net/' + config.kitId + '.js'; tk.async = true; tk.onload = tk.onreadystatechange = function () { a = this.readyState; if (f || a && a != 'complete' && a != 'loaded') return; f = true; clearTimeout(t); try { Typekit.load(config) } catch (e) { } }; s.parentNode.insertBefore(tk, s)
     })(document);
-
-    var selected = [];
-    function generateTagIDs() {
-      document.querySelectorAll('#tags-data li').forEach((e, i) => {
-        if (e.firstChild && e.firstChild.textContent) {
-          e.setAttribute('id', 'tag-' + i);
-          e.setAttribute('data-name', e.firstChild.textContent.trim());
-          if (e.firstChild.nodeName === 'A') {
-            // topic could be a link
-            const link = e.firstChild.getAttribute('href');
-            if (link) {
-              e.setAttribute('data-link', link);
-            }
-          }
-        } else {
-          // useless element
-          e.remove();
-        }
-      });
-    }
-
-    function insertIntro() {
-      // first div is the intro
-      const intro = document.querySelector('#tags-data > div');
-      intro.classList.add('intro');
-      const filter = document.querySelector('div.filter');
-      filter.parentNode.insertBefore(intro, filter);
-    }
-
-    function findCategories() {
-      document.querySelectorAll('#tags-data > div ').forEach((e, i) => {
-        e.setAttribute('id', `cat-${i}`);
-        CATEGORIES.push(e.firstElementChild.textContent.trim());
-      });
-    }
 
     function remove(e) {
       var target = e.getAttribute('data-target');
@@ -338,17 +337,15 @@
     }
 
     function addByName(name) {
-      const e = document.querySelector(`#tags-data [data-name="${name}"]`);
-      if (e) {
-        const id = e.getAttribute('id');
-        selected.push(id);
+      const item = _taxonomy.get(name);
+      if (item) {
+        selected.push(item.name);
         displaySelected();
       }
     }
 
     function copy(button) {
-
-      var copyText = document.getElementById('copybuffer');
+      const copyText = document.getElementById('copybuffer');
 
       copyText.select();
       copyText.setSelectionRange(0, 99999);
@@ -356,9 +353,7 @@
       document.execCommand('copy');
 
       button.disabled = true;
-
     }
-
 
     function displaySelected() {
       var html = '';
@@ -378,7 +373,7 @@
       });
 
       tags.forEach((tagInfo) => {
-        html += `<span data-target="${tagInfo.id}" onclick="remove(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}${tagInfo.nuft ? ' nuft' : ''}">${tagInfo.label}</span></span> `;
+        html += `<span data-target="${tagInfo.name}" onclick="remove(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}${tagInfo.nuft ? ' nuft' : ''}">${tagInfo.label}</span></span> `;
         if (1 === CATEGORIES.indexOf(tagInfo.category)) products += tagInfo.tag + ', ';
         else topics += tagInfo.tag + ', ';
       });
@@ -419,36 +414,6 @@
       return label;
     }
 
-    function fetchTag(id) {
-      var tagInfo;
-      var e = document.getElementById(id);
-      if (e.firstChild && e.firstChild.textContent) {
-        var label = e.firstChild.textContent.trim();
-        var path = '';
-        var parent = e.parentNode.parentNode;
-        var nuft = label.indexOf('*') !== -1;
-        var tag = label.replace(/[\*|\#]/gm, '').trim();
-        while (parent.nodeName == 'LI') {
-          var parentLabel = getLabel(parent);
-          parentLabel = parentLabel.trim();
-          path = parentLabel + (path ? ' / ' : ' ') + path;
-          parent = parent.parentNode.parentNode;
-        }
-        const link = e.getAttribute('data-link');
-        var cat = getLabel(parent);
-        tagInfo = {
-          tag,
-          label,
-          nuft,
-          path,
-          category: cat,
-          id,
-          link
-        };
-      }
-      return tagInfo;
-    }
-
     function filter() {
       var searchTerm = document.getElementById('search').value.toLowerCase();
 
@@ -457,8 +422,9 @@
       CATEGORIES.forEach((cat, index) => {
         html += `<div class="category">`;
         html += `<h2>${cat}</h2>`;
-        document.querySelectorAll(`#tags-data #cat-${index} li`).forEach((e) => {
-          var tagInfo = fetchTag(e.id);
+        const items = _taxonomy.getCategory(cat);
+        items.forEach((name) => {
+          var tagInfo = fetchTag(name);
           if (tagInfo) {
             var label = tagInfo.label;
             var offset = label.toLowerCase().indexOf(searchTerm);
@@ -468,7 +434,7 @@
               term = label.substr(offset, searchTerm.length);
               after = label.substr(offset + searchTerm.length);
 
-              html += `<span data-target="${e.id}" onclick="add(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}${tagInfo.nuft ? ' nuft' : ''}">${before}<span class="highlight">${term}</span>${after}</span></span> `;
+              html += `<span data-target="${name}" onclick="add(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}${tagInfo.nuft ? ' nuft' : ''}">${before}<span class="highlight">${term}</span>${after}</span></span> `;
             }
           }
         })
@@ -499,39 +465,14 @@
       }
     }
 
-  </script>
-</head>
-
-<body>
-  <div id="tags-data"></div>
-  <main>
-    <div class="filter">
-      <input autocomplete="off" placeholder="Type to filter" id="search" onkeydown="filter()" onkeyup="filter()">
-    </div>
-    <div id="results"></div>
-    <div id="selected" class="hidden">test</div>
-    <div id="linkchecker" class="hidden">
-      <h1>Linkchecker report</h1>
-      <div id="lcResults"></div>
-    </div>
-  </main>
-  <textarea class="offscreen" id="copybuffer"></textarea>
-
-  <script>
-    const params=new URLSearchParams(window.location.search);
-    let lang=params.get('lang');
-    if (!lang) lang='en';
-
     const asyncForEach = async (array, callback) => {
       for (let index = 0; index < array.length; index += 1) {
         await callback(array[index], index, array);
       }
     };
 
-    const checkLinks = params.get('checkLinks') || false;
-
     let lcRunning = false;
-    const runLinkchecker = async () => {
+    async function runLinkchecker(lang) {
       if (lcRunning) return;
       lcRunning = true;
 
@@ -553,10 +494,7 @@
       const computeLink = (tagInfo) => {
         const { link } = tagInfo;
         if (link) {
-          // adapt host to current browser host
-          const u = new URL(link);
-          const current = new URL(window.location.href);
-          return `${current.origin}${u.pathname}`;
+          return link;
         } else {
           return getLink('topic', tagInfo.tag.replace(/\s/gm, '-').toLowerCase());
         }
@@ -564,15 +502,16 @@
       
       const resultsPanel = document.getElementById('lcResults');
       asyncForEach(CATEGORIES, async (cat, index) => {
-        asyncForEach(document.querySelectorAll(`#tags-data #cat-${index} li`), async (e) => {
-          const tagInfo = fetchTag(e.id);
+        const items = _taxonomy.getCategory(cat);
+        asyncForEach(items,async (name) => {
+          const tagInfo = fetchTag(name);
           if (tagInfo) {
             const { tag, nuft } = tagInfo;
             const link = computeLink(tagInfo);
 
             if (link) {
               console.log(`checking link ${tag}: ${link}`, tagInfo);
-              const ui = document.querySelector(`#results [data-target="${e.id}"]`);
+              const ui = document.querySelector(`#results [data-target="${name}"]`);
               const icon = document.createElement('span');
               icon.classList = 'lcIcon';
               icon.innerHTML = LOADING_ICON;
@@ -615,28 +554,58 @@
         });
       });
     }
+  </script>
+</head>
 
-    fetch(`/${lang}/topics/_taxonomy.plain.html`)
-      .then((response) => {
-        return response.text();
-      })
-      .then(async (data) => {
-        document.getElementById('tags-data').innerHTML = data;
-        insertIntro();
+<body>
+  <div id="tags-data"></div>
+  <main>
+    <div class="intro">
+      <h1 id="pick-your-tags">Pick your tags</h1>
+      <p>Use this page to pick the tags for your post. Tags will correctly categorize your post on the blog, and ensure we can pull metrics for it.</p>
+      <p>Once you click on a tag, it will populate at the bottom of the page. When you have picked all the tags, click “copy” and then paste the information directly in your blog post draft.</p>
+      <ul>
+      <li><strong>Blog categories</strong> = will place your article in the right topic area per the main blog menu</li>
+      <li><strong>Products</strong> = ensures your post shows when readers use the product dropdown filter on blog pages. <u>Pick your product and its parent</u>; for example, Adobe Sign <u>and</u> Document Cloud.</li>
+      <li><strong>Industries</strong> = use only when your post includes mention of an industry; this is not a catchall for audience targeting</li>
+      <li><strong>Internal</strong> = Required for measurement. You <u>must</u> choose a <em>Corporate Alignment</em> tag.</li>
+      </ul>
+    </div>
+    <div class="filter">
+      <input autocomplete="off" placeholder="Type to filter" id="search" onkeydown="filter()" onkeyup="filter()">
+    </div>
+    <div id="results"></div>
+    <div id="selected" class="hidden">test</div>
+    <div id="linkchecker" class="hidden">
+      <h1>Linkchecker report</h1>
+      <div id="lcResults"></div>
+    </div>
+  </main>
+  <textarea class="offscreen" id="copybuffer"></textarea>
 
-        // remove now all <strong> tags (cause issues)
-        document.getElementById('tags-data').innerHTML = document.getElementById('tags-data').innerHTML.replace(/<(\/)?strong>/gm, '');
-        findCategories();
-        generateTagIDs();
-        filter();
+  <script>
+    async function init() {
+      const params = new URLSearchParams(window.location.search);
+      let lang = params.get('lang');
+      if (!lang) lang='en';
 
-        document.addEventListener('paste', handlePaste);
+      const checkLinks = params.get('checkLinks') || false;
 
-        if (checkLinks) {
-          await runLinkchecker();
-        }
- 
-      });
+      const { getTaxonomy } = await import('/scripts/taxonomy.js');
+      const taxonomy = await getTaxonomy('en');
+
+      initTaxonomy(taxonomy);
+      initCategories();
+      filter();
+
+      document.addEventListener('paste', handlePaste);
+
+      if (checkLinks) {
+        await runLinkchecker(lang);
+      }
+    }
+
+    init();
     
   </script>
 </body>
