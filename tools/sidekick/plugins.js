@@ -57,8 +57,7 @@
         const currentHost = location.host;
         const currentPath = location.pathname;
       
-        if (/.*\.sharepoint\.com/.test(currentHost)
-          || currentHost === 'docs.google.com') {
+        if (sk.isEditor()) {
           // source document, open window with staging url
           const u = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@v1');
           u.search = new URLSearchParams([
@@ -74,7 +73,7 @@
           switch (currentHost) {
             case config.innerHost:
             case config.outerHost:
-                // staging, switch to production
+              // staging, switch to production
               if (!config.host) {
                 sk.notify(`Production host for ${config.project} is unknown`);
                 return;
@@ -82,13 +81,16 @@
               window.location.href = `https://${config.host}${currentPath.replace('/publish', '')}`;
               break;
             case config.host:
-              // production, switch to staging4
+              // production, switch to staging
               window.location.href = `https://${config.innerHost}${currentPath.replace(/^\/(.*)\/(\d{4})/, '/$1/publish/$2')}`;
               break;
             default:
               sk.hideModal();
-              sk.notify(`<p>Preview can be used for ${config.project} here:</p>` +
-                `<p><ul><li>online document editors, or any page on<li>https://${config.innerHost}/${config.host ? `<li>https://${config.host}/` : ''}</ul><p>`, 2);
+              sk.notify([
+                `Preview can be used for ${config.project} here:`,
+                'Online Word documents',
+                `Articles on https://${config.innerHost}/${config.host ? ` or https://${config.host}/` : ''}`,
+               ], 2);
           }
         }
       },
@@ -242,6 +244,7 @@
   // PUBLISH ----------------------------------------------------------------------
 
   async function sendPurge(cfg, path) {
+    /* eslint-disable no-console */
     console.log(`purging ${path}`);
     const xfh = [
       cfg.host,
@@ -254,19 +257,26 @@
       ['path', path],
     ]).toString();
     const resp = await fetch(u, {
-      method: 'POST'
+      method: 'POST',
     });
     const json = await resp.json();
     console.log(JSON.stringify(json));
+    /* eslint-enable no-console */
+    return {
+      ok: resp.ok && json.every((e) => e.status === 'ok'),
+      status: resp.status,
+      json,
+      path,
+    };
+  }
 
-    const ok = json.every(e => e.status === 'ok');
-
-    if (!resp.ok || !ok) {
-      sk.notify(`<p>Failed to purge ${path} from the cache. Please try again later.</p>` +
-        `<pre>Status: ${resp.status}</pre>` +
-        `<pre>${JSON.stringify(json)}</pre>`);
-    }
-    return json;
+  function showErrorModal(sk, resp) {
+    sk.showModal([
+      `Failed to purge ${resp.path} from the cache. Please reload this page and try again later.`,
+      `Status: ${resp.status}`,
+      JSON.stringify(resp.json),
+    ], true, 0);
+    return false;
   }
 
   sk.add({
@@ -287,18 +297,25 @@
 
         let path = location.pathname;
 
-        await sendPurge(config, path);
-        // also purge path without /publish segment
-        if (path.includes('/publish/')) {
-          path = path.replace('/publish/','/');
-          console.log(`purging ${path}`)
-          await sendPurge(config, path);
+        let resp = await sendPurge(config, path);
+        if (resp.ok) {
+          // also purge path without /publish segment
+          if (path.includes('/publish/')) {
+            path = path.replace('/publish/','/');
+            console.log(`purging ${path}`)
+            resp = await sendPurge(config, path);
+            if (!resp.ok) {
+              return showErrorModal(sk, resp);
+            }
+          }
+          // fetch and redirect to production
+          const prodURL = `https://${config.host}${path}`;
+          await fetch(prodURL, {cache: 'reload', mode: 'no-cors'});
+          console.log(`redirecting ${prodURL}`);
+          window.location.href = prodURL;
+        } else {
+          return showErrorModal(sk, resp);
         }
-
-        const outerURL = `https://${config.host}${path}`;
-        await fetch(outerURL, {cache: 'reload', mode: 'no-cors'});
-        console.log(`redirecting ${outerURL}`);
-        window.location.href = outerURL;            
       },
     },
   });
