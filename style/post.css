@@ -596,6 +596,12 @@
     max-width: 800px;
   }
 
+  .post-page main>div.post-body>.infographic {
+    margin-left: 0px;
+    margin-right: 0px;
+    max-width: 800px;
+  }
+
   .post-page main>div.post-body>p.images.left {
     margin-left: auto;
     margin-right: auto;

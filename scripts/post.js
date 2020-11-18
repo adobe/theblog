@@ -561,6 +561,17 @@ function loadGetSocial() {
   });
 }
 
+function decorateInfographic() {
+  document.querySelectorAll('.infographic img').forEach(($img) => {
+    const $div=$img.closest('.infographic');
+    const $p=$img.parentNode;
+    const $a=$div.querySelector('a');
+    $a.innerHTML='';
+    $a.appendChild($img);
+    $p.remove();
+  });
+}
+
 function decorateLinkedImages() {
   document.querySelectorAll('.linked-image img').forEach(($img) => {
     const $div=$img.closest('.linked-image');
@@ -745,6 +756,7 @@ window.addEventListener('load', async function() {
   decorateAnimations();
   decorateEmbeds();
   decorateLinkedImages();
+  decorateInfographic();
   addInterLinks().then(() => handleLinks());
   await addCategory();
   fetchAuthor();
