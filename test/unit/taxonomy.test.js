@@ -1,9 +1,13 @@
 
 import { getTaxonomy } from '../../scripts/taxonomy.js';
 
-describe('Taxonomy', async () => {
-  const taxonomy = await getTaxonomy(null, '/base/test/features/taxonomy/en.json');
+let taxonomy;
 
+before(async () => {
+  taxonomy = await getTaxonomy(null, '/base/test/features/taxonomy/en.json');
+});
+
+describe('Taxonomy', () => {
   it('getTaxonomy#isUFT', () => {
     expect(taxonomy.isUFT('Top100')).to.be.true;
     expect(taxonomy.isUFT('Top200')).to.be.false;
