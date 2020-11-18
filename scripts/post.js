@@ -152,24 +152,6 @@ async function handleAsyncMetadata() {
     .filter(topic => taxonomy.isUFT(topic));
 }
 
-function addPredictedPublishURL() {
-  const segs=window.location.pathname.split('/');
-  if (segs[2]=='drafts') {
-    let datePath = '';
-    if (window.blog.rawDate) {
-      const datesplits = window.blog.rawDate.split('-');
-      if (datesplits.length > 2) {
-        datePath = `/${datesplits[2]}/${datesplits[0]}/${datesplits[1]}`;
-      }
-    }
-    const $predURL=createTag('div', {class:'predicted-url'});
-    const filename=(segs[segs.length-1].split('.')[0]).toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
-    const url=`https://blog.adobe.com/${segs[1]}${datePath}/${filename}.html`;
-    $predURL.innerHTML=`Predicted Publish URL: ${url}`;
-    document.querySelector('main').insertBefore($predURL, getSection(0));
-  }
-}
-
 function toClassName(name) {
   return (name.toLowerCase().replace(/[^0-9a-z]/gi, '-'))
 }
@@ -764,7 +746,6 @@ window.addEventListener('load', async function() {
   decorateEmbeds();
   decorateLinkedImages();
   addInterLinks().then(() => handleLinks());
-  addPredictedPublishURL();
   await addCategory();
   fetchAuthor();
   await handleAsyncMetadata();
