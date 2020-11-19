@@ -15,7 +15,7 @@
 
 You are wondering how Adobe Commerce Cloud helps our customers in the UK ?
 
-[Commerce in the UK](https://blog.adobe.com/en/topics/commerce-in-uk.html)
+[Commerce in the UK](https://landingpage-poc--theblog--adobe.hlx.page/en/topics/commerce-in-uk.html)
 
 -   <https://landingpage-poc--theblog--adobe.hlx.page/en/drafts/alex/uk/convenience-in-retail-is-no-longer-enough-the-age-of-fast-recognition.html>
 -   <https://landingpage-poc--theblog--adobe.hlx.page/en/drafts/alex/uk/three-retail-truths-to-help-your-business-get-ahead-on-amazon-prime-day.html>
