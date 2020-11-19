@@ -587,8 +587,8 @@ function decorateInfographic() {
     if ($a) {
       $a.innerHTML='';
       $a.appendChild($img);
+      $p.remove();
     }
-    $p.remove();
   });
 }
 
@@ -600,8 +600,8 @@ function decorateLinkedImages() {
     if ($a) {
       $a.innerHTML='';
       $a.appendChild($img);
+      $p.remove();
     }
-    $p.remove();
     $div.className='images';
   });
 }
