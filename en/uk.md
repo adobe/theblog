@@ -19,9 +19,8 @@ Want to know what happens with Adobe Commerce Cloud in the UK ?
 
 -   <https://landingpage-poc--theblog--adobe.hlx.page/en/drafts/alex/uk/three-retail-truths-to-help-your-business-get-ahead-on-amazon-prime-day.html
 -   <https://landingpage-poc--theblog--adobe.hlx.page/en/drafts/alex/uk/four-ways-retailers-can-prepare-for-the-worlds-first-digital-christmas.html
+-   <https://landingpage-poc--theblog--adobe.hlx.page/en/drafts/alex/uk/3-steps-to-keep-commerce-rolling-despite-the-impact-of-covid-19.html
 
 ---
-
-Topics: Adobe MAX
 
 Index: /en/drafts/alex/uk/index.json
