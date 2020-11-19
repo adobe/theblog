@@ -39,7 +39,7 @@ export async function getTaxonomy(lang, url) {
   }
 
   // TODO restore
-  const target = url || `/${lang}/_taxonomy.json`;
+  const target = url || `/${lang}/topics/_taxonomy.json`;
  
   return fetch(target)
     .then((response) => {
