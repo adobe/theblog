@@ -4,7 +4,7 @@
 
 ## Featured Posts
 
--   </en/drafts/alex/uk/convenience-in-retail-is-no-longer-enough-the-age-of-fast-recognition.html>
+-   <https://landingpage-poc--theblog--adobe.hlx.page/en/publish/2020/11/13/convenience-in-retail-is-no-longer-enough-the-age-of-fast-recognition.html>
 
 
 ---
