@@ -478,6 +478,13 @@
   margin-top: -73px !important;
 }
 
+.post-page main .predicted-url {
+  text-align: center;
+  background-color: #707070;
+  color: white;
+  font-size: 14px;
+}
+
 .post-page main .post-title h3 {
   display: none;
 }
