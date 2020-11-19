@@ -595,8 +595,10 @@ function decorateLinkedImages() {
     const $div=$img.closest('.linked-image');
     const $p=$img.parentNode;
     const $a=$div.querySelector('a');
-    $a.innerHTML='';
-    $a.appendChild($img);
+    if ($a) {
+      $a.innerHTML='';
+      $a.appendChild($img);
+    }
     $p.remove();
     $div.className='images';
   });
