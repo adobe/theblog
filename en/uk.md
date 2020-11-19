@@ -4,7 +4,7 @@
 
 ## Featured Posts
 
--   <https://blog.adobe.com/en/2020/11/03/australian-tech-community-unites-to-launch-skill-finder.html>
+-   <https://landingpage-poc--theblog--adobe.hlx.page/en/drafts/alex/uk/convenience-in-retail-is-no-longer-enough-the-age-of-fast-recognition.html>
 
 
 ---
