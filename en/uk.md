@@ -4,7 +4,7 @@
 
 ## Featured Posts
 
--   <https://landingpage-poc--theblog--adobe.hlx.page/en/drafts/alex/uk/convenience-in-retail-is-no-longer-enough-the-age-of-fast-recognition.html>
+-   </en/drafts/alex/uk/convenience-in-retail-is-no-longer-enough-the-age-of-fast-recognition.html>
 
 
 ---
@@ -24,4 +24,4 @@ Hello UK!
 ---
 
 Topics: Adobe MAX
-Index: https://landingpage-poc--theblog--adobe.hlx.page/en/drafts/alex/uk/index.json
+Index: /en/drafts/alex/uk/index.json
