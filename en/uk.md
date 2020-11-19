@@ -11,13 +11,13 @@
 
 ## News
 
-### Special news section in the UK
+### What happens with Adobe Commerce Cloud ?
 
-Hello UK!
+Want to know what happens with Adobe Commerce Cloud in the UK ?
 
-[Browse the collection](https://blog.adobe.com/en/topics/retail-and-ecommerce-trends.html)
+[Commerce in the UK](https://blog.adobe.com/en/topics/commerce-in-uk.html)
 
--   <https://blog.adobe.com/en/2020/11/10/south-australia-department-for-education-reshapes-the-future-with-forms.html>
+-   <https://landingpage-poc--theblog--adobe.hlx.page/en/publish/2020/10/13/three-retail-truths-to-help-your-business-get-ahead-on-amazon-prime-day.html>
 -   <https://blog.adobe.com/en/2020/11/12/next-big-media-platform-esports.html>
 -   <https://blog.adobe.com/en/2020/11/12/3-ways-electronic-signatures-can-improve-cx-and-drive-business-impact.html>
 
