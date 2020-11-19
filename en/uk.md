@@ -24,3 +24,4 @@ Hello UK!
 ---
 
 Topics: Adobe MAX
+Index: https://landingpage-poc--theblog--adobe.hlx.page/en/drafts/alex/uk/index.json
