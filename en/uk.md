@@ -18,8 +18,7 @@ Want to know what happens with Adobe Commerce Cloud in the UK ?
 [Commerce in the UK](https://blog.adobe.com/en/topics/commerce-in-uk.html)
 
 -   <https://landingpage-poc--theblog--adobe.hlx.page/en/drafts/alex/uk/three-retail-truths-to-help-your-business-get-ahead-on-amazon-prime-day.html
--   <https://blog.adobe.com/en/2020/11/12/next-big-media-platform-esports.html>
--   <https://blog.adobe.com/en/2020/11/12/3-ways-electronic-signatures-can-improve-cx-and-drive-business-impact.html>
+-   <https://landingpage-poc--theblog--adobe.hlx.page/en/drafts/alex/uk/four-ways-retailers-can-prepare-for-the-worlds-first-digital-christmas.html
 
 ---
 
