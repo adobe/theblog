@@ -10,6 +10,7 @@
  * governing permissions and limitations under the License.
  */
 import {
+  getIndexPath,
   addClass,
   fetchArticles,
   applyFilters,
@@ -25,6 +26,8 @@ import {
  * Decorates the topic page with CSS classes
  */
 function decorateTopicPage() {
+  window.blog.indexPath = getIndexPath();
+
   addClass('.topic-page main>div:first-of-type', 'topic-title');
   const img = document.querySelector('main img');
   const titleSection = document.querySelector('.topic-title');
