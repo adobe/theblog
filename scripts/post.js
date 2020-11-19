@@ -584,8 +584,10 @@ function decorateInfographic() {
     const $div=$img.closest('.infographic');
     const $p=$img.parentNode;
     const $a=$div.querySelector('a');
-    $a.innerHTML='';
-    $a.appendChild($img);
+    if ($a) {
+      $a.innerHTML='';
+      $a.appendChild($img);
+    }
     $p.remove();
   });
 }
