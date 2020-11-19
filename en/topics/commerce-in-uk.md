@@ -5,3 +5,7 @@
 Adobe Commerce Cloud in the UK
 
 /components/filters-industries.html
+
+---
+
+Index: /en/drafts/alex/uk/index.json
