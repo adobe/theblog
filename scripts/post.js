@@ -147,10 +147,9 @@ async function handleAsyncMetadata() {
       }
     }));
 
-  // filter out NUFT and sort alphabetically
+  // filter out NUFT
   window.blog.topics = allTopics
-    .filter(topic => taxonomy.isUFT(topic))
-    .sort((a, b) => a.localeCompare(b));
+    .filter(topic => taxonomy.isUFT(topic));
 }
 
 function addPredictedPublishURL() {
@@ -544,7 +543,8 @@ async function addTopics() {
   if (!window.blog.topics || window.blog.topics.length === 0) return;
   const topicsWrap = createTag('div', { 'class' : 'topics' });
   const taxonomy = await getTaxonomy(window.blog.language);
-  window.blog.topics.forEach((topic) => {
+  // use alphabetically sorted copy
+  Array.from(window.blog.topics).sort((a, b) => a.localeCompare(b)).forEach((topic) => {
     const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
     const btn = createTag('a', {
       href,
@@ -579,14 +579,29 @@ function loadGetSocial() {
   });
 }
 
+function decorateInfographic() {
+  document.querySelectorAll('.infographic img').forEach(($img) => {
+    const $div=$img.closest('.infographic');
+    const $p=$img.parentNode;
+    const $a=$div.querySelector('a');
+    if ($a) {
+      $a.innerHTML='';
+      $a.appendChild($img);
+      $p.remove();
+    }
+  });
+}
+
 function decorateLinkedImages() {
   document.querySelectorAll('.linked-image img').forEach(($img) => {
     const $div=$img.closest('.linked-image');
     const $p=$img.parentNode;
     const $a=$div.querySelector('a');
-    $a.innerHTML='';
-    $a.appendChild($img);
-    $p.remove();
+    if ($a) {
+      $a.innerHTML='';
+      $a.appendChild($img);
+      $p.remove();
+    }
     $div.className='images';
   });
 }
@@ -763,6 +778,7 @@ window.addEventListener('load', async function() {
   decorateAnimations();
   decorateEmbeds();
   decorateLinkedImages();
+  decorateInfographic();
   addInterLinks().then(() => handleLinks());
   addPredictedPublishURL();
   await addCategory();
