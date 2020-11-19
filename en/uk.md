@@ -13,7 +13,7 @@
 
 ### What happens with Adobe Commerce Cloud ?
 
-You are wondering help Adobe Commerce Cloud help our customers in the UK ?
+You are wondering how Adobe Commerce Cloud helps our customers in the UK ?
 
 [Commerce in the UK](https://blog.adobe.com/en/topics/commerce-in-uk.html)
 
