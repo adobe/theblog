@@ -63,7 +63,10 @@
         const { config, location } = sk;
         const url = predictUrl(config.host, location.pathname);
         navigator.clipboard.writeText(url);
-        sk.notify(`<p>Predicted URL copied to clipboard:</p><p>${url}</p>`);
+        sk.notify([
+          'Predicted URL copied to clipboard:',
+          url,
+        ]);
       },
     },
   });
