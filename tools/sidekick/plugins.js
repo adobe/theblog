@@ -33,70 +33,6 @@
     },
   });
 
-  // PREVIEW ----------------------------------------------------------------------
-
-  sk.add({
-    id: 'preview',
-    condition: (sidekick) => {
-      return sidekick.isEditor() || sidekick.isHelix();
-    },
-    override: true,
-    button: {
-      text: 'Preview',
-      action: () => {
-        const { config, location } = sk;
-        if (!config.innerHost) {
-          sk.notify(`Preview is not configured for ${config.project}`, 0);
-          return;
-        }
-        // check if host is a URL
-        if (config.host && config.host.startsWith('http')) {
-          config.host = new URL(config.host).host;
-        }
-      
-        const currentHost = location.host;
-        const currentPath = location.pathname;
-      
-        if (sk.isEditor()) {
-          // source document, open window with staging url
-          const u = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@v2');
-          u.search = new URLSearchParams([
-            ['owner', config.owner],
-            ['repo', config.repo],
-            ['ref', config.ref || 'master'],
-            ['path', '/'],
-            ['lookup', location.href],
-          ]).toString();
-          window.open(u, `hlx-sidekick-${config.ref}--${config.repo}--${config.owner}`);
-        } else {
-          sk.showModal('Please wait...', true);
-          switch (currentHost) {
-            case config.innerHost:
-            case config.outerHost:
-              // staging, switch to production
-              if (!config.host) {
-                sk.notify(`Production host for ${config.project} is unknown`);
-                return;
-              }
-              window.location.href = `https://${config.host}${currentPath.replace('/publish', '')}`;
-              break;
-            case config.host:
-              // production, switch to staging
-              window.location.href = `https://${config.innerHost}${currentPath.replace(/^\/(.*)\/(\d{4})/, '/$1/publish/$2')}`;
-              break;
-            default:
-              sk.hideModal();
-              sk.notify([
-                `Preview can be used for ${config.project} here:`,
-                'Online Word documents',
-                `Articles on https://${config.innerHost}/${config.host ? ` or https://${config.host}/` : ''}`,
-               ], 2);
-          }
-        }
-      },
-    }
-  });
-
   // PREDICTED URL ----------------------------------------------------------------
 
   function predictUrl(host, path) {
@@ -286,7 +222,6 @@
     },
     override: true,
     button: {
-      text: 'Publish',
       action: async () => {
         const { config, location } = sk;
         if (!config.innerHost || !config.host) {
