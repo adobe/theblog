@@ -52,6 +52,9 @@ export async function getTaxonomy(lang, url) {
         children: {}
       };
 
+      // temp fix until https://github.com/adobe/helix-simulator/issues/545 is fixed
+      data = data.data || data;
+
       if (data && data.length > 0) {
         const H = HEADERS;
         let level1, level2;
