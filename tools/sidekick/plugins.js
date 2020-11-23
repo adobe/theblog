@@ -100,13 +100,13 @@
         } = await import('/scripts/common.js');
         const sk = window.hlxSidekick;
         const btn = evt.target;
-        let $modal = document.querySelector('.modal');
+        let $modal = document.querySelector('.hlx-sk-overlay > div > .card');
         if ($modal) {
           sk.hideModal();
           btn.classList.remove('pressed');
         } else {
           sk.showModal('', true);
-          $modal = document.querySelector('.modal');
+          $modal = document.querySelector('.hlx-sk-overlay > div');
           $modal.classList.remove('wait');
           $modal.innerHTML = addCard(itemTransformer(getCardData()),
             document.createDocumentFragment()).outerHTML;
@@ -130,13 +130,10 @@
           .hlx-sk-overlay .card {
             box-shadow: var(--hlx-sk-shadow);
           }
-          .hlx-sk-overlay .modal {
+          .hlx-sk-overlay > div {
             text-align: center;
             background-color: transparent;
             box-shadow: none;
-          }
-          .hlx-sk-overlay .modal * {
-            font-size: unset;
           }`;
           $modal.appendChild(style);
           btn.classList.add('pressed');
