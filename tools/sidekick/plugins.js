@@ -105,10 +105,11 @@
           sk.hideModal();
           btn.classList.remove('pressed');
         } else {
-          sk.showModal(addCard(itemTransformer(getCardData()),
-            document.createDocumentFragment()).outerHTML, true);
+          sk.showModal('', true);
           $modal = document.querySelector('.modal');
           $modal.classList.remove('wait');
+          $modal.innerHTML = addCard(itemTransformer(getCardData()),
+            document.createDocumentFragment()).outerHTML;
           function hideCardPreview() {
             sk.hideModal();
             btn.classList.remove('pressed');
@@ -173,8 +174,10 @@
           navigator.clipboard.writeText(getArticleData().join('\t'));
           sk.notify('Article data copied to clipboard');
         } catch (e) {
-          sk.notify('<p>Unable to copy article data:</p>' +
-            `<pre>${e}</pre>`, 0);
+          sk.notify([
+            'Unable to copy article data:',
+            e,
+          ], 0);
         }
       },
     },
