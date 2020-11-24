@@ -38,27 +38,23 @@ export async function getTaxonomy(lang, url) {
     return topic.replace(/\n/gm, ' ').trim();
   }
 
-  // TODO restore
   const target = url || `/${lang}/topics/_taxonomy.json`;
  
   return fetch(target)
     .then((response) => {
       return response.json();
     })
-    .then((data) => {
+    .then((json) => {
       const _data = {
         topics: {},
         categories: {},
         children: {}
       };
 
-      // temp fix until https://github.com/adobe/helix-simulator/issues/545 is fixed
-      data = data.data || data;
-
-      if (data && data.length > 0) {
+      if (json && json.data && json.data.length > 0) {
         const H = HEADERS;
         let level1, level2;
-        data.forEach((row, index) => {
+        json.data.forEach((row, index) => {
           let level = 3;
           const level3 = escapeTopic(row[H.level3] !== '' ? row[H.level3] : null);
           if (!level3) {
