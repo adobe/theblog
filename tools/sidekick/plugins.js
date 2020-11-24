@@ -153,7 +153,7 @@
       predictUrl(null, sk.location.pathname),
       '[]',
       '0',
-      document.querySelector('main>div:nth-of-type(5)').textContent.trim().substring(0, 75),
+      document.querySelector('main>div:nth-of-type(4)').textContent.trim().substring(0, 75),
       document.title,
       `["${window.blog.topics.join('\", \"')}"]`,
     ]
