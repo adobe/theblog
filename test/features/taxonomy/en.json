@@ -1,4 +1,5 @@
-[
+{ 
+  "data": [
     {
       "ExcludeFromMetadata": "",
       "Hidden": "",
@@ -90,3 +91,4 @@
       "Type": "Internals"
     }
   ]
+}
