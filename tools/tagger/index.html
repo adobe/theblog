@@ -609,7 +609,11 @@
     async function init() {
       const params = new URLSearchParams(window.location.search);
       let lang = params.get('lang');
-      if (!lang) lang='en';
+      if (lang) {
+        localStorage.setItem('blog-tagger-lang', lang);
+      } else {
+        lang = localStorage.getItem('blog-tagger-lang') || 'en';
+      }
 
       // select in combo
       const option = document.querySelector(`#lang-switcher option[value=${lang}]`);
