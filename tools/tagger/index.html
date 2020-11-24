@@ -622,7 +622,7 @@
       const checkLinks = params.get('checkLinks') || false;
 
       const { getTaxonomy } = await import('/scripts/taxonomy.js');
-      const taxonomy = await getTaxonomy('en');
+      const taxonomy = await getTaxonomy(lang);
 
       initTaxonomy(taxonomy);
       initCategories();
