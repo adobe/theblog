@@ -33,70 +33,6 @@
     },
   });
 
-  // PREVIEW ----------------------------------------------------------------------
-
-  sk.add({
-    id: 'preview',
-    condition: (sidekick) => {
-      return sidekick.isEditor() || sidekick.isHelix();
-    },
-    override: true,
-    button: {
-      text: 'Preview',
-      action: () => {
-        const { config, location } = sk;
-        if (!config.innerHost) {
-          sk.notify(`Preview is not configured for ${config.project}`, 0);
-          return;
-        }
-        // check if host is a URL
-        if (config.host && config.host.startsWith('http')) {
-          config.host = new URL(config.host).host;
-        }
-      
-        const currentHost = location.host;
-        const currentPath = location.pathname;
-      
-        if (sk.isEditor()) {
-          // source document, open window with staging url
-          const u = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@v2');
-          u.search = new URLSearchParams([
-            ['owner', config.owner],
-            ['repo', config.repo],
-            ['ref', config.ref || 'master'],
-            ['path', '/'],
-            ['lookup', location.href],
-          ]).toString();
-          window.open(u, `hlx-sidekick-${config.ref}--${config.repo}--${config.owner}`);
-        } else {
-          sk.showModal('Please wait...', true);
-          switch (currentHost) {
-            case config.innerHost:
-            case config.outerHost:
-              // staging, switch to production
-              if (!config.host) {
-                sk.notify(`Production host for ${config.project} is unknown`);
-                return;
-              }
-              window.location.href = `https://${config.host}${currentPath.replace('/publish', '')}`;
-              break;
-            case config.host:
-              // production, switch to staging
-              window.location.href = `https://${config.innerHost}${currentPath.replace(/^\/(.*)\/(\d{4})/, '/$1/publish/$2')}`;
-              break;
-            default:
-              sk.hideModal();
-              sk.notify([
-                `Preview can be used for ${config.project} here:`,
-                'Online Word documents',
-                `Articles on https://${config.innerHost}/${config.host ? ` or https://${config.host}/` : ''}`,
-               ], 2);
-          }
-        }
-      },
-    }
-  });
-
   // PREDICTED URL ----------------------------------------------------------------
 
   function predictUrl(host, path) {
@@ -127,7 +63,10 @@
         const { config, location } = sk;
         const url = predictUrl(config.host, location.pathname);
         navigator.clipboard.writeText(url);
-        sk.notify(`<p>Predicted URL copied to clipboard:</p><p>${url}</p>`);
+        sk.notify([
+          'Predicted URL copied to clipboard:',
+          url,
+        ]);
       },
     },
   });
@@ -161,15 +100,16 @@
         } = await import('/scripts/common.js');
         const sk = window.hlxSidekick;
         const btn = evt.target;
-        let $modal = document.querySelector('.modal');
+        let $modal = document.querySelector('.hlx-sk-overlay > div > .card');
         if ($modal) {
           sk.hideModal();
           btn.classList.remove('pressed');
         } else {
-          sk.showModal(addCard(itemTransformer(getCardData()),
-            document.createDocumentFragment()).outerHTML, true);
-          $modal = document.querySelector('.modal');
+          sk.showModal('', true);
+          $modal = document.querySelector('.hlx-sk-overlay > div');
           $modal.classList.remove('wait');
+          $modal.innerHTML = addCard(itemTransformer(getCardData()),
+            document.createDocumentFragment()).outerHTML;
           function hideCardPreview() {
             sk.hideModal();
             btn.classList.remove('pressed');
@@ -190,13 +130,10 @@
           .hlx-sk-overlay .card {
             box-shadow: var(--hlx-sk-shadow);
           }
-          .hlx-sk-overlay .modal {
+          .hlx-sk-overlay > div {
             text-align: center;
             background-color: transparent;
             box-shadow: none;
-          }
-          .hlx-sk-overlay .modal * {
-            font-size: unset;
           }`;
           $modal.appendChild(style);
           btn.classList.add('pressed');
@@ -216,7 +153,7 @@
       predictUrl(null, sk.location.pathname),
       '[]',
       '0',
-      document.querySelector('main>div:nth-of-type(5)').textContent.trim().substring(0, 75),
+      document.querySelector('main>div:nth-of-type(4)').textContent.trim().substring(0, 75),
       document.title,
       `["${window.blog.topics.join('\", \"')}"]`,
     ]
@@ -234,8 +171,10 @@
           navigator.clipboard.writeText(getArticleData().join('\t'));
           sk.notify('Article data copied to clipboard');
         } catch (e) {
-          sk.notify('<p>Unable to copy article data:</p>' +
-            `<pre>${e}</pre>`, 0);
+          sk.notify([
+            'Unable to copy article data:',
+            e,
+          ], 0);
         }
       },
     },
@@ -286,7 +225,6 @@
     },
     override: true,
     button: {
-      text: 'Publish',
       action: async () => {
         const { config, location } = sk;
         if (!config.innerHost || !config.host) {
