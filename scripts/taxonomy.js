@@ -28,6 +28,12 @@ const INDUSTRIES = 'industries';
 const INTERNALS = 'internals';
 let _taxonomy;
 
+/**
+ * Returns the taxonomy object
+ * @param {string} lang Language of the taxonomy
+ * @param {*} url URL to use to load the taxonomy
+ * @returns {object} The taxonomy object
+ */
 export async function getTaxonomy(lang, url) {
   if (_taxonomy) {
     return _taxonomy;
