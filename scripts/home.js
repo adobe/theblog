@@ -20,7 +20,12 @@ import {
   fetchArticles,
   fetchArticleIndex,
   itemTransformer,
+  extractTopicsAndProducts,
 } from '/scripts/common.js';
+
+import {
+  getTaxonomy
+} from '/scripts/taxonomy.js';
 
 /**
  * Sets up the homepage
@@ -85,7 +90,24 @@ async function setupHomepage() {
     addCard(n, newsdeck)
   });
 
+  extractTopicsAndProducts();
+
+  const filters = {};
+
+  if (window.blog.topicsOnly && window.blog.topicsOnly.length > 0) {
+    filters.topics = window.blog.topicsOnly.map(t => t.toLowerCase());
+  }
+
+  if (window.blog.products && window.blog.products.length > 0) {
+    filters.products = window.blog.products.map(p => p.toLowerCase());
+  }
+
+  if (window.blog.exclude && window.blog.exclude.length > 0) {
+    filters.exclude = window.blog.exclude.map(p => p.toLowerCase());
+  }
+
   await fetchArticles({
+    filters,
     pageSize: 13,
     callback: () => {
       if (window.blog.page === 0) {

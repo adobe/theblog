@@ -472,6 +472,12 @@ async function fetchHits(filters, limit, cursor) {
       //check if path is already in a card
       if (document.querySelector(`.card a[href='/${getCardPath(e.path)}']`)) matched=false;
       if (hits.find(h => h.path == e.path)) matched=false;
+
+      if (filters.exclude) {
+        if (findMatches(articleTopics, articleProducts, filters.exclude)) {
+          matched = false;
+        }
+      }
   
       if (matched) {
         if (hits.length==limit) {
@@ -536,6 +542,7 @@ export async function fetchArticles({
   }
   window.blog.page = window.blog.page === undefined ? 0 : window.blog.page + 1;
   if (!(filters.pathsOnly && filters.paths.length==0)) {
+    console.log('filters', filters);
     const result=await fetchHits(filters, pageSize, window.blog.cursor?window.blog.cursor:0);
     const hits=result.hits;
     const setFocus=window.blog.page?true:false;
@@ -557,6 +564,71 @@ export function applyFilters(filters) {
   if ($deck) $deck.parentNode.remove();
   window.blog.userFilters = Object.keys(filters).length ? filters : false;
   fetchArticles();
+}
+
+/**
+ * Extracts the topics and products from the last section of a page
+ */
+export function extractTopicsAndProducts() {
+  // store topics
+  const last = getSection();
+  let topics, topicContainer;
+  Array.from(last.children).forEach((i) => {
+    const r = /^Topics\: ?(.*)$/gmi.exec(i.innerText);
+    if (r && r.length > 0) {
+      topics = r[1].split(/\,\s*/);
+      topicContainer = i;
+    }
+  });
+  topics = topics
+    ? topics.filter((topic) => topic.length > 0)
+    : [];
+  if (topicContainer) {
+    topicContainer.remove();
+  }
+
+  window.blog.topics = topics;
+
+  // store products as topics
+  let products, productContainer;
+  Array.from(last.children).forEach((i) => {
+    const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
+    if (r && r.length > 0) {
+      products = r[1].split(/\,\s*/);
+      productContainer = i;
+    }
+  });
+
+  window.blog.topicsOnly = window.blog.topics;
+
+  window.blog.products = products
+  ? products.filter((product) => product.length > 0)
+  : [];
+
+  window.blog.topics = window.blog.topics.concat(window.blog.products);
+
+  if (productContainer) {
+    productContainer.remove();
+  }
+
+  let exclude, excludeContainer;
+  Array.from(last.children).forEach((i) => {
+    const r = /^Exclude\: ?(.*)$/gmi.exec(i.innerText);
+    if (r && r.length > 0) {
+      exclude = r[1].split(/\,\s*/);
+      excludeContainer = i;
+    }
+  });
+
+  window.blog.exclude = exclude;
+
+  if (excludeContainer) {
+    excludeContainer.remove();
+  }
+
+  if (last.innerText.trim() === '') {
+    last.remove(); // remove empty last div
+  }
 }
 
 window.addEventListener('load', function() {

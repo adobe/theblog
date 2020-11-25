@@ -16,6 +16,7 @@ import {
   getLink,
   wrap,
   createTag,
+  extractTopicsAndProducts,
 } from '/scripts/common.js';
 
 import {
@@ -64,43 +65,8 @@ function handleImmediateMetadata() {
     window.blog.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
     if (window.blog.date) window.blog.rawDate = d[0];
   }
-  // store topics
-  const last = getSection();
-  let topics, topicContainer;
-  Array.from(last.children).forEach((i) => {
-    const r = /^Topics\: ?(.*)$/gmi.exec(i.innerText);
-    if (r && r.length > 0) {
-      topics = r[1].split(/\,\s*/);
-      topicContainer = i;
-    }
-  });
-  topics = topics
-    ? topics.filter((topic) => topic.length > 0)
-    : [];
-  if (topicContainer) {
-    topicContainer.remove();
-  }
-
-  window.blog.topics = topics;
-
-  // store products as topics
-  let products, productContainer;
-  Array.from(last.children).forEach((i) => {
-    const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
-    if (r && r.length > 0) {
-      products = r[1].split(/\,\s*/);
-      productContainer = i;
-    }
-  });
-  window.blog.topics = window.blog.topics.concat(products
-    ? products.filter((product) => product.length > 0)
-    : []);
-  if (productContainer) {
-    productContainer.remove();
-  }
-  if (last.innerText.trim() === '') {
-    last.remove(); // remove empty last div
-  }
+  
+  extractTopicsAndProducts();
 
   addMetaTags([{
     property: 'og:locale',
@@ -112,20 +78,6 @@ function handleImmediateMetadata() {
 }
 
 /**
- * Retrieves parents of specified topic from the taxonomy.
- */
-function getParentTopics(taxonomy, topics) {
-  let parentTopics = [];
-  topics.forEach((topic) => {
-    const parents = taxonomy.getParents(topic);
-    if (parents && parents.length > 0) {
-      parentTopics = parentTopics.concat(parents);
-    }
-  });
-  return parentTopics;
-}
-
-/**
  * Finds user facing topics to display, and adds both user and non user facing topics as meta tags.
  */
 async function handleAsyncMetadata() {
@@ -134,8 +86,12 @@ async function handleAsyncMetadata() {
   // de-dupe UFT, NUFT + parents
   const allTopics = Array.from(new Set([
     ...window.blog.topics,
-    ...getParentTopics(taxonomy, window.blog.topics),
+    ...taxonomy.getParents(window.blog.topics),
   ]));
+
+  // filter out NUFT
+  window.blog.topics = allTopics
+    .filter(topic => taxonomy.isUFT(topic));
 
   // add all topics as article:tags
   addMetaTags(allTopics
@@ -146,10 +102,6 @@ async function handleAsyncMetadata() {
         content: topic,
       }
     }));
-
-  // filter out NUFT
-  window.blog.topics = allTopics
-    .filter(topic => taxonomy.isUFT(topic));
 }
 
 function toClassName(name) {
