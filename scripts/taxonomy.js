@@ -156,19 +156,22 @@ export async function getTaxonomy(lang, url) {
           return _data.topics[topic] ? _data.topics[topic].link : null;
         },
 
-        getParents: function (topic) {
+        getParents: function (topics) {
+          let list = typeof topics === 'string' ? [topics] : topics;
           const parents = [];
-          const t = _data.topics[topic];
-          if(t) {
-            if (t.level3) {
-              parents.push(t.level2);
-              parents.push(t.level1);
-            } else {
-              if (t.level2) {
-                parents.push(t.level1);
+          list.forEach(topic => {
+            const t = _data.topics[topic];
+            if(t) {
+              if (t.level3) {
+                if (parents.indexOf(t.level2) === -1) parents.push(t.level2);
+                if (parents.indexOf(t.level1) === -1) parents.push(t.level1);
+              } else {
+                if (t.level2 && parents.indexOf(t.level1) === -1) {
+                  parents.push(t.level1);
+                }
               }
             }
-          }
+          });
           return parents;
         },
 

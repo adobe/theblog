@@ -71,6 +71,14 @@ describe('Taxonomy', () => {
     expect(taxonomy.getParents('Top110')).to.eql([]);
   });
 
+  it('getTaxonomy#getParents accept arrays', () => {
+    expect(taxonomy.getParents(['Top211', 'Top212', 'Top241'])).to.eql(['Top210', 'Top200', 'Top240']);
+    expect(taxonomy.getParents(['Top210', 'Top211'])).to.eql(['Top200', 'Top210']);
+    
+    // with non existing
+    expect(taxonomy.getParents(['Top110', 'Top211'])).to.eql(['Top210', 'Top200']);
+  });
+
   it('getTaxonomy#getChildren', () => {
     expect(taxonomy.getChildren('Top100')).to.eql([]);
     expect(taxonomy.getChildren('Top200')).to.eql(['Top210', 'Top220', 'Top230', 'Top240']);
