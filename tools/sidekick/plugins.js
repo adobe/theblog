@@ -17,15 +17,38 @@
 
   // sk.loadCSS();
 
+  // EDIT -------------------------------------------------------------------------
+
+  sk.add({
+    id: 'edit',
+    condition: (sidekick) => sidekick.isHelix(),
+    override: true,
+    button: {
+      action: () => {
+        const { config, location } = sk;
+        const href = location.href
+          .split('#')[0] // remove anchor
+          .split('?')[0] // remove query string
+          .replace(/\/([a-z]{2})\/(\d{4})/, '/$1/publish/$2'); // remove /publish/
+        const url = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@v2');
+        url.search = new URLSearchParams([
+          ['owner', config.owner],
+          ['repo', config.repo],
+          ['ref', config.ref || 'main'],
+          ['path', '/'],
+          ['edit', href],
+        ]).toString();
+        window.open(url, `hlx-sk-edit-${config.repo}--${config.owner}`);
+      },
+    },
+  });
+
   // PREVIEW ----------------------------------------------------------------------
 
   sk.add({
     id: 'preview',
-    condition: (sidekick) => {
-      const { config } = sidekick;
-      return config.innerHost
-        && (sk.isEditor() || sk.isHelix());
-    },
+    condition: (sidekick) => sidekick.config.innerHost
+      && (sk.isEditor() || sk.isHelix()),
     override: true,
     button: {
       action: () => {
@@ -41,11 +64,11 @@
             ['lookup', location.href],
           ]).toString();
         } else if (location.host === config.innerHost) {
-          // inner to outer
+          // inner to outer -> remove /publish/
           url = new URL(`https://${config.host}${location.pathname.replace('/publish/', '/')}`);
         } else {
-          // outer to inner
-          url = new URL(`https://${config.innerHost}${location.pathname.replace(/^\/([a-z]+)\/(\d{4})/, '/$1/publish/$2')}`);
+          // outer to inner -> add /publish/
+          url = new URL(`https://${config.innerHost}${location.pathname.replace(/^\/([a-z]{2})\/(\d{4})/, '/$1/publish/$2')}`);
         }
         window.open(url.toString(), `hlx-sk-preview-${config.repo}--${config.owner}`);
       },
@@ -57,9 +80,7 @@
 
   sk.add({
     id: 'tagger',
-    condition: (sidekick) => {
-      return sidekick.isEditor();
-    },
+    condition: (sidekick) => sidekick.isEditor(),
     button: {
       text: 'Tagger',
       action: () => {
