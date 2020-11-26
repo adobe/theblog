@@ -129,7 +129,7 @@ function getParentTopics(taxonomy, topics) {
  * Finds user facing topics to display, and adds both user and non user facing topics as meta tags.
  */
 async function handleAsyncMetadata() {
-  const taxonomy = await getTaxonomy();
+  const taxonomy = await getTaxonomy(window.blog.language);
   
   // de-dupe UFT, NUFT + parents
   const allTopics = Array.from(new Set([
@@ -150,24 +150,6 @@ async function handleAsyncMetadata() {
   // filter out NUFT
   window.blog.topics = allTopics
     .filter(topic => taxonomy.isUFT(topic));
-}
-
-function addPredictedPublishURL() {
-  const segs=window.location.pathname.split('/');
-  if (segs[2]=='drafts') {
-    let datePath = '';
-    if (window.blog.rawDate) {
-      const datesplits = window.blog.rawDate.split('-');
-      if (datesplits.length > 2) {
-        datePath = `/${datesplits[2]}/${datesplits[0]}/${datesplits[1]}`;
-      }
-    }
-    const $predURL=createTag('div', {class:'predicted-url'});
-    const filename=(segs[segs.length-1].split('.')[0]).toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
-    const url=`https://blog.adobe.com/${segs[1]}${datePath}/${filename}.html`;
-    $predURL.innerHTML=`Predicted Publish URL: ${url}`;
-    document.querySelector('main').insertBefore($predURL, getSection(0));
-  }
 }
 
 function toClassName(name) {
@@ -529,7 +511,7 @@ async function addCategory() {
   if (!window.blog.topics || window.blog.topics.length === 0) return;
   const topic = window.blog.topics[0];
   const categoryWrap = document.createElement('div');
-  const taxonomy = await getTaxonomy();
+  const taxonomy = await getTaxonomy(window.blog.language);
   const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
   categoryWrap.className = 'category';
   categoryWrap.innerHTML = `<a href="${href}" title="${topic}">${topic}</a>`;
@@ -542,7 +524,7 @@ async function addCategory() {
 async function addTopics() {
   if (!window.blog.topics || window.blog.topics.length === 0) return;
   const topicsWrap = createTag('div', { 'class' : 'topics' });
-  const taxonomy = await getTaxonomy();
+  const taxonomy = await getTaxonomy(window.blog.language);
   // use alphabetically sorted copy
   Array.from(window.blog.topics).sort((a, b) => a.localeCompare(b)).forEach((topic) => {
     const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
@@ -780,7 +762,6 @@ window.addEventListener('load', async function() {
   decorateLinkedImages();
   decorateInfographic();
   addInterLinks().then(() => handleLinks());
-  addPredictedPublishURL();
   await addCategory();
   fetchAuthor();
   await handleAsyncMetadata();

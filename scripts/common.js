@@ -235,8 +235,9 @@ export function getPostPaths(el, parent, removeContainer) {
  * @param {object} item The query hit object
  * @returns {object} The processed query hit object
  */
-export function itemTransformer(item) {
+export async function itemTransformer(item) {
   const path = getCardPath(item.path);
+  const taxonomy = await getTaxonomy(window.blog.language);
   const itemParams = {
     hero: item.hero
       ? getOptimizedImageUrl(item.hero, {
@@ -252,7 +253,7 @@ export function itemTransformer(item) {
     }).replace(/\//g, '-'),
     authorUrl: item.author ? getLink(window.blog.TYPE.AUTHOR, item.author) : '',
     topic: item.topics.length > 0 ? item.topics[0] : '',
-    topicUrl: item.topics.length > 0 ? getLink(window.blog.TYPE.TOPIC, item.topics[0]) : '',
+    topicUrl: item.topics.length > 0 ? taxonomy.getLink(item.topics[0]) || getLink(window.blog.TYPE.TOPIC, item.topics[0]) : '',
     path,
   }
   return Object.assign({}, item, itemParams);
@@ -281,7 +282,7 @@ export function addCard(hit, $container) {
   return $item;
 }
 
-function addArticlesToDeck(hits, omitEmpty, transformer, hasMore, setFocus) {
+async function addArticlesToDeck(hits, omitEmpty, transformer, hasMore, setFocus) {
     // console.log('adding articles to page', window.blog.page);
     let $deck = document.querySelector('.articles .deck');
     if (!$deck) {
@@ -301,9 +302,8 @@ function addArticlesToDeck(hits, omitEmpty, transformer, hasMore, setFocus) {
     } else {
       // add hits to card container
       if (!window.blog.page) $deck.innerHTML = '';
-      hits
-        .map(transformer)
-        .forEach((hit, i) => {
+      hits = await Promise.all(hits.map(transformer));
+      hits.forEach((hit, i) => {
           const $card=addCard(hit, $deck);
           if (!i && setFocus) $card.querySelector('a').focus();
         });
@@ -353,7 +353,7 @@ function findMatches(baseTopics, baseProducts, topicsToMatch) {
 }
 
 async function translateTable(pages, index) {
-  const taxonomy = await getTaxonomy();
+  const taxonomy = await getTaxonomy(window.blog.language);
   pages.forEach((e) => {
     let r=e;
     let products=JSON.parse(r.products);
@@ -511,7 +511,7 @@ export async function fetchArticles({
     filters.paths = getPostPaths('h2#featured-posts', 1, true);
     filters.pathsOnly = true;
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
-    const taxonomy = await getTaxonomy();
+    const taxonomy = await getTaxonomy(window.blog.language);
     const currentTopic = document.title.trim();
     let topics = [currentTopic].concat(taxonomy.getChildren(currentTopic));
     if (currentTopic.includes('Adobe ')) topics = topics.concat(taxonomy.getChildren(currentTopic.replace('Adobe ', '')));
@@ -541,7 +541,7 @@ export async function fetchArticles({
     const setFocus=window.blog.page?true:false;
     window.blog.cursor=result.cursor;
   
-    addArticlesToDeck(hits, omitEmpty, transformer, result.cursor, setFocus);
+    await addArticlesToDeck(hits, omitEmpty, transformer, result.cursor, setFocus);
     if (typeof callback === 'function') callback(hits);
   
   }

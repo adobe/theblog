@@ -79,7 +79,8 @@ async function setupHomepage() {
   });
 
   const newsdeck=document.querySelector('.news-box .deck');
-  news.map(itemTransformer).forEach((n) => {
+  news = await Promise.all(news.map(itemTransformer));
+  news.forEach((n) => {
     n.hero= getOptimizedImageUrl(n.hero, { height: 260 });
     addCard(n, newsdeck)
   });
