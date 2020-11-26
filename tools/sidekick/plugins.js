@@ -144,7 +144,7 @@
           sk.showModal('', true);
           $modal = document.querySelector('.hlx-sk-overlay > div');
           $modal.classList.remove('wait');
-          $modal.innerHTML = addCard(itemTransformer(getCardData()),
+          $modal.innerHTML = addCard(await itemTransformer(getCardData()),
             document.createDocumentFragment()).outerHTML;
           function hideCardPreview() {
             sk.hideModal();
