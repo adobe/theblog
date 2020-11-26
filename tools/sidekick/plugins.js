@@ -17,6 +17,42 @@
 
   // sk.loadCSS();
 
+  // PREVIEW ----------------------------------------------------------------------
+
+  sk.add({
+    id: 'preview',
+    condition: (sidekick) => {
+      const { location, config } = sidekick;
+      return config.innerHost
+        && (sk.isEditor() || sk.isHelix());
+    },
+    override: true,
+    button: {
+      action: () => {
+        const { config, location } = sk;
+        let url;
+        if (sk.isEditor()) {
+          url = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@v2');
+          url.search = new URLSearchParams([
+            ['owner', config.owner],
+            ['repo', config.repo],
+            ['ref', config.ref || 'main'],
+            ['path', '/'],
+            ['lookup', location.href],
+          ]).toString();
+        } else if (location.host === config.innerHost) {
+          // inner to outer
+          url = new URL(`https://${config.outerHost}${location.pathname.replace('/publish/', '/')}`);
+        } else {
+          // outer to inner
+          url = new URL(`https://${config.innerHost}${location.pathname.replace(/^\/(.*)\/(\d{4})/, '/$1/publish/$2')}`);
+        }
+        window.open(url.toString(), `hlx-sk-preview-${config.repo}--${config.owner}`);
+      },
+    },
+  });
+
+
   // TAGGER -----------------------------------------------------------------------
 
   sk.add({
