@@ -22,7 +22,7 @@
   sk.add({
     id: 'preview',
     condition: (sidekick) => {
-      const { location, config } = sidekick;
+      const { config } = sidekick;
       return config.innerHost
         && (sk.isEditor() || sk.isHelix());
     },
@@ -192,7 +192,7 @@
       document.querySelector('main>div:nth-of-type(4)').textContent.trim().substring(0, 75),
       document.title,
       `["${window.blog.topics.join('\", \"')}"]`,
-    ]
+    ];
   }
 
   sk.add({
