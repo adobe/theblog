@@ -359,9 +359,12 @@ async function addInterLinks() {
   if (response.ok) { 
     const json = await response.json();
     const articleBody = document.querySelector('main').textContent.toLowerCase();
+    const maxLinks = Math.round(articleBody.split(/\s/).length/100);
+    if (maxLinks <= 0) return;
     const keywords = (Array.isArray(json) ? json : json.data)
       // scan article to filter keywords down to relevant ones
       .filter(({ Keyword }) => articleBody.indexOf(Keyword.toLowerCase()) !== -1)
+      .filter(({}, i) => i < maxLinks)
       // sort matches by length descending
       .sort((a, b) => {
         return b.Keyword.length - a.Keyword.length;
@@ -373,7 +376,6 @@ async function addInterLinks() {
           ...item,
         }
       });
-
     // find exact text node matches and insert links (exclude headings and anchors)
     document.querySelectorAll('main > div > *:not(h1):not(h2):not(h3):not(h4):not(h5):not(a)').forEach((p) => {
       if (keywords.length === 0) return;
@@ -399,11 +401,13 @@ async function addInterLinks() {
               return b.start - a.start;
             })
             // split text node and insert link with matched text
-            .forEach(({ item, start, end }) => {
+            .forEach(({ item, start, end }, i) => {
               const text = textNode.nodeValue;
               const a = createTag('a', {
                 title: item.Keyword,
                 href: item.URL,
+                // TODO just for testing, remove in production!
+                class: 'interlink',
               });
               a.appendChild(document.createTextNode(text.substring(start, end)));
               p.insertBefore(a, textNode.nextSibling);
@@ -414,6 +418,7 @@ async function addInterLinks() {
             });
         });
     });
+    console.log(keywords);
   }
 }
 
