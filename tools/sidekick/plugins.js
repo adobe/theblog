@@ -42,10 +42,10 @@
           ]).toString();
         } else if (location.host === config.innerHost) {
           // inner to outer
-          url = new URL(`https://${config.outerHost}${location.pathname.replace('/publish/', '/')}`);
+          url = new URL(`https://${config.host}${location.pathname.replace('/publish/', '/')}`);
         } else {
           // outer to inner
-          url = new URL(`https://${config.innerHost}${location.pathname.replace(/^\/(.*)\/(\d{4})/, '/$1/publish/$2')}`);
+          url = new URL(`https://${config.innerHost}${location.pathname.replace(/^\/([a-z]+)\/(\d{4})/, '/$1/publish/$2')}`);
         }
         window.open(url.toString(), `hlx-sk-preview-${config.repo}--${config.owner}`);
       },
