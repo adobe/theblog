@@ -131,10 +131,7 @@ function removeHeaderAndFooter() {
  * @returns {string} The card path
  */
 function getCardPath(path) {
-  path = path.toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
-  return !window.location.hostname.endsWith('.page') && !isLocalhost()
-    ? path.replace('/publish/', '/')
-    : path;
+  return path.toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
 }
 
 /**
@@ -216,7 +213,7 @@ export function getPostPaths(el, parent, removeContainer) {
       let path = url.pathname;
       const p = path.split('/');
       if (p.length >= 3 && p[2] !== 'drafts' && p[2] !== 'publish') {
-        // re-add /publish/ for the query
+        // add /publish/ if missing
         p.splice(2, 0, 'publish');
         path = p.join('/');
       }
