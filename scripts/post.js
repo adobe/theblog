@@ -129,7 +129,7 @@ function getParentTopics(taxonomy, topics) {
  * Finds user facing topics to display, and adds both user and non user facing topics as meta tags.
  */
 async function handleAsyncMetadata() {
-  const taxonomy = await getTaxonomy();
+  const taxonomy = await getTaxonomy(window.blog.language);
   
   // de-dupe UFT, NUFT + parents
   const allTopics = Array.from(new Set([
@@ -147,28 +147,9 @@ async function handleAsyncMetadata() {
       }
     }));
 
-  // filter out NUFT and sort alphabetically
+  // filter out NUFT
   window.blog.topics = allTopics
-    .filter(topic => taxonomy.isUFT(topic))
-    .sort((a, b) => a.localeCompare(b));
-}
-
-function addPredictedPublishURL() {
-  const segs=window.location.pathname.split('/');
-  if (segs[2]=='drafts') {
-    let datePath = '';
-    if (window.blog.rawDate) {
-      const datesplits = window.blog.rawDate.split('-');
-      if (datesplits.length > 2) {
-        datePath = `/${datesplits[2]}/${datesplits[0]}/${datesplits[1]}`;
-      }
-    }
-    const $predURL=createTag('div', {class:'predicted-url'});
-    const filename=(segs[segs.length-1].split('.')[0]).toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
-    const url=`https://blog.adobe.com/${segs[1]}${datePath}/${filename}.html`;
-    $predURL.innerHTML=`Predicted Publish URL: ${url}`;
-    document.querySelector('main').insertBefore($predURL, getSection(0));
-  }
+    .filter(topic => taxonomy.isUFT(topic));
 }
 
 function toClassName(name) {
@@ -530,7 +511,7 @@ async function addCategory() {
   if (!window.blog.topics || window.blog.topics.length === 0) return;
   const topic = window.blog.topics[0];
   const categoryWrap = document.createElement('div');
-  const taxonomy = await getTaxonomy();
+  const taxonomy = await getTaxonomy(window.blog.language);
   const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
   categoryWrap.className = 'category';
   categoryWrap.innerHTML = `<a href="${href}" title="${topic}">${topic}</a>`;
@@ -543,8 +524,9 @@ async function addCategory() {
 async function addTopics() {
   if (!window.blog.topics || window.blog.topics.length === 0) return;
   const topicsWrap = createTag('div', { 'class' : 'topics' });
-  const taxonomy = await getTaxonomy();
-  window.blog.topics.forEach((topic) => {
+  const taxonomy = await getTaxonomy(window.blog.language);
+  // use alphabetically sorted copy
+  Array.from(window.blog.topics).sort((a, b) => a.localeCompare(b)).forEach((topic) => {
     const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
     const btn = createTag('a', {
       href,
@@ -579,14 +561,29 @@ function loadGetSocial() {
   });
 }
 
+function decorateInfographic() {
+  document.querySelectorAll('.infographic img').forEach(($img) => {
+    const $div=$img.closest('.infographic');
+    const $p=$img.parentNode;
+    const $a=$div.querySelector('a');
+    if ($a) {
+      $a.innerHTML='';
+      $a.appendChild($img);
+      $p.remove();
+    }
+  });
+}
+
 function decorateLinkedImages() {
   document.querySelectorAll('.linked-image img').forEach(($img) => {
     const $div=$img.closest('.linked-image');
     const $p=$img.parentNode;
     const $a=$div.querySelector('a');
-    $a.innerHTML='';
-    $a.appendChild($img);
-    $p.remove();
+    if ($a) {
+      $a.innerHTML='';
+      $a.appendChild($img);
+      $p.remove();
+    }
     $div.className='images';
   });
 }
@@ -629,9 +626,10 @@ function decorateEmbeds() {
     }
 
     if($a.href.startsWith('https://www.instagram.com/')) {
+      const location = window.location.href;
       embedHTML=`
         <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-        <iframe class="instagram-media instagram-media-rendered" src="${url}" allowtransparency="true" allowfullscreen="true" frameborder="0" height="530" scrolling="no" style="background: white; max-width: 658px; width: calc(100% - 2px); border-radius: 3px; border: 1px solid rgb(219, 219, 219); box-shadow: none; display: block; margin: 0px 0px 12px; min-width: 326px; padding: 0px;">
+        <iframe class="instagram-media instagram-media-rendered" src="${url}/embed/?cr=1&amp;v=13&amp;wp=1316&amp;rd=${location.endsWith('.html') ? location : location + 'html'}" allowtransparency="true" allowfullscreen="true" frameborder="0" height="530" scrolling="no" style="background: white; max-width: 658px; width: calc(100% - 2px); border-radius: 3px; border: 1px solid rgb(219, 219, 219); box-shadow: none; display: block; margin: 0px 0px 12px; min-width: 326px; padding: 0px;">
         </iframe>
         </div>`;
       type='instagram';
@@ -800,8 +798,8 @@ window.addEventListener('load', async function() {
   decorateAnimations();
   decorateEmbeds();
   decorateLinkedImages();
+  decorateInfographic();
   addInterLinks().then(() => handleLinks());
-  addPredictedPublishURL();
   await addCategory();
   fetchAuthor();
   await handleAsyncMetadata();

@@ -478,13 +478,6 @@
   margin-top: -73px !important;
 }
 
-.post-page main .predicted-url {
-  text-align: center;
-  background-color: #707070;
-  color: white;
-  font-size: 14px;
-}
-
 .post-page main .post-title h3 {
   display: none;
 }
@@ -598,6 +591,12 @@
   }
 
   .post-page main>div.post-body>.images {
+    margin-left: 0px;
+    margin-right: 0px;
+    max-width: 800px;
+  }
+
+  .post-page main>div.post-body>.infographic {
     margin-left: 0px;
     margin-right: 0px;
     max-width: 800px;
