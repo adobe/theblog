@@ -652,6 +652,11 @@ function decorateAnimations() {
       if (isAnimation) {
         attribs={playsinline:'', autoplay:'', loop:'', muted:''};
       }
+      const $poster=$a.closest('div').querySelector('img');
+      if ($poster) {
+        attribs.poster=$poster.src;
+        $poster.remove();
+      }
 
       const $video=createTag('video', attribs);
       if (href.startsWith('https://hlx.blob.core.windows.net/external/')) {
