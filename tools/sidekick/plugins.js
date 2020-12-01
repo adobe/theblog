@@ -38,7 +38,7 @@
           ['path', '/'],
           ['edit', href],
         ]).toString();
-        window.open(url, `hlx-sk-edit-${config.repo}--${config.owner}`);
+        window.open(url, `hlx-sk-edit-${btoa(location.href)}`);
       },
     },
   });
@@ -70,7 +70,7 @@
           // outer to inner -> add /publish/
           url = new URL(`https://${config.innerHost}${location.pathname.replace(/^\/([a-z]{2})\/(\d{4})/, '/$1/publish/$2')}`);
         }
-        window.open(url.toString(), `hlx-sk-preview-${config.repo}--${config.owner}`);
+        window.open(url.toString(), `hlx-sk-preview-${btoa(location.href)}`);
       },
     },
   });
@@ -80,7 +80,7 @@
 
   sk.add({
     id: 'tagger',
-    condition: (sidekick) => sidekick.isEditor(),
+    condition: (sk) => sk.isEditor() && (sk.location.query.includes('.docx&') || sk.location.query.includes('.md&')),
     button: {
       text: 'Tagger',
       action: () => {
@@ -314,5 +314,4 @@
       },
     },
   });
-
 })();
