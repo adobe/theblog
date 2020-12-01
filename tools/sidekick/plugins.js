@@ -314,4 +314,34 @@
       },
     },
   });
+
+  // PUBLISH TAXONOMY -------------------------------------------------------------
+
+  sk.add({
+    id: 'publish-taxonomy',
+    condition: (sk) => {
+      const { config, location } = sk;
+      return config.innerHost
+        && config.host
+        && sk.isEditor()
+        && location.search.includes('file=_taxonomy.xlsx');
+    },
+    override: true,
+    button: {
+      text: 'Publish',
+      action: async () => {
+        const { config } = sk;
+        const lang = 'en'; // TODO: find out actual language
+        const path = `/${lang}/topics/_taxonomy.json`;
+        sk.showModal('Publishing taxonomy...', true);
+        let resp = await sendPurge(config, path);
+        if (resp.ok) {
+          sk.notify('Taxonomy published');
+        } else {
+          sk.notify('Failed to publish taxonomy. Please try again later.', 0);
+          console.log('error', JSON.stringify(resp));
+        }
+      },
+    },
+  });
 })();
