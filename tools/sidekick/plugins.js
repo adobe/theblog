@@ -80,7 +80,7 @@
 
   sk.add({
     id: 'tagger',
-    condition: (sk) => sk.isEditor() && (sk.location.query.includes('.docx&') || sk.location.query.includes('.md&')),
+    condition: (sidekick) => sidekick.isEditor(),
     button: {
       text: 'Tagger',
       action: () => {
