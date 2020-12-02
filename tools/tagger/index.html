@@ -376,20 +376,32 @@
       var products = '';
       var topics = '';
 
-      const tags = [];
+      let tags = [];
       selected.forEach((e) => {
         tags.push(fetchTag(e.name, e.category));
       });
-      // sort array to keep CATEGORIES logical order
-      tags.sort((t1, t2) => {
-        const i1 = CATEGORIES.indexOf(t1.category);
-        const i2 = CATEGORIES.indexOf(t2.category);
-        if (i1 <= i2) return -1;
-        return 1;
-      });
+
+      if (tags.length > 1) {
+        // sort array (except first element) to keep CATEGORIES logical order
+        const toSort = tags.splice(1);
+        toSort.sort((t1, t2) => {
+          const i1 = CATEGORIES.indexOf(t1.category);
+          const i2 = CATEGORIES.indexOf(t2.category);
+          if (i1 < i2) return -1;
+          if (i1 > i2) return 1;
+          
+          let i = t1.path.localeCompare(t2.path);
+          if (i === 0) {
+            return t1.tag.localeCompare(t2.tag);
+          }
+          return i;
+        });
+
+        tags = [tags[0]].concat(toSort);
+      }
 
       tags.forEach((tagInfo) => {
-        html += `<span data-target="${tagInfo.name}" data-category="${tagInfo.category}" onclick="remove(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}${tagInfo.nuft ? ' nuft' : ''}">${tagInfo.label}</span></span> `;
+        html += `<span data-target="${tagInfo.tag}" data-category="${tagInfo.category}" onclick="remove(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}${tagInfo.nuft ? ' nuft' : ''}">${tagInfo.label}</span></span> `;
         if (1 === CATEGORIES.indexOf(tagInfo.category)) products += tagInfo.tag + ', ';
         else topics += tagInfo.tag + ', ';
       });
