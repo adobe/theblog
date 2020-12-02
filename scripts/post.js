@@ -81,9 +81,9 @@ function handleImmediateMetadata() {
     topicContainer.remove();
   }
 
+  // raw topics (i.e as written in the source document)
   window.blog.topics = topics;
 
-  // store products as topics
   let products, productContainer;
   Array.from(last.children).forEach((i) => {
     const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
@@ -92,9 +92,11 @@ function handleImmediateMetadata() {
       productContainer = i;
     }
   });
-  window.blog.topics = window.blog.topics.concat(products
+
+  // raw products (i.e as written in the source document)
+  window.blog.products = products
     ? products.filter((product) => product.length > 0)
-    : []);
+    : [];
   if (productContainer) {
     productContainer.remove();
   }
@@ -114,10 +116,10 @@ function handleImmediateMetadata() {
 /**
  * Retrieves parents of specified topic from the taxonomy.
  */
-function getParentTopics(taxonomy, topics) {
+function getParentTopics(taxonomy, topics, category) {
   let parentTopics = [];
   topics.forEach((topic) => {
-    const parents = taxonomy.getParents(topic);
+    const parents = taxonomy.getParents(topic, category);
     if (parents && parents.length > 0) {
       parentTopics = parentTopics.concat(parents);
     }
@@ -131,14 +133,25 @@ function getParentTopics(taxonomy, topics) {
 async function handleAsyncMetadata() {
   const taxonomy = await getTaxonomy(window.blog.language);
   
-  // de-dupe UFT, NUFT + parents
   const allTopics = Array.from(new Set([
     ...window.blog.topics,
     ...getParentTopics(taxonomy, window.blog.topics),
   ]));
 
-  // add all topics as article:tags
-  addMetaTags(allTopics
+  const allProducts = Array.from(new Set([
+    ...window.blog.products,
+    ...getParentTopics(taxonomy, window.blog.products, taxonomy.PRODUCTS),
+  ]));
+  
+
+  // de-dupe UFT, NUFT + parents
+  const allTags = Array.from(new Set([
+    ...allTopics,
+    ...allProducts,
+  ]));
+
+  // add all tags as article:tags
+  addMetaTags(allTags
     .filter((topic) => !taxonomy.skipMeta(topic))
     .map((topic) => {
       return {
@@ -147,9 +160,25 @@ async function handleAsyncMetadata() {
       }
     }));
 
-  // filter out NUFT
-  window.blog.topics = allTopics
-    .filter(topic => taxonomy.isUFT(topic));
+    // topics + parents
+    window.blog.allTopics = allTopics;
+
+    // products + parents
+    window.blog.allProducts = allProducts;
+
+    // UFT topics + parents
+    window.blog.allVisibleTopics = allTopics
+      .filter(topic => taxonomy.isUFT(topic));
+
+    // UFT products + parents
+    window.blog.allVisibleProducts = allProducts
+      .filter(topic => taxonomy.isUFT(topic, taxonomy.PRODUCTS));
+
+    // UFT topics + products + parents
+    window.blog.allVisibleTags = Array.from(new Set([
+      ...window.blog.allVisibleTopics,
+      ...window.blog.allVisibleProducts,
+    ]));
 }
 
 function toClassName(name) {
@@ -508,8 +537,8 @@ function fetchAuthor() {
  * Adds the primary topic as category to the post header
  */
 async function addCategory() {
-  if (!window.blog.topics || window.blog.topics.length === 0) return;
-  const topic = window.blog.topics[0];
+  if (!window.blog.allVisibleTopics || window.blog.allVisibleTopics.length === 0) return;
+  const topic = allVisibleTopics[0];
   const categoryWrap = document.createElement('div');
   const taxonomy = await getTaxonomy(window.blog.language);
   const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
@@ -522,18 +551,21 @@ async function addCategory() {
  * Adds buttons for all topics to the bottom of the post
  */
 async function addTopics() {
-  if (!window.blog.topics || window.blog.topics.length === 0) return;
+  if (!window.blog.allVisibleTags || window.blog.allVisibleTags.length === 0) return;
   const topicsWrap = createTag('div', { 'class' : 'topics' });
   const taxonomy = await getTaxonomy(window.blog.language);
   // use alphabetically sorted copy
-  Array.from(window.blog.topics).sort((a, b) => a.localeCompare(b)).forEach((topic) => {
-    const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
-    const btn = createTag('a', {
-      href,
-      title: topic,
-    });
-    btn.innerText = topic;
-    topicsWrap.appendChild(btn);
+  Array.from(window.blog.allVisibleTags).sort((a, b) => a.localeCompare(b)).forEach((topic) => {
+    const item = taxonomy.lookup(topic);
+    if (item) {
+      const href = item.link || getLink(window.blog.TYPE.TOPIC, item.name.replace(/\s/gm, '-').toLowerCase());
+      const btn = createTag('a', {
+        href,
+        title: topic,
+      });
+      btn.innerText = topic;
+      topicsWrap.appendChild(btn);
+    }
   });
   document.querySelector('main').appendChild(topicsWrap);
 }

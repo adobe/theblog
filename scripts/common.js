@@ -369,7 +369,7 @@ async function translateTable(pages, index) {
 
     r.products = products;
     products.forEach((product) => {
-      r.products = r.products.concat(taxonomy.getParents(product));
+      r.products = r.products.concat(taxonomy.getParents(product, taxonomy.PRODUCTS));
     });
 
 
@@ -513,8 +513,8 @@ export async function fetchArticles({
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
     const taxonomy = await getTaxonomy(window.blog.language);
     const currentTopic = document.title.trim();
-    let topics = [currentTopic].concat(taxonomy.getChildren(currentTopic));
-    if (currentTopic.includes('Adobe ')) topics = topics.concat(taxonomy.getChildren(currentTopic.replace('Adobe ', '')));
+    const topic = taxonomy.lookup(currentTopic);
+    let topics = topic ? [topic.name].concat(topic.children) : [];
     filters.topics = topics.map(topic => topic.toLowerCase());
     if (window.blog.userFilters) {
       Object.keys(window.blog.userFilters).forEach((cat) => {

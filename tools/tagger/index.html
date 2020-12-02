@@ -300,8 +300,8 @@
       CATEGORIES.push(_taxonomy.getCategoryTitle(_taxonomy.INTERNALS));
     }
 
-    function fetchTag(name) {
-      const item = _taxonomy.get(name);
+    function fetchTag(name, cat) {
+      const item = _taxonomy.get(name, cat);
       if (item) {
         const tag = name.replace(/[\*|\#]/gm, '').trim();
 
@@ -333,21 +333,29 @@
     })(document);
 
     function remove(e) {
-      var target = e.getAttribute('data-target');
-      selected.splice(selected.indexOf(target), 1);
+      const target = e.getAttribute('data-target');
+      const cat = e.getAttribute('data-category');
+      selected.splice(selected.findIndex(s => s.name === target && s.category === cat), 1);
       displaySelected();
     }
 
     function add(e) {
-      var target = e.getAttribute('data-target');
-      selected.push(target);
+      const target = e.getAttribute('data-target');
+      const cat = e.getAttribute('data-category');
+      selected.push({
+        name: target,
+        category: cat
+      });
       displaySelected();
     }
 
-    function addByName(name) {
-      const item = _taxonomy.get(name);
+    function addByName(name, cat) {
+      const item = _taxonomy.get(name, cat);
       if (item) {
-        selected.push(item.name);
+        selected.push({
+          name: item.name, 
+          category: cat 
+        });
         displaySelected();
       }
     }
@@ -370,7 +378,7 @@
 
       const tags = [];
       selected.forEach((e) => {
-        tags.push(fetchTag(e));
+        tags.push(fetchTag(e.name, e.category));
       });
       // sort array to keep CATEGORIES logical order
       tags.sort((t1, t2) => {
@@ -381,7 +389,7 @@
       });
 
       tags.forEach((tagInfo) => {
-        html += `<span data-target="${tagInfo.name}" onclick="remove(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}${tagInfo.nuft ? ' nuft' : ''}">${tagInfo.label}</span></span> `;
+        html += `<span data-target="${tagInfo.name}" data-category="${tagInfo.category}" onclick="remove(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}${tagInfo.nuft ? ' nuft' : ''}">${tagInfo.label}</span></span> `;
         if (1 === CATEGORIES.indexOf(tagInfo.category)) products += tagInfo.tag + ', ';
         else topics += tagInfo.tag + ', ';
       });
@@ -401,7 +409,9 @@
       copybuffer.value = `---\r\n\r\nTopics: ${topics}\r\nProducts: ${products}\r\n\r\n`
 
       document.querySelectorAll('#results>.category>span').forEach((e) => {
-        if (selected.indexOf(e.getAttribute('data-target')) < 0) {
+        const target = e.getAttribute('data-target');
+        const cat = e.getAttribute('data-category');
+        if (selected.findIndex(s => s.name === target && s.category === cat) < 0) {
           e.classList.remove('selected');
           e.setAttribute('onclick', 'add(this)');
         } else {
@@ -432,7 +442,7 @@
         html += `<h2>${cat}</h2>`;
         const items = _taxonomy.getCategory(cat);
         items.forEach((name) => {
-          var tagInfo = fetchTag(name);
+          var tagInfo = fetchTag(name, cat);
           if (tagInfo) {
             var label = tagInfo.label;
             var offset = label.toLowerCase().indexOf(searchTerm);
@@ -442,7 +452,7 @@
               term = label.substr(offset, searchTerm.length);
               after = label.substr(offset + searchTerm.length);
 
-              html += `<span data-target="${name}" onclick="add(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}${tagInfo.nuft ? ' nuft' : ''}">${before}<span class="highlight">${term}</span>${after}</span></span> `;
+              html += `<span data-target="${name}" data-category="${cat}" onclick="add(this)" class="path">${tagInfo.path}<span class="tag cat-${CATEGORIES.indexOf(tagInfo.category)}${tagInfo.nuft ? ' nuft' : ''}">${before}<span class="highlight">${term}</span>${after}</span></span> `;
             }
           }
         })
@@ -469,7 +479,7 @@
         }
 
         topics.forEach((t) => addByName(t));
-        products.forEach((p) => addByName(p));
+        products.forEach((p) => addByName(p, PRODUCTS));
       }
     }
 
@@ -512,14 +522,14 @@
       asyncForEach(CATEGORIES, async (cat, index) => {
         const items = _taxonomy.getCategory(cat);
         asyncForEach(items,async (name) => {
-          const tagInfo = fetchTag(name);
+          const tagInfo = fetchTag(name, cat);
           if (tagInfo) {
             const { tag, nuft } = tagInfo;
             const link = computeLink(tagInfo);
 
             if (link) {
               console.log(`checking link ${tag}: ${link}`, tagInfo);
-              const ui = document.querySelector(`#results [data-target="${name}"]`);
+              const ui = document.querySelector(`#results [data-target="${name}"][data-category="${cat}"]`);
               const icon = document.createElement('span');
               icon.classList = 'lcIcon';
               icon.innerHTML = LOADING_ICON;
