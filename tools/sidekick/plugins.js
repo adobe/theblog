@@ -139,7 +139,7 @@
       path: window.location.pathname.substring(1),
       teaser: d[6],
       title: d[7],
-      topics: [...window.blog.topics],
+      topics: [...window.blog.allVisibleTopics],
     };
   }
 
@@ -208,7 +208,7 @@
       `/hlx_${document.head.querySelector('meta[property="og:image"]')
         .getAttribute('content').split('/hlx_')[1]}`,
       predictUrl(null, sk.location.pathname),
-      '[]',
+      `["${window.blog.products.join('\", \"')}"]`,
       '0',
       document.querySelector('main>div:nth-of-type(4)').textContent.trim().substring(0, 75),
       document.title,
