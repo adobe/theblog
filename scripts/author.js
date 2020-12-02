@@ -53,6 +53,7 @@ function getSocialLinkDetails(url) {
     'LinkedIn',
     'Facebook',
     'YouTube',
+    'Instagram',
   ].forEach((t) => {
     if (!title && url.indexOf(t.toLowerCase()) > 0) {
       title = t;
