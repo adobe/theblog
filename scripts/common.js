@@ -587,9 +587,9 @@ export function extractTopicsAndProducts() {
     topicContainer.remove();
   }
 
+  // raw topics (i.e as written in the source document)
   window.blog.topics = topics;
 
-  // store products as topics
   let products, productContainer;
   Array.from(last.children).forEach((i) => {
     const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
@@ -599,13 +599,10 @@ export function extractTopicsAndProducts() {
     }
   });
 
-  window.blog.topicsOnly = window.blog.topics;
-
+  // raw products (i.e as written in the source document)
   window.blog.products = products
-  ? products.filter((product) => product.length > 0)
-  : [];
-
-  window.blog.topics = window.blog.topics.concat(window.blog.products);
+    ? products.filter((product) => product.length > 0)
+    : [];
 
   if (productContainer) {
     productContainer.remove();
