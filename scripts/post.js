@@ -90,7 +90,7 @@ async function handleAsyncMetadata() {
 
   const allProducts = Array.from(new Set([
     ...window.blog.products,
-    ...getParentTopics(taxonomy, window.blog.products, taxonomy.PRODUCTS),
+    ...taxonomy.getParents(taxonomy, window.blog.products, taxonomy.PRODUCTS),
   ]));
   
 
@@ -109,6 +109,26 @@ async function handleAsyncMetadata() {
         content: topic,
       }
     }));
+
+  // topics + parents
+  window.blog.allTopics = allTopics;
+
+  // products + parents
+  window.blog.allProducts = allProducts;
+
+  // UFT topics + parents
+  window.blog.allVisibleTopics = allTopics
+    .filter(topic => taxonomy.isUFT(topic));
+
+  // UFT products + parents
+  window.blog.allVisibleProducts = allProducts
+    .filter(topic => taxonomy.isUFT(topic, taxonomy.PRODUCTS));
+
+  // UFT topics + products + parents
+  window.blog.allVisibleTags = Array.from(new Set([
+    ...window.blog.allVisibleTopics,
+    ...window.blog.allVisibleProducts,
+  ]));
 }
 
 function toClassName(name) {
