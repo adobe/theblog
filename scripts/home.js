@@ -94,8 +94,8 @@ async function setupHomepage() {
 
   const filters = {};
 
-  if (window.blog.topicsOnly && window.blog.topicsOnly.length > 0) {
-    filters.topics = window.blog.topicsOnly.map(t => t.toLowerCase());
+  if (window.blog.topics && window.blog.topics.length > 0) {
+    filters.topics = window.blog.topics.map(t => t.toLowerCase());
   }
 
   if (window.blog.products && window.blog.products.length > 0) {
