@@ -90,7 +90,7 @@ async function handleAsyncMetadata() {
 
   const allProducts = Array.from(new Set([
     ...window.blog.products,
-    ...taxonomy.getParents(taxonomy, window.blog.products, taxonomy.PRODUCTS),
+    ...taxonomy.getParents(window.blog.products, taxonomy.PRODUCTS),
   ]));
   
 
