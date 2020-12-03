@@ -34,10 +34,6 @@ a.action.load-more::before {
   content: 'Keine Artikel in dieser Kategorie gefunden';
 }
 
-.post-page .products::before {
-  content: "Adobe-Produkte in diesem Artikel";
-}
-
 .social::before {
   content: "Folgen Sie mir auf";
 }
