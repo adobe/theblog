@@ -473,6 +473,7 @@ function fetchAuthor() {
     xhr.onload = function() {
       try {
         let avatarURL = DEFAULT_AVATAR;
+        let authorName = window.blog.author;
         // try to get <main> elements and find author image
         const groups = /(^\s*<main>)((.|\n)*?)<\/main>/gm.exec(xhr.responseText) || [];
         let main = groups.length > 2 ? groups[2] : null;
@@ -482,14 +483,20 @@ function fetchAuthor() {
           if (img && img.length > 0 && img[1]) {
             avatarURL = img[1];
           }
+
+          const nameGroup = /<h2.*?>(.*?)<\/h2>/gm.exec(main);
+          if (nameGroup && nameGroup.length > 0) {
+            authorName = nameGroup[1];
+          }
         }
         avatarURL = getOptimizedImageUrl(avatarURL, { width: 128, crop: '1:1' });
+        
         const authorDiv = document.createElement('div');
         authorDiv.innerHTML = `<div class="author-summary">
           <img class="lazyload" alt="${window.blog.author}" title="${window.blog.author}" data-src="${avatarURL}">
           <div><span class="post-author">
             ${xhr.status < 400 ? `<a href="${pageURL}" title="${window.blog.author}">` : ''}
-              ${window.blog.author}
+              ${authorName}
             ${xhr.status < 400 ? '</a>' : ''}
           </span>
           <span class="post-date">${window.blog.date || ''}</span></div></div>`;
