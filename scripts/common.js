@@ -542,7 +542,6 @@ export async function fetchArticles({
   }
   window.blog.page = window.blog.page === undefined ? 0 : window.blog.page + 1;
   if (!(filters.pathsOnly && filters.paths.length==0)) {
-    console.log('filters', filters);
     const result=await fetchHits(filters, pageSize, window.blog.cursor?window.blog.cursor:0);
     const hits=result.hits;
     const setFocus=window.blog.page?true:false;
