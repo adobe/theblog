@@ -12,18 +12,75 @@
 
 // This file contains the blog-specific plugins for the sidekick.
 (() => {
-  const sk = window.hlxSidekick;
+  const sk = window.hlx && window.hlx.sidekick ? window.hlx.sidekick : window.hlxSidekick;
   if (typeof sk !== 'object') return;
 
   // sk.loadCSS();
+
+  // EDIT -------------------------------------------------------------------------
+
+  sk.add({
+    id: 'edit',
+    condition: (sidekick) => sidekick.isHelix(),
+    override: true,
+    button: {
+      action: () => {
+        const { config, location } = sk;
+        const href = location.href
+          .split('#')[0] // remove anchor
+          .split('?')[0] // remove query string
+          .replace(/\/([a-z]{2})\/(\d{4})/, '/$1/publish/$2'); // remove /publish/
+        const url = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@v2');
+        url.search = new URLSearchParams([
+          ['owner', config.owner],
+          ['repo', config.repo],
+          ['ref', config.ref || 'main'],
+          ['path', '/'],
+          ['edit', href],
+        ]).toString();
+        window.open(url, `hlx-sk-edit-${btoa(location.href)}`);
+      },
+    },
+  });
+
+  // PREVIEW ----------------------------------------------------------------------
+
+  sk.add({
+    id: 'preview',
+    condition: (sidekick) => sidekick.config.innerHost
+      && (sk.isEditor() || sk.isHelix()),
+    override: true,
+    button: {
+      action: () => {
+        const { config, location } = sk;
+        let url;
+        if (sk.isEditor()) {
+          url = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@v2');
+          url.search = new URLSearchParams([
+            ['owner', config.owner],
+            ['repo', config.repo],
+            ['ref', config.ref || 'main'],
+            ['path', '/'],
+            ['lookup', location.href],
+          ]).toString();
+        } else if (location.host === config.innerHost) {
+          // inner to outer -> remove /publish/
+          url = new URL(`https://${config.host}${location.pathname.replace('/publish/', '/')}`);
+        } else {
+          // outer to inner -> add /publish/
+          url = new URL(`https://${config.innerHost}${location.pathname.replace(/^\/([a-z]{2})\/(\d{4})/, '/$1/publish/$2')}`);
+        }
+        window.open(url.toString(), `hlx-sk-preview-${btoa(location.href)}`);
+      },
+    },
+  });
+
 
   // TAGGER -----------------------------------------------------------------------
 
   sk.add({
     id: 'tagger',
-    condition: (sidekick) => {
-      return sidekick.isEditor();
-    },
+    condition: (sk) => sk.isEditor() && (sk.location.search.includes('.docx&') || sk.location.search.includes('.md&')),
     button: {
       text: 'Tagger',
       action: () => {
@@ -82,7 +139,7 @@
       path: window.location.pathname.substring(1),
       teaser: d[6],
       title: d[7],
-      topics: [...window.blog.topics],
+      topics: [...window.blog.allVisibleTopics],
     };
   }
 
@@ -108,7 +165,7 @@
           sk.showModal('', true);
           $modal = document.querySelector('.hlx-sk-overlay > div');
           $modal.classList.remove('wait');
-          $modal.innerHTML = addCard(itemTransformer(getCardData()),
+          $modal.innerHTML = addCard(await itemTransformer(getCardData()),
             document.createDocumentFragment()).outerHTML;
           function hideCardPreview() {
             sk.hideModal();
@@ -151,12 +208,12 @@
       `/hlx_${document.head.querySelector('meta[property="og:image"]')
         .getAttribute('content').split('/hlx_')[1]}`,
       predictUrl(null, sk.location.pathname),
-      '[]',
+      `["${window.blog.products.join('\", \"')}"]`,
       '0',
       document.querySelector('main>div:nth-of-type(4)').textContent.trim().substring(0, 75),
       document.title,
       `["${window.blog.topics.join('\", \"')}"]`,
-    ]
+    ];
   }
 
   sk.add({
@@ -257,5 +314,4 @@
       },
     },
   });
-
 })();

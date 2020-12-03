@@ -83,18 +83,25 @@ function handleImmediateMetadata() {
 async function handleAsyncMetadata() {
   const taxonomy = await getTaxonomy(window.blog.language);
   
-  // de-dupe UFT, NUFT + parents
   const allTopics = Array.from(new Set([
     ...window.blog.topics,
     ...taxonomy.getParents(window.blog.topics),
   ]));
 
-  // filter out NUFT
-  window.blog.topics = allTopics
-    .filter(topic => taxonomy.isUFT(topic));
+  const allProducts = Array.from(new Set([
+    ...window.blog.products,
+    ...getParentTopics(taxonomy, window.blog.products, taxonomy.PRODUCTS),
+  ]));
+  
 
-  // add all topics as article:tags
-  addMetaTags(allTopics
+  // de-dupe UFT, NUFT + parents
+  const allTags = Array.from(new Set([
+    ...allTopics,
+    ...allProducts,
+  ]));
+
+  // add all tags as article:tags
+  addMetaTags(allTags
     .filter((topic) => !taxonomy.skipMeta(topic))
     .map((topic) => {
       return {
@@ -460,8 +467,8 @@ function fetchAuthor() {
  * Adds the primary topic as category to the post header
  */
 async function addCategory() {
-  if (!window.blog.topics || window.blog.topics.length === 0) return;
-  const topic = window.blog.topics[0];
+  if (!window.blog.allVisibleTopics || window.blog.allVisibleTopics.length === 0) return;
+  const topic = allVisibleTopics[0];
   const categoryWrap = document.createElement('div');
   const taxonomy = await getTaxonomy(window.blog.language);
   const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
@@ -474,18 +481,21 @@ async function addCategory() {
  * Adds buttons for all topics to the bottom of the post
  */
 async function addTopics() {
-  if (!window.blog.topics || window.blog.topics.length === 0) return;
+  if (!window.blog.allVisibleTags || window.blog.allVisibleTags.length === 0) return;
   const topicsWrap = createTag('div', { 'class' : 'topics' });
   const taxonomy = await getTaxonomy(window.blog.language);
   // use alphabetically sorted copy
-  Array.from(window.blog.topics).sort((a, b) => a.localeCompare(b)).forEach((topic) => {
-    const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
-    const btn = createTag('a', {
-      href,
-      title: topic,
-    });
-    btn.innerText = topic;
-    topicsWrap.appendChild(btn);
+  Array.from(window.blog.allVisibleTags).sort((a, b) => a.localeCompare(b)).forEach((topic) => {
+    const item = taxonomy.lookup(topic);
+    if (item) {
+      const href = item.link || getLink(window.blog.TYPE.TOPIC, item.name.replace(/\s/gm, '-').toLowerCase());
+      const btn = createTag('a', {
+        href,
+        title: topic,
+      });
+      btn.innerText = topic;
+      topicsWrap.appendChild(btn);
+    }
   });
   document.querySelector('main').appendChild(topicsWrap);
 }
@@ -589,7 +599,7 @@ function decorateEmbeds() {
 }
 
 function decorateAnimations() {
-  document.querySelectorAll('.animation a[href]').forEach(($a) => {
+  document.querySelectorAll('.animation a[href], .video a[href]').forEach(($a) => {
     let href=$a.getAttribute('href');
     const url=new URL(href);
     const helixId=url.pathname.split('/')[2];
@@ -598,16 +608,31 @@ function decorateAnimations() {
     $parent.classList.add('images');
 
     if (href.endsWith('.mp4')) {
-      const $video=createTag('video', {playsinline:'', autoplay:'', loop:'', muted:''});
+      const isAnimation=$a.closest('.animation')?true:false;
+
+      let attribs={controls:''};
+      if (isAnimation) {
+        attribs={playsinline:'', autoplay:'', loop:'', muted:''};
+      }
+      const $poster=$a.closest('div').querySelector('img');
+      if ($poster) {
+        attribs.poster=$poster.src;
+        $poster.remove();
+      }
+
+      const $video=createTag('video', attribs);
       if (href.startsWith('https://hlx.blob.core.windows.net/external/')) {
         href='/hlx_'+href.split('/')[4].replace('#image','');
       }
       $video.innerHTML=`<source src="${href}" type="video/mp4">`;
       $a.parentNode.replaceChild($video, $a);
-      $video.addEventListener('canplay', (evt) => { 
-        $video.muted=true;
-        $video.play() });
+      if (isAnimation) {
+          $video.addEventListener('canplay', (evt) => { 
+            $video.muted=true;
+            $video.play() });
+      }
     }
+    
     if (href.endsWith('.gif')) {
       $a.parentNode.replaceChild(createTag('img',{src: `/hlx_${helixId}.gif`}), $a);  
     }
