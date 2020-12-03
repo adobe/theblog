@@ -303,7 +303,7 @@
     function fetchTag(name, cat) {
       const item = _taxonomy.get(name, cat);
       if (item) {
-        const tag = name.replace(/[\*|\#]/gm, '').trim();
+        const tag = name.trim();
 
         const parents = item.parents.slice().reverse();
         const path = parents.join(' / ') + ' ';
