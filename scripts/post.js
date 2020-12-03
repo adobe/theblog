@@ -160,25 +160,25 @@ async function handleAsyncMetadata() {
       }
     }));
 
-    // topics + parents
-    window.blog.allTopics = allTopics;
+  // topics + parents
+  window.blog.allTopics = allTopics;
 
-    // products + parents
-    window.blog.allProducts = allProducts;
+  // products + parents
+  window.blog.allProducts = allProducts;
 
-    // UFT topics + parents
-    window.blog.allVisibleTopics = allTopics
-      .filter(topic => taxonomy.isUFT(topic));
+  // UFT topics + parents
+  window.blog.allVisibleTopics = allTopics
+    .filter(topic => taxonomy.isUFT(topic));
 
-    // UFT products + parents
-    window.blog.allVisibleProducts = allProducts
-      .filter(topic => taxonomy.isUFT(topic, taxonomy.PRODUCTS));
+  // UFT products + parents
+  window.blog.allVisibleProducts = allProducts
+    .filter(topic => taxonomy.isUFT(topic, taxonomy.PRODUCTS));
 
-    // UFT topics + products + parents
-    window.blog.allVisibleTags = Array.from(new Set([
-      ...window.blog.allVisibleTopics,
-      ...window.blog.allVisibleProducts,
-    ]));
+  // UFT topics + products + parents
+  window.blog.allVisibleTags = Array.from(new Set([
+    ...window.blog.allVisibleTopics,
+    ...window.blog.allVisibleProducts,
+  ]));
 }
 
 function toClassName(name) {
