@@ -155,7 +155,7 @@
           addCard,
           itemTransformer,
         } = await import('/scripts/common.js');
-        const sk = window.hlxSidekick;
+        const sk = window.hlx && window.hlx.sidekick ? window.hlx.sidekick : window.hlxSidekick;
         const btn = evt.target;
         let $modal = document.querySelector('.hlx-sk-overlay > div > .card');
         if ($modal) {
