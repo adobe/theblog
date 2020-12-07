@@ -488,7 +488,7 @@ function fetchAuthor() {
  */
 async function addCategory() {
   if (!window.blog.allVisibleTopics || window.blog.allVisibleTopics.length === 0) return;
-  const topic = allVisibleTopics[0];
+  const topic = window.blog.allVisibleTopics[0];
   const categoryWrap = document.createElement('div');
   const taxonomy = await getTaxonomy(window.blog.language);
   const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
@@ -759,9 +759,9 @@ window.addEventListener('load', async function() {
   decorateLinkedImages();
   decorateInfographic();
   addInterLinks().then(() => handleLinks());
-  await addCategory();
   fetchAuthor();
   await handleAsyncMetadata();
+  await addCategory();
   await addTopics();
   loadGetSocial();
   shapeBanners();
