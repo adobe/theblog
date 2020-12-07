@@ -605,31 +605,13 @@ function decorateEmbeds() {
       type = 'youtube';
     }
 
-    if($a.href.startsWith('https://w.soundcloud.com') || $a.href.startsWith('https://api.soundcloud.com')) {
-      const tracks = usp.get('tracks');
-      embedHTML=`
-      <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-      <iframe src="https://w.soundcloud.com/player/?visual=true&amp;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F${tracks}&amp;show_artwork=true" style="border: 0; width: 100%; height: 400px;" allowfullscreen="" allow="encrypted-media" title="content from soundcloud" loading="lazy">
-      </iframe>
-      </div>`
-      type='soundcloud'
-    }
-
-    if($a.href.startsWith('https://www.twitter.com')) {
-      const id = usp.get('id');
-      embedHTML=`
-      <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-      <iframe scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" style="position: static; visibility: visible; width: 550px; height: 476px; display: block; flex-grow: 1;" title="Twitter Tweet" src="https://platform.twitter.com/embed/index.html?creatorScreenName=Adobe&amp;dnt=true&amp;frame=false&amp;hideCard=false&amp;hideThread=false&amp;id=${id}&amp;lang=en&amp;origin=https%3A%2F%2Fblog.adobe.com%2Fen%2Fpublish%2F2017%2F08%2F28%2Fcreating-motion-graphics-templates-in-adobe-after-effects.html&amp;siteScreenName=Adobe&amp;theme=light&amp;widgetsVersion=ed20a2b%3A1601588405575&amp;width=550px" data-tweet-id="${id}">
-      </iframe>
-      </div>`
-      type='twitter'
-    }
-
     if($a.href.startsWith('https://www.instagram.com/')) {
       const location = window.location.href;
       embedHTML=`
         <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-        <iframe class="instagram-media instagram-media-rendered" src="${url}/embed/?cr=1&amp;v=13&amp;wp=1316&amp;rd=${location.endsWith('.html') ? location : location + 'html'}" allowtransparency="true" allowfullscreen="true" frameborder="0" height="530" scrolling="no" style="background: white; max-width: 658px; width: calc(100% - 2px); border-radius: 3px; border: 1px solid rgb(219, 219, 219); box-shadow: none; display: block; margin: 0px 0px 12px; min-width: 326px; padding: 0px;">
+        <iframe class="instagram-media instagram-media-rendered" id="instagram-embed-0" src="${url}/embed/?cr=1&amp;v=13&amp;wp=1316&amp;rd=${location.endsWith('.html') ? location : location + '.html'}" 
+        allowtransparency="true" allowfullscreen="true" frameborder="0" height="530" style="background: white; max-width: 658px; width: calc(100% - 2px); border-radius: 3px; border: 1px solid rgb(219, 219, 219); 
+        box-shadow: none; display: block; margin: 0px 0px 12px; min-width: 326px; padding: 0px;">
         </iframe>
         </div>`;
       type='instagram';
@@ -638,7 +620,8 @@ function decorateEmbeds() {
     if ($a.href.startsWith('https://player.vimeo.com/video/')) {
       embedHTML=`
         <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-        <iframe src="${url}?byline=0&badge=0&portrait=0&title=0" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" scrolling="no" allow="encrypted-media" title="content from vimeo" loading="lazy">
+        <iframe src="${url}?byline=0&badge=0&portrait=0&title=0" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" 
+        allowfullscreen="" scrolling="no" allow="encrypted-media" title="content from vimeo" loading="lazy">
         </iframe>
         </div>`
         type='vimeo-player';
@@ -647,7 +630,8 @@ function decorateEmbeds() {
     if ($a.href.startsWith('https://video.tv.adobe.com/v/')) {
       embedHTML=`
         <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-        <iframe src="${url}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" scrolling="no" allow="encrypted-media" title="content from adobe" loading="lazy">
+        <iframe src="${url}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" 
+        scrolling="no" allow="encrypted-media" title="content from adobe" loading="lazy">
         </iframe>
         </div>`
         type='adobe-tv';
