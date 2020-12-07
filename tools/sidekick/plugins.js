@@ -331,15 +331,30 @@
       text: 'Publish',
       action: async () => {
         const { config } = sk;
-        const lang = 'en'; // TODO: find out actual language
-        const path = `/${lang}/topics/_taxonomy.json`;
         sk.showModal('Publishing taxonomy...', true);
-        let resp = await sendPurge(config, path);
-        if (resp.ok) {
+        const url = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@v2');
+        url.search = new URLSearchParams([
+          ['report', 'true'],
+          ['owner', config.owner],
+          ['repo', config.repo],
+          ['ref', config.ref || 'main'],
+          ['path', '/'],
+          ['lookup', location.href],
+        ]).toString();
+        const resp = await fetch(url.toString());
+        const json = await resp.json();
+        if (!resp.ok || !json.unfriendlyWebUrl) {
+          sk.notify('Failed to publish taxonomy. Please try again later.', 0);
+          console.log('error', JSON.stringify(await resp.json()));
+        }
+        const path = new URL(json.unfriendlyWebUrl).pathname;
+        const purge = await sendPurge(config, path);
+        if (purge.ok) {
+          await fetch(json.unfriendlyWebUrl, {cache: 'reload', mode: 'no-cors'});
           sk.notify('Taxonomy published');
         } else {
           sk.notify('Failed to publish taxonomy. Please try again later.', 0);
-          console.log('error', JSON.stringify(resp));
+          console.log('error', JSON.stringify(purge));
         }
       },
     },
