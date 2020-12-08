@@ -34,10 +34,6 @@ a.action.load-more::before {
   content: 'No articles found in this category';
 }
 
-.post-page .products::before {
-    content: "Adobe products in this article";
-}
-
 .social::before {
   content: "Follow me on";
 }

@@ -12,7 +12,7 @@
 
 // This file contains the blog-specific plugins for the sidekick.
 (() => {
-  const sk = window.hlxSidekick;
+  const sk = window.hlx && window.hlx.sidekick ? window.hlx.sidekick : window.hlxSidekick;
   if (typeof sk !== 'object') return;
 
   // sk.loadCSS();
@@ -38,7 +38,7 @@
           ['path', '/'],
           ['edit', href],
         ]).toString();
-        window.open(url, `hlx-sk-edit-${config.repo}--${config.owner}`);
+        window.open(url, `hlx-sk-edit-${btoa(location.href)}`);
       },
     },
   });
@@ -70,7 +70,7 @@
           // outer to inner -> add /publish/
           url = new URL(`https://${config.innerHost}${location.pathname.replace(/^\/([a-z]{2})\/(\d{4})/, '/$1/publish/$2')}`);
         }
-        window.open(url.toString(), `hlx-sk-preview-${config.repo}--${config.owner}`);
+        window.open(url.toString(), `hlx-sk-preview-${btoa(location.href)}`);
       },
     },
   });
@@ -80,7 +80,7 @@
 
   sk.add({
     id: 'tagger',
-    condition: (sidekick) => sidekick.isEditor(),
+    condition: (sk) => sk.isEditor() && (sk.location.search.includes('.docx&') || sk.location.search.includes('.md&')),
     button: {
       text: 'Tagger',
       action: () => {
@@ -139,7 +139,7 @@
       path: window.location.pathname.substring(1),
       teaser: d[6],
       title: d[7],
-      topics: [...window.blog.topics],
+      topics: [...window.blog.allVisibleTopics],
     };
   }
 
@@ -155,7 +155,7 @@
           addCard,
           itemTransformer,
         } = await import('/scripts/common.js');
-        const sk = window.hlxSidekick;
+        const sk = window.hlx && window.hlx.sidekick ? window.hlx.sidekick : window.hlxSidekick;
         const btn = evt.target;
         let $modal = document.querySelector('.hlx-sk-overlay > div > .card');
         if ($modal) {
@@ -208,7 +208,7 @@
       `/hlx_${document.head.querySelector('meta[property="og:image"]')
         .getAttribute('content').split('/hlx_')[1]}`,
       predictUrl(null, sk.location.pathname),
-      '[]',
+      `["${window.blog.products.join('\", \"')}"]`,
       '0',
       document.querySelector('main>div:nth-of-type(4)').textContent.trim().substring(0, 75),
       document.title,
@@ -314,5 +314,4 @@
       },
     },
   });
-
 })();

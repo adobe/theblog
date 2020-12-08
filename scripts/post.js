@@ -16,6 +16,7 @@ import {
   getLink,
   wrap,
   createTag,
+  extractTopicsAndProducts,
 } from '/scripts/common.js';
 
 import {
@@ -64,43 +65,8 @@ function handleImmediateMetadata() {
     window.blog.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
     if (window.blog.date) window.blog.rawDate = d[0];
   }
-  // store topics
-  const last = getSection();
-  let topics, topicContainer;
-  Array.from(last.children).forEach((i) => {
-    const r = /^Topics\: ?(.*)$/gmi.exec(i.innerText);
-    if (r && r.length > 0) {
-      topics = r[1].split(/\,\s*/);
-      topicContainer = i;
-    }
-  });
-  topics = topics
-    ? topics.filter((topic) => topic.length > 0)
-    : [];
-  if (topicContainer) {
-    topicContainer.remove();
-  }
-
-  window.blog.topics = topics;
-
-  // store products as topics
-  let products, productContainer;
-  Array.from(last.children).forEach((i) => {
-    const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
-    if (r && r.length > 0) {
-      products = r[1].split(/\,\s*/);
-      productContainer = i;
-    }
-  });
-  window.blog.topics = window.blog.topics.concat(products
-    ? products.filter((product) => product.length > 0)
-    : []);
-  if (productContainer) {
-    productContainer.remove();
-  }
-  if (last.innerText.trim() === '') {
-    last.remove(); // remove empty last div
-  }
+  
+  extractTopicsAndProducts();
 
   addMetaTags([{
     property: 'og:locale',
@@ -112,33 +78,30 @@ function handleImmediateMetadata() {
 }
 
 /**
- * Retrieves parents of specified topic from the taxonomy.
- */
-function getParentTopics(taxonomy, topics) {
-  let parentTopics = [];
-  topics.forEach((topic) => {
-    const parents = taxonomy.getParents(topic);
-    if (parents && parents.length > 0) {
-      parentTopics = parentTopics.concat(parents);
-    }
-  });
-  return parentTopics;
-}
-
-/**
  * Finds user facing topics to display, and adds both user and non user facing topics as meta tags.
  */
 async function handleAsyncMetadata() {
   const taxonomy = await getTaxonomy(window.blog.language);
   
-  // de-dupe UFT, NUFT + parents
   const allTopics = Array.from(new Set([
     ...window.blog.topics,
-    ...getParentTopics(taxonomy, window.blog.topics),
+    ...taxonomy.getParents(window.blog.topics),
   ]));
 
-  // add all topics as article:tags
-  addMetaTags(allTopics
+  const allProducts = Array.from(new Set([
+    ...window.blog.products,
+    ...taxonomy.getParents(window.blog.products, taxonomy.PRODUCTS),
+  ]));
+  
+
+  // de-dupe UFT, NUFT + parents
+  const allTags = Array.from(new Set([
+    ...allTopics,
+    ...allProducts,
+  ]));
+
+  // add all tags as article:tags
+  addMetaTags(allTags
     .filter((topic) => !taxonomy.skipMeta(topic))
     .map((topic) => {
       return {
@@ -147,9 +110,25 @@ async function handleAsyncMetadata() {
       }
     }));
 
-  // filter out NUFT
-  window.blog.topics = allTopics
+  // topics + parents
+  window.blog.allTopics = allTopics;
+
+  // products + parents
+  window.blog.allProducts = allProducts;
+
+  // UFT topics + parents
+  window.blog.allVisibleTopics = allTopics
     .filter(topic => taxonomy.isUFT(topic));
+
+  // UFT products + parents
+  window.blog.allVisibleProducts = allProducts
+    .filter(topic => taxonomy.isUFT(topic, taxonomy.PRODUCTS));
+
+  // UFT topics + products + parents
+  window.blog.allVisibleTags = Array.from(new Set([
+    ...window.blog.allVisibleTopics,
+    ...window.blog.allVisibleProducts,
+  ]));
 }
 
 function toClassName(name) {
@@ -508,8 +487,8 @@ function fetchAuthor() {
  * Adds the primary topic as category to the post header
  */
 async function addCategory() {
-  if (!window.blog.topics || window.blog.topics.length === 0) return;
-  const topic = window.blog.topics[0];
+  if (!window.blog.allVisibleTopics || window.blog.allVisibleTopics.length === 0) return;
+  const topic = allVisibleTopics[0];
   const categoryWrap = document.createElement('div');
   const taxonomy = await getTaxonomy(window.blog.language);
   const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
@@ -522,18 +501,21 @@ async function addCategory() {
  * Adds buttons for all topics to the bottom of the post
  */
 async function addTopics() {
-  if (!window.blog.topics || window.blog.topics.length === 0) return;
+  if (!window.blog.allVisibleTags || window.blog.allVisibleTags.length === 0) return;
   const topicsWrap = createTag('div', { 'class' : 'topics' });
   const taxonomy = await getTaxonomy(window.blog.language);
   // use alphabetically sorted copy
-  Array.from(window.blog.topics).sort((a, b) => a.localeCompare(b)).forEach((topic) => {
-    const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
-    const btn = createTag('a', {
-      href,
-      title: topic,
-    });
-    btn.innerText = topic;
-    topicsWrap.appendChild(btn);
+  Array.from(window.blog.allVisibleTags).sort((a, b) => a.localeCompare(b)).forEach((topic) => {
+    const item = taxonomy.lookup(topic);
+    if (item) {
+      const href = item.link || getLink(window.blog.TYPE.TOPIC, item.name.replace(/\s/gm, '-').toLowerCase());
+      const btn = createTag('a', {
+        href,
+        title: topic,
+      });
+      btn.innerText = topic;
+      topicsWrap.appendChild(btn);
+    }
   });
   document.querySelector('main').appendChild(topicsWrap);
 }
@@ -659,7 +641,7 @@ function decorateEmbeds() {
 }
 
 function decorateAnimations() {
-  document.querySelectorAll('.animation a[href]').forEach(($a) => {
+  document.querySelectorAll('.animation a[href], .video a[href]').forEach(($a) => {
     let href=$a.getAttribute('href');
     const url=new URL(href);
     const helixId=url.pathname.split('/')[2];
@@ -668,16 +650,31 @@ function decorateAnimations() {
     $parent.classList.add('images');
 
     if (href.endsWith('.mp4')) {
-      const $video=createTag('video', {playsinline:'', autoplay:'', loop:'', muted:''});
+      const isAnimation=$a.closest('.animation')?true:false;
+
+      let attribs={controls:''};
+      if (isAnimation) {
+        attribs={playsinline:'', autoplay:'', loop:'', muted:''};
+      }
+      const $poster=$a.closest('div').querySelector('img');
+      if ($poster) {
+        attribs.poster=$poster.src;
+        $poster.remove();
+      }
+
+      const $video=createTag('video', attribs);
       if (href.startsWith('https://hlx.blob.core.windows.net/external/')) {
         href='/hlx_'+href.split('/')[4].replace('#image','');
       }
       $video.innerHTML=`<source src="${href}" type="video/mp4">`;
       $a.parentNode.replaceChild($video, $a);
-      $video.addEventListener('canplay', (evt) => { 
-        $video.muted=true;
-        $video.play() });
+      if (isAnimation) {
+          $video.addEventListener('canplay', (evt) => { 
+            $video.muted=true;
+            $video.play() });
+      }
     }
+    
     if (href.endsWith('.gif')) {
       $a.parentNode.replaceChild(createTag('img',{src: `/hlx_${helixId}.gif`}), $a);  
     }
