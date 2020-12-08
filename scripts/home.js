@@ -126,7 +126,7 @@ async function setupHomepage() {
   });
 
   // add publish dependencies
-  window.hlx=window.hlx||{};
+  window.hlx = window.hlx || {};
   window.hlx.dependencies = [];
   const limit = 256;
   let offset = 0;
