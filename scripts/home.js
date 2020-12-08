@@ -125,6 +125,16 @@ async function setupHomepage() {
     }
   });
 
+  // add publish dependencies
+  window.hlx=window.hlx||{};
+  window.hlx.dependencies = [];
+  const limit = 256;
+  let offset = 0;
+  while (offset < limit * 10) {
+    window.hlx.dependencies.push(`/${window.blog.language}/query-index.json?limit=${limit}&offset=${offset}`);
+    offset += 256;
+  }
+
 }
 
 window.addEventListener('load', function() {
