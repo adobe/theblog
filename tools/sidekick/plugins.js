@@ -313,6 +313,7 @@
             }
           }
           if (config.host) {
+            sk.showModal('Please wait...', true);
             // fetch and redirect to production
             const prodURL = `https://${config.host}${path}`;
             await fetch(prodURL, {cache: 'reload', mode: 'no-cors'});
