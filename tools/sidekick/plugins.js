@@ -303,22 +303,16 @@
               return showErrorModal(sk, resp);
             }
           }
-          let okToRedirect = true;
           // purge dependencies
           if (Array.isArray(window.hlx.dependencies)) {
-            const deps = window.hlx.dependencies.filter(async (dPath) => {
+            if (!window.hlx.dependencies.every(async (dPath) => {
               sk.showModal(`Publishing dependency ${dPath}`, true);
-              return !(await sendPurge(config, dPath)).ok;
-            });
-            if (deps.length > 0) {
-              okToRedirect = false;
-              sk.showModal([
-                'Failed to publish the following dependendies. Please try again later.',
-                ...deps,
-              ], true, 1);
+              return (await sendPurge(config, dPath)).ok;
+            })) {
+              return sk.notify('Failed to publish dependendies. Please try again later.', 1);
             }
           }
-          if (okToRedirect) {
+          if (config.host) {
             // fetch and redirect to production
             const prodURL = `https://${config.host}${path}`;
             await fetch(prodURL, {cache: 'reload', mode: 'no-cors'});
