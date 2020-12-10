@@ -23,9 +23,7 @@ import {
   extractTopicsAndProducts,
 } from '/scripts/common.js';
 
-import {
-  getTaxonomy
-} from '/scripts/taxonomy.js';
+const NUM_PURGED_INDEX_SEGMENTS = 10;
 
 /**
  * Sets up the homepage
@@ -124,6 +122,16 @@ async function setupHomepage() {
       }
     }
   });
+
+  // add publish dependencies
+  window.hlx = window.hlx || {};
+  window.hlx.dependencies = [];
+  const limit = 256;
+  let offset = 0;
+  while (offset < limit * NUM_PURGED_INDEX_SEGMENTS) {
+    window.hlx.dependencies.push(`/${window.blog.language}/query-index.json?limit=${limit}&offset=${offset}`);
+    offset += 256;
+  }
 
 }
 
