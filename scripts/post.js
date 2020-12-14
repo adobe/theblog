@@ -578,25 +578,47 @@ function decorateEmbeds() {
     let embedHTML='';
     let type='';
 
-    if ($a.href.startsWith('https://video.tv.adobe.com/v/')) {
-      embedHTML=`
-        <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-        <iframe src="${$a.href}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" scrolling="no" allow="encrypted-media" title="content from adobe" loading="lazy">
-        </iframe>
-        </div>`
-        type='adobe-tv';
-    }
-    
     if ($a.href.startsWith('https://www.youtube.com/watch')) {
       const vid=usp.get('v');
-      
-      type='youtube';
       embedHTML=`<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
         <iframe src="https://www.youtube.com/embed/${vid}?rel=0&amp;v=${vid}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" scrolling="no" allow="encrypted-media; accelerometer; gyroscope; picture-in-picture" title="content from youtube" loading="lazy"></iframe>
         </div>
       `;
+      type = 'youtube';
     }
 
+    if($a.href.startsWith('https://www.instagram.com/')) {
+      const location = window.location.href;
+      embedHTML=`
+        <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+        <iframe class="instagram-media instagram-media-rendered" id="instagram-embed-0" src="${url}/embed/?cr=1&amp;v=13&amp;wp=1316&amp;rd=${location.endsWith('.html') ? location : location + '.html'}" 
+        allowtransparency="true" allowfullscreen="true" frameborder="0" height="530" style="background: white; max-width: 658px; width: calc(100% - 2px); border-radius: 3px; border: 1px solid rgb(219, 219, 219); 
+        box-shadow: none; display: block; margin: 0px 0px 12px; min-width: 326px; padding: 0px;">
+        </iframe>
+        </div>`;
+      type='instagram';
+    }
+
+    if ($a.href.startsWith('https://player.vimeo.com/video/')) {
+      embedHTML=`
+        <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+        <iframe src="${url}?byline=0&badge=0&portrait=0&title=0" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" 
+        allowfullscreen="" scrolling="no" allow="encrypted-media" title="content from vimeo" loading="lazy">
+        </iframe>
+        </div>`
+        type='vimeo-player';
+    }
+
+    if ($a.href.startsWith('https://video.tv.adobe.com/v/')) {
+      embedHTML=`
+        <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+        <iframe src="${url}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" 
+        scrolling="no" allow="encrypted-media" title="content from adobe" loading="lazy">
+        </iframe>
+        </div>`
+        type='adobe-tv';
+    }
+ 
     if (type) {
       const $embed=createTag('div', {class: `embed embed-oembed embed-${type}`});
       const $div=$a.closest('div');
