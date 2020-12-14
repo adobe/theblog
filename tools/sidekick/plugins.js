@@ -288,9 +288,9 @@
           sk.notify(`Publish is not configured for ${config.project}`, 0);
           return;
         }
-        sk.showModal('Publishing...', true);
 
         let path = location.pathname;
+        sk.showModal(`Publishing ${path}`, true);
 
         let resp = await sendPurge(config, path);
         if (resp.ok) {
@@ -303,11 +303,25 @@
               return showErrorModal(sk, resp);
             }
           }
-          // fetch and redirect to production
-          const prodURL = `https://${config.host}${path}`;
-          await fetch(prodURL, {cache: 'reload', mode: 'no-cors'});
-          console.log(`redirecting ${prodURL}`);
-          window.location.href = prodURL;
+          // purge dependencies
+          if (Array.isArray(window.hlx.dependencies)) {
+            if (!window.hlx.dependencies.every(async (dPath) => {
+              sk.showModal(`Publishing dependency ${dPath}`, true);
+              return (await sendPurge(config, dPath)).ok;
+            })) {
+              return sk.notify('Failed to publish dependendies. Please try again later.', 1);
+            }
+          }
+          if (config.host) {
+            sk.showModal('Please wait...', true);
+            // fetch and redirect to production
+            const prodURL = `https://${config.host}${path}`;
+            await fetch(prodURL, {cache: 'reload', mode: 'no-cors'});
+            console.log(`redirecting ${prodURL}`);
+            window.location.href = prodURL;
+          } else {
+            sk.notify('Successfully published');
+          }
         } else {
           return showErrorModal(sk, resp);
         }
