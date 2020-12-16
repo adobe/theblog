@@ -488,7 +488,7 @@ function fetchAuthor() {
  */
 async function addCategory() {
   if (!window.blog.allVisibleTopics || window.blog.allVisibleTopics.length === 0) return;
-  const topic = allVisibleTopics[0];
+  const topic = window.blog.allVisibleTopics[0];
   const categoryWrap = document.createElement('div');
   const taxonomy = await getTaxonomy(window.blog.language);
   const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
@@ -570,37 +570,41 @@ function decorateLinkedImages() {
   });
 }
 
+async function fetchHTML(embedUrl){
+  const req = await fetch(embedUrl);
+  if(req.ok){
+    const resp = await req.json();
+    return resp.html;
+  }
+  return '';
+}
 
-async function decorateEmbeds() {
+function attachEmbed($a, html, type){
+  const $embed=createTag('div', {class: `embed embed-oembed embed-${type}`});
+  const $div=$a.closest('div');
+  $embed.innerHTML=html;
+  $div.parentElement.replaceChild($embed, $div);
+}
 
-  document.querySelectorAll('.block-embed a[href]').forEach(($a) => {
-    const url=new URL($a.href);
+async function getEmbed($a){
+  const url=new URL($a.href);
     const usp=new URLSearchParams(url.search);
     let embedHTML='';
     let type='';
-
-    const getHtml = (url) => {
-      const req = await fetch(url);
-      if(req.ok){
-        const resp = await req.json();
-        return resp.html;
-      }
-      return '';
-    }
-
-    if($a.href.startsWith('https://slideshare.net')) {
-     embedHTML = getHtml(`http://www.slideshare.net/api/oembed/2?url=${$a.href}`);
-     type = embedHTML ? 'slideshare' : null;
+    
+    if($a.href.startsWith('https://www.slideshare.net')) {
+      embedHTML = fetchHTML(`http://www.slideshare.net/api/oembed/2?url=${url.href}`);
+      type = 'slideshare';
     }
 
     if($a.href.startsWith('https://w.soundcloud.com') || $a.href.startsWith('https://api.soundcloud.com')) {
-    embedHTML =  getHtml`https://soundcloud.com/oembed?url=${$a.href}`;
-    type = embedHTML ? 'soundcloud' : null;
+      embedHTML = fetchHTML(`https://soundcloud.com/oembed?url=${$url.href}`);
+      type = 'soundcloud';
     }
 
     if($a.href.startsWith('https://www.twitter.com')) {
-      embedHTML = getHtml(`https://publish.twitter.com/oembed?url=${$a.href}`);
-      type = embedHTML ? 'twitter' : null;
+      embedHTML = fetchHTML(`https://publish.twitter.com/oembed?url=${$url.href}`);
+      type = 'twitter';
     }
 
     if ($a.href.startsWith('https://www.youtube.com/watch')) {
@@ -643,15 +647,31 @@ async function decorateEmbeds() {
         </div>`
         type='adobe-tv';
     }
- 
-    if (type) {
-      const $embed=createTag('div', {class: `embed embed-oembed embed-${type}`});
-      const $div=$a.closest('div');
-      $embed.innerHTML=embedHTML;
-      $div.parentElement.replaceChild($embed, $div);
+
+    return {
+      html: embedHTML,
+      type
     }
-    
-  })
+}
+
+async function decorateEmbeds() {
+  const embedPromises = [];
+  const blockEmbeds = document.querySelectorAll('.block-embed a[href]');
+  let resolvedEmbeds = [];
+  
+  blockEmbeds.forEach(($a) => {
+    embedPromises.push(getEmbed($a));
+  });
+
+  if(embedPromises.length > 0){
+    resolvedEmbeds = await Promise.all(embedPromises);
+    blockEmbeds.forEach(($a, idx) => {
+      const { html, type } = resolvedEmbeds[idx];
+      if (html){
+        attachEmbed($a, html, type);
+      }
+    });
+  }
 
   document.querySelectorAll('.post-page .post-body .embed').forEach(($e) => {
     const $next=$e.nextElementSibling;
@@ -661,8 +681,7 @@ async function decorateEmbeds() {
         $next.classList.add('legend');
         }
       }
-  })
-
+  });
 }
 
 function decorateAnimations() {
@@ -806,9 +825,9 @@ window.addEventListener('load', async function() {
   decorateLinkedImages();
   decorateInfographic();
   addInterLinks().then(() => handleLinks());
-  await addCategory();
   fetchAuthor();
   await handleAsyncMetadata();
+  await addCategory();
   await addTopics();
   loadGetSocial();
   shapeBanners();
