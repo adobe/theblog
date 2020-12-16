@@ -474,10 +474,8 @@ async function fetchHits(filters, limit, cursor) {
       if (hits.find(h => h.path == e.path)) matched=false;
 
       if (filters.exclude) {
-        console.log('has filters.exclude', filters.exclude, articleTopics);
         if (findMatches(articleTopics, articleProducts, filters.exclude)) {
           matched = false;
-          console.log('EXCLUDED!!');
         }
       }
   
