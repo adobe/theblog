@@ -288,9 +288,9 @@
           sk.notify(`Publish is not configured for ${config.project}`, 0);
           return;
         }
-        sk.showModal('Publishing...', true);
 
         let path = location.pathname;
+        sk.showModal(`Publishing ${path}`, true);
 
         let resp = await sendPurge(config, path);
         if (resp.ok) {
@@ -303,13 +303,72 @@
               return showErrorModal(sk, resp);
             }
           }
-          // fetch and redirect to production
-          const prodURL = `https://${config.host}${path}`;
-          await fetch(prodURL, {cache: 'reload', mode: 'no-cors'});
-          console.log(`redirecting ${prodURL}`);
-          window.location.href = prodURL;
+          // purge dependencies
+          if (Array.isArray(window.hlx.dependencies)) {
+            if (!window.hlx.dependencies.every(async (dPath) => {
+              sk.showModal(`Publishing dependency ${dPath}`, true);
+              return (await sendPurge(config, dPath)).ok;
+            })) {
+              return sk.notify('Failed to publish dependendies. Please try again later.', 1);
+            }
+          }
+          if (config.host) {
+            sk.showModal('Please wait...', true);
+            // fetch and redirect to production
+            const prodURL = `https://${config.host}${path}`;
+            await fetch(prodURL, {cache: 'reload', mode: 'no-cors'});
+            console.log(`redirecting ${prodURL}`);
+            window.location.href = prodURL;
+          } else {
+            sk.notify('Successfully published');
+          }
         } else {
           return showErrorModal(sk, resp);
+        }
+      },
+    },
+  });
+
+  // PUBLISH TAXONOMY -------------------------------------------------------------
+
+  sk.add({
+    id: 'publish-taxonomy',
+    condition: (sk) => {
+      const { config, location } = sk;
+      return config.innerHost
+        && config.host
+        && sk.isEditor()
+        && location.search.includes('file=_taxonomy.xlsx');
+    },
+    override: true,
+    button: {
+      text: 'Publish',
+      action: async () => {
+        const { config } = sk;
+        sk.showModal('Publishing taxonomy...', true);
+        const url = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@v2');
+        url.search = new URLSearchParams([
+          ['report', 'true'],
+          ['owner', config.owner],
+          ['repo', config.repo],
+          ['ref', config.ref || 'main'],
+          ['path', '/'],
+          ['lookup', location.href],
+        ]).toString();
+        const resp = await fetch(url.toString());
+        const json = await resp.json();
+        if (!resp.ok || !json.unfriendlyWebUrl) {
+          sk.notify('Failed to publish taxonomy. Please try again later.', 0);
+          console.log('error', JSON.stringify(await resp.json()));
+        }
+        const path = new URL(json.unfriendlyWebUrl).pathname;
+        const purge = await sendPurge(config, path);
+        if (purge.ok) {
+          await fetch(json.unfriendlyWebUrl, {cache: 'reload', mode: 'no-cors'});
+          sk.notify('Taxonomy published');
+        } else {
+          sk.notify('Failed to publish taxonomy. Please try again later.', 0);
+          console.log('error', JSON.stringify(purge));
         }
       },
     },
