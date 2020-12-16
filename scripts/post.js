@@ -570,13 +570,38 @@ function decorateLinkedImages() {
   });
 }
 
-function decorateEmbeds() {
+
+async function decorateEmbeds() {
 
   document.querySelectorAll('.block-embed a[href]').forEach(($a) => {
     const url=new URL($a.href);
     const usp=new URLSearchParams(url.search);
     let embedHTML='';
     let type='';
+
+    const getHtml = (url) => {
+      const req = await fetch(url);
+      if(req.ok){
+        const resp = await req.json();
+        return resp.html;
+      }
+      return '';
+    }
+
+    if($a.href.startsWith('https://slideshare.net')) {
+     embedHTML = getHtml(`http://www.slideshare.net/api/oembed/2?url=${$a.href}`);
+     type = embedHTML ? 'slideshare' : null;
+    }
+
+    if($a.href.startsWith('https://w.soundcloud.com') || $a.href.startsWith('https://api.soundcloud.com')) {
+    embedHTML =  getHtml`https://soundcloud.com/oembed?url=${$a.href}`;
+    type = embedHTML ? 'soundcloud' : null;
+    }
+
+    if($a.href.startsWith('https://www.twitter.com')) {
+      embedHTML = getHtml(`https://publish.twitter.com/oembed?url=${$a.href}`);
+      type = embedHTML ? 'twitter' : null;
+    }
 
     if ($a.href.startsWith('https://www.youtube.com/watch')) {
       const vid=usp.get('v');
