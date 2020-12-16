@@ -10,13 +10,6 @@
  * governing permissions and limitations under the License.
  */
 
- .topic-page {
-  /* header bg colors */
-  --bg1: #2c0167;
-  --bg2: #fd8467;
-  --bg3: #83106a;
-}
-
 .topic-page header,
 .topic-page main,
 .topic-page footer {
@@ -46,6 +39,7 @@
 .topic-page main div.topic-title > h1,
 .topic-page main div.topic-title > p {
   color: white;
+  margin: 0;
   width: calc(100% - 64px);
   max-width: 378px;
   align-self: center;
@@ -57,29 +51,46 @@
   font-size: 1.125rem;
 }
 
-.topic-page main div.topic-title img {
+.topic-page main div.topic-title > img {
   display: none;
 }
 
 .topic-page main div.topic-title {
-  height: 220px;
-  padding: 0;
-  background-color: var(--bg1); /* fallback bg color */
+  padding: 48px 0;
+  background-color: #2c2c2c; /* fallback bg color */
   display: flex;
   flex-flow: column wrap;
   justify-content: center;
   align-items: center;
-  background:
-    radial-gradient(
-      350px 100px at bottom left,
-      var(--bg3),
-      transparent 400px
-    ),
-    linear-gradient(
-      to right,
-      var(--bg1),
-      var(--bg2)
-    );
+}
+
+.topic-title .card {
+  margin: 24px 0 0 0;
+  width: calc(100% - 64px);
+  padding: 16px;
+  background-color: white;
+}
+
+.topic-title .card .hero {
+  border-radius: 0;
+}
+
+.topic-title .card .content {
+  padding: 24px 8px 8px 8px;
+}
+
+.topic-title .card h2 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  max-height: 6rem;
+  margin-bottom: 0.5rem;
+}
+
+
+
+.topic-title .card .date,
+.topic-title .card .teaser {
+  display: block;
 }
 
 .topic-page .deck {
@@ -91,37 +102,6 @@
 }
 
 @media (min-width:600px) {
-
-  .topic-page main div.topic-title {
-    height: 220px;
-    background:
-      radial-gradient(
-        75% 250px at bottom left,
-        var(--bg3),
-        transparent 50%
-      ),
-      radial-gradient(
-        25% 80px at top,
-        var(--bg3),
-        transparent 350px
-      ),
-      radial-gradient(
-        45% 150px at bottom right,
-        var(--bg3),
-        transparent 400px
-      ),
-      radial-gradient(
-        67% 350px at right,
-        var(--bg2),
-        transparent 75%
-      ),
-      linear-gradient(
-        to right,
-        var(--bg1),
-        var(--bg1),
-        var(--bg2)
-      );
-  }
 
   .topic-page main div.topic-title > h1,
   .topic-page main div.topic-title > p {

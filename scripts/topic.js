@@ -15,11 +15,18 @@ import {
   applyFilters,
   wrapNodes,
   createTag,
+  extractTopicsAndProducts,
 } from '/scripts/common.js';
 import {
   addFilters,
-  clearAllFilters,
 } from '/scripts/filters.js';
+
+/**
+ * Detects if there are featured posts
+ */
+function detectFeaturedPosts() {
+  window.blog.hasFeaturedPost = !!document.querySelector('h2#featured-posts');
+}
 
 /**
  * Decorates the topic page with CSS classes
@@ -41,12 +48,24 @@ function decorateTopicPage() {
 }
 
 window.addEventListener('load', async function() {
+  detectFeaturedPosts();
+  extractTopicsAndProducts();
   decorateTopicPage();
   await addFilters((filters) => {
     // apply selected filters
     applyFilters(filters);
   });
-  fetchArticles();
+  //move first card to featured
+  fetchArticles({
+    callback: (hits) => {
+      if (window.blog.hasFeaturedPost) {
+        const $card = document.querySelector('main .card');
+        if ($card) {
+          document.querySelector('.topic-title').appendChild($card);
+        }
+      }
+    }
+  });
 });
 
 (new MutationObserver(mutations => {
