@@ -160,6 +160,7 @@ window.blog = function() {
     PT: 'pt',
     KO: 'ko',
     ES: 'es',
+    IT: 'it',
   };
   const context = '/';
   let language = LANG.EN;

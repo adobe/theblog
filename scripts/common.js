@@ -539,6 +539,18 @@ export async function fetchArticles({
     filters.author = document.title.split(',')[0];
   } else if (window.blog.pageType === window.blog.TYPE.HOME) {
     filters.paths = getPostPaths('h2#featured-posts', 1, true);
+
+    if (window.blog.topics && window.blog.topics.length > 0) {
+      filters.topics = window.blog.topics.map(t => t.toLowerCase());
+    }
+
+    if (window.blog.products && window.blog.products.length > 0) {
+      filters.products = window.blog.products.map(p => p.toLowerCase());
+    }
+
+    if (window.blog.exclude && window.blog.exclude.length > 0) {
+      filters.exclude = window.blog.exclude.map(p => p.toLowerCase());
+    }
   }
   window.blog.page = window.blog.page === undefined ? 0 : window.blog.page + 1;
   if (!(filters.pathsOnly && filters.paths.length==0)) {

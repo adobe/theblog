@@ -90,22 +90,7 @@ async function setupHomepage() {
 
   extractTopicsAndProducts();
 
-  const filters = {};
-
-  if (window.blog.topics && window.blog.topics.length > 0) {
-    filters.topics = window.blog.topics.map(t => t.toLowerCase());
-  }
-
-  if (window.blog.products && window.blog.products.length > 0) {
-    filters.products = window.blog.products.map(p => p.toLowerCase());
-  }
-
-  if (window.blog.exclude && window.blog.exclude.length > 0) {
-    filters.exclude = window.blog.exclude.map(p => p.toLowerCase());
-  }
-
   await fetchArticles({
-    filters,
     pageSize: 13,
     callback: () => {
       if (window.blog.page === 0) {
