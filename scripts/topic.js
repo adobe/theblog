@@ -39,7 +39,6 @@ function decorateTopicPage() {
   if (img) {
     titleSection.style.background=`url(${img.getAttribute('src')}) no-repeat center center`;
     titleSection.style.backgroundSize=`cover`;
-    titleSection.classList.add('has-image');
     img.parentNode.remove();
   }
   // if banner image inserted above the title, move title up into first div
@@ -71,7 +70,9 @@ window.addEventListener('load', async function() {
               height: 349,
             }),
           );
-          document.querySelector('.topic-title').appendChild($card);
+          const titleSection = document.querySelector('.topic-title');
+          titleSection.classList.add('has-featured');
+          titleSection.appendChild($card);
         }
       }
     }

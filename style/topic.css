@@ -41,8 +41,7 @@
   flex-flow: column wrap;
   justify-content: flex-start;
   width: calc(100% - 64px);
-  min-width: 568px;
-  max-width: 790px;
+  min-width: 268px;
   margin: 0 auto;
 }
 
@@ -116,6 +115,11 @@
 
 @media (min-width:600px) {
 
+  .topic-title .topic-title-container {
+    min-width: 568px;
+    max-width: 790px;
+  }
+
   .topic-title .card {
     min-width: 568px;
     max-width: 790px;
@@ -125,21 +129,29 @@
     height: unset;
   }
 
-  .topic-title .card .p.date {
+  .topic-title .card p.date {
+    height: unset;
+  }
+
+  .topic-title .card p.date {
     position: unset;
   }
+
 }
 
 @media (min-width:1200px) {
 
   .topic-title .topic-title-container {
-    flex-flow: row wrap;
-    max-width: unset;
+    max-width: 1200px;
   }
 
-  .topic-title .topic-title-container > p {
+  .topic-title.has-featured .topic-title-container {
+    flex-flow: row wrap;
+  }
+
+  .topic-title.has-featured .topic-title-container > p {
     margin: auto 0 auto 16px;
-    padding: 0;
+    padding-top: 4px;
   }
 
   .topic-page .deck {
@@ -147,15 +159,15 @@
   }
 
   .topic-page .deck .card {
-      width: calc(100%/4 - 24px);
+    width: calc(100%/4 - 24px);
   }
 
   .topic-page .deck .card:nth-of-type(3n) {
-      margin-right: 32px;
+    margin-right: 32px;
   }
 
   .topic-page .deck .card:nth-of-type(4n) {
-      margin-right: 0;
+    margin-right: 0;
   }
 
   .topic-title .card {
