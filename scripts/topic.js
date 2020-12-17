@@ -13,6 +13,7 @@ import {
   addClass,
   fetchArticles,
   applyFilters,
+  wrap,
   wrapNodes,
   createTag,
   extractTopicsAndProducts,
@@ -38,6 +39,7 @@ function decorateTopicPage() {
   if (img) {
     titleSection.style.background=`url(${img.getAttribute('src')}) no-repeat center center`;
     titleSection.style.backgroundSize=`cover`;
+    titleSection.classList.add('has-image');
     img.parentNode.remove();
   }
   // if banner image inserted above the title, move title up into first div
@@ -45,6 +47,7 @@ function decorateTopicPage() {
   if (title.parentNode !== titleSection) {
     wrapNodes(titleSection, [title]);
   }
+  wrap('topic-title-container', '.topic-page .topic-title > *');
 }
 
 window.addEventListener('load', async function() {
@@ -61,6 +64,13 @@ window.addEventListener('load', async function() {
       if (window.blog.hasFeaturedPost) {
         const $card = document.querySelector('main .card');
         if ($card) {
+          const $hero = $card.querySelector('.hero img');
+          $hero.setAttribute(
+            'data-src',
+            getOptimizedImageUrl($hero.getAttribute('data-src'), {
+              height: 349,
+            }),
+          );
           document.querySelector('.topic-title').appendChild($card);
         }
       }
