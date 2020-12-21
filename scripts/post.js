@@ -571,7 +571,12 @@ function decorateLinkedImages() {
 }
 
 async function fetchHTML(embedUrl){
-  const req = await fetch(embedUrl);
+  const data = {
+    'method': 'GET', 
+    'Access-Control-Allow-Origin': '*',
+    'cache': 'no-cache', 
+  };
+  const req = await fetch(embedUrl, data);
   if(req.ok){
     const resp = await req.json();
     return resp.html;
@@ -593,17 +598,17 @@ async function getEmbed($a){
     let type='';
     
     if($a.href.startsWith('https://www.slideshare.net')) {
-      embedHTML = fetchHTML(`http://www.slideshare.net/api/oembed/2?url=${url.href}`);
+      embedHTML = await fetchHTML(`https://www.slideshare.net/api/oembed/2?url=${url.href}`);
       type = 'slideshare';
     }
 
     if($a.href.startsWith('https://w.soundcloud.com') || $a.href.startsWith('https://api.soundcloud.com')) {
-      embedHTML = fetchHTML(`https://soundcloud.com/oembed?url=${$url.href}`);
+      embedHTML = await fetchHTML(`https://soundcloud.com/oembed?url=${url.href}`);
       type = 'soundcloud';
     }
 
     if($a.href.startsWith('https://www.twitter.com')) {
-      embedHTML = fetchHTML(`https://publish.twitter.com/oembed?url=${$url.href}`);
+      embedHTML = await fetchHTML(`https://publish.twitter.com/oembed?url=${url.href}`);
       type = 'twitter';
     }
 
