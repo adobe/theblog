@@ -328,11 +328,12 @@ function decorateImages() {
 /**	
  * Checks if a given match intersects with an existing match	
  * before adding it to the list of matches. In case of an 	
- * intersection, the more specific (i.e. longer) match wins.	
+ * intersection, the more specific (i.e. longer) match wins.
  * @param {array} matches The existing matches	
  * @param {object} contender The match to check and add	
+ * @param {number} maxMatches The maximum number of matches
  */	
-function checkAndAddMatch(matches, contender) {	
+function checkAndAddMatch(matches, contender, maxMatches) {	
   const collisions = matches	
     // check for intersections	
     .filter((match) => {	
@@ -343,8 +344,8 @@ function checkAndAddMatch(matches, contender) {
       // contender starts or ends within existing match	
       return true;	
     });	
-  if (collisions.length === 0) {	
-    // no intersecting existing matches, add contender	
+  if (collisions.length === 0 && matches.length < maxMatches) {	
+    // no intersecting existing matches, add contender if max not yet reached
     matches.push(contender);	
   }	
 }
@@ -358,13 +359,17 @@ async function addInterLinks() {
   const response = await fetch('/en/keywords.json');
   if (response.ok) { 
     const json = await response.json();
-    const articleBody = document.querySelector('main').textContent.toLowerCase();
-    const maxLinks = Math.round(articleBody.split(/\s/).length/100);
+    const articleBody = document.querySelector('main .post-body');
+    const articleText = articleBody.textContent.toLowerCase();
+    // set article link limit: 1 every 100 words
+    const articleLinks = articleBody.querySelectorAll('a').length;
+    const articleWords = articleText.split(/\s/).length;
+    const maxLinks = (Math.floor(articleWords/100)) - articleLinks;
+    let linkCount = 0;
     if (maxLinks <= 0) return;
     const keywords = (Array.isArray(json) ? json : json.data)
       // scan article to filter keywords down to relevant ones
-      .filter(({ Keyword }) => articleBody.indexOf(Keyword.toLowerCase()) !== -1)
-      .filter(({}, i) => i < maxLinks)
+      .filter(({ Keyword }) => articleText.indexOf(Keyword.toLowerCase()) !== -1)
       // sort matches by length descending
       .sort((a, b) => {
         return b.Keyword.length - a.Keyword.length;
@@ -376,12 +381,24 @@ async function addInterLinks() {
           ...item,
         }
       });
+    if (keywords.length === 0) return;
+
     // find exact text node matches and insert links (exclude headings and anchors)
-    document.querySelectorAll('main > div > *:not(h1):not(h2):not(h3):not(h4):not(h5):not(a)').forEach((p) => {
+    document.querySelectorAll('main .post-body > *:not(h1):not(h2):not(h3):not(h4):not(h5):not(a):not(.legend)').forEach((p) => {
       if (keywords.length === 0) return;
-      const textNodes = Array.from(p.childNodes)
+      if (linkCount === maxLinks) {
+        keywords.splice(0, keywords.length); // clear rest
+        return;
+      }
+      // set par link limit: 1 every 40 words
+      const parLinks = p.querySelectorAll('a').length;
+      const parWords = p.textContent.split(/\s/).length;
+      const maxParLinks = Math.floor(parWords/40) - parLinks;
+      if (maxParLinks <= 0) return;
+
+      Array.from(p.childNodes)
         // filter out non text nodes  
-        .filter(node => node.nodeType === Node.TEXT_NODE)
+        .filter((node) => node.nodeType === Node.TEXT_NODE)
         .forEach((textNode) => {
           const matches = [];
           // find case-insensitive matches inside text node
@@ -392,7 +409,7 @@ async function addInterLinks() {
                 item,
                 start: match.index,
                 end: match.index + item.Keyword.length,
-              });
+              }, maxParLinks);
             }
           });
           matches
@@ -401,24 +418,24 @@ async function addInterLinks() {
               return b.start - a.start;
             })
             // split text node and insert link with matched text
-            .forEach(({ item, start, end }, i) => {
+            .forEach(({ item, start, end }) => {
               const text = textNode.nodeValue;
               const a = createTag('a', {
                 title: item.Keyword,
                 href: item.URL,
-                // TODO just for testing, remove in production!
                 class: 'interlink',
               });
               a.appendChild(document.createTextNode(text.substring(start, end)));
               p.insertBefore(a, textNode.nextSibling);
               p.insertBefore(document.createTextNode(text.substring(end)), a.nextSibling);
               textNode.nodeValue = text.substring(0, start);
+              linkCount += 1;
               // remove matched link from interlinks
               keywords.splice(keywords.indexOf(item), 1);
             });
         });
     });
-    console.log(keywords);
+    // console.log(`${linkCount}/${maxLinks} interlinks added (${articleWords} words, ${articleLinks} links)`);
   }
 }
 
