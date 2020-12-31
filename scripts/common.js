@@ -320,7 +320,15 @@ export async function fetchArticleIndex(offset) {
 
   if (response.ok) { 
     const json = await response.json();
-    const data = Array.isArray(json) ? json : json.data;
+    let data = Array.isArray(json) ? json : json.data;
+
+    // filter out future date
+    const current = new Date();
+    const today = new Date(Date.UTC(current.getFullYear(), current.getMonth(), current.getDate()));
+    const endOfToday = today.setDate(today.getDate() + 1) - 1; // tomorrow midnight minus 1 millis
+    data = data.filter((item) => {
+      return item.date && item.date * 1000 <= endOfToday;
+    });
     await translateTable(data,window.blog.articleIndex);
   }
   console.log(`fetched article index: at ${index.articles.length} entries, ${index.done?'':'not'} done.`)
