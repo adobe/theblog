@@ -12,7 +12,7 @@ describe('Post', () => {
   let page;
 
   before(async function before() {
-    this.timeout(120000);
+    this.timeout(240000);
     await startServer();
   });
 
@@ -84,5 +84,5 @@ describe('Post', () => {
       expect(interlinks).to.deep.equal(links);
       page.off('request', deliverStatic);
     }
-  }).timeout(2400000);
+  }).timeout(360000);
 });
