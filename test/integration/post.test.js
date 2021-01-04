@@ -13,7 +13,7 @@ describe('Post', () => {
 
   before(async function before() {
     this.timeout(240000);
-    await startServer();
+    await startServer(true);
   });
 
   beforeEach(async () => {
