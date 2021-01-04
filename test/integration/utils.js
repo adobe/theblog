@@ -1,3 +1,5 @@
+const fse = require('fs-extra');
+const { resolve } = require('path');
 const shell = require('shelljs');
 const puppeteer = require('puppeteer');
 
@@ -7,13 +9,14 @@ const TEST_URL = `http://localhost:${TEST_PORT}`;
 let server;
 let browser;
 
-async function startServer() {
+async function startServer(verbose) {
   console.log('  Starting server ...');
   return new Promise((resolve) => {
     shell.cd('..');
-    server = shell.exec(`hlx up --no-open --port ${TEST_PORT}`, { async: true, silent: true });
+    server = shell.exec(`hlx up --no-open --port ${TEST_PORT}`, { async: true, silent: !verbose });
     server.stderr.on('data', (data) => {
       if (data.includes('server up and running')) {
+        console.log('  Server started.');
         return resolve();
       }
     });
@@ -41,10 +44,15 @@ async function stopBrowser() {
   return null;
 }
 
+async function readFile(path) {
+  return await fse.readFile(resolve(__dirname, '..', path), 'utf-8');
+}
+
 module.exports = {
   startServer,
   stopServer,
   startBrowser,
   stopBrowser,
+  readFile,
   TEST_URL,
 };
