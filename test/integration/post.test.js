@@ -24,10 +24,7 @@ describe('Post', () => {
     page = await stopBrowser();
   });
 
-  after(function after() {
-    this.timeout(5000);
-    stopServer();
-  });
+  after(() => stopServer());
 
   it('Renders the expected interlinks', async () => {
     let testPage;
