@@ -572,9 +572,7 @@ function decorateLinkedImages() {
 
 async function fetchHTML(embedUrl){
   const data = {
-    'method': 'GET', 
-    'Access-Control-Allow-Origin': '*',
-    'cache': 'no-cache', 
+    'method': 'GET',
   };
   const req = await fetch(embedUrl, data);
   if(req.ok){
