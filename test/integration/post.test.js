@@ -84,5 +84,5 @@ describe('Post', () => {
       expect(interlinks).to.deep.equal(links);
       page.off('request', deliverStatic);
     }
-  }).timeout(1200000);
+  }).timeout(2400000);
 });
