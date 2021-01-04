@@ -333,7 +333,7 @@ function decorateImages() {
  * @param {object} contender The match to check and add	
  * @param {number} maxMatches The maximum number of matches
  */	
-function checkAndAddMatch(matches, contender, maxMatches) {	
+export function checkAndAddMatch(matches, contender, maxMatches) {	
   const collisions = matches	
     // check for intersections	
     .filter((match) => {	
