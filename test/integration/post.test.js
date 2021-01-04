@@ -12,8 +12,8 @@ describe('Post', () => {
   let page;
 
   before(async function before() {
-    this.timeout(240000);
-    await startServer(true);
+    this.timeout(120000);
+    await startServer();
   });
 
   beforeEach(async () => {

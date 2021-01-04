@@ -30,6 +30,8 @@ jobs:
         node-version: '12'
     - run: npm install
       working-directory: test
+    - run: npm install --no-save @adobe/helix-cli
+      working-directory: test
     - run: npm run integration-test
       working-directory: test
       env:
