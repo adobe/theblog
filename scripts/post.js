@@ -15,6 +15,7 @@ import {
   addClass,
   getLink,
   wrap,
+  wrapNodes,
   createTag,
   extractTopicsAndProducts,
 } from '/scripts/common.js';
@@ -22,10 +23,6 @@ import {
 import {
   getTaxonomy
 } from '/scripts/taxonomy.js';
-
-import { 
-  wrapNodes 
-} from '/scripts/common.js';
 
 const DEFAULT_AVATAR = '/hlx_942ea2ad17270c65cda838d52145ec5b26704d41.png';
 
