@@ -70,6 +70,14 @@ a.action.load-more::before {
   content: "전체 해제";
 }
 
+.filter #products button::before {
+  content: '제품';
+}
+
+.filter #industries button::before {
+  content: '산업';
+}
+
 .selection::before {
   content: "검색 결과";
 }
