@@ -70,11 +70,11 @@ a.action.load-more::before {
   content: "전체 해제";
 }
 
-.filter #products button::before {
+.filter .products button::before {
   content: '제품';
 }
 
-.filter #industries button::before {
+.filter .industries button::before {
   content: '산업';
 }
 
