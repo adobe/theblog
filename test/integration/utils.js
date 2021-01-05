@@ -26,7 +26,7 @@ async function startServer(verbose) {
 function stopServer() {
   server.kill();
   console.log('  Server stopped.');
-  process.exit(0);
+  process.exit(0); // make sure gh workflow action completes
 }
 
 async function startBrowser(headless = true) {
