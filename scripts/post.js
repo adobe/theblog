@@ -435,7 +435,6 @@ async function addInterLinks() {
             });
         });
     });
-    // console.log(`${linkCount}/${maxLinks} interlinks added (${articleWords} words, ${articleLinks} links)`);
   }
 }
 
