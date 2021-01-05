@@ -26,6 +26,7 @@ async function startServer(verbose) {
 function stopServer() {
   server.kill();
   console.log('  Server stopped.');
+  process.exit(0);
 }
 
 async function startBrowser(headless = true) {
