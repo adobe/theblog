@@ -71,11 +71,11 @@ a.action.load-more::before {
 }
 
 .filter .products button::before {
-  content: '제품';
+  content: "제품";
 }
 
 .filter .industries button::before {
-  content: '산업';
+  content: "산업";
 }
 
 .selection::before {
