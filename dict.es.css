@@ -89,3 +89,13 @@ a.action.load-more::before {
 .filter-wrapper .filter:first-child::before {
   content: "Filters";
 }
+
+.filter .products button::before {
+  content: "Productos";
+}
+
+.filter .industries button::before {
+  content: "Sectores";
+}
+
+

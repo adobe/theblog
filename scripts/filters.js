@@ -233,9 +233,8 @@ function i18n() {
 
 function getDrowdownHTML(taxonomy, category) {
   return `
-  <div id="${category}" class="dropdown">
+  <div class="${category} dropdown">
     <button role="button" tabindex="0" aria-haspopup="true" class="btn filter-btn" type="button">
-      ${taxonomy.getCategoryTitle(category)}
       <span class="arrow">
         <span></span>
         <span></span>
