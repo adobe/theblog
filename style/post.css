@@ -347,11 +347,6 @@
   width: unset;
 }
 
-/* TODO just for testing, remove in production! */
-.post-page main>div.post-body a.interlink {
-  background-color: yellow;
-}
-
 .embed img {
   max-width: 100%;
 }
