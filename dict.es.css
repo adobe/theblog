@@ -91,11 +91,11 @@ a.action.load-more::before {
 }
 
 .filter .products button::before {
-  content: "Products";
+  content: "Productos";
 }
 
 .filter .industries button::before {
-  content: "Industries";
+  content: "Sectores";
 }
 
 
