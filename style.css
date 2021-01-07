@@ -321,11 +321,12 @@ main > div img {
    opacity: 0.6;
  }
  
+ .card .hero img.lazyload:not([src]),
  .card .hero img[src="#"] {
    /* hide if hero image missing */
    visibility: hidden;
  }
- 
+
  .card .hero a {
    font-size: 0;
  }

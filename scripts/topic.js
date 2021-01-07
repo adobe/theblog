@@ -13,13 +13,21 @@ import {
   addClass,
   fetchArticles,
   applyFilters,
+  wrap,
   wrapNodes,
   createTag,
+  extractTopicsAndProducts,
 } from '/scripts/common.js';
 import {
   addFilters,
-  clearAllFilters,
 } from '/scripts/filters.js';
+
+/**
+ * Detects if there are featured posts
+ */
+function detectFeaturedPosts() {
+  window.blog.hasFeaturedPost = !!document.querySelector('h2#featured-posts');
+}
 
 /**
  * Decorates the topic page with CSS classes
@@ -38,15 +46,37 @@ function decorateTopicPage() {
   if (title.parentNode !== titleSection) {
     wrapNodes(titleSection, [title]);
   }
+  wrap('topic-title-container', '.topic-page .topic-title > *');
 }
 
 window.addEventListener('load', async function() {
+  detectFeaturedPosts();
+  extractTopicsAndProducts();
   decorateTopicPage();
   await addFilters((filters) => {
     // apply selected filters
     applyFilters(filters);
   });
-  fetchArticles();
+  //move first card to featured
+  fetchArticles({
+    callback: (hits) => {
+      if (window.blog.hasFeaturedPost) {
+        const $card = document.querySelector('main .card');
+        if ($card) {
+          const $hero = $card.querySelector('.hero img');
+          $hero.setAttribute(
+            'data-src',
+            getOptimizedImageUrl($hero.getAttribute('data-src'), {
+              height: 349,
+            }),
+          );
+          const titleSection = document.querySelector('.topic-title');
+          titleSection.classList.add('has-featured');
+          titleSection.appendChild($card);
+        }
+      }
+    }
+  });
 });
 
 (new MutationObserver(mutations => {

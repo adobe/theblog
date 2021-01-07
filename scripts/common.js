@@ -518,10 +518,13 @@ export async function fetchArticles({
     filters.pathsOnly = true;
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
     const taxonomy = await getTaxonomy(window.blog.language);
-    const currentTopic = document.title.trim();
+    const currentTopic = Array.isArray(window.blog.topics) && window.blog.topics.length > 0
+      ? window.blog.topics[0]
+      : document.title.trim();
     const topic = taxonomy.lookup(currentTopic);
     let topics = topic ? [topic.name].concat(topic.children) : [];
     filters.topics = topics.map(topic => topic.toLowerCase());
+    filters.paths = getPostPaths('h2#featured-posts', 1, true);
     if (window.blog.userFilters) {
       Object.keys(window.blog.userFilters).forEach((cat) => {
         // lowercase all user filters
