@@ -233,7 +233,7 @@ function i18n() {
 
 function getDrowdownHTML(taxonomy, category) {
   return `
-  <div class="${category} dropdown">
+  <div id="${category}" class="${category} dropdown">
     <button role="button" tabindex="0" aria-haspopup="true" class="btn filter-btn" type="button">
       <span class="arrow">
         <span></span>
