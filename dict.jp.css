@@ -9,8 +9,12 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+ 
+body {
+  font-family: Adobe Clean Han Japanese, sans-serif;
+}
 
- a.learn-more::before {
+a.learn-more::before {
   content: "Learn more >"
 }
 
