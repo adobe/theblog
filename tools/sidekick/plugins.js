@@ -104,6 +104,13 @@
     const filename = (pathsplits[pathsplits.length-1].split('.')[0]).toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
     return `${host ? `https://${host}/` : ''}${pathsplits[1]}${datePath}/${filename}.html`;
   }
+
+  function allowedPostPath(path) {
+    return ![
+      'documentation',
+      'fpost',
+    ].includes(path.split('/')[2]);
+  }
   
   sk.add({
     id: 'predicted-url',
@@ -112,7 +119,8 @@
       return sidekick.isHelix()
         && window.blog.pageType === window.blog.TYPE.POST
         && config.host
-        && location.host != config.host;
+        && location.host != config.host
+        && allowedPostPath(location.pathname);
     },
     button: {
       text: 'Copy Predicted URL',
@@ -146,7 +154,9 @@
   sk.add({
     id: 'card-preview',
     condition: (sidekick) => {
-      return sidekick.isHelix() && window.blog.pageType === window.blog.TYPE.POST;
+      return sidekick.isHelix()
+        && window.blog.pageType === window.blog.TYPE.POST
+        && allowedPostPath(sidekick.location.pathname);
     },
     button: {
       text: 'Card Preview',
