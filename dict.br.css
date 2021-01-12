@@ -1,0 +1,99 @@
+/*
+ * Copyright 2020 Adobe. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+ a.learn-more::before {
+  content: "Learn more >"
+}
+
+a.action.load-more::before {
+  content: "Load more articles"
+}
+
+.post-page .articles::before {
+  content: "Recommended for you";
+}
+
+.articles-empty::before {
+  content: "No articles found";
+}
+
+.author-page .articles-empty::before {
+  content: 'No articles found by this author';
+}
+
+.topic-page .articles-empty::before {
+  content: 'No articles found in this category';
+}
+
+.social::before {
+  content: "Follow me on";
+}
+
+.blank-page.error-404 main h2::before {
+  content: 'These are uncharted waters.';
+}
+
+.blank-page.error-404 main p.detail::before {
+  content: "Sorry, that page can't be found.";
+}
+
+.blank-page.error-404 main .gotohome::before {
+  content: 'Go to homepage ›';
+}
+
+.blank-page.error-404 main .searchadobe::before {
+  content: 'Search Adobe.com ›';
+}
+
+.topic-page .dropdown-menu .search input::after  {
+  content: "Search...";
+}
+
+.topic-page .filter-wrapper a.action.apply::before {
+  content: "Apply";
+}
+
+.topic-page .filter-wrapper a.action.clear::before {
+  content: "Reset";
+}
+
+.topic-page .selection::before {
+  content: "Showing articles for";
+}
+
+.topic-page .selection a.user-filter::before {
+  content: "Remove $1";
+}
+
+.topic-page .articles-empty.user-filters::before {
+  content: "Sorry, no matching results";
+}
+
+.topic-page .articles-empty.user-filters .user-help:before {
+  content: "Please try again selecting fewer filters or clearing all selections.";
+}
+
+.topic-page .selection a.action.clear-all::before {
+  content: "Clear all";
+}
+
+.filter-wrapper .filter:first-child::before {
+  content: "Filters";
+}
+
+.filter .products button::before {
+  content: "Products";
+}
+
+.filter .industries button::before {
+  content: "Industries";
+}
