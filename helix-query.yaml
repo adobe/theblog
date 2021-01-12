@@ -110,3 +110,15 @@ indices:
     include:
       - es/publish/*/*/*/*.(md|docx)
     target: https://adobe.sharepoint.com/:x:/r/sites/TheBlog/Shared%20Documents/theblog/es/query-index.xlsx?d=w89b84177df3b4d0d8f5e54a8390e7bb8&csf=1&web=1&e=qLQZny
+   
+  japanese:
+    <<: *default
+    include:
+      - jp/publish/*/*/*/*.(md|docx)
+    target: https://adobe.sharepoint.com/:x:/r/sites/TheBlog/Shared%20Documents/theblog/jp/query-index.xlsx?d=wc6a419a78b334addbd61c92845a7d223&csf=1&web=1&e=60wq5c
+
+  brasil:
+    <<: *default
+    include:
+      - br/publish/*/*/*/*.(md|docx)
+    target: https://adobe.sharepoint.com/:x:/r/sites/TheBlog/Shared%20Documents/theblog/br/query-index.xlsx?d=wa09c53afbe564829ae0016464bc554c7&csf=1&web=1&e=QVX7d0
