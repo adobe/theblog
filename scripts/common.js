@@ -399,6 +399,10 @@ export async function fetchArticleIndex(offset) {
     const json = await response.json();
     const data = Array.isArray(json) ? json : json.data;
     await translateTable(data,window.blog.articleIndex);
+  } else {
+    // stop because of error
+    console.log('error fetching index segment');
+    index.done=true;
   }
   console.log(`fetched article index: at ${index.articles.length} entries, ${index.done?'':'not'} done.`)
 }
