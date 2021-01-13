@@ -30,8 +30,9 @@
   padding: 0;
 }
 
-.post-page .post-title h3:empty {
-  display: none;
+.post-page .post-title h3:empty,
+.post-page .post-title p {
+    display: none;
 }
 
 .post-page .hero-image {
