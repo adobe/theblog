@@ -588,7 +588,7 @@ function decorateLinkedImages() {
   });
 }
 function decorateCaptions() {
-  document.querySelectorAll('.aption p').forEach(($p) => {
+  document.querySelectorAll('.caption p').forEach(($p) => {
     $p.classList.add('legend');
   })
 }

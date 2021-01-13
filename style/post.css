@@ -56,6 +56,10 @@
   margin-top: 1.5em;
 }
 
+.post-page main div.images + div.caption {
+  margin-top: 0;
+}
+
 .post-page main div.hero-image p:nth-of-type(2) {
   text-align: left;
   width: 100%;
