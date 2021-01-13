@@ -587,7 +587,11 @@ function decorateLinkedImages() {
     $div.className='images';
   });
 }
-
+function decorateCaptions() {
+  document.querySelectorAll('.aption p').forEach(($p) => {
+    $p.classList.add('legend');
+  })
+}
 function decorateEmbeds() {
 
   document.querySelectorAll('.block-embed a[href]').forEach(($a) => {
@@ -798,6 +802,7 @@ window.addEventListener('load', async function() {
   decorateEmbeds();
   decorateLinkedImages();
   decorateInfographic();
+  decorateCaptions();
   addInterLinks().then(() => handleLinks());
   fetchAuthor();
   await handleAsyncMetadata();
