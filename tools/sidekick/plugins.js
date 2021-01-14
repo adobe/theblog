@@ -46,6 +46,13 @@
     };
   }
 
+  function allowedPostPath(path) {
+    return ![
+      'documentation',
+      'fpost',
+    ].includes(path.split('/')[2]);
+  }
+  
   sk.add({
     id: 'card-preview',
     condition: (sidekick) => {
@@ -126,7 +133,8 @@
       return sidekick.isHelix()
         && window.blog.pageType === window.blog.TYPE.POST
         && config.host
-        && location.host != config.host;
+        && location.host != config.host
+        && allowedPostPath(location.pathname);
     },
     button: {
       text: 'Copy Predicted URL',
