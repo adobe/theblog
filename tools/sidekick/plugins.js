@@ -106,15 +106,15 @@
 
   function predictUrl(host, path) {
     const pathsplits = path.split('/');
-    let datePath = '';
+    let publishPath = '';
     if (window.blog && window.blog.rawDate) {
       const datesplits = window.blog.rawDate.split('-');
       if (datesplits.length > 2) {
-        datePath = `/${datesplits[2]}/${datesplits[0]}/${datesplits[1]}`;
+        publishPath = `/publish/${datesplits[2]}/${datesplits[0]}/${datesplits[1]}`;
       }
     }
     const filename = (pathsplits[pathsplits.length-1].split('.')[0]).toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
-    return `${host ? `https://${host}/` : ''}${pathsplits[1]}${datePath}/${filename}.html`;
+    return `${host ? `https://${host}/` : ''}${pathsplits[1]}${publishPath}/${filename}.html`;
   }
   
   sk.add({
