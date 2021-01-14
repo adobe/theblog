@@ -30,8 +30,9 @@
   padding: 0;
 }
 
-.post-page .post-title h3:empty {
-  display: none;
+.post-page .post-title h3:empty,
+.post-page .post-title p {
+    display: none;
 }
 
 .post-page .hero-image {
@@ -53,6 +54,10 @@
 
 .post-page main p + p {
   margin-top: 1.5em;
+}
+
+.post-page main div.images + div.caption {
+  margin-top: 0;
 }
 
 .post-page main div.hero-image p:nth-of-type(2) {
