@@ -377,6 +377,8 @@ async function translateTable(pages, index) {
     r.topics = Array.from(new Set(r.topics));
     r.products = Array.from(new Set(r.products));
 
+    if (r.path.startsWith('/')) r.path=r.path.substring(1);
+
     index.pathLookup[r.path]=r;
     index.articles.push (r);
   })
