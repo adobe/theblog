@@ -34,7 +34,7 @@ function createSVG(id) {
  */
 function decorateAuthorPage(){
   wrap('bio', '.author-page main > div:first-of-type > *');
-  addClass('.bio > p:first-of-type', 'frame');
+  addClass('.bio > p:first-of-type img', 'frame', 1);
   wrap('summary', [
     '.bio > h2',
     '.bio > p:not(.frame), .bio > ul',
@@ -53,6 +53,7 @@ function getSocialLinkDetails(url) {
     'LinkedIn',
     'Facebook',
     'YouTube',
+    'Instagram',
   ].forEach((t) => {
     if (!title && url.indexOf(t.toLowerCase()) > 0) {
       title = t;

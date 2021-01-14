@@ -15,85 +15,89 @@
  }
 
  a.learn-more::before {
-  content: "Learn more >"
+  content: "자세히 보기"
 }
 
 a.action.load-more::before {
-  content: "Load more articles"
+  content: "더 보기"
 }
 
 .post-page .articles::before {
-  content: "Recommended for you";
+  content: "추천 글";
 }
 
 .articles-empty::before {
-  content: "No articles found";
+  content: "해당 글이 없습니다";
 }
 
 .author-page .articles-empty::before {
-  content: 'No articles found by this author';
+  content: '해당 작성자의 글이 없습니다';
 }
 
 .topic-page .articles-empty::before {
-  content: 'No articles found in this category';
-}
-
-.post-page .products::before {
-    content: "Adobe products in this article";
+  content: '해당 분야의 글이 없습니다';
 }
 
 .social::before {
-  content: "Follow me on";
+  content: "팔로우";
 }
 
 .blank-page.error-404 main h2::before {
-  content: 'These are uncharted waters.';
+  content: '해당 페이지가 없습니다';
 }
 
 .blank-page.error-404 main p.detail::before {
-  content: "Sorry, that page can't be found.";
+  content: "죄송합니다. 페이지를 찾을 수 없습니다.";
 }
 
 .blank-page.error-404 main .gotohome::before {
-  content: 'Go to homepage ›';
+  content: '홈페이지 가기';
 }
 
 .blank-page.error-404 main .searchadobe::before {
-  content: 'Search Adobe.com ›';
+  content: '사이트 내 검색';
 }
 
 .topic-page .dropdown-menu .search input::after  {
-  content: "Search...";
+  content: "검색";
 }
 
 .topic-page .filter-wrapper a.action.apply::before {
-  content: "Apply";
+  content: "확인";
 }
 
 .topic-page .filter-wrapper a.action.clear::before {
-  content: "Reset";
+  content: "전체 해제";
+}
+
+.filter .products button::before {
+  content: "제품";
+}
+
+.filter .industries button::before {
+  content: "산업";
 }
 
 .selection::before {
-  content: "Showing articles for";
+  content: "검색 결과";
 }
 
 .topic-page .selection a.user-filter::before {
-  content: "Remove $1";
+  content: "해제";
 }
 
 .topic-page .articles-empty.user-filters::before {
-  content: "Sorry, no matching results";
+  content: "죄송합니다. 해당 결과가 없습니다";
 }
 
 .topic-page .articles-empty.user-filters .user-help:before {
-  content: "Please try again selecting fewer filters or clearing all selections.";
+  content: "조건을 다시 설정해 주세요";
 }
 
 .topic-page .selection a.action.clear-all::before {
-  content: "Clear all";
+  content: "전체 해제";
 }
 
 .filter-wrapper .filter:first-child::before {
-  content: "Filters";
+  content: "조건";
 }

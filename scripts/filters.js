@@ -233,9 +233,8 @@ function i18n() {
 
 function getDrowdownHTML(taxonomy, category) {
   return `
-  <div id="${category}" class="dropdown">
+  <div id="${category}" class="${category} dropdown">
     <button role="button" tabindex="0" aria-haspopup="true" class="btn filter-btn" type="button">
-      ${taxonomy.getCategoryTitle(category)}
       <span class="arrow">
         <span></span>
         <span></span>
@@ -287,11 +286,12 @@ async function drawFilterBar(callback) {
   filterBar.innerHTML = html;
 
   filterBar.querySelectorAll('.dropdown').forEach((dropdown) => {
-    const cat = taxonomy.getCategory(dropdown.id);
+    const categoryName = dropdown.id;
+    const cat = taxonomy.getCategory(categoryName);
     let optionsHTML = '';
     if (cat) {
-      cat.forEach((name) => {
-        const item = taxonomy.get(name);
+      cat.forEach((topic) => {
+        const item = taxonomy.get(topic, categoryName);
         if (item.level === 1) {
           const lname = item.name.replace(/\*/gm, '');
           optionsHTML += `<div class="option option">

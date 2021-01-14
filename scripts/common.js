@@ -366,13 +366,15 @@ async function translateTable(pages, index) {
 
     r.products = products;
     products.forEach((product) => {
-      r.products = r.products.concat(taxonomy.getParents(product));
+      r.products = r.products.concat(taxonomy.getParents(product, taxonomy.PRODUCTS));
     });
 
 
     // filter duplicates
     r.topics = Array.from(new Set(r.topics));
     r.products = Array.from(new Set(r.products));
+
+    if (r.path.startsWith('/')) r.path=r.path.substring(1);
 
     index.pathLookup[r.path]=r;
     index.articles.push (r);
@@ -396,6 +398,10 @@ export async function fetchArticleIndex(offset) {
     const json = await response.json();
     const data = Array.isArray(json) ? json : json.data;
     await translateTable(data,window.blog.articleIndex);
+  } else {
+    // stop because of error
+    console.log('error fetching index segment');
+    index.done=true;
   }
   console.log(`fetched article index: at ${index.articles.length} entries, ${index.done?'':'not'} done.`)
 }
@@ -469,6 +475,12 @@ async function fetchHits(filters, limit, cursor) {
       //check if path is already in a card
       if (document.querySelector(`.card a[href='/${getCardPath(e.path)}']`)) matched=false;
       if (hits.find(h => h.path == e.path)) matched=false;
+
+      if (filters.exclude) {
+        if (findMatches(articleTopics, articleProducts, filters.exclude)) {
+          matched = false;
+        }
+      }
   
       if (matched) {
         if (hits.length==limit) {
@@ -509,10 +521,13 @@ export async function fetchArticles({
     filters.pathsOnly = true;
   } else if (window.blog.pageType === window.blog.TYPE.TOPIC) {
     const taxonomy = await getTaxonomy(window.blog.language);
-    const currentTopic = document.title.trim();
-    let topics = [currentTopic].concat(taxonomy.getChildren(currentTopic));
-    if (currentTopic.includes('Adobe ')) topics = topics.concat(taxonomy.getChildren(currentTopic.replace('Adobe ', '')));
+    const currentTopic = Array.isArray(window.blog.topics) && window.blog.topics.length > 0
+      ? window.blog.topics[0]
+      : document.title.trim();
+    const topic = taxonomy.lookup(currentTopic);
+    let topics = topic ? [topic.name].concat(topic.children) : [];
     filters.topics = topics.map(topic => topic.toLowerCase());
+    filters.paths = getPostPaths('h2#featured-posts', 1, true);
     if (window.blog.userFilters) {
       Object.keys(window.blog.userFilters).forEach((cat) => {
         // lowercase all user filters
@@ -530,6 +545,18 @@ export async function fetchArticles({
     filters.author = document.title.split(',')[0];
   } else if (window.blog.pageType === window.blog.TYPE.HOME) {
     filters.paths = getPostPaths('h2#featured-posts', 1, true);
+
+    if (window.blog.topics && window.blog.topics.length > 0) {
+      filters.topics = window.blog.topics.map(t => t.toLowerCase());
+    }
+
+    if (window.blog.products && window.blog.products.length > 0) {
+      filters.products = window.blog.products.map(p => p.toLowerCase());
+    }
+
+    if (window.blog.exclude && window.blog.exclude.length > 0) {
+      filters.exclude = window.blog.exclude.map(p => p.toLowerCase());
+    }
   }
   window.blog.page = window.blog.page === undefined ? 0 : window.blog.page + 1;
   if (!(filters.pathsOnly && filters.paths.length==0)) {
@@ -554,6 +581,68 @@ export function applyFilters(filters) {
   if ($deck) $deck.parentNode.remove();
   window.blog.userFilters = Object.keys(filters).length ? filters : false;
   fetchArticles();
+}
+
+/**
+ * Extracts the topics and products from the last section of a page
+ */
+export function extractTopicsAndProducts() {
+  // store topics
+  const last = getSection();
+  let topics, topicContainer;
+  Array.from(last.children).forEach((i) => {
+    const r = /^Topics\: ?(.*)$/gmi.exec(i.innerText);
+    if (r && r.length > 0) {
+      topics = r[1].split(/\,\s*/);
+      topicContainer = i;
+    }
+  });
+  topics = topics
+    ? topics.filter((topic) => topic.length > 0)
+    : [];
+  if (topicContainer) {
+    topicContainer.remove();
+  }
+
+  // raw topics (i.e as written in the source document)
+  window.blog.topics = topics;
+
+  let products, productContainer;
+  Array.from(last.children).forEach((i) => {
+    const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
+    if (r && r.length > 0) {
+      products = r[1].split(/\,\s*/);
+      productContainer = i;
+    }
+  });
+
+  // raw products (i.e as written in the source document)
+  window.blog.products = products
+    ? products.filter((product) => product.length > 0)
+    : [];
+
+  if (productContainer) {
+    productContainer.remove();
+  }
+
+  let exclude, excludeContainer;
+  Array.from(last.children).forEach((i) => {
+    const r = /^Exclude\: ?(.*)$/gmi.exec(i.innerText);
+    if (r && r.length > 0) {
+      exclude = r[1].split(/\,\s*/);
+      excludeContainer = i;
+    }
+  });
+
+  window.blog.exclude = exclude;
+
+  if (excludeContainer) {
+    excludeContainer.remove();
+  }
+
+  if (last.innerText.trim() === '') {
+    last.remove(); // remove empty last div
+  }
 }
 
 window.addEventListener('load', function() {

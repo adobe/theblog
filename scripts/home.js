@@ -20,7 +20,10 @@ import {
   fetchArticles,
   fetchArticleIndex,
   itemTransformer,
+  extractTopicsAndProducts,
 } from '/scripts/common.js';
+
+const NUM_PURGED_INDEX_SEGMENTS = 10;
 
 /**
  * Sets up the homepage
@@ -85,6 +88,8 @@ async function setupHomepage() {
     addCard(n, newsdeck)
   });
 
+  extractTopicsAndProducts();
+
   await fetchArticles({
     pageSize: 13,
     callback: () => {
@@ -102,6 +107,16 @@ async function setupHomepage() {
       }
     }
   });
+
+  // add publish dependencies
+  window.hlx = window.hlx || {};
+  window.hlx.dependencies = [];
+  const limit = 256;
+  let offset = 0;
+  while (offset < limit * NUM_PURGED_INDEX_SEGMENTS) {
+    window.hlx.dependencies.push(`/${window.blog.language}/query-index.json?limit=${limit}&offset=${offset}`);
+    offset += 256;
+  }
 
 }
 

@@ -15,16 +15,14 @@ import {
   addClass,
   getLink,
   wrap,
+  wrapNodes,
   createTag,
+  extractTopicsAndProducts,
 } from '/scripts/common.js';
 
 import {
   getTaxonomy
 } from '/scripts/taxonomy.js';
-
-import { 
-  wrapNodes 
-} from '/scripts/common.js';
 
 const DEFAULT_AVATAR = '/hlx_942ea2ad17270c65cda838d52145ec5b26704d41.png';
 
@@ -64,43 +62,8 @@ function handleImmediateMetadata() {
     window.blog.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
     if (window.blog.date) window.blog.rawDate = d[0];
   }
-  // store topics
-  const last = getSection();
-  let topics, topicContainer;
-  Array.from(last.children).forEach((i) => {
-    const r = /^Topics\: ?(.*)$/gmi.exec(i.innerText);
-    if (r && r.length > 0) {
-      topics = r[1].split(/\,\s*/);
-      topicContainer = i;
-    }
-  });
-  topics = topics
-    ? topics.filter((topic) => topic.length > 0)
-    : [];
-  if (topicContainer) {
-    topicContainer.remove();
-  }
-
-  window.blog.topics = topics;
-
-  // store products as topics
-  let products, productContainer;
-  Array.from(last.children).forEach((i) => {
-    const r = /^Products\: ?(.*)$/gmi.exec(i.innerText);
-    if (r && r.length > 0) {
-      products = r[1].split(/\,\s*/);
-      productContainer = i;
-    }
-  });
-  window.blog.topics = window.blog.topics.concat(products
-    ? products.filter((product) => product.length > 0)
-    : []);
-  if (productContainer) {
-    productContainer.remove();
-  }
-  if (last.innerText.trim() === '') {
-    last.remove(); // remove empty last div
-  }
+  
+  extractTopicsAndProducts();
 
   addMetaTags([{
     property: 'og:locale',
@@ -112,33 +75,30 @@ function handleImmediateMetadata() {
 }
 
 /**
- * Retrieves parents of specified topic from the taxonomy.
- */
-function getParentTopics(taxonomy, topics) {
-  let parentTopics = [];
-  topics.forEach((topic) => {
-    const parents = taxonomy.getParents(topic);
-    if (parents && parents.length > 0) {
-      parentTopics = parentTopics.concat(parents);
-    }
-  });
-  return parentTopics;
-}
-
-/**
  * Finds user facing topics to display, and adds both user and non user facing topics as meta tags.
  */
 async function handleAsyncMetadata() {
   const taxonomy = await getTaxonomy(window.blog.language);
   
-  // de-dupe UFT, NUFT + parents
   const allTopics = Array.from(new Set([
     ...window.blog.topics,
-    ...getParentTopics(taxonomy, window.blog.topics),
+    ...taxonomy.getParents(window.blog.topics),
   ]));
 
-  // add all topics as article:tags
-  addMetaTags(allTopics
+  const allProducts = Array.from(new Set([
+    ...window.blog.products,
+    ...taxonomy.getParents(window.blog.products, taxonomy.PRODUCTS),
+  ]));
+  
+
+  // de-dupe UFT, NUFT + parents
+  const allTags = Array.from(new Set([
+    ...allTopics,
+    ...allProducts,
+  ]));
+
+  // add all tags as article:tags
+  addMetaTags(allTags
     .filter((topic) => !taxonomy.skipMeta(topic))
     .map((topic) => {
       return {
@@ -147,9 +107,25 @@ async function handleAsyncMetadata() {
       }
     }));
 
-  // filter out NUFT
-  window.blog.topics = allTopics
+  // topics + parents
+  window.blog.allTopics = allTopics;
+
+  // products + parents
+  window.blog.allProducts = allProducts;
+
+  // UFT topics + parents
+  window.blog.allVisibleTopics = allTopics
     .filter(topic => taxonomy.isUFT(topic));
+
+  // UFT products + parents
+  window.blog.allVisibleProducts = allProducts
+    .filter(topic => taxonomy.isUFT(topic, taxonomy.PRODUCTS));
+
+  // UFT topics + products + parents
+  window.blog.allVisibleTags = Array.from(new Set([
+    ...window.blog.allVisibleTopics,
+    ...window.blog.allVisibleProducts,
+  ]));
 }
 
 function toClassName(name) {
@@ -328,11 +304,12 @@ function decorateImages() {
 /**	
  * Checks if a given match intersects with an existing match	
  * before adding it to the list of matches. In case of an 	
- * intersection, the more specific (i.e. longer) match wins.	
+ * intersection, the more specific (i.e. longer) match wins.
  * @param {array} matches The existing matches	
  * @param {object} contender The match to check and add	
+ * @param {number} maxMatches The maximum number of matches
  */	
-function checkAndAddMatch(matches, contender) {	
+export function checkAndAddMatch(matches, contender, maxMatches) {	
   const collisions = matches	
     // check for intersections	
     .filter((match) => {	
@@ -343,8 +320,8 @@ function checkAndAddMatch(matches, contender) {
       // contender starts or ends within existing match	
       return true;	
     });	
-  if (collisions.length === 0) {	
-    // no intersecting existing matches, add contender	
+  if (collisions.length === 0 && matches.length < maxMatches) {	
+    // no intersecting existing matches, add contender if max not yet reached
     matches.push(contender);	
   }	
 }
@@ -358,10 +335,17 @@ async function addInterLinks() {
   const response = await fetch('/en/keywords.json');
   if (response.ok) { 
     const json = await response.json();
-    const articleBody = document.querySelector('main').textContent.toLowerCase();
+    const articleBody = document.querySelector('main .post-body');
+    const articleText = articleBody.textContent.toLowerCase();
+    // set article link limit: 1 every 100 words
+    const articleLinks = articleBody.querySelectorAll('a').length;
+    const articleWords = articleText.split(/\s/).length;
+    const maxLinks = (Math.floor(articleWords/100)) - articleLinks;
+    let linkCount = 0;
+    if (maxLinks <= 0) return;
     const keywords = (Array.isArray(json) ? json : json.data)
       // scan article to filter keywords down to relevant ones
-      .filter(({ Keyword }) => articleBody.indexOf(Keyword.toLowerCase()) !== -1)
+      .filter(({ Keyword }) => articleText.indexOf(Keyword.toLowerCase()) !== -1)
       // sort matches by length descending
       .sort((a, b) => {
         return b.Keyword.length - a.Keyword.length;
@@ -373,13 +357,24 @@ async function addInterLinks() {
           ...item,
         }
       });
+    if (keywords.length === 0) return;
 
     // find exact text node matches and insert links (exclude headings and anchors)
-    document.querySelectorAll('main > div > *:not(h1):not(h2):not(h3):not(h4):not(h5):not(a)').forEach((p) => {
+    document.querySelectorAll('main .post-body > *:not(h1):not(h2):not(h3):not(h4):not(h5):not(a):not(.legend)').forEach((p) => {
       if (keywords.length === 0) return;
-      const textNodes = Array.from(p.childNodes)
+      if (linkCount === maxLinks) {
+        keywords.splice(0, keywords.length); // clear rest
+        return;
+      }
+      // set par link limit: 1 every 40 words
+      const parLinks = p.querySelectorAll('a').length;
+      const parWords = p.textContent.split(/\s/).length;
+      const maxParLinks = Math.floor(parWords/40) - parLinks;
+      if (maxParLinks <= 0) return;
+
+      Array.from(p.childNodes)
         // filter out non text nodes  
-        .filter(node => node.nodeType === Node.TEXT_NODE)
+        .filter((node) => node.nodeType === Node.TEXT_NODE)
         .forEach((textNode) => {
           const matches = [];
           // find case-insensitive matches inside text node
@@ -390,7 +385,7 @@ async function addInterLinks() {
                 item,
                 start: match.index,
                 end: match.index + item.Keyword.length,
-              });
+              }, maxParLinks);
             }
           });
           matches
@@ -404,11 +399,13 @@ async function addInterLinks() {
               const a = createTag('a', {
                 title: item.Keyword,
                 href: item.URL,
+                class: 'interlink',
               });
               a.appendChild(document.createTextNode(text.substring(start, end)));
               p.insertBefore(a, textNode.nextSibling);
               p.insertBefore(document.createTextNode(text.substring(end)), a.nextSibling);
               textNode.nodeValue = text.substring(0, start);
+              linkCount += 1;
               // remove matched link from interlinks
               keywords.splice(keywords.indexOf(item), 1);
             });
@@ -508,8 +505,8 @@ function fetchAuthor() {
  * Adds the primary topic as category to the post header
  */
 async function addCategory() {
-  if (!window.blog.topics || window.blog.topics.length === 0) return;
-  const topic = window.blog.topics[0];
+  if (!window.blog.allVisibleTopics || window.blog.allVisibleTopics.length === 0) return;
+  const topic = window.blog.allVisibleTopics[0];
   const categoryWrap = document.createElement('div');
   const taxonomy = await getTaxonomy(window.blog.language);
   const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
@@ -522,18 +519,21 @@ async function addCategory() {
  * Adds buttons for all topics to the bottom of the post
  */
 async function addTopics() {
-  if (!window.blog.topics || window.blog.topics.length === 0) return;
+  if (!window.blog.allVisibleTags || window.blog.allVisibleTags.length === 0) return;
   const topicsWrap = createTag('div', { 'class' : 'topics' });
   const taxonomy = await getTaxonomy(window.blog.language);
   // use alphabetically sorted copy
-  Array.from(window.blog.topics).sort((a, b) => a.localeCompare(b)).forEach((topic) => {
-    const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
-    const btn = createTag('a', {
-      href,
-      title: topic,
-    });
-    btn.innerText = topic;
-    topicsWrap.appendChild(btn);
+  Array.from(window.blog.allVisibleTags).sort((a, b) => a.localeCompare(b)).forEach((topic) => {
+    const item = taxonomy.lookup(topic);
+    if (item) {
+      const href = item.link || getLink(window.blog.TYPE.TOPIC, item.name.replace(/\s/gm, '-').toLowerCase());
+      const btn = createTag('a', {
+        href,
+        title: topic,
+      });
+      btn.innerText = topic;
+      topicsWrap.appendChild(btn);
+    }
   });
   document.querySelector('main').appendChild(topicsWrap);
 }
@@ -587,7 +587,11 @@ function decorateLinkedImages() {
     $div.className='images';
   });
 }
-
+function decorateCaptions() {
+  document.querySelectorAll('.caption p').forEach(($p) => {
+    $p.classList.add('legend');
+  })
+}
 function decorateEmbeds() {
 
   document.querySelectorAll('.block-embed a[href]').forEach(($a) => {
@@ -596,25 +600,47 @@ function decorateEmbeds() {
     let embedHTML='';
     let type='';
 
-    if ($a.href.startsWith('https://video.tv.adobe.com/v/')) {
-      embedHTML=`
-        <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-        <iframe src="${$a.href}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" scrolling="no" allow="encrypted-media" title="content from adobe" loading="lazy">
-        </iframe>
-        </div>`
-        type='adobe-tv';
-    }
-    
     if ($a.href.startsWith('https://www.youtube.com/watch')) {
       const vid=usp.get('v');
-      
-      type='youtube';
       embedHTML=`<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
         <iframe src="https://www.youtube.com/embed/${vid}?rel=0&amp;v=${vid}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" scrolling="no" allow="encrypted-media; accelerometer; gyroscope; picture-in-picture" title="content from youtube" loading="lazy"></iframe>
         </div>
       `;
+      type = 'youtube';
     }
 
+    if($a.href.startsWith('https://www.instagram.com/')) {
+      const location = window.location.href;
+      embedHTML=`
+        <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+        <iframe class="instagram-media instagram-media-rendered" id="instagram-embed-0" src="${url}/embed/?cr=1&amp;v=13&amp;wp=1316&amp;rd=${location.endsWith('.html') ? location : location + '.html'}" 
+        allowtransparency="true" allowfullscreen="true" frameborder="0" height="530" style="background: white; max-width: 658px; width: calc(100% - 2px); border-radius: 3px; border: 1px solid rgb(219, 219, 219); 
+        box-shadow: none; display: block; margin: 0px 0px 12px; min-width: 326px; padding: 0px;">
+        </iframe>
+        </div>`;
+      type='instagram';
+    }
+
+    if ($a.href.startsWith('https://player.vimeo.com/video/')) {
+      embedHTML=`
+        <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+        <iframe src="${url}?byline=0&badge=0&portrait=0&title=0" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" 
+        allowfullscreen="" scrolling="no" allow="encrypted-media" title="content from vimeo" loading="lazy">
+        </iframe>
+        </div>`
+        type='vimeo-player';
+    }
+
+    if ($a.href.startsWith('https://video.tv.adobe.com/v/')) {
+      embedHTML=`
+        <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+        <iframe src="${url}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" 
+        scrolling="no" allow="encrypted-media" title="content from adobe" loading="lazy">
+        </iframe>
+        </div>`
+        type='adobe-tv';
+    }
+ 
     if (type) {
       const $embed=createTag('div', {class: `embed embed-oembed embed-${type}`});
       const $div=$a.closest('div');
@@ -637,7 +663,7 @@ function decorateEmbeds() {
 }
 
 function decorateAnimations() {
-  document.querySelectorAll('.animation a[href]').forEach(($a) => {
+  document.querySelectorAll('.animation a[href], .video a[href]').forEach(($a) => {
     let href=$a.getAttribute('href');
     const url=new URL(href);
     const helixId=url.pathname.split('/')[2];
@@ -646,16 +672,31 @@ function decorateAnimations() {
     $parent.classList.add('images');
 
     if (href.endsWith('.mp4')) {
-      const $video=createTag('video', {playsinline:'', autoplay:'', loop:'', muted:''});
+      const isAnimation=$a.closest('.animation')?true:false;
+
+      let attribs={controls:''};
+      if (isAnimation) {
+        attribs={playsinline:'', autoplay:'', loop:'', muted:''};
+      }
+      const $poster=$a.closest('div').querySelector('img');
+      if ($poster) {
+        attribs.poster=$poster.src;
+        $poster.remove();
+      }
+
+      const $video=createTag('video', attribs);
       if (href.startsWith('https://hlx.blob.core.windows.net/external/')) {
         href='/hlx_'+href.split('/')[4].replace('#image','');
       }
       $video.innerHTML=`<source src="${href}" type="video/mp4">`;
       $a.parentNode.replaceChild($video, $a);
-      $video.addEventListener('canplay', (evt) => { 
-        $video.muted=true;
-        $video.play() });
+      if (isAnimation) {
+          $video.addEventListener('canplay', (evt) => { 
+            $video.muted=true;
+            $video.play() });
+      }
     }
+    
     if (href.endsWith('.gif')) {
       $a.parentNode.replaceChild(createTag('img',{src: `/hlx_${helixId}.gif`}), $a);  
     }
@@ -761,10 +802,11 @@ window.addEventListener('load', async function() {
   decorateEmbeds();
   decorateLinkedImages();
   decorateInfographic();
+  decorateCaptions();
   addInterLinks().then(() => handleLinks());
-  await addCategory();
   fetchAuthor();
   await handleAsyncMetadata();
+  await addCategory();
   await addTopics();
   loadGetSocial();
   shapeBanners();

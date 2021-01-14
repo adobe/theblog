@@ -92,3 +92,33 @@ indices:
     include:
       - ko/publish/*/*/*/*.(md|docx)
     target: https://adobe.sharepoint.com/:x:/r/sites/TheBlog/Shared%20Documents/theblog/ko/query-index.xlsx?d=wd29a640f97104e3b8ece1d5b89aba0be&csf=1&web=1&e=K3fruX
+
+  french:
+    <<: *default
+    include:
+      - fr/publish/*/*/*/*.(md|docx)
+    target: https://adobe.sharepoint.com/:x:/r/sites/TheBlog/Shared%20Documents/theblog/fr/query-index.xlsx?d=w0e8a21f8b55d4bd48088556c67f95bd4&csf=1&web=1&e=6RuhWr
+
+  italian:
+    <<: *default
+    include:
+      - it/publish/*/*/*/*.(md|docx)
+    target: https://adobe.sharepoint.com/:x:/r/sites/TheBlog/Shared%20Documents/theblog/it/query-index.xlsx?d=we2fbc2b08a164958a41bb61f776f3aac&csf=1&web=1&e=k1f9uS
+
+  spanish:
+    <<: *default
+    include:
+      - es/publish/*/*/*/*.(md|docx)
+    target: https://adobe.sharepoint.com/:x:/r/sites/TheBlog/Shared%20Documents/theblog/es/query-index.xlsx?d=w89b84177df3b4d0d8f5e54a8390e7bb8&csf=1&web=1&e=qLQZny
+   
+  japanese:
+    <<: *default
+    include:
+      - jp/publish/*/*/*/*.(md|docx)
+    target: https://adobe.sharepoint.com/:x:/r/sites/TheBlog/Shared%20Documents/theblog/jp/query-index.xlsx?d=wc6a419a78b334addbd61c92845a7d223&csf=1&web=1&e=60wq5c
+
+  brasil:
+    <<: *default
+    include:
+      - br/publish/*/*/*/*.(md|docx)
+    target: https://adobe.sharepoint.com/:x:/r/sites/TheBlog/Shared%20Documents/theblog/br/query-index.xlsx?d=wa09c53afbe564829ae0016464bc554c7&csf=1&web=1&e=QVX7d0

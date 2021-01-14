@@ -12,7 +12,7 @@
 
 // This file contains the blog-specific plugins for the sidekick.
 (() => {
-  const sk = window.hlxSidekick;
+  const sk = window.hlx && window.hlx.sidekick ? window.hlx.sidekick : window.hlxSidekick;
   if (typeof sk !== 'object') return;
 
   // sk.loadCSS();
@@ -21,7 +21,7 @@
 
   sk.add({
     id: 'tagger',
-    condition: (sidekick) => sidekick.isEditor(),
+    condition: (sk) => sk.isEditor() && (sk.location.search.includes('.docx&') || sk.location.search.includes('.md&')),
     button: {
       text: 'Tagger',
       action: () => {
@@ -42,14 +42,16 @@
       path: window.location.pathname.substring(1),
       teaser: d[6],
       title: d[7],
-      topics: [...window.blog.topics],
+      topics: [...window.blog.allVisibleTopics],
     };
   }
 
   sk.add({
     id: 'card-preview',
     condition: (sidekick) => {
-      return sidekick.isHelix() && window.blog.pageType === window.blog.TYPE.POST;
+      return sidekick.isHelix()
+        && window.blog.pageType === window.blog.TYPE.POST
+        && allowedPostPath(sidekick.location.pathname);
     },
     button: {
       text: 'Card Preview',
@@ -58,7 +60,7 @@
           addCard,
           itemTransformer,
         } = await import('/scripts/common.js');
-        const sk = window.hlxSidekick;
+        const sk = window.hlx && window.hlx.sidekick ? window.hlx.sidekick : window.hlxSidekick;
         const btn = evt.target;
         let $modal = document.querySelector('.hlx-sk-overlay > div > .card');
         if ($modal) {
@@ -149,7 +151,7 @@
       `/hlx_${document.head.querySelector('meta[property="og:image"]')
         .getAttribute('content').split('/hlx_')[1]}`,
       predictUrl(null, sk.location.pathname),
-      '[]',
+      `["${window.blog.products.join('\", \"')}"]`,
       '0',
       document.querySelector('main>div:nth-of-type(4)').textContent.trim().substring(0, 75),
       document.title,
@@ -178,4 +180,58 @@
     },
   });
 
+  // PUBLISH ----------------------------------------------------------------------
+
+  sk.add({
+    id: 'publish',
+    condition: (sidekick) => {
+      // do not show publish button for drafts
+      return sidekick.isHelix() && !sidekick.location.pathname.includes('/drafts/');
+    },
+  });
+
+  // PUBLISH TAXONOMY -------------------------------------------------------------
+
+  sk.add({
+    id: 'publish-taxonomy',
+    condition: (sk) => {
+      const { config, location } = sk;
+      return config.innerHost
+        && config.host
+        && sk.isEditor()
+        && location.search.includes('file=_taxonomy.xlsx');
+    },
+    override: true,
+    button: {
+      text: 'Publish',
+      action: async () => {
+        const { config } = sk;
+        sk.showModal('Publishing taxonomy...', true);
+        const url = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@v2');
+        url.search = new URLSearchParams([
+          ['report', 'true'],
+          ['owner', config.owner],
+          ['repo', config.repo],
+          ['ref', config.ref || 'main'],
+          ['path', '/'],
+          ['lookup', location.href],
+        ]).toString();
+        const resp = await fetch(url.toString());
+        const json = await resp.json();
+        if (!resp.ok || !json.unfriendlyWebUrl) {
+          sk.notify('Failed to publish taxonomy. Please try again later.', 0);
+          console.log('error', JSON.stringify(await resp.json()));
+        }
+        const path = new URL(json.unfriendlyWebUrl).pathname;
+        const purge = await sendPurge(config, path);
+        if (purge.ok) {
+          await fetch(json.unfriendlyWebUrl, {cache: 'reload', mode: 'no-cors'});
+          sk.notify('Taxonomy published');
+        } else {
+          sk.notify('Failed to publish taxonomy. Please try again later.', 0);
+          console.log('error', JSON.stringify(purge));
+        }
+      },
+    },
+  });
 })();

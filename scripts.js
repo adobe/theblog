@@ -156,10 +156,11 @@ window.blog = function() {
     EN: 'en',
     DE: 'de',
     FR: 'fr',
-    JP: 'jp',
-    PT: 'pt',
     KO: 'ko',
     ES: 'es',
+    IT: 'it',
+    JP: 'jp',
+    BR: 'br',
   };
   const context = '/';
   let language = LANG.EN;
