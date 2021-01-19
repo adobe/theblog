@@ -3,7 +3,7 @@ version: 1
 indices:
   english: &default
     source: html
-    fetch: https://{repo}-{owner}.project-helix.page/{path}
+    fetch: https://{repo}--{owner}.hlx.page/{path}
     include:
       - en/publish/*/*/*/*.(md|docx)
     exclude:
@@ -110,7 +110,7 @@ indices:
     include:
       - es/publish/*/*/*/*.(md|docx)
     target: https://adobe.sharepoint.com/:x:/r/sites/TheBlog/Shared%20Documents/theblog/es/query-index.xlsx?d=w89b84177df3b4d0d8f5e54a8390e7bb8&csf=1&web=1&e=qLQZny
-   
+
   japanese:
     <<: *default
     include:
