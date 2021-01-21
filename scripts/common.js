@@ -355,6 +355,8 @@ async function translateTable(pages, index) {
   const taxonomy = await getTaxonomy(window.blog.language);
   pages.forEach((e) => {
     let r=e;
+    // when index is empty, it contains only one invalid item (0,0,0...)
+    if (r.path === 0) return;
     let products=JSON.parse(r.products);
     let topics=JSON.parse(r.topics);
     if (!Array.isArray(products)) products=[];
