@@ -131,7 +131,7 @@ function removeHeaderAndFooter() {
  * @returns {string} The card path
  */
 function getCardPath(path) {
-  return path.toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
+  return path ? path.toLowerCase().replace(/[^a-z\d_\/\.]/g,'-') : '';
 }
 
 /**
@@ -232,7 +232,7 @@ export function getPostPaths(el, parent, removeContainer) {
  * @param {object} item The query hit object
  * @returns {object} The processed query hit object
  */
-export async function itemTransformer(item) {
+export async function itemTransformer(item = {}) {
   const path = getCardPath(item.path);
   const taxonomy = await getTaxonomy(window.blog.language);
   const itemParams = {
@@ -242,15 +242,17 @@ export async function itemTransformer(item) {
         crop: '3:2',
       })
       : '#',
-    date: new Date(item.date * 1000).toLocaleDateString('en-US', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      timeZone: 'UTC',
-    }).replace(/\//g, '-'),
+    date: item.date
+      ? new Date(item.date * 1000).toLocaleDateString('en-US', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          timeZone: 'UTC',
+        }).replace(/\//g, '-')
+      : '',
     authorUrl: item.author ? getLink(window.blog.TYPE.AUTHOR, item.author) : '',
-    topic: item.topics.length > 0 ? item.topics[0] : '',
-    topicUrl: item.topics.length > 0 ? taxonomy.getLink(item.topics[0]) || getLink(window.blog.TYPE.TOPIC, item.topics[0]) : '',
+    topic: item.topics && item.topics.length > 0 ? item.topics[0] : '',
+    topicUrl: item.topics && item.topics.length > 0 ? taxonomy.getLink(item.topics[0]) || getLink(window.blog.TYPE.TOPIC, item.topics[0]) : '',
     path,
   }
   return Object.assign({}, item, itemParams);
