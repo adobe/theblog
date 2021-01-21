@@ -9,7 +9,6 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-
 /**
  * Loads a JS module.
  * @param {string} src The path to the JS module
@@ -230,7 +229,6 @@ window.adobeid = {
   locale: window.blog.language,
 };
 
-
 /**
  * Set up a click event on Region Picker
  */
@@ -252,14 +250,24 @@ function handleDropdownRegion() {
       FEDSregionPickerText.innerText = localeNames[currentLocale];
   }
 
+  if (window.adobeGlobalNav && window.adobeGlobalNav.globalNavReady) {
+    const fedsFooter = document.querySelector('#feds-footer');
+    if (fedsFooter instanceof HTMLElement) {
+      const regionDropdownContainer = document.createElement('div');
+        regionDropdownContainer.classList.add('region-dropdown');
+        regionDropdownContainer.innerHTML = `<ul class="region-dropdown-list"></ul>`;
+       fedsFooter.parentElement.insertBefore(regionDropdownContainer, fedsFooter);
+    }
+  }
+
   // Automatically build the dropdown based on Locale List
   const dropdownRegionList = document.querySelector('.region-dropdown-list');
   Object.keys(localeNames).forEach((locale) => {
     dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="#" data-lang="${locale}">${localeNames[locale]}</a></li>`);
-});
+  });
   
   const regionDropdownButton =  document.querySelector('.feds-regionPicker');
-  const regionDropdownModal = document.querySelector('#regionDropdown');
+  const regionDropdownModal = document.querySelector('.region-dropdown');
   regionDropdownButton.addEventListener('click', (event) => {
       event.preventDefault();
       toggleDropdownModal();
@@ -267,25 +275,16 @@ function handleDropdownRegion() {
 
   // Hide region modal if clicked outside
   document.addEventListener('click', function (event) {
-    if (event.target.closest('#regionDropdown') || event.target.closest('.feds-regionPicker')) {
+    if (event.target.closest('.region-dropdown') || event.target.closest('.feds-regionPicker')) {
 
     } else {
       hideDropdownModal();
     }
   });
-
-  // Keyboard access for Dropdown Region
-  document.body.addEventListener('keyup', (event) => {
-    if (event.key === 'Escape') {
-      if (regionDropdownModal.classList.contains('visible')) {
-        toggleDropdownModal();
-      }
-    }
-  });
 }
 
 function showDropdownModal() {
-  const regionDropdownModal  = document.querySelector('#regionDropdown');
+  const regionDropdownModal  = document.querySelector('.region-dropdown');
   const regionDropdownButton =  document.querySelector('.region-dropdown-button-link');
   regionDropdownModal.style.left = regionDropdownButton.getBoundingClientRect().left + window.scrollX + 'px';
   regionDropdownModal.style.top = window.scrollY + regionDropdownButton.getBoundingClientRect().top - regionDropdownModal.getBoundingClientRect().height + 'px';
@@ -293,12 +292,12 @@ function showDropdownModal() {
  }
  
  function hideDropdownModal() {
-  const regionDropdownModal = document.querySelector('#regionDropdown');
+  const regionDropdownModal = document.querySelector('.region-dropdown');
   regionDropdownModal.classList.remove('visible');
  }
 
 function toggleDropdownModal() {
-  const regionDropdownModal  = document.querySelector('#regionDropdown');
+  const regionDropdownModal  = document.querySelector('.region-dropdown');
   if (regionDropdownModal.classList.contains('visible')) {
     hideDropdownModal();
   } else {

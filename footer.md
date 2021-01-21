@@ -1,8 +1,3 @@
-<div id="regionDropdown" class="region-dropdown">
-  <ul class="region-dropdown-list">
-  </ul>
-</div>
-
 <div class="region-dropdown-button">
     <a href="#" class="region-dropdown-button-link">
         <div class="region-dropdown-button-icon" style="width: 19px; height: 19px;">
@@ -14,9 +9,7 @@
     </a>
 </div>
 
-<div id="feds-footer">
-
-</div>
+<div id="feds-footer"></div>
 <div class="evidon-notice-link"></div>
 <script>setMarTechContext()</script>
 <script src="https://www.adobe.com/marketingtech/main.min.js"></script>
