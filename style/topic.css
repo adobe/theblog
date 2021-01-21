@@ -57,6 +57,11 @@
   font-size: 1.125rem;
 }
 
+.topic-title .topic-title-container > p:not(:first-of-type) {
+  display: none;
+}
+
+
 .topic-title > img {
   display: none;
 }

@@ -17,65 +17,6 @@
 
   // sk.loadCSS();
 
-  // EDIT -------------------------------------------------------------------------
-
-  sk.add({
-    id: 'edit',
-    condition: (sidekick) => sidekick.isHelix(),
-    override: true,
-    button: {
-      action: () => {
-        const { config, location } = sk;
-        const href = location.href
-          .split('#')[0] // remove anchor
-          .split('?')[0] // remove query string
-          .replace(/\/([a-z]{2})\/(\d{4})/, '/$1/publish/$2'); // remove /publish/
-        const url = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@v2');
-        url.search = new URLSearchParams([
-          ['owner', config.owner],
-          ['repo', config.repo],
-          ['ref', config.ref || 'main'],
-          ['path', '/'],
-          ['edit', href],
-        ]).toString();
-        window.open(url, `hlx-sk-edit-${btoa(location.href)}`);
-      },
-    },
-  });
-
-  // PREVIEW ----------------------------------------------------------------------
-
-  sk.add({
-    id: 'preview',
-    condition: (sidekick) => sidekick.config.innerHost
-      && (sk.isEditor() || sk.isHelix()),
-    override: true,
-    button: {
-      action: () => {
-        const { config, location } = sk;
-        let url;
-        if (sk.isEditor()) {
-          url = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@v2');
-          url.search = new URLSearchParams([
-            ['owner', config.owner],
-            ['repo', config.repo],
-            ['ref', config.ref || 'main'],
-            ['path', '/'],
-            ['lookup', location.href],
-          ]).toString();
-        } else if (location.host === config.innerHost) {
-          // inner to outer -> remove /publish/
-          url = new URL(`https://${config.host}${location.pathname.replace('/publish/', '/')}`);
-        } else {
-          // outer to inner -> add /publish/
-          url = new URL(`https://${config.innerHost}${location.pathname.replace(/^\/([a-z]{2})\/(\d{4})/, '/$1/publish/$2')}`);
-        }
-        window.open(url.toString(), `hlx-sk-preview-${btoa(location.href)}`);
-      },
-    },
-  });
-
-
   // TAGGER -----------------------------------------------------------------------
 
   sk.add({
@@ -86,44 +27,6 @@
       action: () => {
         const { config } = sk;
         window.open(`https://${config.host}/tools/tagger/`, 'hlx-sidekick-tagger');
-      },
-    },
-  });
-
-  // PREDICTED URL ----------------------------------------------------------------
-
-  function predictUrl(host, path) {
-    const pathsplits = path.split('/');
-    let datePath = '';
-    if (window.blog && window.blog.rawDate) {
-      const datesplits = window.blog.rawDate.split('-');
-      if (datesplits.length > 2) {
-        datePath = `/${datesplits[2]}/${datesplits[0]}/${datesplits[1]}`;
-      }
-    }
-    const filename = (pathsplits[pathsplits.length-1].split('.')[0]).toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
-    return `${host ? `https://${host}/` : ''}${pathsplits[1]}${datePath}/${filename}.html`;
-  }
-  
-  sk.add({
-    id: 'predicted-url',
-    condition: (sidekick) => {
-      const { config, location } = sidekick;
-      return sidekick.isHelix()
-        && window.blog.pageType === window.blog.TYPE.POST
-        && config.host
-        && location.host != config.host;
-    },
-    button: {
-      text: 'Copy Predicted URL',
-      action: (evt) => {
-        const { config, location } = sk;
-        const url = predictUrl(config.host, location.pathname);
-        navigator.clipboard.writeText(url);
-        sk.notify([
-          'Predicted URL copied to clipboard:',
-          url,
-        ]);
       },
     },
   });
@@ -143,10 +46,19 @@
     };
   }
 
+  function allowedPostPath(path) {
+    return ![
+      'documentation',
+      'fpost',
+    ].includes(path.split('/')[2]);
+  }
+  
   sk.add({
     id: 'card-preview',
     condition: (sidekick) => {
-      return sidekick.isHelix() && window.blog.pageType === window.blog.TYPE.POST;
+      return sidekick.isHelix()
+        && window.blog.pageType === window.blog.TYPE.POST
+        && allowedPostPath(sidekick.location.pathname);
     },
     button: {
       text: 'Card Preview',
@@ -199,6 +111,45 @@
     },
   });
 
+  // PREDICTED URL ----------------------------------------------------------------
+
+  function predictUrl(host, path) {
+    const pathsplits = path.split('/');
+    let publishPath = '';
+    if (window.blog && window.blog.rawDate) {
+      const datesplits = window.blog.rawDate.split('-');
+      if (datesplits.length > 2) {
+        publishPath = `/publish/${datesplits[2]}/${datesplits[0]}/${datesplits[1]}`;
+      }
+    }
+    const filename = (pathsplits[pathsplits.length-1].split('.')[0]).toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
+    return `${host ? `https://${host}/` : ''}${pathsplits[1]}${publishPath}/${filename}.html`;
+  }
+  
+  sk.add({
+    id: 'predicted-url',
+    condition: (sidekick) => {
+      const { config, location } = sidekick;
+      return sidekick.isHelix()
+        && window.blog.pageType === window.blog.TYPE.POST
+        && config.host
+        && location.host != config.host
+        && allowedPostPath(location.pathname);
+    },
+    button: {
+      text: 'Copy Predicted URL',
+      action: (evt) => {
+        const { config, location } = sk;
+        const url = predictUrl(config.host, location.pathname);
+        navigator.clipboard.writeText(url);
+        sk.notify([
+          'Predicted URL copied to clipboard:',
+          url,
+        ]);
+      },
+    },
+  });
+
   // ARTICLE DATA -------------------------------------------------------------------
 
   function getArticleData() {
@@ -239,93 +190,11 @@
 
   // PUBLISH ----------------------------------------------------------------------
 
-  async function sendPurge(cfg, path) {
-    /* eslint-disable no-console */
-    console.log(`purging ${path}`);
-    const xfh = [
-      cfg.host,
-      cfg.outerHost,
-    ];
-    const u = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/purge@v1');
-    u.search = new URLSearchParams([
-      ['host', cfg.innerHost],
-      ['xfh', xfh.join(',')],
-      ['path', path],
-    ]).toString();
-    const resp = await fetch(u, {
-      method: 'POST',
-    });
-    const json = await resp.json();
-    console.log(JSON.stringify(json));
-    /* eslint-enable no-console */
-    return {
-      ok: resp.ok && json.every((e) => e.status === 'ok'),
-      status: resp.status,
-      json,
-      path,
-    };
-  }
-
-  function showErrorModal(sk, resp) {
-    sk.showModal([
-      `Failed to purge ${resp.path} from the cache. Please reload this page and try again later.`,
-      `Status: ${resp.status}`,
-      JSON.stringify(resp.json),
-    ], true, 0);
-    return false;
-  }
-
   sk.add({
     id: 'publish',
     condition: (sidekick) => {
+      // do not show publish button for drafts
       return sidekick.isHelix() && !sidekick.location.pathname.includes('/drafts/');
-    },
-    override: true,
-    button: {
-      action: async () => {
-        const { config, location } = sk;
-        if (!config.innerHost || !config.host) {
-          sk.notify(`Publish is not configured for ${config.project}`, 0);
-          return;
-        }
-
-        let path = location.pathname;
-        sk.showModal(`Publishing ${path}`, true);
-
-        let resp = await sendPurge(config, path);
-        if (resp.ok) {
-          // also purge path without /publish segment
-          if (path.includes('/publish/')) {
-            path = path.replace('/publish/','/');
-            console.log(`purging ${path}`)
-            resp = await sendPurge(config, path);
-            if (!resp.ok) {
-              return showErrorModal(sk, resp);
-            }
-          }
-          // purge dependencies
-          if (Array.isArray(window.hlx.dependencies)) {
-            if (!window.hlx.dependencies.every(async (dPath) => {
-              sk.showModal(`Publishing dependency ${dPath}`, true);
-              return (await sendPurge(config, dPath)).ok;
-            })) {
-              return sk.notify('Failed to publish dependendies. Please try again later.', 1);
-            }
-          }
-          if (config.host) {
-            sk.showModal('Please wait...', true);
-            // fetch and redirect to production
-            const prodURL = `https://${config.host}${path}`;
-            await fetch(prodURL, {cache: 'reload', mode: 'no-cors'});
-            console.log(`redirecting ${prodURL}`);
-            window.location.href = prodURL;
-          } else {
-            sk.notify('Successfully published');
-          }
-        } else {
-          return showErrorModal(sk, resp);
-        }
-      },
     },
   });
 

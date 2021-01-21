@@ -67,7 +67,8 @@ window.addEventListener('load', async function() {
           $hero.setAttribute(
             'data-src',
             getOptimizedImageUrl($hero.getAttribute('data-src'), {
-              height: 349,
+              height: 698,
+              crop: '2:1',
             }),
           );
           const titleSection = document.querySelector('.topic-title');
