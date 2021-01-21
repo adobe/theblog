@@ -219,7 +219,7 @@ window.fedsConfig = {
   },
   footer: {
     regionModal: function (event) {
-        window.location.hash = 'regionPickerList';
+        window.location.hash = '#regionDropdown';
     }
   },
 };
@@ -235,16 +235,39 @@ window.adobeid = {
  * Set up a click event on Region Picker
  */
 function handleDropdownRegion() {
-  const regionDropdownButton =  document.querySelector('.region-dropdown-button-link');
+  const currentLocale = window.blog.language;
+  const localeNames = {
+      'en': 'USA (English)',
+      'fr': 'France (French)',
+      'de': 'Germany (Deutsch)',
+      'it': 'Italy (Italiano)',
+      'es': 'Latin America (Espanol)',
+      'ko': 'Korea',
+      'br': 'Brazil (Portugues)',
+      'jp': 'Japan ()',
+  };
+  // Change locale value from Feds Region Picker Button
+  const FEDSregionPickerText = document.querySelector('.feds-regionPicker-text');
+  if (FEDSregionPickerText instanceof HTMLElement) {
+      FEDSregionPickerText.innerText = localeNames[currentLocale];
+  }
+
+  // Automatically build the dropdown based on Locale List
+  const dropdownRegionList = document.querySelector('.region-dropdown-list');
+  Object.keys(localeNames).forEach((locale) => {
+    dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="#" data-lang="${locale}">${localeNames[locale]}</a></li>`);
+});
+  
+  const regionDropdownButton =  document.querySelector('.feds-regionPicker');
   const regionDropdownModal = document.querySelector('#regionDropdown');
   regionDropdownButton.addEventListener('click', (event) => {
       event.preventDefault();
       toggleDropdownModal();
   });
 
-  // hide region modal if clicked outside
+  // Hide region modal if clicked outside
   document.addEventListener('click', function (event) {
-    if (event.target.closest('#regionDropdown') || event.target.closest('.region-dropdown-button-link')) {
+    if (event.target.closest('#regionDropdown') || event.target.closest('.feds-regionPicker')) {
 
     } else {
       hideDropdownModal();
@@ -328,4 +351,8 @@ loadJSModule(`/scripts/${window.blog.pageType}.js`);
 
 // Load language specific CSS overlays
 loadCSS(`/dict.${window.blog.language}.css`);
+
+window.addEventListener('load', () => {
+  handleDropdownRegion();  
+});
 

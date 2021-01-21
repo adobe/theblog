@@ -519,6 +519,7 @@ main > div img {
   display: inline-block;
   font-size: inherit;
   padding: 3px 15px 5px 8px;
+  visibility: hidden;
 }
 
 .region-dropdown.visible {

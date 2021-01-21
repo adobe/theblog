@@ -1,26 +1,5 @@
 <div id="regionDropdown" class="region-dropdown">
   <ul class="region-dropdown-list">
-    <li>
-      <a class="region-dropdown-picker" href="#" data-lang="br">Brazil (Portuguese)</a>
-    </li>
-    <li>
-      <a class="region-dropdown-picker" href="#" data-lang="ko">Korea</a>
-    </li>
-    <li>
-      <a class="region-dropdown-picker" href="#" data-lang="es">Latin America (Espanol)</a>
-    </li>
-    <li>
-      <a class="region-dropdown-picker" href="#" data-lang="de">Germany (Deutsch)</a>
-    </li>
-    <li>
-      <a class="region-dropdown-picker" href="#" data-lang="it">Italy</a>
-    </li>
-    <li>
-      <a class="region-dropdown-picker" href="#" data-lang="jp">Japan</a>
-    </li>
-    <li>
-      <a class="region-dropdown-picker selected" href="#" data-lang="us">USA (English)</a>
-    </li>
   </ul>
 </div>
 
@@ -36,6 +15,7 @@
 </div>
 
 <div id="feds-footer">
+
 </div>
 <div class="evidon-notice-link"></div>
 <script>setMarTechContext()</script>
