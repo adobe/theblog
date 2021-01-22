@@ -235,14 +235,10 @@ window.adobeid = {
 function handleDropdownRegion() {
   const currentLocale = window.blog.language;
   const localeNames = {
-      'en': 'USA (English)',
-      'fr': 'France (French)',
-      'de': 'Germany (Deutsch)',
-      'it': 'Italy (Italiano)',
-      'es': 'Latin America (Espanol)',
       'ko': 'Korea',
-      'br': 'Brazil (Portugues)',
-      'jp': 'Japan ()',
+      'en': 'APAC (English)',
+      'en': 'USA (English)',
+      'en': 'UK (English)',
   };
 
   // Change locale value from Feds Region Picker Button
@@ -260,33 +256,39 @@ function handleDropdownRegion() {
   }
   
   // Add Region Dropdown Container before Feds Footer
-  if (window.adobeGlobalNav && window.adobeGlobalNav.globalNavReady) {
     const fedsFooter = document.querySelector('#feds-footer');
     if (fedsFooter instanceof HTMLElement) {
       const regionDropdownContainer = document.createElement('div');
-        regionDropdownContainer.classList.add('region-dropdown');
-        regionDropdownContainer.innerHTML = `<ul class="region-dropdown-list"></ul>`;
-       fedsFooter.parentElement.insertBefore(regionDropdownContainer, fedsFooter);
+      regionDropdownContainer.classList.add('region-dropdown');
+      regionDropdownContainer.innerHTML = `<ul class="region-dropdown-list"></ul>`;
+      fedsFooter.parentElement.insertBefore(regionDropdownContainer, fedsFooter);
     }
-  }
 
   // Automatically build the dropdown based on Locale List
   const dropdownRegionList = document.querySelector('.region-dropdown-list');
-  Object.keys(localeNames).forEach((locale) => {
-    dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="#" data-lang="${locale}">${localeNames[locale]}</a></li>`);
-  });
+  if (dropdownRegionList instanceof HTMLElement) {
+      Object.keys(localeNames).forEach((locale) => {
+      dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="#" data-lang="${locale}">${localeNames[locale]}</a></li>`);
+      const regionDropdownPicker = document.querySelector('.region-dropdown-picker');
+      if (regionDropdownPicker instanceof HTMLElement) {
+        if (currentLocale == [locale]) {
+          regionDropdownPicker.classList.add('selected');
+        }
+      }
+    });
+  }
   
   const regionDropdownButton =  document.querySelector('.feds-regionPicker');
-  const regionDropdownModal = document.querySelector('.region-dropdown');
-  regionDropdownButton.addEventListener('click', (event) => {
+  if (regionDropdownButton instanceof HTMLElement) {
+    regionDropdownButton.addEventListener('click', (event) => {
       event.preventDefault();
       toggleDropdownModal();
-  });
+    });
+  }
 
   // Hide region modal if clicked outside
   document.addEventListener('click', function (event) {
     if (event.target.closest('.region-dropdown') || event.target.closest('.feds-regionPicker')) {
-
     } else {
       hideDropdownModal();
     }
@@ -295,7 +297,7 @@ function handleDropdownRegion() {
 
 function showDropdownModal() {
   const regionDropdownModal  = document.querySelector('.region-dropdown');
-  const regionDropdownButton =  document.querySelector('.region-dropdown-button-link');
+  const regionDropdownButton =  document.querySelector('.feds-regionPicker');
   regionDropdownModal.style.left = regionDropdownButton.getBoundingClientRect().left + window.scrollX + 'px';
   regionDropdownModal.style.top = window.scrollY + regionDropdownButton.getBoundingClientRect().top - regionDropdownModal.getBoundingClientRect().height + 'px';
   regionDropdownModal.classList.add('visible');
