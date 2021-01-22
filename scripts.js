@@ -230,7 +230,7 @@ window.adobeid = {
 function handleDropdownRegion() {
   const currentLocale = window.blog.language;
   const localeNames = {
-      'ko': 'Korea',
+      'ko': 'Korea (한국어)',
       'en': 'APAC (English)',
       'en': 'USA (English)',
       'en': 'UK (English)',
