@@ -266,7 +266,7 @@ function handleDropdownRegion() {
       dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="#" data-lang="${locale}">${localeNames[locale]}</a></li>`);
       const regionDropdownPicker = document.querySelector('.region-dropdown-picker');
       if (regionDropdownPicker instanceof HTMLElement) {
-        if (currentLocale == [locale]) {
+        if (currentLocale === locale) {
           regionDropdownPicker.classList.add('selected');
         }
       }
@@ -366,7 +366,10 @@ loadJSModule(`/scripts/${window.blog.pageType}.js`);
 // Load language specific CSS overlays
 loadCSS(`/dict.${window.blog.language}.css`);
 
-window.addEventListener('load', () => {
+// Check if FEDS is available before loading the Dropdown Selector
+if (typeof feds === 'object' && typeof feds.events === 'object' && feds.events.experience === true) {
   handleDropdownRegion();  
-});
+} else {
+  window.addEventListener('feds.events.experience.loaded', handleDropdownRegion);
+}
 
