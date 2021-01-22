@@ -283,9 +283,13 @@ function handleDropdownRegion() {
 
   // Hide region modal if clicked outside
   document.addEventListener('click', function (event) {
-    if (event.target.closest('.region-dropdown') || event.target.closest('.feds-regionPicker')) {
-    } else {
-      hideDropdownModal();
+    const regionDropdownButton =  document.querySelector('.feds-regionPicker');
+    const regionDropdownModal  = document.querySelector('.region-dropdown');
+    if (regionDropdownButton instanceof HTMLElement || regionDropdownModal instanceof HTMLElement) {
+      if (event.target.closest('.region-dropdown') || event.target.closest('.feds-regionPicker')) {
+      } else {
+        hideDropdownModal();
+      }
     }
   });
 }
@@ -300,15 +304,19 @@ function showDropdownModal() {
  
  function hideDropdownModal() {
   const regionDropdownModal = document.querySelector('.region-dropdown');
-  regionDropdownModal.classList.remove('visible');
+  if (regionDropdownModal instanceof HTMLElement) {
+      regionDropdownModal.classList.remove('visible');
+  }
  }
 
 function toggleDropdownModal() {
   const regionDropdownModal  = document.querySelector('.region-dropdown');
-  if (regionDropdownModal.classList.contains('visible')) {
-    hideDropdownModal();
-  } else {
-    showDropdownModal();
+  if (regionDropdownModal instanceof HTMLElement) {
+    if (regionDropdownModal.classList.contains('visible')) {
+      hideDropdownModal();
+    } else {
+      showDropdownModal();
+    }
   }
 }
 
