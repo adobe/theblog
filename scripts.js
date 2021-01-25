@@ -205,7 +205,7 @@ window.fedsMapping = {
 window.fedsConfig = {
   locale: window.fedsMapping[window.blog.language] || window.blog.language,
   content: {
-    experience: 'blog-gnav',
+    experience: 'acom',
   },
   search: {
     context: 'blogs',
@@ -231,20 +231,41 @@ function handleDropdownRegion() {
   const currentLocale = window.blog.language;
   const localeNames = {
       'ko': 'Korea (한국어)',
-      'en': 'APAC (English)',
       'en': 'USA (English)',
-      'en': 'UK (English)',
   };
+
+  const regionsNameList = [
+    {
+      lang: "en",
+      localeName: "APAC (English)",
+      localeHome: "https://blog.adobe.com/en/apac.html",
+    },
+    {
+      lang: "ko",
+      localeName: "Korea (한국어)",
+      localeHome: "https://blog.adobe.com/ko/index.html",
+    },
+    {
+      lang: "en",
+      localeName: "UK (English)",
+      localeHome: "https://blog.adobe.com/en/uk.html",
+    },
+    {
+      lang: "en",
+      localeName: "USA (English)",
+      localeHome: "https://blog.adobe.com/",
+    }
+  ];
 
   // Change locale value from Feds Region Picker Button
   const FEDSregionPickerText = document.querySelector('.feds-regionPicker-text');
-  if (FEDSregionPickerText instanceof HTMLElement) {
+  if (FEDSregionPickerText) {
       FEDSregionPickerText.innerText = localeNames[currentLocale];
   }
 
   // Change Icon from Feds
   const FEDSRegionPickerIcon = document.querySelector('.feds-regionPicker-icon');
-  if (FEDSRegionPickerIcon instanceof HTMLElement) {
+  if (FEDSRegionPickerIcon) {
       FEDSRegionPickerIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 19 19">
       <path class="b" d="M9.514.925A8.666,8.666,0,0,0,.925,9.514,8.666,8.666,0,0,0,9.514,18.1,8.669,8.669,0,0,0,18.1,9.514,8.669,8.669,0,0,0,9.514.925Zm7.3,10.152a7.378,7.378,0,0,1-.354,1.14c-.035.088-.059.18-.1.266a7.49,7.49,0,0,1-.65,1.2c-.018.027-.042.05-.061.077a7.523,7.523,0,0,1-.817.991c-.049.053-.106.095-.16.145a7.5,7.5,0,0,1-.981.809l-.013.009A7.429,7.429,0,0,1,9.7,16.96c2.626-1.979,2.305-3.138,3.793-4.793.5-.664-1.493-.83-3.152-1.493-2.157-1-1.33.664-2.987-1.162-1-1.162-1.33-2.819,1.659-1.493.332.332.5-1.162,1.162-1.991.331-.331.331-.663.5-1.161a1.092,1.092,0,0,0-2.157.166c0,.332-1.162-1.991-.332-1.991a5.893,5.893,0,0,1-1.659-.332c.156-.08.319-.143.479-.208a7.361,7.361,0,0,1,2.422-.454.776.776,0,0,1,.086,0c.166-.166-1,1.162-.664,1.162s2.323.5,2.157.664c.57-1-.206-1.624-1.067-1.782a7.388,7.388,0,0,1,3.313,1c.18.11.372.2.543.325.063.045.116.1.179.147a6.831,6.831,0,0,1,1.017.978c-.332.166-.332.663-.166,1,.33.33.334.331.988,0,.106.167.191.347.283.522-.1.039-.138.138-.276.138a2.665,2.665,0,0,0-.83,1.825c0,2.655.664,1.659,1.493,1.991a.6.6,0,0,0,.432.16,7.6,7.6,0,0,1-.078.769C16.828,10.986,16.822,11.032,16.812,11.077ZM6.828,16.463A8.035,8.035,0,0,1,2.047,9.514a7.387,7.387,0,0,1,.118-1.22c.026-.156.048-.312.084-.465A7.419,7.419,0,0,1,2.532,6.9c.079-.21.169-.416.266-.617.068-.143.146-.279.224-.417a7.463,7.463,0,0,1,.6-.9c.1-.129.206-.26.312-.383.141-.16.281-.319.436-.469a7.417,7.417,0,0,1,.668-.554c.155,1.483-1.16,2.314-.664,3.967.664,2.157,1.493,1.162,2.489,2.655C8.01,11.824,9.8,14.608,8.869,16.918A7.4,7.4,0,0,1,6.828,16.463Z" transform="translate(0.059 0.059)"/>
       </svg>`;
@@ -252,7 +273,7 @@ function handleDropdownRegion() {
   
   // Add Region Dropdown Container before Feds Footer
     const fedsFooter = document.querySelector('#feds-footer');
-    if (fedsFooter instanceof HTMLElement) {
+    if (fedsFooter) {
       const regionDropdownContainer = document.createElement('div');
       regionDropdownContainer.classList.add('region-dropdown');
       regionDropdownContainer.innerHTML = `<ul class="region-dropdown-list"></ul>`;
@@ -261,20 +282,14 @@ function handleDropdownRegion() {
 
   // Automatically build the dropdown based on Locale List
   const dropdownRegionList = document.querySelector('.region-dropdown-list');
-  if (dropdownRegionList instanceof HTMLElement) {
-      Object.keys(localeNames).forEach((locale) => {
-      dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="#" data-lang="${locale}">${localeNames[locale]}</a></li>`);
-      const regionDropdownPicker = document.querySelector('.region-dropdown-picker');
-      if (regionDropdownPicker instanceof HTMLElement) {
-        if (currentLocale === locale) {
-          regionDropdownPicker.classList.add('selected');
-        }
+  if (dropdownRegionList) {
+      for (const {lang: locale, localeName: localeName, localeHome: localeHome} of regionsNameList) {
+        dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="${localeHome}" data-lang="${locale}">${localeName}</a></li>`);
       }
-    });
   }
   
   const regionDropdownButton =  document.querySelector('.feds-regionPicker');
-  if (regionDropdownButton instanceof HTMLElement) {
+  if (regionDropdownButton) {
     regionDropdownButton.addEventListener('click', (event) => {
       event.preventDefault();
       toggleDropdownModal();
@@ -284,10 +299,8 @@ function handleDropdownRegion() {
   // Hide region modal if clicked outside
   document.addEventListener('click', function (event) {
     const regionDropdownButton =  document.querySelector('.feds-regionPicker');
-    const regionDropdownModal  = document.querySelector('.region-dropdown');
-    if (regionDropdownButton instanceof HTMLElement || regionDropdownModal instanceof HTMLElement) {
-      if (event.target.closest('.region-dropdown') || event.target.closest('.feds-regionPicker')) {
-      } else {
+    if (regionDropdownButton || HTMLElement) {
+      if (!event.target.closest('.region-dropdown') && !event.target.closest('.feds-regionPicker')) {
         hideDropdownModal();
       }
     }
@@ -297,21 +310,23 @@ function handleDropdownRegion() {
 function showDropdownModal() {
   const regionDropdownModal  = document.querySelector('.region-dropdown');
   const regionDropdownButton =  document.querySelector('.feds-regionPicker');
-  regionDropdownModal.style.left = regionDropdownButton.getBoundingClientRect().left + window.scrollX + 'px';
-  regionDropdownModal.style.top = window.scrollY + regionDropdownButton.getBoundingClientRect().top - regionDropdownModal.getBoundingClientRect().height + 'px';
-  regionDropdownModal.classList.add('visible');
+  if (regionDropdownModal) {
+    regionDropdownModal.style.left = regionDropdownButton.getBoundingClientRect().left + window.scrollX + 'px';
+    regionDropdownModal.style.top = window.scrollY + regionDropdownButton.getBoundingClientRect().top - regionDropdownModal.getBoundingClientRect().height + 'px';
+    regionDropdownModal.classList.add('visible');
+  }
  }
  
  function hideDropdownModal() {
   const regionDropdownModal = document.querySelector('.region-dropdown');
-  if (regionDropdownModal instanceof HTMLElement) {
+  if (regionDropdownModal) {
       regionDropdownModal.classList.remove('visible');
   }
  }
 
 function toggleDropdownModal() {
   const regionDropdownModal  = document.querySelector('.region-dropdown');
-  if (regionDropdownModal instanceof HTMLElement) {
+  if (regionDropdownModal) {
     if (regionDropdownModal.classList.contains('visible')) {
       hideDropdownModal();
     } else {
@@ -319,7 +334,6 @@ function toggleDropdownModal() {
     }
   }
 }
-
 
 // Prep images for lazy loading and use adequate sizes
 let imgCount = 0;
