@@ -245,7 +245,7 @@ function handleDropdownRegion() {
     },
     {
       lang: "en",
-      localeName: "USA (English)",
+      localeName: "US (English)",
       localeHome: `${window.location.origin}/`,
     }
   ];
