@@ -793,6 +793,19 @@ function shapeBanners() {
   });
 }
 
+function addPublishDependencies() {
+  const path = window.location.pathname;
+  if (!/\d{4}\/\d{2}\/\d{2}/.test(path)) {
+    // skip posts without date in URL
+    return;
+  }
+  // sidekick will publish post paths with /publish only
+  // also add the path without /publish for legacy reasons
+  window.hlx = window.hlx || {};
+  window.hlx.dependencies = [path.replace('/publish/', '/')];
+}
+
+
 window.addEventListener('load', async function() {
   decoratePostPage();
   handleImmediateMetadata();
@@ -811,4 +824,5 @@ window.addEventListener('load', async function() {
   loadGetSocial();
   shapeBanners();
   fetchArticles();
+  addPublishDependencies();
 });
