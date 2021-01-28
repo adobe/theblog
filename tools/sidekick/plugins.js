@@ -15,7 +15,13 @@
   const sk = window.hlx && window.hlx.sidekick ? window.hlx.sidekick : window.hlxSidekick;
   if (typeof sk !== 'object') return;
 
-  // sk.loadCSS();
+  const path = sk.location.pathname;
+  if (!path.includes('/publish/') && /\d{4}\/\d{2}\/\d{2}/.test(path)) {
+    // post URL wihout publish in the path, add it back
+    const segs = path.split('/');
+    segs.splice(2, 0, 'publish')
+    sk.location = new URL(segs.join('/'), sk.location.origin);
+  }
 
   // TAGGER -----------------------------------------------------------------------
 
