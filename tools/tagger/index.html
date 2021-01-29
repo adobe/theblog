@@ -10,6 +10,14 @@
       font-family: 'Adobe Clean';
     }
 
+    body.jp #results, body.jp #selected {
+      font-family: Adobe Clean Han Japanese, sans-serif;
+    }
+
+    body.ko #results, body.ko #selected {
+      font-family: Adobe Clean Han K, sans-serif;
+    }
+
     main .intro {
       font-size: 1rem;
     }
@@ -134,7 +142,13 @@
       border-radius: 10px;
       border: 1px dashed black;
       padding: 4px 10px 2px 10px;
-      font-size: 10px;
+      font-size: 12px;
+    }
+
+    span.psep {
+      font-size: 20px;
+      font-weight: bold;
+      font-family: 'Adobe Clean';
     }
 
     #selected {
@@ -306,7 +320,7 @@
         const tag = name.trim();
 
         const parents = item.parents.slice().reverse();
-        const path = parents.join(' / ') + ' ';
+        const path = parents.join(' <span class="psep">/</span> ') + ' ';
 
         return {
           tag,
@@ -641,6 +655,8 @@
       } else {
         lang = localStorage.getItem('blog-tagger-lang') || 'en';
       }
+
+      document.body.classList.add(lang);
 
       // select in combo
       const option = document.querySelector(`#lang-switcher option[value=${lang}]`);
