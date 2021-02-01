@@ -259,31 +259,50 @@ function handleDropdownRegion() {
   }
   
   // get actual selected Region
-  getActualRegion = function() {
-    const currentRegion = regionsNameList.find(r => r.localeHome === location.pathname);
+  const selectedRegion = () => {
+    const regionPage = regionsNameList.find(r => r.localeHome === location.pathname);
+    // check if localeName matches the blog.language example 'en' in order to show the localeName in the buttom
+    const nonRegionPage = regionsNameList.find(r => r.lang === window.blog.language);
     let selectedLocale;
-    if (!currentRegion) {
+    let selectedLocaleName;
+    if (!regionPage) {
       // region array is empty, we are not on a region page -> check the sessionStorage, if no value, use blog.language
       selectedLocale = sessionStorage.getItem('blog-selected-language') || window.blog.language;
+      // in order to show the localeName in our region button
+      if (selectedLocale !== window.blog.language) {
+        const storedLanguage = regionsNameList.find(r => r.lang === selectedLocale);
+        selectedLocaleName = storedLanguage.localeName;
+      } else {
+        selectedLocaleName = nonRegionPage.localeName;
+      }
     } else {
-      selectedLocale = currentRegion.lang;
-        // sessionStorage will be used only if current region lang is not same as blog.lang en_apac en_uk 
-        // where blog.lang will still being en
-        if (currentRegion.lang !== window.blog.language) {
-          sessionStorage.setItem('blog-selected-language', currentRegion.lang);
-        }
-    } return { selectedLocale };
-  } ();
+      selectedLocale = regionPage.lang;
+      selectedLocaleName = regionPage.localeName;
+      // sessionStorage will be used only if current region lang is not same as blog.lang en_apac en_uk 
+      // where blog.lang will still being en
+      if (regionPage.lang !== window.blog.language) {
+        sessionStorage.setItem('blog-selected-language', regionPage.lang);
+      }
+    } return {selectedLocale, selectedLocaleName};
+  }
+
+  
+  const dropdownRegionList = document.querySelector('.region-dropdown-list');
+  const {selectedLocale, selectedLocaleName} = selectedRegion(); 
+
+  // Change locale value from Feds Region Picker Button adding a Region Locale Name 
+  const FEDSregionPickerText = document.querySelector('.feds-regionPicker-text');
+  if (FEDSregionPickerText && selectedLocaleName !== undefined) {
+      FEDSregionPickerText.innerText = selectedLocaleName;
+  }
 
   // Automatically build the dropdown based on Locale List
-  const dropdownRegionList = document.querySelector('.region-dropdown-list');
-  const selectedRegionLocale =  getActualRegion.selectedLocale;
   if (dropdownRegionList) {
-    for (const {lang, localeName,localeHome} of regionsNameList) {
+    for (const {lang, localeName, localeHome} of regionsNameList) {
       dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="${window.location.origin + localeHome}" title="${localeName}" data-lang="${lang}">${localeName}</a></li>`);
       const regionDropdownPicker = document.querySelector('.region-dropdown-picker');
       if (regionDropdownPicker) {
-        if (selectedRegionLocale === lang) {
+        if (selectedLocale === lang) {
           regionDropdownPicker.classList.add('selected');
         }
       }
