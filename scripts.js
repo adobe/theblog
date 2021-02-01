@@ -268,11 +268,13 @@ function handleDropdownRegion() {
     if (!regionPage) {
       // region array is empty, we are not on a region page -> check the sessionStorage, if no value, use blog.language
       selectedLocale = sessionStorage.getItem('blog-selected-language') || window.blog.language;
-      // in order to show the localeName in our region button
+      // in order to show the localeName either from SessionStorage locale or blog.language in our region button
       if (selectedLocale !== window.blog.language) {
+        // if the selected locale do not match the blog.language we get the LocaleName name based on the sessionStorage saved Language Value
         const storedLanguage = regionsNameList.find(r => r.lang === selectedLocale);
         selectedLocaleName = storedLanguage.localeName;
       } else {
+        // else we get the localeName base on the blog.language and after have find the same language in our RegionListName
         selectedLocaleName = nonRegionPage.localeName;
       }
     } else {
