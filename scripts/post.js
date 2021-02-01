@@ -816,13 +816,15 @@ window.addEventListener('load', async function() {
   decorateLinkedImages();
   decorateInfographic();
   decorateCaptions();
-  addInterLinks().then(() => handleLinks());
-  fetchAuthor();
-  await handleAsyncMetadata();
-  await addCategory();
-  await addTopics();
-  loadGetSocial();
-  shapeBanners();
-  fetchArticles();
-  addPublishDependencies();
+  window.setTimeout(async () => {
+    addInterLinks().then(() => handleLinks());
+    fetchAuthor();
+    await handleAsyncMetadata();
+    addCategory();
+    addTopics();
+    loadGetSocial();
+    shapeBanners();
+    fetchArticles();
+    addPublishDependencies();
+  }, 1);
 });
