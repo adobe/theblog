@@ -279,11 +279,11 @@ function handleDropdownRegion() {
   const dropdownRegionList = document.querySelector('.region-dropdown-list');
   const selectedRegionLocale =  getActualRegion.selectedLocale;
   if (dropdownRegionList) {
-    for (const {lang: locale, localeName: localeName, localeHome: localeHome} of regionsNameList) {
-      dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="${window.location.origin + localeHome}" title="${localeName}" data-lang="${locale}">${localeName}</a></li>`);
+    for (const {lang, localeName,localeHome} of regionsNameList) {
+      dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="${window.location.origin + localeHome}" title="${localeName}" data-lang="${lang}">${localeName}</a></li>`);
       const regionDropdownPicker = document.querySelector('.region-dropdown-picker');
       if (regionDropdownPicker) {
-        if (selectedRegionLocale === locale) {
+        if (selectedRegionLocale === lang) {
           regionDropdownPicker.classList.add('selected');
         }
       }
