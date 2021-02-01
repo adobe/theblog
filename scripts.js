@@ -27,8 +27,10 @@ function loadJSModule(src) {
  */
 function loadCSS(href) {
   const link = document.createElement('link');
-  link.setAttribute('rel', 'stylesheet');
+  link.setAttribute('rel', 'preload');
   link.setAttribute('href', href);
+  link.setAttribute('as', href);
+  link.setAttribute('onload', 'this.onload=null;this.rel=\'stylesheet\'');
   document.head.appendChild(link);
 };
 
