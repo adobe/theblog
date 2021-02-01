@@ -260,17 +260,17 @@ function handleDropdownRegion() {
   
   // get actual selected Region
   getActualRegion = function() {
-    const currentRegion = regionsNameList.filter(r => r.localeHome === location.pathname);
+    const currentRegion = regionsNameList.find(r => r.localeHome === location.pathname);
     let selectedLocale;
-    if (!currentRegion.length) {
+    if (!currentRegion) {
       // region array is empty, we are not on a region page -> check the sessionStorage, if no value, use blog.language
       selectedLocale = sessionStorage.getItem('blog-selected-language') || window.blog.language;
     } else {
-      selectedLocale = currentRegion[0].lang;
+      selectedLocale = currentRegion.lang;
         // sessionStorage will be used only if current region lang is not same as blog.lang en_apac en_uk 
         // where blog.lang will still being en
-        if (currentRegion[0].lang !== window.blog.language) {
-          sessionStorage.setItem('blog-selected-language', currentRegion[0].lang);
+        if (currentRegion.lang !== window.blog.language) {
+          sessionStorage.setItem('blog-selected-language', currentRegion.lang);
         }
     } return { selectedLocale };
   } ();
