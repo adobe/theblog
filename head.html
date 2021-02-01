@@ -16,6 +16,58 @@
 <link rel="preconnect" href="https://www.adobe.com"/>
 
 <style type="text/css">
+ *,
+ *:before,
+ *:after {
+    box-sizing: border-box;
+    border: 0;
+ }
+ 
+ body {
+   padding: 0;
+   margin: 0;
+   background-color: white;
+   font-family: adobe-clean, sans-serif;
+   font-weight: 300;
+   font-size: 1.125rem;
+   line-height: 1.5em;
+ }
+
+main > div {
+  padding: 1rem 2rem;
+}
+
+img {
+  width: 100%;
+}
+
+main > div img {
+  max-width: 100%;
+}
+
+ h1, h2, h3, h4, h5, h6 {
+   font-weight: 600;
+   line-height: 1.25em;
+   margin: 0.25em 0;
+ }
+ 
+ h1 {
+   font-size: 28px;
+ }
+ 
+ h2 {
+   font-size: 24px;
+ }
+ 
+ 
+ h3 {
+   font-size: 20px;
+ }
+ 
+ h4, h5, h6 {
+   font-size: 16px;
+ }
+
   /* hide content while styles are loading to avoid flickering */
   header, main, footer {
     visibility: hidden;
@@ -91,8 +143,8 @@
 <!-- async css loading -->
 <link rel="icon" type="image/svg+xml" href="/icons/adobe.svg"/>
 <link rel="alternate icon" href="https://www.adobe.com/favicon.ico"/>
-<link rel="stylesheet" href="/style.css"/>
-<link rel="stylesheet" href="/hlx_fonts/pnv6nym.css"/>
+<link rel="preload" href="/styles.css" as="styles" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="/hlx_fonts/pnv6nym.css" as="fonts" onload="this.onload=null;this.rel='stylesheet'">
 <link rel="publisher" href="https://www.facebook.com/Adobe"/>
 
 <script src="/scripts.js"></script>

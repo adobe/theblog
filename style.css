@@ -15,58 +15,6 @@
   100% { opacity: 1; }
 }
 
- *,
- *:before,
- *:after {
-    box-sizing: border-box;
-    border: 0;
- }
- 
- body {
-   padding: 0;
-   margin: 0;
-   background-color: white;
-   font-family: adobe-clean, sans-serif;
-   font-weight: 300;
-   font-size: 1.125rem;
-   line-height: 1.5em;
- }
-
-main > div {
-  padding: 1rem 2rem;
-}
-
-img {
-  width: 100%;
-}
-
-main > div img {
-  max-width: 100%;
-}
-
- h1, h2, h3, h4, h5, h6 {
-   font-weight: 600;
-   line-height: 1.25em;
-   margin: 0.25em 0;
- }
- 
- h1 {
-   font-size: 28px;
- }
- 
- h2 {
-   font-size: 24px;
- }
- 
- 
- h3 {
-   font-size: 20px;
- }
- 
- h4, h5, h6 {
-   font-size: 16px;
- }
- 
  .detail-m, .detail-l, .detail-xl {
    margin: 0.5em 0;
    line-height: 1.5em;
