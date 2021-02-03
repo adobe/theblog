@@ -18,6 +18,7 @@ import {
   wrapNodes,
   createTag,
   extractTopicsAndProducts,
+  fireLCP,
 } from '/scripts/common.js';
 
 import {
@@ -199,6 +200,20 @@ function fixTableCleanup() {
 function decoratePostPage(){
   addClass('.post-page main>div:first-of-type', 'post-title');
   addClass('.post-page main>div:nth-of-type(2)', 'hero-image');
+  
+  const hero = document.querySelector('.hero-image img');
+  if (hero) {
+    if (hero.complete) {
+      fireLCP();
+    } else {
+      hero.addEventListener('load', () => {
+        fireLCP();
+      });
+    }
+  } else {
+    fireLCP();
+  }
+
   addClass('.post-page main>div:nth-of-type(3)', 'post-author');
    // hide author name
   addClass('.post-author', 'hide');
@@ -805,10 +820,7 @@ function addPublishDependencies() {
   window.hlx.dependencies = [path.replace('/publish/', '/')];
 }
 
-decoratePostPage();
-handleImmediateMetadata();
-
-window.setTimeout(async function() {
+document.addEventListener('lcp', async (e) => {
   decorateImages();
   decorateTables();
   decorateAnimations();
@@ -824,5 +836,8 @@ window.setTimeout(async function() {
   loadGetSocial();
   shapeBanners();
   fetchArticles();
-  addPublishDependencies();
-}, 3000);
+  addPublishDependencies();  
+}, false);
+
+decoratePostPage();
+handleImmediateMetadata();

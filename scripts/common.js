@@ -649,8 +649,12 @@ export function extractTopicsAndProducts() {
   }
 }
 
-// window.addEventListener('load', function() {
-  setDocumentLanguage();
-  removeHeaderAndFooter();
-  addPageTypeAsBodyClass();
-// });
+export function fireLCP() {
+  const event = document.createEvent('Event');
+  event.initEvent('lcp', true, true);
+  document.dispatchEvent(event);
+}
+
+setDocumentLanguage();
+addPageTypeAsBodyClass();
+removeHeaderAndFooter();
