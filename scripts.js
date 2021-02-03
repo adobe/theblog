@@ -270,7 +270,7 @@ window.setTimeout(() => {
   loadCSS(`/style/${window.blog.pageType}.css`);
   // Load language specific CSS overlays
   loadCSS(`/dict.${window.blog.language}.css`);
-}, 100);
+}, 5000);
 
 loadJSModule(`/scripts/${window.blog.pageType}.js`);
 

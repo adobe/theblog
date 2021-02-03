@@ -808,7 +808,6 @@ function addPublishDependencies() {
 decoratePostPage();
 handleImmediateMetadata();
 
-
 window.setTimeout(async function() {
   decorateImages();
   decorateTables();
@@ -826,4 +825,4 @@ window.setTimeout(async function() {
   shapeBanners();
   fetchArticles();
   addPublishDependencies();
-}, 100);
+}, 3000);
