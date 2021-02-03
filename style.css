@@ -32,12 +32,12 @@
    font-size: 16px;
  }
  
- p, .body-l, .body-m, .body-xl {
+ .body-l, .body-m, .body-xl {
    margin: 0.5em 0;
    line-height: 1.5em;
  }
  
- p, .body-xl {
+ .body-xl {
    font-size: 20px; 
  }
  
