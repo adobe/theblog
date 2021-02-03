@@ -48,13 +48,7 @@
  .body-m {
    font-size: 16px; 
  }
- 
- 
- a {
-   color: #2c6d9f;
-   text-decoration: underline;
- }
- 
+  
  pre {
    background-color: lightgrey;
    padding: 1em;

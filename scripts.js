@@ -27,10 +27,10 @@ function loadJSModule(src) {
  */
 function loadCSS(href) {
   const link = document.createElement('link');
-  link.setAttribute('rel', 'preload');
+  link.setAttribute('rel', 'stylesheet');
   link.setAttribute('href', href);
-  link.setAttribute('as', 'style');
-  link.setAttribute('onload', 'this.onload=null;this.rel=\'stylesheet\'');
+  link.setAttribute('media', 'print');
+  link.setAttribute('onload', 'this.media=\'all\'');
   document.head.appendChild(link);
 };
 
@@ -265,12 +265,8 @@ const observer = new MutationObserver(mutations => {
 });
 observer.observe(document, { childList: true, subtree: true });
 
-// Load page specific code
-window.setTimeout(() => {
-  loadCSS(`/style/${window.blog.pageType}.css`);
-  // Load language specific CSS overlays
-  loadCSS(`/dict.${window.blog.language}.css`);
-}, 5000);
-
 loadJSModule(`/scripts/${window.blog.pageType}.js`);
 
+loadCSS(`/style/${window.blog.pageType}.css`);
+// Load language specific CSS overlays
+loadCSS(`/dict.${window.blog.language}.css`);
