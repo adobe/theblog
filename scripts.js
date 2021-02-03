@@ -265,8 +265,9 @@ const observer = new MutationObserver(mutations => {
 });
 observer.observe(document, { childList: true, subtree: true });
 
-loadJSModule(`/scripts/${window.blog.pageType}.js`);
+// loadJSModule(`/scripts/${window.blog.pageType}.js`);
 
-loadCSS(`/style/${window.blog.pageType}.css`);
+// loadCSS(`/style/${window.blog.pageType}.css`);
+
 // Load language specific CSS overlays
-loadCSS(`/dict.${window.blog.language}.css`);
+// loadCSS(`/dict.${window.blog.language}.css`);

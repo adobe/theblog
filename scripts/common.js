@@ -655,6 +655,6 @@ export function fireLCP() {
   document.dispatchEvent(event);
 }
 
-setDocumentLanguage();
-addPageTypeAsBodyClass();
-removeHeaderAndFooter();
+// setDocumentLanguage();
+// addPageTypeAsBodyClass();
+// removeHeaderAndFooter();
