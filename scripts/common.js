@@ -649,8 +649,8 @@ export function extractTopicsAndProducts() {
   }
 }
 
-window.addEventListener('load', function() {
+// window.addEventListener('load', function() {
   setDocumentLanguage();
   removeHeaderAndFooter();
   addPageTypeAsBodyClass();
-});
+// });

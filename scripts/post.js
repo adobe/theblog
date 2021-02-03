@@ -805,26 +805,25 @@ function addPublishDependencies() {
   window.hlx.dependencies = [path.replace('/publish/', '/')];
 }
 
+decoratePostPage();
+handleImmediateMetadata();
 
-// window.addEventListener('load', async function() {
-//   decoratePostPage();
-//   handleImmediateMetadata();
-//   decorateImages();
-//   decorateTables();
-//   decorateAnimations();
-//   decorateEmbeds();
-//   decorateLinkedImages();
-//   decorateInfographic();
-//   decorateCaptions();
-//   window.setTimeout(async () => {
-//     addInterLinks().then(() => handleLinks());
-//     fetchAuthor();
-//     await handleAsyncMetadata();
-//     addCategory();
-//     addTopics();
-//     loadGetSocial();
-//     shapeBanners();
-//     fetchArticles();
-//     addPublishDependencies();
-//   }, 1);
-// });
+
+window.setTimeout(async function() {
+  decorateImages();
+  decorateTables();
+  decorateAnimations();
+  decorateEmbeds();
+  decorateLinkedImages();
+  decorateInfographic();
+  decorateCaptions();
+  addInterLinks().then(() => handleLinks());
+  fetchAuthor();
+  await handleAsyncMetadata();
+  addCategory();
+  addTopics();
+  loadGetSocial();
+  shapeBanners();
+  fetchArticles();
+  addPublishDependencies();
+}, 100);

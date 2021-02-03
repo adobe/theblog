@@ -347,11 +347,7 @@
    display: none;
  }
  
- .hide {
-   display: none !important;
- }
- 
- @media (min-width:600px) {
+@media (min-width:600px) {
  
    h1 {
      font-size: 36px;

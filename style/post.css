@@ -9,13 +9,6 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-.post-page main div.post-author {
-  margin-top: 20px;
-  height: 96px;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
 .post-page main div.post-author .author {
   max-width: 600px; 
   margin: 20px auto 0 auto;
@@ -49,12 +42,6 @@
 }
 
 
-.post-page main>div.post-body {
-  padding-top: 0;
-  padding-bottom: 0;
-  margin-top: 57px;
-}
-
 .post-page main>div.articles {
   padding-top: 80px;
 }
@@ -85,19 +72,6 @@
   font-weight: 400;
   color: #4682E1;
   text-decoration: none;
-}
-.post-page div.category {
-  margin: 0 32px;
-  padding: 0;
-}
-
-.post-page div.category a {
-  text-decoration: none;
-  color: #707070;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 700;
-  font-size: 0.8em;
 }
 
 .post-page .author {
