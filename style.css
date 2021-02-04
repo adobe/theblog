@@ -519,7 +519,7 @@ main > div img {
   display: inline-block;
   font-size: inherit;
   padding: 3px 15px 5px 8px;
-  margin: 0 0 -15px 0;
+  margin: 0;
   visibility: hidden;
   position: absolute;
   z-index: 0;
