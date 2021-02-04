@@ -263,39 +263,39 @@ function handleDropdownRegion() {
     const regionPage = regionsNameList.find(r => r.home === location.pathname);
     // check if Region name matches the blog.language example 'en' in order to show the Region Name in the buttom
     const nonRegionPage = regionsNameList.find(r => r.lang === window.blog.language);
-    let selectedRegionLang;
-    let selectedRegionName;
+    let regionLang;
+    let regionName;
     if (!regionPage) {
       // region array is empty, we are not on a region page -> check the sessionStorage, if no value, use blog.language
-      selectedRegionLang = sessionStorage.getItem('blog-selected-language') || window.blog.language;
+      regionLang = sessionStorage.getItem('blog-selected-language') || window.blog.language;
       // in order to show the Region name either from SessionStorage language or blog.language in our region button
-      if (selectedRegionLang !== window.blog.language) {
+      if (regionLang !== window.blog.language) {
         // if the selected Region lang do not match the blog.language we get the Region name based on the sessionStorage saved Language Value
-        const storedLanguage = regionsNameList.find(r => r.lang === selectedRegionLang);
-        selectedRegionName = storedLanguage.name;
+        const storedLanguage = regionsNameList.find(r => r.lang === regionLang);
+        regionName = storedLanguage.name;
       } else {
         // else we get the Region name base on the blog.language and after have find the same language in our RegionListName
-        selectedRegionName = nonRegionPage.name;
+        regionName = nonRegionPage.name;
       }
     } else {
-      selectedRegionLang = regionPage.lang;
-      selectedRegionName = regionPage.name;
+      regionLang = regionPage.lang;
+      regionName = regionPage.name;
       // sessionStorage will be used only if current Region lang is not same as blog.lang as en_apac or en_uk 
       // where blog.lang will still being en
       if (regionPage.lang !== window.blog.language) {
         sessionStorage.setItem('blog-selected-language', regionPage.lang);
       }
-    } return {selectedRegionLang, selectedRegionName};
+    } return {regionLang, regionName};
   }
 
   
   const dropdownRegionList = document.querySelector('.region-dropdown-list');
-  const {selectedRegionLang, selectedRegionName} = selectedRegion(); 
+  const {regionLang, regionName} = selectedRegion(); 
 
   // Change Region name value from Feds Region Picker Button adding a Region Name
   const FEDSregionPickerText = document.querySelector('.feds-regionPicker-text');
-  if (FEDSregionPickerText && selectedRegionName !== undefined) {
-      FEDSregionPickerText.innerText = selectedRegionName;
+  if (FEDSregionPickerText && regionName !== undefined) {
+      FEDSregionPickerText.innerText = regionName;
   }
 
   // Automatically build the dropdown based on Region List
@@ -304,7 +304,7 @@ function handleDropdownRegion() {
       dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="${window.location.origin + home}" title="${name}" data-lang="${lang}">${name}</a></li>`);
       const regionDropdownPicker = document.querySelector('.region-dropdown-picker');
       if (regionDropdownPicker) {
-        if (selectedRegionLang === lang) {
+        if (regionLang === lang) {
           regionDropdownPicker.classList.add('selected');
         }
       }
