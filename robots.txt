@@ -13,9 +13,5 @@ disallow: /fr/
 disallow: /it/
 disallow: /jp/
 disallow: /ko/
-allow: /ko/20*/
-allow: /ko/publish/20*/
-allow: /ko/authors/
-allow: /ko/topics/
 
 sitemap: https://blog.adobe.com/sitemap.xml
