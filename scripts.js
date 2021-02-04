@@ -292,7 +292,7 @@ function handleDropdownRegion() {
   const dropdownRegionList = document.querySelector('.region-dropdown-list');
   const {regionLang, regionName} = selectedRegion(); 
 
-  // Change Region name value from Feds Region Picker Button adding a Region Name
+  // Change Region name value from Feds Region Picker Button adding the actual Region Name
   const FEDSregionPickerText = document.querySelector('.feds-regionPicker-text');
   if (FEDSregionPickerText && regionName !== undefined) {
       FEDSregionPickerText.innerText = regionName;
@@ -304,6 +304,7 @@ function handleDropdownRegion() {
       dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="${window.location.origin + home}" title="${name}" data-lang="${lang}">${name}</a></li>`);
       const regionDropdownPicker = document.querySelector('.region-dropdown-picker');
       if (regionDropdownPicker) {
+        // Mark the actual selected Region on the dropdown
         if (regionLang === lang) {
           regionDropdownPicker.classList.add('selected');
         }
