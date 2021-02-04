@@ -337,13 +337,13 @@ function handleDropdownRegion() {
     });
   }
 
-  const regionDropdownModal  = document.querySelector('.region-dropdown');
-  // jj
-    if (regionDropdownModal) {
-      window.addEventListener('resize', () => {
-            positionDropdownModal();
-      });
-    }
+  // As we are attaching the Dropdown on top of the Button region Picker
+  // this position will be updated if the window change
+  if (regionDropdownModal) {
+    window.addEventListener('resize', () => {
+          positionDropdownModal();
+    });
+  }
 }
 
 function positionDropdownModal() {
