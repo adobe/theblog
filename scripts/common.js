@@ -131,10 +131,7 @@ function removeHeaderAndFooter() {
  * @returns {string} The card path
  */
 function getCardPath(path) {
-  path = path.toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
-  return !window.location.hostname.endsWith('.page') && !isLocalhost()
-    ? path.replace('/publish/', '/')
-    : path;
+  return path ? path.toLowerCase().replace(/[^a-z\d_\/\.]/g,'-') : '';
 }
 
 /**
@@ -216,7 +213,7 @@ export function getPostPaths(el, parent, removeContainer) {
       let path = url.pathname;
       const p = path.split('/');
       if (p.length >= 3 && p[2] !== 'drafts' && p[2] !== 'publish') {
-        // re-add /publish/ for the query
+        // add /publish/ if missing
         p.splice(2, 0, 'publish');
         path = p.join('/');
       }
@@ -235,7 +232,7 @@ export function getPostPaths(el, parent, removeContainer) {
  * @param {object} item The query hit object
  * @returns {object} The processed query hit object
  */
-export async function itemTransformer(item) {
+export async function itemTransformer(item = {}) {
   const path = getCardPath(item.path);
   const taxonomy = await getTaxonomy(window.blog.language);
   const itemParams = {
@@ -245,15 +242,17 @@ export async function itemTransformer(item) {
         crop: '3:2',
       })
       : '#',
-    date: new Date(item.date * 1000).toLocaleDateString('en-US', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      timeZone: 'UTC',
-    }).replace(/\//g, '-'),
+    date: item.date
+      ? new Date(item.date * 1000).toLocaleDateString('en-US', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          timeZone: 'UTC',
+        }).replace(/\//g, '-')
+      : '',
     authorUrl: item.author ? getLink(window.blog.TYPE.AUTHOR, item.author) : '',
-    topic: item.topics.length > 0 ? item.topics[0] : '',
-    topicUrl: item.topics.length > 0 ? taxonomy.getLink(item.topics[0]) || getLink(window.blog.TYPE.TOPIC, item.topics[0]) : '',
+    topic: item.topics && item.topics.length > 0 ? item.topics[0] : '',
+    topicUrl: item.topics && item.topics.length > 0 ? taxonomy.getLink(item.topics[0]) || getLink(window.blog.TYPE.TOPIC, item.topics[0]) : '',
     path,
   }
   return Object.assign({}, item, itemParams);
@@ -356,6 +355,8 @@ async function translateTable(pages, index) {
   const taxonomy = await getTaxonomy(window.blog.language);
   pages.forEach((e) => {
     let r=e;
+    // exclude invalid paths
+    if (!r.path || r.path === 0 || r.path === '') return;
     let products=JSON.parse(r.products);
     let topics=JSON.parse(r.topics);
     if (!Array.isArray(products)) products=[];
@@ -376,6 +377,8 @@ async function translateTable(pages, index) {
     // filter duplicates
     r.topics = Array.from(new Set(r.topics));
     r.products = Array.from(new Set(r.products));
+
+    if (r.path.startsWith('/')) r.path=r.path.substring(1);
 
     index.pathLookup[r.path]=r;
     index.articles.push (r);
@@ -399,6 +402,10 @@ export async function fetchArticleIndex(offset) {
     const json = await response.json();
     const data = Array.isArray(json) ? json : json.data;
     await translateTable(data,window.blog.articleIndex);
+  } else {
+    // stop because of error
+    console.log('error fetching index segment');
+    index.done=true;
   }
   console.log(`fetched article index: at ${index.articles.length} entries, ${index.done?'':'not'} done.`)
 }
