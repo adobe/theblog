@@ -229,23 +229,23 @@ function handleDropdownRegion() {
   const regionsNameList = [
     {
       lang: 'en_apac',
-      localeName: 'APAC (English)',
-      localeHome: `/en/apac.html`,
+      name: 'APAC (English)',
+      home: `/en/apac.html`,
     },
     {
       lang: "ko",
-      localeName: "Korea (한국어)",
-      localeHome: `/ko/ko.html`,
+      name: "Korea (한국어)",
+      home: `/ko/ko.html`,
     },
     {
       lang: "en_uk",
-      localeName: "UK (English)",
-      localeHome: `/en/uk.html`,
+      name: "UK (English)",
+      home: `/en/uk.html`,
     },
     {
       lang: "en",
-      localeName: "US (English)",
-      localeHome: `/`,
+      name: "US (English)",
+      home: `/`,
     }
   ];
   
@@ -260,51 +260,51 @@ function handleDropdownRegion() {
   
   // get actual selected Region
   const selectedRegion = () => {
-    const regionPage = regionsNameList.find(r => r.localeHome === location.pathname);
-    // check if localeName matches the blog.language example 'en' in order to show the localeName in the buttom
+    const regionPage = regionsNameList.find(r => r.home === location.pathname);
+    // check if Region name matches the blog.language example 'en' in order to show the Region Name in the buttom
     const nonRegionPage = regionsNameList.find(r => r.lang === window.blog.language);
-    let selectedLocale;
-    let selectedLocaleName;
+    let selectedRegionLang;
+    let selectedRegionName;
     if (!regionPage) {
       // region array is empty, we are not on a region page -> check the sessionStorage, if no value, use blog.language
-      selectedLocale = sessionStorage.getItem('blog-selected-language') || window.blog.language;
-      // in order to show the localeName either from SessionStorage locale or blog.language in our region button
-      if (selectedLocale !== window.blog.language) {
-        // if the selected locale do not match the blog.language we get the LocaleName name based on the sessionStorage saved Language Value
-        const storedLanguage = regionsNameList.find(r => r.lang === selectedLocale);
-        selectedLocaleName = storedLanguage.localeName;
+      selectedRegionLang = sessionStorage.getItem('blog-selected-language') || window.blog.language;
+      // in order to show the Region name either from SessionStorage language or blog.language in our region button
+      if (selectedRegionLang !== window.blog.language) {
+        // if the selected Region lang do not match the blog.language we get the Region name based on the sessionStorage saved Language Value
+        const storedLanguage = regionsNameList.find(r => r.lang === selectedRegionLang);
+        selectedRegionName = storedLanguage.name;
       } else {
-        // else we get the localeName base on the blog.language and after have find the same language in our RegionListName
-        selectedLocaleName = nonRegionPage.localeName;
+        // else we get the Region name base on the blog.language and after have find the same language in our RegionListName
+        selectedRegionName = nonRegionPage.name;
       }
     } else {
-      selectedLocale = regionPage.lang;
-      selectedLocaleName = regionPage.localeName;
-      // sessionStorage will be used only if current region lang is not same as blog.lang en_apac en_uk 
+      selectedRegionLang = regionPage.lang;
+      selectedRegionName = regionPage.name;
+      // sessionStorage will be used only if current Region lang is not same as blog.lang as en_apac or en_uk 
       // where blog.lang will still being en
       if (regionPage.lang !== window.blog.language) {
         sessionStorage.setItem('blog-selected-language', regionPage.lang);
       }
-    } return {selectedLocale, selectedLocaleName};
+    } return {selectedRegionLang, selectedRegionName};
   }
 
   
   const dropdownRegionList = document.querySelector('.region-dropdown-list');
-  const {selectedLocale, selectedLocaleName} = selectedRegion(); 
+  const {selectedRegionLang, selectedRegionName} = selectedRegion(); 
 
-  // Change locale value from Feds Region Picker Button adding a Region Locale Name 
+  // Change Region name value from Feds Region Picker Button adding a Region Name
   const FEDSregionPickerText = document.querySelector('.feds-regionPicker-text');
-  if (FEDSregionPickerText && selectedLocaleName !== undefined) {
-      FEDSregionPickerText.innerText = selectedLocaleName;
+  if (FEDSregionPickerText && selectedRegionName !== undefined) {
+      FEDSregionPickerText.innerText = selectedRegionName;
   }
 
-  // Automatically build the dropdown based on Locale List
+  // Automatically build the dropdown based on Region List
   if (dropdownRegionList) {
-    for (const {lang, localeName, localeHome} of regionsNameList) {
-      dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="${window.location.origin + localeHome}" title="${localeName}" data-lang="${lang}">${localeName}</a></li>`);
+    for (const {lang, name, home} of regionsNameList) {
+      dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="${window.location.origin + home}" title="${name}" data-lang="${lang}">${name}</a></li>`);
       const regionDropdownPicker = document.querySelector('.region-dropdown-picker');
       if (regionDropdownPicker) {
-        if (selectedLocale === lang) {
+        if (selectedRegionLang === lang) {
           regionDropdownPicker.classList.add('selected');
         }
       }
