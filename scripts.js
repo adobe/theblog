@@ -285,7 +285,8 @@ function handleDropdownRegion() {
       if (regionPage.lang !== window.blog.language) {
         sessionStorage.setItem('blog-selected-language', regionPage.lang);
       }
-    } return {regionLang, regionName};
+    } 
+    return {regionLang, regionName};
   }
 
   
