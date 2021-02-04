@@ -336,14 +336,29 @@ function handleDropdownRegion() {
       }
     });
   }
+
+  const regionDropdownModal  = document.querySelector('.region-dropdown');
+  // jj
+    if (regionDropdownModal) {
+      window.addEventListener('resize', () => {
+            positionDropdownModal();
+      });
+    }
 }
 
-function showDropdownModal() {
+function positionDropdownModal() {
   const regionDropdownModal  = document.querySelector('.region-dropdown');
   const regionDropdownButton =  document.querySelector('.feds-regionPicker');
   if (regionDropdownModal) {
     regionDropdownModal.style.left = regionDropdownButton.getBoundingClientRect().left + window.scrollX + 'px';
-    regionDropdownModal.style.top = window.scrollY + regionDropdownButton.getBoundingClientRect().top - regionDropdownModal.getBoundingClientRect().height + 'px';
+    regionDropdownModal.style.top = (window.scrollY + regionDropdownButton.getBoundingClientRect().top) - 15 - regionDropdownModal.getBoundingClientRect().height + 'px';
+  }
+}
+
+function showDropdownModal() {
+  const regionDropdownModal  = document.querySelector('.region-dropdown');
+  if (regionDropdownModal) {
+    positionDropdownModal();
     regionDropdownModal.classList.add('visible');
   }
  }
