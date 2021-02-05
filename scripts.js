@@ -259,7 +259,7 @@ function handleDropdownRegion() {
   }
   
   // get actual selected Region
-  const selectedRegion = () => {
+  const getSelectedRegion = () => {
     const regionPage = regionsNameList.find(r => r.home === location.pathname);
     // check if Region name matches the blog.language example 'en' in order to show the Region Name in the buttom
     const nonRegionPage = regionsNameList.find(r => r.lang === window.blog.language);
@@ -291,7 +291,7 @@ function handleDropdownRegion() {
 
   
   const dropdownRegionList = document.querySelector('.region-dropdown-list');
-  const {regionLang, regionName} = selectedRegion(); 
+  const {regionLang, regionName} = getSelectedRegion(); 
 
   // Change Region name value from Feds Region Picker Button adding the actual Region Name
   const FEDSregionPickerText = document.querySelector('.feds-regionPicker-text');
