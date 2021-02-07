@@ -17,10 +17,15 @@
 
   const path = sk.location.pathname;
   if (!path.includes('/publish/') && /\d{4}\/\d{2}\/\d{2}/.test(path)) {
-    // post URL wihout publish in the path, add it back
+    // post URL without publish in the path, add it back
     const segs = path.split('/');
     segs.splice(2, 0, 'publish')
     sk.location = new URL(segs.join('/'), sk.location.origin);
+  }
+
+  if (typeof sk.copyGlobal === 'function') {
+    // copy globals for sidekick extension
+    sk.copyGlobal('blog');  
   }
 
   // TAGGER -----------------------------------------------------------------------
@@ -42,13 +47,16 @@
   function getCardData() {
     const d = getArticleData();
     return {
-      author: d[0],
-      date: d[1],
-      hero: d[2],
-      path: window.location.pathname.substring(1),
+      date: new Date(d[1] * 1000).toLocaleDateString('en-US', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        timeZone: 'UTC',
+      }).replace(/\//g, '-'),
+      hero: `${d[2]}?auto=webp&format=pjpg&optimize=medium&height=512&crop=3%3A2`,
       teaser: d[6],
       title: d[7],
-      topics: [...window.blog.allVisibleTopics],
+      topic: [...(window.blog.allVisibleTopics || window.blog.topics)][0],
     };
   }
 
@@ -69,10 +77,6 @@
     button: {
       text: 'Card Preview',
       action: async (evt) => {
-        const {
-          addCard,
-          itemTransformer,
-        } = await import('/scripts/common.js');
         const sk = window.hlx && window.hlx.sidekick ? window.hlx.sidekick : window.hlxSidekick;
         const btn = evt.target;
         let $modal = document.querySelector('.hlx-sk-overlay > div > .card');
@@ -81,10 +85,21 @@
           btn.classList.remove('pressed');
         } else {
           sk.showModal('', true);
+          const card = getCardData();
           $modal = document.querySelector('.hlx-sk-overlay > div');
           $modal.classList.remove('wait');
-          $modal.innerHTML = addCard(await itemTransformer(getCardData()),
-            document.createDocumentFragment()).outerHTML;
+          $modal.innerHTML = `
+          <div class="card">
+          <div class="hero">
+            <a href="#" title="${card.title}"><img src="${card.hero}" alt="${card.title}"></a>
+          </div>
+          <div class="content">
+            <p class="topic"><a href="#" title="${card.topic}">${card.topic}</a></p>
+            <h2><a href="#" title="${card.title}">${card.title}</a></h2>
+            <p class="teaser"><a href="#" title="${card.teaser}">${card.teaser}</a></p>
+            <p class="date">${card.date}</p>
+          </div></div>
+          `;
           function hideCardPreview() {
             sk.hideModal();
             btn.classList.remove('pressed');
@@ -103,6 +118,7 @@
           const style = document.createElement('style');
           style.textContent = `
           .hlx-sk-overlay .card {
+            width: 376px;
             box-shadow: var(--hlx-sk-shadow);
           }
           .hlx-sk-overlay > div {
