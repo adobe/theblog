@@ -238,7 +238,7 @@
           console.log('error', JSON.stringify(await resp.json()));
         }
         const path = new URL(json.unfriendlyWebUrl).pathname;
-        const purge = await sendPurge(config, path);
+        const purge = await sk.publish(path);
         if (purge.ok) {
           await fetch(json.unfriendlyWebUrl, {cache: 'reload', mode: 'no-cors'});
           sk.notify('Taxonomy published');
