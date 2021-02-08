@@ -621,10 +621,13 @@ function decorateEmbeds() {
       type='instagram';
     }
 
-    if ($a.href.startsWith('https://player.vimeo.com/video/')) {
+    const vimeoPlayerFlag = $a.href.startsWith('https://player.vimeo.com/video/');
+    if (vimeoPlayerFlag || $a.href.startsWith('https://vimeo.com')) {
+      const linkArr = $a.href.split('/');
+      const video = linkArr ? linkArr[3] : linkArr;
       embedHTML=`
         <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-        <iframe src="${url}?byline=0&badge=0&portrait=0&title=0" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" 
+        <iframe src="${vimeoPlayerFlag ? url : `https://player.vimeo.com/video/${video}`}?byline=0&badge=0&portrait=0&title=0" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" 
         allowfullscreen="" scrolling="no" allow="encrypted-media" title="content from vimeo" loading="lazy">
         </iframe>
         </div>`
