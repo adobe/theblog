@@ -275,9 +275,7 @@ function handleDropdownRegion() {
         regionName = storedLanguage.name;
       } else {
         // else we get the Region name base on the blog.language and after have find the same language in our RegionListName
-        if (nonRegionPage !== undefined) {
-            regionName = nonRegionPage.name;
-        }       
+          regionName = nonRegionPage.name;    
       }
     } else {
       regionLang = regionPage.lang;
@@ -297,7 +295,7 @@ function handleDropdownRegion() {
 
   // Change Region name value from Feds Region Picker Button adding the actual Region Name
   const FEDSregionPickerText = document.querySelector('.feds-regionPicker-text');
-  if (FEDSregionPickerText && regionName !== undefined) {
+  if (FEDSregionPickerText) {
       FEDSregionPickerText.innerText = regionName;
   }
 
