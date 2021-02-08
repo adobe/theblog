@@ -17,7 +17,7 @@
 
   const path = sk.location.pathname;
   if (!path.includes('/publish/') && /\d{4}\/\d{2}\/\d{2}/.test(path)) {
-    // post URL wihout publish in the path, add it back
+    // post URL without publish in the path, add it back
     const segs = path.split('/');
     segs.splice(2, 0, 'publish')
     sk.location = new URL(segs.join('/'), sk.location.origin);
@@ -103,6 +103,7 @@
           const style = document.createElement('style');
           style.textContent = `
           .hlx-sk-overlay .card {
+            width: 376px;
             box-shadow: var(--hlx-sk-shadow);
           }
           .hlx-sk-overlay > div {
@@ -237,7 +238,7 @@
           console.log('error', JSON.stringify(await resp.json()));
         }
         const path = new URL(json.unfriendlyWebUrl).pathname;
-        const purge = await sendPurge(config, path);
+        const purge = await sk.publish(path);
         if (purge.ok) {
           await fetch(json.unfriendlyWebUrl, {cache: 'reload', mode: 'no-cors'});
           sk.notify('Taxonomy published');

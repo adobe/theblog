@@ -1,11 +1,17 @@
 user-agent: *
 disallow: /archive
 disallow: /components
+disallow: /br/
+disallow: /de/
 disallow: /en/
 allow: /en/20*/
 allow: /en/publish/20*/
 allow: /en/authors/
 allow: /en/topics/
+disallow: /es/
+disallow: /fr/
+disallow: /it/
 disallow: /jp/
+disallow: /ko/
 
 sitemap: https://blog.adobe.com/sitemap.xml
