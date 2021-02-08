@@ -275,7 +275,9 @@ function handleDropdownRegion() {
         regionName = storedLanguage.name;
       } else {
         // else we get the Region name base on the blog.language and after have find the same language in our RegionListName
-          regionName = nonRegionPage.name;    
+        if (nonRegionPage !== undefined) {
+            regionName = nonRegionPage.name;
+        }       
       }
     } else {
       regionLang = regionPage.lang;
@@ -289,13 +291,12 @@ function handleDropdownRegion() {
     return {regionLang, regionName};
   }
 
-  
   const dropdownRegionList = document.querySelector('.region-dropdown-list');
   const {regionLang, regionName} = getSelectedRegion(); 
 
   // Change Region name value from Feds Region Picker Button adding the actual Region Name
   const FEDSregionPickerText = document.querySelector('.feds-regionPicker-text');
-  if (FEDSregionPickerText) {
+  if (FEDSregionPickerText && regionName !== undefined) {
       FEDSregionPickerText.innerText = regionName;
   }
 
