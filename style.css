@@ -514,12 +514,15 @@ main > div img {
   */
 .region-dropdown {
   border: 1px solid #d3d3d3;
+  background-color: #ffffff;
   border-radius: 4px;
   display: inline-block;
   font-size: inherit;
   padding: 3px 15px 5px 8px;
-  margin-left: 20px;
+  margin: 0;
   visibility: hidden;
+  position: absolute;
+  z-index: 0;
 }
 
 .region-dropdown.visible {
