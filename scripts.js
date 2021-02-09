@@ -203,7 +203,7 @@ window.fedsMapping = {
 window.fedsConfig = {
   locale: window.fedsMapping[window.blog.language] || window.blog.language,
   content: {
-    experience: 'acom',
+    experience: 'blogs/blog-gnav',
   },
   search: {
     context: 'blogs',
