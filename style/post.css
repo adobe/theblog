@@ -565,6 +565,10 @@
     max-width: fit-content;
   }
 
+  .post-page main>div.post-body>.embed-twitter {
+    max-height: unset;
+  }
+
   .post-page main>div.post-body>.embed.embed-internal-promotions {
     max-width: 600px;
   }
