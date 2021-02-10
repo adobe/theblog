@@ -588,8 +588,19 @@ function decorateLinkedImages() {
   });
 }
 function decorateCaptions() {
-  document.querySelectorAll('.caption p').forEach(($p) => {
-    $p.classList.add('legend');
+  document.querySelectorAll('.caption').forEach(($caption) => {
+    const $pCheck = $caption.querySelector('p');
+    if ($pCheck) {
+      $caption('p').forEach(($p) => {
+        $p.classList.add('legend');
+      })    
+    } else {
+      const $p=createTag('p', {class: 'legend'});
+      $p.innerHTML=$caption.innerHTML;
+      $caption.innerHTML='';
+      $caption.appendChild($p);
+    }
+
   })
 }
 function decorateEmbeds() {
