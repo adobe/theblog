@@ -9,6 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+
 /**
  * Loads a JS module.
  * @param {string} src The path to the JS module
@@ -101,6 +102,7 @@ function setDigitalData() {
   digitalData._set('page.pageInfo.language', lang);
   // console.log(lang);
 }
+
 
 /**
  * Return the correct CMP integration ID based on the domain name
