@@ -518,7 +518,7 @@ main > div img {
   border-radius: 4px;
   display: inline-block;
   font-size: inherit;
-  padding: 3px 15px 5px 8px;
+  padding: 3px 10px 5px 8px;
   margin: 0;
   visibility: hidden;
   position: absolute;
@@ -542,20 +542,35 @@ a.region-dropdown-picker {
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
+  padding-right: 5px;
+}
+
+a.region-dropdown-picker:focus {
+  outline: 2px solid #109cde;
+}
+
+a.region-dropdown-picker:active {
+  outline: none;
 }
 
 a.region-dropdown-picker:after {
-  display: block;
   margin-left: 15px;
   color:rgba(20, 115, 230, 0);
-  transform-origin: center center;
-  transform: scaleX(2);
-  content: "\2228";
-  font-size: .9rem;
+  content: " ";
+  display: block;
+  width: 0.4em;
+  height: 0.8em;
+  border: solid rgba(20, 115, 230, 0);
+  border-width: 0 0.1em 0.1em 0;
+  margin-top: -0.4em;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 
 a.region-dropdown-picker.selected:after {
-  color: rgb(20, 115, 230);
+  border-color: rgb(20, 115, 230);
 }
 
 .region-dropdown-list a:hover {
