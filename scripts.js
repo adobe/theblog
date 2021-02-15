@@ -303,7 +303,7 @@ function handleDropdownRegion() {
   // Automatically build the dropdown based on Region List
   if (dropdownRegionList) {
     for (const {lang, name, home} of regionsNameList) {
-      dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="${window.location.origin + home}" title="${name}" data-lang="${lang}">${name}</a></li>`);
+      dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="${home}" title="${name}" data-lang="${lang}">${name}</a></li>`);
       const regionDropdownPicker = document.querySelector('.region-dropdown-picker');
       if (regionDropdownPicker) {
         // Mark the actual selected Region on the dropdown

@@ -527,7 +527,6 @@ main > div img {
 
 .region-dropdown.visible {
   visibility: visible;
-  z-index: 2;
 }
 
 .region-dropdown ul {
@@ -556,13 +555,7 @@ a.region-dropdown-picker:after {
 }
 
 a.region-dropdown-picker.selected:after {
-  display: block;
-  margin-left: 15px;
   color: rgb(20, 115, 230);
-  transform-origin: cent er center;
-  transform: scaleX(2);
-  content: "\2228";
-  font-size: .9rem;
 }
 
 .region-dropdown-list a:hover {
