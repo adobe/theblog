@@ -545,12 +545,13 @@ a.region-dropdown-picker {
   padding-right: 5px;
 }
 
-a.region-dropdown-picker:focus {
-  outline: 2px solid #109cde;
-}
-
+a.region-dropdown-picker:focus:not(.focus-visible),
 a.region-dropdown-picker:active {
   outline: none;
+}
+
+a.region-dropdown-picker:focus-visible {
+  outline: 2px solid #109cde;
 }
 
 a.region-dropdown-picker:after {
