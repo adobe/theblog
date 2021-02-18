@@ -662,7 +662,7 @@ function handleDropdownRegion() {
     {
       lang: "ko",
       name: "Korea (한국어)",
-      home: `/ko/index.html`,
+      home: `/ko/`,
     },
     {
       lang: "en_uk",
