@@ -527,6 +527,7 @@ main > div img {
 
 .region-dropdown.visible {
   visibility: visible;
+  z-index: 2;
 }
 
 .region-dropdown ul {
