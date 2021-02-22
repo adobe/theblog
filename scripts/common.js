@@ -730,7 +730,7 @@ function handleDropdownRegion() {
   // Automatically build the dropdown based on Region List
   if (dropdownRegionList) {
     for (const {lang, name, home} of regionsNameList) {
-      dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" tabindex="0" href="${home}" title="${name}" data-lang="${lang}">${name}</a></li>`);
+      dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="${home}" title="${name}" data-lang="${lang}">${name}</a></li>`);
       const regionDropdownPicker = document.querySelector('.region-dropdown-picker');
       if (regionDropdownPicker) {
         // Mark the actual selected Region on the dropdown
@@ -766,6 +766,15 @@ function handleDropdownRegion() {
       }
     });
   }
+
+  const dropdownLinkList = document.querySelector('.region-dropdown-picker').parentElement;
+  regionDropdownButton.addEventListener('keyup', (event) => {
+    if (event.key === 'Enter') {
+      if (regionDropdownModal.classList.contains('visible')) {
+        dropdownLinkList.firstElementChild.focus();
+      }
+    }
+  });
 
   // As we are attaching the Dropdown on top of the Button region Picker
   // this position will be updated if the window change

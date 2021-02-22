@@ -550,7 +550,7 @@ a.region-dropdown-picker:active {
   outline: none;
 }
 
-a.region-dropdown-picker:focus-visible {
+a.region-dropdown-picker:focus {
   outline: 2px solid #109cde;
 }
 
