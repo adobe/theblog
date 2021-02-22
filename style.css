@@ -543,11 +543,7 @@ a.region-dropdown-picker {
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  padding-right: 5px;
-}
-
-a.region-dropdown-picker:active {
-  outline: none;
+  padding: 8px 5px 8px 0;
 }
 
 a.region-dropdown-picker:focus {

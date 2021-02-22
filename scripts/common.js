@@ -677,12 +677,12 @@ function handleDropdownRegion() {
   ];
 
   // Add Region Dropdown Container before Feds Footer
-  const fedsFooter = document.querySelector('#feds-footer');
-  if (fedsFooter) {
+  const fedsFooterButton = document.querySelector('.feds-regionPicker');
+  if (fedsFooterButton) {
     const regionDropdownContainer = document.createElement('div');
     regionDropdownContainer.classList.add('region-dropdown');
     regionDropdownContainer.innerHTML = `<ul class="region-dropdown-list"></ul>`;
-    fedsFooter.parentElement.insertBefore(regionDropdownContainer, fedsFooter);
+    fedsFooterButton.parentElement.insertBefore(regionDropdownContainer, fedsFooterButton);
   }
   
   // Get actual selected Region
@@ -794,7 +794,7 @@ function positionDropdownModal() {
   const regionDropdownButton = document.querySelector('.feds-regionPicker');
   if (regionDropdownModal) {
     regionDropdownModal.style.left = regionDropdownButton.getBoundingClientRect().left + window.scrollX + 'px';
-    regionDropdownModal.style.top = (window.scrollY + regionDropdownButton.getBoundingClientRect().top) - 15 - regionDropdownModal.getBoundingClientRect().height + 'px';
+    regionDropdownModal.style.top = (window.scrollY + regionDropdownButton.getBoundingClientRect().top) - regionDropdownModal.getBoundingClientRect().height + 'px';
   }
 }
 
