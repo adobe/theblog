@@ -762,7 +762,7 @@ function handleDropdownRegion() {
   if (regionDropdownButton) {
     document.body.addEventListener('keyup', (event) => {
       if (event.key === 'Escape') {
-          toggleDropdownModal();
+          hideDropdownModal();
       }
     });
   }

@@ -546,7 +546,6 @@ a.region-dropdown-picker {
   padding-right: 5px;
 }
 
-a.region-dropdown-picker:focus:not(.focus-visible),
 a.region-dropdown-picker:active {
   outline: none;
 }
