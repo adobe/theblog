@@ -741,7 +741,7 @@ function handleDropdownRegion() {
     }
   }
 
-  const regionDropdownButton =  document.querySelector('.feds-regionPicker');
+  const regionDropdownButton = document.querySelector('.feds-regionPicker');
   if (regionDropdownButton) {
     regionDropdownButton.addEventListener('click', (event) => {
       event.preventDefault();
@@ -769,7 +769,7 @@ function handleDropdownRegion() {
 
   // As we are attaching the Dropdown on top of the Button region Picker
   // this position will be updated if the window change
-  const regionDropdownModal  = document.querySelector('.region-dropdown');
+  const regionDropdownModal = document.querySelector('.region-dropdown');
   if (regionDropdownModal) {
     window.addEventListener('resize', () => {
           positionDropdownModal();
@@ -781,8 +781,8 @@ function handleDropdownRegion() {
  * Position Dropdown on top of Feds Footer Button
  */
 function positionDropdownModal() {
-  const regionDropdownModal  = document.querySelector('.region-dropdown');
-  const regionDropdownButton =  document.querySelector('.feds-regionPicker');
+  const regionDropdownModal = document.querySelector('.region-dropdown');
+  const regionDropdownButton = document.querySelector('.feds-regionPicker');
   if (regionDropdownModal) {
     regionDropdownModal.style.left = regionDropdownButton.getBoundingClientRect().left + window.scrollX + 'px';
     regionDropdownModal.style.top = (window.scrollY + regionDropdownButton.getBoundingClientRect().top) - 15 - regionDropdownModal.getBoundingClientRect().height + 'px';
@@ -790,7 +790,7 @@ function positionDropdownModal() {
 }
 
 function showDropdownModal() {
-  const regionDropdownModal  = document.querySelector('.region-dropdown');
+  const regionDropdownModal = document.querySelector('.region-dropdown');
   if (regionDropdownModal) {
     positionDropdownModal();
     regionDropdownModal.classList.add('visible');
@@ -805,7 +805,7 @@ function showDropdownModal() {
  }
 
 function toggleDropdownModal() {
-  const regionDropdownModal  = document.querySelector('.region-dropdown');
+  const regionDropdownModal = document.querySelector('.region-dropdown');
   if (regionDropdownModal) {
     if (regionDropdownModal.classList.contains('visible')) {
       hideDropdownModal();
