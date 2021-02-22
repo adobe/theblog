@@ -687,12 +687,12 @@ function handleDropdownRegion() {
   
   // Get actual selected Region
   const getSelectedRegion = () => {
-    const regionPage = regionsNameList.find(r => r.home === location.pathname);
+    const regionByPath = regionsNameList.find(r => r.home === location.pathname);
     // check if Region name matches the blog.language example 'en' in order to show the Region Name in the buttom
-    const langPage = regionsNameList.find(r => r.lang === window.blog.language);
+    const regionByLang = regionsNameList.find(r => r.lang === window.blog.language);
     let regionLang;
     let regionName;
-    if (!regionPage) {
+    if (!regionByPath) {
       // region array is empty, we are not on a region page -> check the sessionStorage, if no value, use blog.language
       regionLang = sessionStorage.getItem('blog-selected-language') || window.blog.language;
       // in order to show the Region name either from SessionStorage language or blog.language in our region button
@@ -702,17 +702,17 @@ function handleDropdownRegion() {
         regionName = storedLanguage.name;
       } else {
         // else we get the Region name base on the blog.language and after have find the same language in our RegionListName
-        if (langPage !== undefined) {
-            regionName = langPage.name;
+        if (regionByLang !== undefined) {
+            regionName = regionByLang.name;
         }       
       }
     } else {
-      regionLang = regionPage.lang;
-      regionName = regionPage.name;
+      regionLang = regionByPath.lang;
+      regionName = regionByPath.name;
       // sessionStorage will be used only if current Region lang is not same as blog.lang as en_apac or en_uk 
       // where blog.lang will still being en
-      if (regionPage.lang !== window.blog.language) {
-        sessionStorage.setItem('blog-selected-language', regionPage.lang);
+      if (regionByPath.lang !== window.blog.language) {
+        sessionStorage.setItem('blog-selected-language', regionByPath.lang);
       }
     } 
     return {regionLang, regionName};
