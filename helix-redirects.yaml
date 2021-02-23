@@ -63,7 +63,7 @@ redirects:
   - from: ^/adobemax/.*$
     to: https://blog.adobe.com/en/topics/adobe-max.html
     type: permanent
-  - from: ^/japan/experiencecloud/.*$
+  - from: ^/japan/.*$
     to: https://blog.adobe.com/jp/index.html
     type: permanent
   - from: ^/creativestation/.*$
@@ -74,6 +74,9 @@ redirects:
     type: permanent
   - from: ^/latinoamerica/.*$
     to: https://blog.adobe.com/es/index.html
+    type: permanent
+  - from: ^/security/.*$
+    to: https://blog.adobe.com/en/topics/security.html
     type: permanent
   - from: ^/brasil/.*$
     to: https://blog.adobe.com/br/index.html
