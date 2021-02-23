@@ -1,6 +1,6 @@
 redirects:
   - https://adobe.sharepoint.com/:x:/s/TheBlog/EaikC7JAUNpAoZy604FUP7YB2oTdxZVtrWNihbJ6k-BCnA?email=&e=Nd2OF4
-  - from: ^/techcomms/.*$
+  - from: ^/techcomm/.*$
     to: https://blog.adobe.com/en/topics/techcomm.html
     type: permanent
   - from: .*\/feed/$
