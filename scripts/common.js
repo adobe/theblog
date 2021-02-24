@@ -755,14 +755,8 @@ function handleDropdownRegion() {
   // Automatically build the dropdown based on Region List
   if (dropdownRegionList) {
     for (const {lang, name, home} of regionsNameList) {
-      dropdownRegionList.insertAdjacentHTML('afterbegin', `<li><a class="region-dropdown-picker" href="${home}" title="${name}" data-lang="${lang}">${name}</a></li>`);
-      const regionDropdownPicker = document.querySelector('.region-dropdown-picker');
-      if (regionDropdownPicker) {
-        // Mark the actual selected Region on the dropdown
-        if (regionLang === lang) {
-          regionDropdownPicker.classList.add('selected');
-        }
-      }
+      const selected = regionLang === lang;
+      dropdownRegionList.insertAdjacentHTML('beforeend', `<li><a class="region-dropdown-picker ${selected ? 'selected' : ''}" href="${home}" title="${name}" data-lang="${lang}">${name}</a></li>`);
     }
   }
 
