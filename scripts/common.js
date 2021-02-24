@@ -760,14 +760,6 @@ function handleDropdownRegion() {
       }
     }
 
-    const regionDropdownButton = document.querySelector('.feds-regionPicker');
-    if (regionDropdownButton) {
-      regionDropdownButton.addEventListener('click', (event) => {
-        event.preventDefault();
-        toggleDropdownModal();
-      });
-    }
-
     // Hide region modal if clicked outside
     document.addEventListener('click', function (event) {
       if (regionDropdownButton || HTMLElement) {
@@ -830,10 +822,10 @@ function handleDropdownRegion() {
     }
   }
 
-  function toggleDropdownModal({ target }) {
+  function toggleDropdownModal(regionDropdownButton) {
     let regionDropdownModal = document.querySelector('.region-dropdown');
     if (!regionDropdownModal) {
-      regionalDropdownModal = createDropdownModal(target);
+      regionDropdownModal = createDropdownModal(regionDropdownButton);
     }
     if (regionDropdownModal.classList.contains('visible')) {
       hideDropdownModal();
@@ -841,19 +833,26 @@ function handleDropdownRegion() {
       showDropdownModal();
     }
   }
+
+  const regionDropdownButton = document.querySelector('.feds-regionPicker');
+  if (regionDropdownButton) {
+    regionDropdownButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      toggleDropdownModal(event.target);
+    });
+  }
 }
 
 window.addEventListener('load', function() {
   setDocumentLanguage();
   removeHeaderAndFooter();
   addPageTypeAsBodyClass();
+  /**
+   * Check if FEDS is available before loading the Dropdown Selector
+   */
+  if (typeof feds === 'object' && typeof feds.events === 'object' && feds.events.experience === true) {
+    handleDropdownRegion();  
+  } else {
+    window.addEventListener('feds.events.experience.loaded', handleDropdownRegion);
+  }
 });
-
-/**
- * Check if FEDS is available before loading the Dropdown Selector
- */
-if (typeof feds === 'object' && typeof feds.events === 'object' && feds.events.experience === true) {
-  handleDropdownRegion();  
-} else {
-  window.addEventListener('feds.events.experience.loaded', handleDropdownRegion);
-}
