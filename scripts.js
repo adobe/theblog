@@ -263,6 +263,13 @@ const observer = new MutationObserver(mutations => {
 });
 observer.observe(document, { childList: true, subtree: true });
 
+function checkRedirect() {
+  /* client side redirect, to be removed asap when server rule is activated */
+  if (window.location.href.includes('://blogs')) window.location.href = window.location.href.replace('://blogs', '://blog');
+};
+
+checkRedirect();
+
 // Load page specific code
 loadCSS(`/style/${window.blog.pageType}.css`);
 loadJSModule(`/scripts/${window.blog.pageType}.js`);
