@@ -23,6 +23,34 @@
     sk.location = new URL(segs.join('/'), sk.location.origin);
   }
 
+  // PREVIEW ----------------------------------------------------------------------
+
+  sk.add({
+    id: 'preview',
+    override: true,
+    condition: (sidekick) => sidekick.isEditor() || (sidekick.isHelix() && sidekick.config.host),
+    button: {
+      action: () => {
+        const { config, location } = sk;
+        let url;
+        if (sk.isEditor()) {
+          url = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@2.7.0');
+          url.search = new URLSearchParams([
+            ['owner', config.owner],
+            ['repo', config.repo],
+            ['ref', config.ref || 'main'],
+            ['path', '/'],
+            ['lookup', location.href],
+          ]).toString();
+        } else {
+          const host = location.host === config.innerHost ? config.host : config.innerHost;
+          url = new URL(`https://${host}${sk.transformPath(location.pathname)}`);
+        }
+        window.open(url.toString(), `hlx-sk-preview-${btoa(location.href)}`);
+      },
+    },
+  });
+
   // TAGGER -----------------------------------------------------------------------
 
   sk.add({
