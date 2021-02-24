@@ -815,7 +815,7 @@ function positionDropdownModal() {
   const regionDropdownButton = document.querySelector('.feds-regionPicker');
   if (regionDropdownModal) {
     regionDropdownModal.style.left = regionDropdownButton.getBoundingClientRect().left + window.scrollX + 'px';
-    regionDropdownModal.style.top = (window.scrollY + regionDropdownButton.getBoundingClientRect().top) - regionDropdownModal.getBoundingClientRect().height + 'px';
+    regionDropdownModal.style.top = (window.scrollY + regionDropdownButton.getBoundingClientRect().top) - 15 - regionDropdownModal.getBoundingClientRect().height + 'px';
   }
 }
 
