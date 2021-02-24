@@ -655,14 +655,19 @@ export function extractTopicsAndProducts() {
 function handleDropdownRegion() {
   const regionsNameList = [
     {
+      lang: "de",
+      name: "Deutsch",
+      home: `/de/`,
+    },
+    {
+      lang: "es",
+      name: "Español",
+      home: `/es/`,
+    },
+    {
       lang: 'en_apac',
       name: 'APAC (English)',
       home: `/en/apac.html`,
-    },
-    {
-      lang: "ko",
-      name: "Korea (한국어)",
-      home: `/ko/`,
     },
     {
       lang: "en_uk",
@@ -673,6 +678,26 @@ function handleDropdownRegion() {
       lang: "en",
       name: "US (English)",
       home: `/`,
+    },{
+      lang: "fr",
+      name: "Français",
+      home: `/fr/`,
+    },{
+      lang: "it",
+      name: "Italiano",
+      home: `/it/`,
+    },{
+      lang: "jp",
+      name: "日本",
+      home: `/jp/`,
+    },{
+      lang: "ko",
+      name: "한국어",
+      home: `/ko/`,
+    },{
+      lang: "br",
+      name: "Português",
+      home: `/br/`,
     }
   ];
 
