@@ -509,3 +509,67 @@ main > div img {
    display:none;
  }
  
+  /*
+  * Styles for Dropdown Region Selector
+  */
+.region-dropdown {
+  border: 1px solid #d3d3d3;
+  background-color: #ffffff;
+  border-radius: 4px;
+  display: inline-block;
+  font-size: inherit;
+  padding: 3px 10px 5px 8px;
+  margin: 0;
+  visibility: hidden;
+  position: absolute;
+  z-index: 0;
+}
+
+.region-dropdown.visible {
+  visibility: visible;
+  z-index: 2;
+}
+
+.region-dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+a.region-dropdown-picker {
+  color: #505050;
+  font-size: .9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 8px 5px 8px 0;
+}
+
+a.region-dropdown-picker:focus {
+  outline: 2px solid #109cde;
+}
+
+a.region-dropdown-picker:after {
+  margin-left: 15px;
+  color:rgba(20, 115, 230, 0);
+  content: " ";
+  display: block;
+  width: 0.4em;
+  height: 0.8em;
+  border: solid rgba(20, 115, 230, 0);
+  border-width: 0 0.1em 0.1em 0;
+  margin-top: -0.4em;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+a.region-dropdown-picker.selected:after {
+  border-color: rgb(20, 115, 230);
+}
+
+.region-dropdown-list a:hover {
+  opacity: 60%;
+}
