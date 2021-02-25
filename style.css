@@ -524,7 +524,7 @@ main > div img {
   position: absolute;
   z-index: 0;
   left: 52px;
-  top:1180px;
+  bottom: 52px;
 }
 
 .region-dropdown.visible {
