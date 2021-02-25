@@ -703,62 +703,133 @@ function handleDropdownRegion() {
     }
   ];
 
-  // Add Region Dropdown Container before Feds Footer
-  const fedsFooterButton = document.querySelector('.feds-regionPicker');
-  if (fedsFooterButton) {
+  function createDropdownModal(fedsFooterButton) {
+    // Add Region Dropdown Container before Feds Footer
     const regionDropdownContainer = document.createElement('div');
     regionDropdownContainer.classList.add('region-dropdown');
     regionDropdownContainer.innerHTML = `<ul class="region-dropdown-list"></ul>`;
     fedsFooterButton.parentElement.insertBefore(regionDropdownContainer, fedsFooterButton);
+    
+    // Get actual selected Region
+    const getSelectedRegion = () => {
+      const regionByPath = regionsNameList.find(r => r.home === location.pathname);
+      // check if Region name matches the blog.language example 'en' in order to show the Region Name in the buttom
+      const regionByLang = regionsNameList.find(r => r.lang === window.blog.language);
+      let regionLang;
+      let regionName;
+      if (!regionByPath) {
+        // region array is empty, we are not on a region page -> check the sessionStorage, if no value, use blog.language
+        regionLang = sessionStorage.getItem('blog-selected-language') || window.blog.language;
+        // in order to show the Region name either from SessionStorage language or blog.language in our region button
+        if (regionLang !== window.blog.language) {
+          // if the selected Region lang do not match the blog.language we get the Region name based on the sessionStorage saved Language Value
+          const storedLanguage = regionsNameList.find(r => r.lang === regionLang);
+          regionName = storedLanguage.name;
+        } else {
+          // else we get the Region name base on the blog.language and after have find the same language in our RegionListName
+          if (regionByLang !== undefined) {
+              regionName = regionByLang.name;
+          }       
+        }
+      } else {
+        regionLang = regionByPath.lang;
+        regionName = regionByPath.name;
+        // sessionStorage will be used only if current Region lang is not same as blog.lang as en_apac or en_uk 
+        // where blog.lang will still being en
+        if (regionByPath.lang !== window.blog.language) {
+          sessionStorage.setItem('blog-selected-language', regionByPath.lang);
+        }
+      } 
+      return {regionLang, regionName};
+    }
+
+    const dropdownRegionList = document.querySelector('.region-dropdown-list');
+    const {regionLang, regionName} = getSelectedRegion(); 
+
+    // Change Region name value from Feds Region Picker Button adding the actual Region Name
+    const FEDSregionPickerText = document.querySelector('.feds-regionPicker-text');
+    if (FEDSregionPickerText && regionName !== undefined) {
+        FEDSregionPickerText.innerText = regionName;
+    }
+
+    // Automatically build the dropdown based on Region List
+    if (dropdownRegionList) {
+      for (const {lang, name, home} of regionsNameList) {
+        const selected = regionLang === lang;
+        dropdownRegionList.insertAdjacentHTML('beforeend', `<li><a class="region-dropdown-picker ${selected ? 'selected' : ''}" href="${home}" title="${name}" data-lang="${lang}">${name}</a></li>`);
+      }
+    }
+
+    // Hide region modal if clicked outside
+    document.addEventListener('click', function (event) {
+      if (regionDropdownButton || HTMLElement) {
+        if (!event.target.closest('.region-dropdown') && !event.target.closest('.feds-regionPicker')) {
+          hideDropdownModal();
+        }
+      }
+    });
+
+    // Keyboard access for Region Picker
+    if (regionDropdownButton) {
+      document.body.addEventListener('keyup', (event) => {
+        if (event.key === 'Escape') {
+            hideDropdownModal();
+        }
+      });
+    }
+
+    const dropdownLinkList = document.querySelector('.region-dropdown-picker').parentElement;
+    regionDropdownButton.addEventListener('keyup', (event) => {
+      if (event.key === 'Enter') {
+        if (regionDropdownModal.classList.contains('visible')) {
+          dropdownLinkList.firstElementChild.focus();
+        }
+      }
+    });
+
+    // As we are attaching the Dropdown on top of the Button region Picker
+    // this position will be updated if the window change
+    window.addEventListener('resize', () => {
+      positionDropdownModal();
+    });
+    return regionDropdownContainer;
+  }
+
+  /**
+   * Position Dropdown on top of Feds Footer Button
+   */
+  function positionDropdownModal() {
+    const regionDropdownModal = document.querySelector('.region-dropdown');
+    const regionDropdownButton = document.querySelector('.feds-regionPicker');
+    if (regionDropdownModal) {
+      regionDropdownModal.style.left = regionDropdownButton.getBoundingClientRect().left + window.scrollX + 'px';
+      regionDropdownModal.style.top = (window.scrollY + regionDropdownButton.getBoundingClientRect().top) - 15 - regionDropdownModal.getBoundingClientRect().height + 'px';    }
+  }
+
+  function showDropdownModal() {
+    const regionDropdownModal = document.querySelector('.region-dropdown');
+    if (regionDropdownModal) {
+      positionDropdownModal();
+      regionDropdownModal.classList.add('visible');
+    }
   }
   
-  // Get actual selected Region
-  const getSelectedRegion = () => {
-    const regionByPath = regionsNameList.find(r => r.home === location.pathname);
-    // check if Region name matches the blog.language example 'en' in order to show the Region Name in the buttom
-    const regionByLang = regionsNameList.find(r => r.lang === window.blog.language);
-    let regionLang;
-    let regionName;
-    if (!regionByPath) {
-      // region array is empty, we are not on a region page -> check the sessionStorage, if no value, use blog.language
-      regionLang = sessionStorage.getItem('blog-selected-language') || window.blog.language;
-      // in order to show the Region name either from SessionStorage language or blog.language in our region button
-      if (regionLang !== window.blog.language) {
-        // if the selected Region lang do not match the blog.language we get the Region name based on the sessionStorage saved Language Value
-        const storedLanguage = regionsNameList.find(r => r.lang === regionLang);
-        regionName = storedLanguage.name;
-      } else {
-        // else we get the Region name base on the blog.language and after have find the same language in our RegionListName
-        if (regionByLang !== undefined) {
-            regionName = regionByLang.name;
-        }       
-      }
+  function hideDropdownModal() {
+    const regionDropdownModal = document.querySelector('.region-dropdown');
+    if (regionDropdownModal) {
+        regionDropdownModal.classList.remove('visible');
+    }
+  }
+
+  function toggleDropdownModal(regionDropdownButton) {
+    let regionDropdownModal = document.querySelector('.region-dropdown');
+    if (!regionDropdownModal) {
+      regionDropdownModal = createDropdownModal(regionDropdownButton);
+    }
+    if (regionDropdownModal.classList.contains('visible')) {
+      hideDropdownModal();
     } else {
-      regionLang = regionByPath.lang;
-      regionName = regionByPath.name;
-      // sessionStorage will be used only if current Region lang is not same as blog.lang as en_apac or en_uk 
-      // where blog.lang will still being en
-      if (regionByPath.lang !== window.blog.language) {
-        sessionStorage.setItem('blog-selected-language', regionByPath.lang);
-      }
-    } 
-    return {regionLang, regionName};
-  }
-
-  const dropdownRegionList = document.querySelector('.region-dropdown-list');
-  const {regionLang, regionName} = getSelectedRegion(); 
-
-  // Change Region name value from Feds Region Picker Button adding the actual Region Name
-  const FEDSregionPickerText = document.querySelector('.feds-regionPicker-text');
-  if (FEDSregionPickerText && regionName !== undefined) {
-      FEDSregionPickerText.innerText = regionName;
-  }
-
-  // Automatically build the dropdown based on Region List
-  if (dropdownRegionList) {
-    for (const {lang, name, home} of regionsNameList) {
-      const selected = regionLang === lang;
-      dropdownRegionList.insertAdjacentHTML('beforeend', `<li><a class="region-dropdown-picker ${selected ? 'selected' : ''}" href="${home}" title="${name}" data-lang="${lang}">${name}</a></li>`);
+      showDropdownModal();
     }
   }
 
@@ -766,82 +837,8 @@ function handleDropdownRegion() {
   if (regionDropdownButton) {
     regionDropdownButton.addEventListener('click', (event) => {
       event.preventDefault();
-      toggleDropdownModal();
+      toggleDropdownModal(event.target);
     });
-  }
-
-  // Hide region modal if clicked outside
-  document.addEventListener('click', function (event) {
-    if (regionDropdownButton || HTMLElement) {
-      if (!event.target.closest('.region-dropdown') && !event.target.closest('.feds-regionPicker')) {
-        hideDropdownModal();
-      }
-    }
-  });
-
-  // Keyboard access for Region Picker
-  if (regionDropdownButton) {
-    document.body.addEventListener('keyup', (event) => {
-      if (event.key === 'Escape') {
-          hideDropdownModal();
-      }
-    });
-  }
-
-  const dropdownLinkList = document.querySelector('.region-dropdown-picker').parentElement;
-  regionDropdownButton.addEventListener('keyup', (event) => {
-    if (event.key === 'Enter') {
-      if (regionDropdownModal.classList.contains('visible')) {
-        dropdownLinkList.firstElementChild.focus();
-      }
-    }
-  });
-
-  // As we are attaching the Dropdown on top of the Button region Picker
-  // this position will be updated if the window change
-  const regionDropdownModal = document.querySelector('.region-dropdown');
-  if (regionDropdownModal) {
-    window.addEventListener('resize', () => {
-          positionDropdownModal();
-    });
-  }
-}
-
-/**
- * Position Dropdown on top of Feds Footer Button
- */
-function positionDropdownModal() {
-  const regionDropdownModal = document.querySelector('.region-dropdown');
-  const regionDropdownButton = document.querySelector('.feds-regionPicker');
-  if (regionDropdownModal) {
-    regionDropdownModal.style.left = regionDropdownButton.getBoundingClientRect().left + window.scrollX + 'px';
-    regionDropdownModal.style.top = (window.scrollY + regionDropdownButton.getBoundingClientRect().top) - regionDropdownModal.getBoundingClientRect().height + 'px';
-  }
-}
-
-function showDropdownModal() {
-  const regionDropdownModal = document.querySelector('.region-dropdown');
-  if (regionDropdownModal) {
-    positionDropdownModal();
-    regionDropdownModal.classList.add('visible');
-  }
- }
- 
- function hideDropdownModal() {
-  const regionDropdownModal = document.querySelector('.region-dropdown');
-  if (regionDropdownModal) {
-      regionDropdownModal.classList.remove('visible');
-  }
- }
-
-function toggleDropdownModal() {
-  const regionDropdownModal = document.querySelector('.region-dropdown');
-  if (regionDropdownModal) {
-    if (regionDropdownModal.classList.contains('visible')) {
-      hideDropdownModal();
-    } else {
-      showDropdownModal();
-    }
   }
 }
 
@@ -849,13 +846,12 @@ window.addEventListener('load', function() {
   setDocumentLanguage();
   removeHeaderAndFooter();
   addPageTypeAsBodyClass();
+  /**
+   * Check if FEDS is available before loading the Dropdown Selector
+   */
+  if (typeof feds === 'object' && typeof feds.events === 'object' && feds.events.experience === true) {
+    handleDropdownRegion();  
+  } else {
+    window.addEventListener('feds.events.experience.loaded', handleDropdownRegion);
+  }
 });
-
-/**
- * Check if FEDS is available before loading the Dropdown Selector
- */
-if (typeof feds === 'object' && typeof feds.events === 'object' && feds.events.experience === true) {
-  handleDropdownRegion();  
-} else {
-  window.addEventListener('feds.events.experience.loaded', handleDropdownRegion);
-}
