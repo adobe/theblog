@@ -44,7 +44,7 @@
           ]).toString();
         } else {
           const host = location.host === config.innerHost ? config.host : config.innerHost;
-          url = new URL(`https://${host}${sk.transformPath(location.pathname)}`);
+          url = new URL(`https://${host}${location.pathname}`);
         }
         window.open(url.toString(), `hlx-sk-preview-${btoa(location.href)}`);
       },
