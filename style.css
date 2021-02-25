@@ -523,8 +523,6 @@ main > div img {
   visibility: hidden;
   position: absolute;
   z-index: 0;
-  left: 52px;
-  bottom: 52px;
 }
 
 .region-dropdown.visible {
