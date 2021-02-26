@@ -539,7 +539,6 @@ main > div img {
 a.region-dropdown-picker {
   color: #505050;
   font-size: .9rem;
-  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
