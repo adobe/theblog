@@ -708,7 +708,7 @@ function handleDropdownRegion() {
     const regionDropdownContainer = document.createElement('div');
     regionDropdownContainer.classList.add('region-dropdown');
     regionDropdownContainer.innerHTML = `<ul class="region-dropdown-list"></ul>`;
-    fedsFooterButton.parentElement.insertBefore(regionDropdownContainer, fedsFooterButton);
+    fedsFooterButton.parentNode.parentNode.appendChild(regionDropdownContainer);
     
     // Get actual selected Region
     const getSelectedRegion = () => {
