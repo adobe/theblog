@@ -623,7 +623,7 @@ function decorateEmbeds() {
     if($a.href.startsWith('https://www.instagram.com/')) {
       const location = window.location.href;
       embedHTML=`
-        <div style="width: 100%; position: relative; padding-bottom: 56.25%;top: 50%;left: 50%;margin: -25px 0 0 -25px;">
+        <div style="width: 100%; position: relative; padding-bottom: 56.25%; display: flex; justify-content: center">
         <iframe class="instagram-media instagram-media-rendered" id="instagram-embed-0" src="${url}/embed/?cr=1&amp;v=13&amp;wp=1316&amp;rd=${location.endsWith('.html') ? location : location + '.html'}" 
         allowtransparency="true" allowfullscreen="true" frameborder="0" height="530" style="background: white; border-radius: 3px; border: 1px solid rgb(219, 219, 219); 
         box-shadow: none; display: block;">
