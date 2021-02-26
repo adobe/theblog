@@ -573,3 +573,7 @@ a.region-dropdown-picker.selected:after {
 .region-dropdown-list a:hover {
   opacity: 60%;
 }
+
+.feds-regionPicker.open:after {
+  content: "\2227";
+}

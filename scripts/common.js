@@ -837,6 +837,7 @@ function handleDropdownRegion() {
   if (regionDropdownButton) {
     regionDropdownButton.addEventListener('click', (event) => {
       event.preventDefault();
+      event.target.parentNode.classList.toggle('open');
       toggleDropdownModal(event.target);
     });
   }
