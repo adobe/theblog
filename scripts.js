@@ -275,5 +275,5 @@ loadCSS(`/style/${window.blog.pageType}.css`);
 loadJSModule(`/scripts/${window.blog.pageType}.js`);
 
 // Load language specific CSS overlays
-loadCSS(`/dict.${window.blog.language}.css`);
+loadCSS(`/i18n/dict.${window.blog.language}.css`);
 

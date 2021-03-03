@@ -233,23 +233,23 @@
     },
   });
 
-  // PUBLISH TAXONOMY -------------------------------------------------------------
+  // PUBLISH TAXONOMY & REDIRECTS--------------------------------------------------
 
   sk.add({
-    id: 'publish-taxonomy',
+    id: 'publish-data',
     condition: (sk) => {
       const { config, location } = sk;
       return config.innerHost
         && config.host
         && sk.isEditor()
-        && location.search.includes('file=_taxonomy.xlsx');
+        && (location.search.includes('file=_taxonomy.xlsx') || location.search.includes('file=redirects.xlsx'));
     },
     override: true,
     button: {
       text: 'Publish',
       action: async () => {
         const { config } = sk;
-        sk.showModal('Publishing taxonomy...', true);
+        sk.showModal('Publishing data...', true);
         const url = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@v2');
         url.search = new URLSearchParams([
           ['report', 'true'],
@@ -269,9 +269,9 @@
         const purge = await sk.publish(path);
         if (purge.ok) {
           await fetch(json.unfriendlyWebUrl, {cache: 'reload', mode: 'no-cors'});
-          sk.notify('Taxonomy published');
+          sk.notify('Data published');
         } else {
-          sk.notify('Failed to publish taxonomy. Please try again later.', 0);
+          sk.notify('Failed to publish data. Please try again later.', 0);
           console.log('error', JSON.stringify(purge));
         }
       },
