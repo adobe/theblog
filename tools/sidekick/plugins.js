@@ -33,7 +33,7 @@
   sk.add({
     id: 'preview',
     override: true,
-    condition: (sidekick) => sidekick.isEditor() || (sidekick.isHelix() && sidekick.config.host),
+    condition: (s) => s.isEditor() || s.location.host === s.config.host,
     button: {
       action: () => {
         const { config, location } = sk;
