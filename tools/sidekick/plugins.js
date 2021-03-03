@@ -13,7 +13,6 @@
 // This file contains the blog-specific plugins for the sidekick.
 (() => {
   const sk = window.hlx && window.hlx.sidekick ? window.hlx.sidekick : window.hlxSidekick;
-  console.log('plugins.js loaded', sk);
   if (typeof sk !== 'object') return;
 
   if (typeof sk.copyGlobal === 'function') {
