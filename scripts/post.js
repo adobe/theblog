@@ -591,7 +591,7 @@ function decorateCaptions() {
   document.querySelectorAll('.caption').forEach(($caption) => {
     const $pCheck = $caption.querySelector('p');
     if ($pCheck) {
-      $caption('p').forEach(($p) => {
+      $caption.querySelectorAll('p').forEach(($p) => {
         $p.classList.add('legend');
       })    
     } else {
