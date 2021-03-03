@@ -252,7 +252,7 @@
   // PUBLISH TAXONOMY & REDIRECTS--------------------------------------------------
 
   sk.add({
-    id: 'publish-taxonomy',
+    id: 'publish-data',
     condition: (sk) => {
       const { config, location } = sk;
       return config.innerHost
