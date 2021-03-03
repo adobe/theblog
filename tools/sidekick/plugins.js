@@ -13,7 +13,13 @@
 // This file contains the blog-specific plugins for the sidekick.
 (() => {
   const sk = window.hlx && window.hlx.sidekick ? window.hlx.sidekick : window.hlxSidekick;
+  console.log('plugins.js loaded', sk);
   if (typeof sk !== 'object') return;
+
+  if (typeof sk.copyGlobal === 'function') {
+  // copy globals for sidekick extension
+    sk.copyGlobal('blog');
+  }
 
   const path = sk.location.pathname;
   if (!path.includes('/publish/') && /\d{4}\/\d{2}\/\d{2}/.test(path)) {
@@ -23,10 +29,33 @@
     sk.location = new URL(segs.join('/'), sk.location.origin);
   }
 
-  if (typeof sk.copyGlobal === 'function') {
-    // copy globals for sidekick extension
-    sk.copyGlobal('blog');  
-  }
+  // PREVIEW ----------------------------------------------------------------------
+
+  sk.add({
+    id: 'preview',
+    override: true,
+    condition: (sidekick) => sidekick.isEditor() || (sidekick.isHelix() && sidekick.config.host),
+    button: {
+      action: () => {
+        const { config, location } = sk;
+        let url;
+        if (sk.isEditor()) {
+          url = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@2.7.0');
+          url.search = new URLSearchParams([
+            ['owner', config.owner],
+            ['repo', config.repo],
+            ['ref', config.ref || 'main'],
+            ['path', '/'],
+            ['lookup', location.href],
+          ]).toString();
+        } else {
+          const host = location.host === config.innerHost ? config.host : config.innerHost;
+          url = new URL(`https://${host}${location.pathname}`);
+        }
+        window.open(url.toString(), `hlx-sk-preview-${btoa(location.href)}`);
+      },
+    },
+  });
 
   // TAGGER -----------------------------------------------------------------------
 
@@ -229,14 +258,14 @@
       return config.innerHost
         && config.host
         && sk.isEditor()
-        && location.search.includes('file=_taxonomy.xlsx');
+        && (location.search.includes('file=_taxonomy.xlsx') || location.search.includes('file=redirects.xlsx'));
     },
     override: true,
     button: {
       text: 'Publish',
       action: async () => {
         const { config } = sk;
-        sk.showModal('Publishing taxonomy...', true);
+        sk.showModal('Publishing data...', true);
         const url = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@v2');
         url.search = new URLSearchParams([
           ['report', 'true'],
@@ -253,15 +282,16 @@
           console.log('error', JSON.stringify(await resp.json()));
         }
         const path = new URL(json.unfriendlyWebUrl).pathname;
-        const purge = await sendPurge(config, path);
+        const purge = await sk.publish(path);
         if (purge.ok) {
           await fetch(json.unfriendlyWebUrl, {cache: 'reload', mode: 'no-cors'});
-          sk.notify('Taxonomy published');
+          sk.notify('Data published');
         } else {
-          sk.notify('Failed to publish taxonomy. Please try again later.', 0);
+          sk.notify('Failed to publish data. Please try again later.', 0);
           console.log('error', JSON.stringify(purge));
         }
       },
     },
   });
+
 })();

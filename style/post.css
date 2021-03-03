@@ -56,7 +56,7 @@
   margin-top: 1.5em;
 }
 
-.post-page main div.images + div.caption {
+.post-page main div.images + div.caption, .post-page main div.embed + div.caption {
   margin-top: 0;
 }
 
@@ -100,7 +100,8 @@
 
 .post-page main>div.post-body .images + *,
 .post-page main>div.post-body .images + *,
-.embed + * {
+.embed + * ,
+.caption + * {
   margin-top: 64px;
 }
 
@@ -563,6 +564,10 @@
 
   .post-page main>div.post-body>.embed-instagram {
     max-width: fit-content;
+  }
+
+  .post-page main>div.post-body>.embed-twitter {
+    max-height: unset;
   }
 
   .post-page main>div.post-body>.embed.embed-internal-promotions {

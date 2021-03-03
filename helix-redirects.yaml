@@ -1,8 +1,101 @@
 redirects:
   - https://adobe.sharepoint.com/:x:/s/TheBlog/EaikC7JAUNpAoZy604FUP7YB2oTdxZVtrWNihbJ6k-BCnA?email=&e=Nd2OF4
-  - from: .*\/feed/$
+  - from: ^/techcomm/.*$
+    to: https://blog.adobe.com/en/topics/techcomm.html
+    type: permanent
+  - from: ^/jnack/.*$
+    to: https://blog.adobe.com/en/topics/photoshop.html
+    type: permanent
+  - from: ^/conversations/.*$
+    to: https://blog.adobe.com/
+    type: permanent
+  - from: ^/adobeconnect/.*$
+    to: https://www.connectusers.com/
+    type: permanent
+  - from: ^/connectsupport/.*$
+    to: https://www.connectusers.com/
+    type: permanent
+  - from: ^/deployment/.*$
+    to: https://blog.adobe.com/
+    type: permanent
+  - from: ^/psirt/.*$
+    to: https://helpx.adobe.com/security.html
+    type: permanent
+  - from: ^/asset/.*$
+    to: https://blog.adobe.com/en/topics/security.html
+    type: permanent
+  - from: ^/CCJKType/.*$
+    to: https://ccjktype.fonts.adobe.com/
+    type: permanent
+  - from: ^/davtechtable/.*$
+    to: https://blog.adobe.com/
+    type: permanent
+  - from: ^/acrolaw/.*$
+    to: https://blog.adobe.com/
+    type: permanent
+  - from: ^/lightroomjournal/.*$
+    to: https://blog.adobe.com/en/topics/lightroom.html
+    type: permanent
+  - from: ^/jkost/.*$
+    to: https://jkost.com/blog/
+    type: permanent
+  - from: ^/coldfusion/.*$
+    to: https://coldfusion.adobe.com/category/blog/
+    type: permanent
+  - from: ^/jlockman/.*$
+    to: https://blog.adobe.com/
+    type: permanent
+  - from: ^/adobelife/.*$
+    to: https://blog.adobe.com/en/topics/adobe-life.html
+    type: permanent
+  - from: ^/digitaldialogue/.*$
+    to: https://blog.adobe.com/ko/index.html
+    type: permanent
+  - from: ^/digitalmedia/.*$
+    to: https://blog.adobe.com/en/topics/creativity.html
+    type: permanent
+  - from: ^/creativecloud/.*$
+    to: https://blog.adobe.com/en/topics/creative-cloud.html
+    type: permanent
+  - from: ^/digitaleurope/.*$
+    to: https://blog.adobe.com/en/uk.html
+    type: permanent
+  - from: ^/adobemax/.*$
+    to: https://blog.adobe.com/en/topics/adobe-max.html
+    type: permanent
+  - from: ^/japan/.*$
+    to: https://blog.adobe.com/jp/index.html
+    type: permanent
+  - from: ^/creativestation/.*$
+    to: https://blog.adobe.com/jp/index.html
+    type: permanent
+  - from: ^/japan-conversations/.*$
+    to: https://blog.adobe.com/jp/index.html
+    type: permanent
+  - from: ^/latinoamerica/.*$
+    to: https://blog.adobe.com/es/index.html
+    type: permanent
+  - from: ^/security/.*$
+    to: https://blog.adobe.com/en/topics/security.html
+    type: permanent
+  - from: ^/brasil/.*$
+    to: https://blog.adobe.com/br/index.html
+    type: permanent
+  - from: ^/creative/.*$
+    to: https://blog.adobe.com/en/uk.html
+    type: permanent
+  - from: ^/documentcloudjapan/.*$
+    to: https://blog.adobe.com/jp/index.html
+    type: permanent
+  - from: ^/creativedialogue/.*$
+    to: https://blog.adobe.com/ko/index.html
+    type: permanent
+  - from: ^/sparkblog/.*$
+    to: https://blog.adobespark.com/
+    type: permanent
+  - from: .*/feed/
     to: /feed.xml
-    type: temporary
-  - from: .*\/feed$
+    type: permanent
+  - from: .*/feed$
     to: /feed.xml
-    type: temporary
+    type: permanent

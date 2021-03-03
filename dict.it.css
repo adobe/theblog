@@ -11,89 +11,89 @@
  */
 
  a.learn-more::before {
-  content: "Learn more >"
+  content: "Scopri di più"
 }
 
 a.action.load-more::before {
-  content: "Load more articles"
+  content: "Mostra più articoli"
 }
 
 .post-page .articles::before {
-  content: "Recommended for you";
+  content: "Suggeriti per te";
 }
 
 .articles-empty::before {
-  content: "No articles found";
+  content: "Nessun articolo trovato";
 }
 
 .author-page .articles-empty::before {
-  content: 'No articles found by this author';
+  content: "Nessun articolo trovato di questo autor";
 }
 
 .topic-page .articles-empty::before {
-  content: 'No articles found in this category';
+  content: "Nessun articolo trovato per questa categoria";
 }
 
 .social::before {
-  content: "Follow me on";
+  content: "Seguimi su";
 }
 
 .blank-page.error-404 main h2::before {
-  content: 'These are uncharted waters.';
+  content: "These are uncharted waters.";
 }
 
 .blank-page.error-404 main p.detail::before {
-  content: "Sorry, that page can't be found.";
+  content: "Pagina non trovata";
 }
 
 .blank-page.error-404 main .gotohome::before {
-  content: 'Go to homepage ›';
+  content: "Vai alla home page ›";
 }
 
 .blank-page.error-404 main .searchadobe::before {
-  content: 'Search Adobe.com ›';
+  content: "Cerca su Adobe.com ›";
 }
 
 .topic-page .dropdown-menu .search input::after  {
-  content: "Search...";
+  content: "Cerca...";
 }
 
 .topic-page .filter-wrapper a.action.apply::before {
-  content: "Apply";
+  content: "Applica";
 }
 
 .topic-page .filter-wrapper a.action.clear::before {
-  content: "Reset";
+  content: "Rimuovi";
 }
 
 .topic-page .selection::before {
-  content: "Showing articles for";
+  content: "Mostra articoli ordinati per ";
 }
 
 .topic-page .selection a.user-filter::before {
-  content: "Remove $1";
+  content: "Rimuovi";
 }
 
 .topic-page .articles-empty.user-filters::before {
-  content: "Sorry, no matching results";
+  content: "Non ci sono risultati per questa ricerca";
 }
 
 .topic-page .articles-empty.user-filters .user-help:before {
-  content: "Please try again selecting fewer filters or clearing all selections.";
+  content: "Riprova ancora selezionando meno filtri o rimuovendo le selezioni precedenti";
 }
 
 .topic-page .selection a.action.clear-all::before {
-  content: "Clear all";
+  content: "Cancella";
 }
 
 .filter-wrapper .filter:first-child::before {
-  content: "Filters";
+  content: "Filtri";
 }
 
 .filter .products button::before {
-  content: "Products";
+  content: "Prodotti";
 }
 
 .filter .industries button::before {
-  content: "Industries";
+  content: "Settori";
 }
