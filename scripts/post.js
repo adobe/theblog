@@ -591,7 +591,7 @@ function decorateCaptions() {
   document.querySelectorAll('.caption').forEach(($caption) => {
     const $pCheck = $caption.querySelector('p');
     if ($pCheck) {
-      $caption('p').forEach(($p) => {
+      $caption.querySelectorAll('p').forEach(($p) => {
         $p.classList.add('legend');
       })    
     } else {
@@ -606,7 +606,7 @@ function decorateCaptions() {
 function decorateEmbeds() {
 
   document.querySelectorAll('.block-embed a[href]').forEach(($a) => {
-    const url=new URL($a.href);
+    const url=$a.href.replace(/\/$/, '');
     const usp=new URLSearchParams(url.search);
     let embedHTML='';
     let type='';
@@ -623,10 +623,10 @@ function decorateEmbeds() {
     if($a.href.startsWith('https://www.instagram.com/')) {
       const location = window.location.href;
       embedHTML=`
-        <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+        <div style="width: 100%; position: relative; padding-bottom: 56.25%; display: flex; justify-content: center">
         <iframe class="instagram-media instagram-media-rendered" id="instagram-embed-0" src="${url}/embed/?cr=1&amp;v=13&amp;wp=1316&amp;rd=${location.endsWith('.html') ? location : location + '.html'}" 
-        allowtransparency="true" allowfullscreen="true" frameborder="0" height="530" style="background: white; max-width: 658px; width: calc(100% - 2px); border-radius: 3px; border: 1px solid rgb(219, 219, 219); 
-        box-shadow: none; display: block; margin: 0px 0px 12px; min-width: 326px; padding: 0px;">
+        allowtransparency="true" allowfullscreen="true" frameborder="0" height="530" style="background: white; border-radius: 3px; border: 1px solid rgb(219, 219, 219); 
+        box-shadow: none; display: block;">
         </iframe>
         </div>`;
       type='instagram';
