@@ -606,8 +606,7 @@ function decorateCaptions() {
 function decorateEmbeds() {
 
   document.querySelectorAll('.block-embed a[href]').forEach(($a) => {
-    const stringified_url=$a.href.replace(/\/$/, '');
-    const url = new URL($a.href);
+    const url = new URL($a.href.replace(/\/$/, ''));
     const usp=new URLSearchParams(url.search);
     let embedHTML='';
     let type='';
@@ -625,7 +624,7 @@ function decorateEmbeds() {
       const location = window.location.href;
       embedHTML=`
         <div style="width: 100%; position: relative; padding-bottom: 56.25%; display: flex; justify-content: center">
-        <iframe class="instagram-media instagram-media-rendered" id="instagram-embed-0" src="${stringified_url}/embed/?cr=1&amp;v=13&amp;wp=1316&amp;rd=${location.endsWith('.html') ? location : location + '.html'}" 
+        <iframe class="instagram-media instagram-media-rendered" id="instagram-embed-0" src="${url.href}/embed/?cr=1&amp;v=13&amp;wp=1316&amp;rd=${location.endsWith('.html') ? location : location + '.html'}" 
         allowtransparency="true" allowfullscreen="true" frameborder="0" height="530" style="background: white; border-radius: 3px; border: 1px solid rgb(219, 219, 219); 
         box-shadow: none; display: block;">
         </iframe>
@@ -633,13 +632,13 @@ function decorateEmbeds() {
       type='instagram';
     }
 
-    const vimeoPlayerFlag = $a.href.startsWith('https://player.vimeo.com/video/');
-    if (vimeoPlayerFlag || $a.href.startsWith('https://vimeo.com')) {
-      const linkArr = $a.href.split('/');
+    const vimeoPlayerFlag = url.href.startsWith('https://player.vimeo.com/video/');
+    if (vimeoPlayerFlag || url.href.startsWith('https://vimeo.com')) {
+      const linkArr = url.href.split('/');
       const video = linkArr ? linkArr[3] : linkArr;
       embedHTML=`
         <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-        <iframe src="${vimeoPlayerFlag ? stringified_url : `https://player.vimeo.com/video/${video}`}?byline=0&badge=0&portrait=0&title=0" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" 
+        <iframe src="${vimeoPlayerFlag ? url.href : `https://player.vimeo.com/video/${video}`}?byline=0&badge=0&portrait=0&title=0" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" 
         allowfullscreen="" scrolling="no" allow="encrypted-media" title="content from vimeo" loading="lazy">
         </iframe>
         </div>`
@@ -649,7 +648,7 @@ function decorateEmbeds() {
     if ($a.href.startsWith('https://video.tv.adobe.com/v/')) {
       embedHTML=`
         <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-        <iframe src="${stringified_url}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" 
+        <iframe src="${url.href}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" 
         scrolling="no" allow="encrypted-media" title="content from adobe" loading="lazy">
         </iframe>
         </div>`
