@@ -188,9 +188,10 @@
   // ARTICLE DATA -------------------------------------------------------------------
 
   function getArticleData() {
+    const [month, day, year] = window.blog.rawDate.split('-');
     return [
       window.blog.author,
-      new Date(window.blog.date).getTime()/1000,
+      Date.UTC(parseInt(year), parseInt(month) - 1, parseInt(day), 15)/1000, // pacific time AM
       `/hlx_${document.head.querySelector('meta[property="og:image"]')
         .getAttribute('content').split('/hlx_')[1]}`,
       predictUrl(null, sk.location.pathname),
