@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Adobe Blog: 3D AR</title>
+  <link href="https://blog.adobe.com/jp/topics/3d-ar.html"/>
+  <id>https://blog.adobe.com/jp/topics/3d-ar.html</id>
+  <esi:include src="/cgi-bin/feed.xml?src=/jp/query-index.json%3Flimit%3D10%26hlx_property.property%3Dtopics%26hlx_property.value%3D%25223D%2522%26hlx_property.operation%3Dlike&amp;id=path&amp;title=title&amp;updated=date">
+</feed>
