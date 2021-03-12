@@ -192,13 +192,16 @@ window.blog = function() {
       }
     }
   }
-  // define date lcoale
+  // define date locale
   let dateLocale = language;
   if (dateLocale === LANG.EN) {
     dateLocale = 'en-US'; // default to US date format
   }
   if (dateLocale === LANG.BR) {
-    dateLocale = 'pt-BR'; // use brazilian portuguese
+    dateLocale = 'pt-BR';
+  }
+  if (dateLocale === LANG.JP) {
+    dateLocale === 'ja-JP';
   }
   const pageName = window.location.pathname.split('/').pop().split('.')[0];
   if (pageName === 'uk' || pageName === 'apac') {
