@@ -197,7 +197,7 @@
       window.blog.author,
       date/1000,
       `/hlx_${document.head.querySelector('meta[property="og:image"]')
-        .getAttribute('content').split('/hlx_')[1]}`,
+        .getAttribute('content').split('/hlx_')[1].split('?')[0]}`,
       predictUrl(null, sk.location.pathname),
       `["${window.blog.products.join('\", \"')}"]`,
       '0',
