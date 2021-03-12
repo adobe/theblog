@@ -234,7 +234,7 @@ export function getPostPaths(el, parent, removeContainer) {
  * @returns {string} The formatted card date
  */
 export function formatLocalCardDate(date) {
-  const dateString = new Date(date).toLocaleDateString(window.blog.dateLocale, {
+  let dateString = new Date(date).toLocaleDateString(window.blog.dateLocale, {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
