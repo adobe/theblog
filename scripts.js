@@ -201,7 +201,7 @@ window.blog = function() {
     dateLocale = 'pt-BR';
   }
   if (dateLocale === LANG.JP) {
-    dateLocale === 'ja-JP';
+    dateLocale = 'ja-JP';
   }
   const pageName = window.location.pathname.split('/').pop().split('.')[0];
   if (pageName === 'uk' || pageName === 'apac') {
