@@ -192,10 +192,16 @@ window.blog = function() {
       }
     }
   }
+  // define date lcoale
   let dateLocale = language;
   if (dateLocale === LANG.EN) {
     dateLocale = 'en-US'; // default to US date format
   }
+  const pageName = window.location.pathname.split('/').pop().split('.')[0];
+  if (pageName === 'uk' || pagenName === 'apac') {
+    dateLocale = 'en-UK'; // special handling for UK and APAC landing pages
+  }
+
   if (window.isErrorPage) {
     pageType = TYPE.BLANK;
   }
