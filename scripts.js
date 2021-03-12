@@ -198,7 +198,7 @@ window.blog = function() {
     dateLocale = 'en-US'; // default to US date format
   }
   const pageName = window.location.pathname.split('/').pop().split('.')[0];
-  if (pageName === 'uk' || pagenName === 'apac') {
+  if (pageName === 'uk' || pageName === 'apac') {
     dateLocale = 'en-UK'; // special handling for UK and APAC landing pages
   }
 
