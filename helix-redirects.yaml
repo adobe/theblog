@@ -9,11 +9,11 @@ redirects:
   - from: ^/conversations/.*$
     to: https://blog.adobe.com/
     type: permanent
-  - from: ^/adobeconnect/.*$
-    to: https://www.connectusers.com/
+  - from: ^/adobeconnect/(.*)$
+    to: https://blogs.connectusers.com/connectsupport/$1
     type: permanent
-  - from: ^/connectsupport/.*$
-    to: https://www.connectusers.com/
+  - from: ^/connectsupport/(.*)$
+    to: https://blogs.connectusers.com/connectsupport/$1
     type: permanent
   - from: ^/deployment/.*$
     to: https://blog.adobe.com/
