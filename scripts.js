@@ -192,7 +192,7 @@ window.blog = function() {
       }
     }
   }
-  let dateLocale = sessionStorage.getItem('blog-selected-language') || language;
+  let dateLocale = language;
   if (dateLocale === LANG.EN) {
     dateLocale = 'en-US'; // default to US date format
   }
