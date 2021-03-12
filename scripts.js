@@ -197,6 +197,9 @@ window.blog = function() {
   if (dateLocale === LANG.EN) {
     dateLocale = 'en-US'; // default to US date format
   }
+  if (dateLocale === LANG.BR) {
+    dateLocale = 'pt-BR'; // use brazilian portuguese
+  }
   const pageName = window.location.pathname.split('/').pop().split('.')[0];
   if (pageName === 'uk' || pageName === 'apac') {
     dateLocale = 'en-UK'; // special handling for UK and APAC landing pages
