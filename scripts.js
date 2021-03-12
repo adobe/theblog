@@ -192,10 +192,14 @@ window.blog = function() {
       }
     }
   }
+  let dateLocale = sessionStorage.getItem('blog-selected-language') || language;
+  if (dateLocale === LANG.EN) {
+    dateLocale = 'en-US'; // default to US date format
+  }
   if (window.isErrorPage) {
     pageType = TYPE.BLANK;
   }
-  return { context, language, pageType, TYPE, LANG };
+  return { context, language, dateLocale, pageType, TYPE, LANG };
 }();
 
 // Adobe config

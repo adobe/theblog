@@ -190,8 +190,7 @@
   function getArticleData() {
     let date = 0;
     if (window.blog.rawDate) {
-      const [month, day, year] = window.blog.rawDate.split('-');
-      date = Date.UTC(parseInt(year), parseInt(month) - 1, parseInt(day), 15); // pacific time AM
+      date = new Date(window.blog.rawDate).setHours(12); // pacific time AM
     }
     return [
       window.blog.author,

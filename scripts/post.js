@@ -27,17 +27,20 @@ import {
 const DEFAULT_AVATAR = '/hlx_942ea2ad17270c65cda838d52145ec5b26704d41.png';
 
 /**
- * Reformats a date string from "01-15-2020" to "January 15, 2020"
+ * Formats the document-provided date (e.g. "01-15-2020") using the
+ * date locale matching the content displayed (e.g. "January 15, 2020").
  * @param {string} date The date string to format
  * @returns {string} The formatted date
  */
 function formatLocalDate(date) {
-  const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-  ];  
   const dateObj = date.split('-');
-
-  return monthNames[parseInt(dateObj[0])-1] + " " + dateObj[1] + ", " + dateObj[2];
+  const dateString = new Date(date).toLocaleDateString(window.blog.dateLocale, {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+  return dateString;
 }
 
 /**
@@ -70,7 +73,7 @@ function handleImmediateMetadata() {
     content: window.blog.language,
   },{
     property: 'article:published_time',
-    content: window.blog.date ? new Date(window.blog.date).toISOString() : '',
+    content: window.blog.rawDate ? new Date(window.blog.rawDate).toISOString() : '',
   }]);
 }
 
