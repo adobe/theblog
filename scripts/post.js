@@ -35,7 +35,7 @@ const DEFAULT_AVATAR = '/hlx_942ea2ad17270c65cda838d52145ec5b26704d41.png';
 function formatLocalDate(date) {
   const dateObj = date.split('-');
   const dateString = new Date(date).toLocaleDateString(window.blog.dateLocale, {
-    day: '2-digit',
+    day: 'numeric',
     month: 'long',
     year: 'numeric',
     timeZone: 'UTC',
