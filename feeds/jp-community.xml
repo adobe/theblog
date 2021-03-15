@@ -3,5 +3,5 @@
   <title>Adobe Blog: Community</title>
   <link href="https://blog.adobe.com/jp/topics/community.html"/>
   <id>https://blog.adobe.com/jp/topics/community.html</id>
-  <esi:include src="/cgi-bin/feed.xml?src=/jp/query-index.json%3Flimit%3D10%26hlx_property.property%3Dtopics%26hlx_property.value%3D%2522Community%2522%26hlx_property.operation%3Dlike&amp;id=path&amp;title=title&amp;updated=date">
+  <esi:include src="/cgi-bin/feed.xml?src=/jp/query-index.json%3Flimit%3D10%26hlx_property.property%3Dtopics%26hlx_property.value%3Dコミュニテ%26hlx_property.operation%3Dlike&amp;id=path&amp;title=title&amp;updated=date">
 </feed>
