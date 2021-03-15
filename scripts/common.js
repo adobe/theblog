@@ -392,7 +392,13 @@ export async function fetchArticleIndex(offset) {
   // console.log(`fetching article index: at ${index.articles.length} entries, new offset=${offset}`)
   if (index.done) return;
 
-  const indexPath = window.blog.indexPath || `/${window.blog.language}/query-index.json`;
+  let indexPath = window.blog.indexPath || `/${window.blog.language}/query-index.json`;
+
+  // temp homepage fix
+  if (indexPath == '/en/query-index.json') {
+    indexPath = '/temp-query.json.txt';
+  }
+
   const queryParams = new URLSearchParams(indexPath.split('?')[1]);
   queryParams.set('limit', 256);
   queryParams.set('offset', offset);
