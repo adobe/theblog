@@ -7,4 +7,5 @@ pipeline.log
 logs
 deploy.sh
 hlx
+en
 .env
