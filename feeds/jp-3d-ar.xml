@@ -3,5 +3,5 @@
   <title>Adobe Blog: 3D AR</title>
   <link href="https://blog.adobe.com/jp/topics/3d-ar.html"/>
   <id>https://blog.adobe.com/jp/topics/3d-ar.html</id>
-  <esi:include src="/cgi-bin/feed.xml?id=path&amp;title=title&amp;updated=date&amp;src=/jp/query-index.json%3Flimit%3D10%26hlx_property.property%3Dtopics%26hlx_property.value%3D3D%20%26%20AR%26hlx_property.operation%3Dlike%">
+  <esi:include src="/cgi-bin/feed.xml?id=path&amp;title=title&amp;updated=date&amp;src=/jp/query-index.json%3Flimit%3D10%26hlx_property.property%3Dtopics%26hlx_property.value%3D3D%20%26%20AR%26hlx_property.operation%3Dlike">
 </feed>
