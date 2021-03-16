@@ -3,5 +3,5 @@
   <title>Adobe Blog: CC Dojo</title>
   <link href="https://blog.adobe.com/jp/topics/ccdojo.html"/>
   <id>https://blog.adobe.com/jp/topics/ccdojo.html</id>
-  <esi:include src="/cgi-bin/feed.xml?src=/jp/query-index.json%3Flimit%3D10%26hlx_property.property%3Dtopics%26hlx_property.value%3D%2522Dojo%2522%26hlx_property.operation%3Dlike&amp;id=path&amp;title=title&amp;updated=date">
+  <esi:include src="/cgi-bin/feed.xml?id=path&amp;title=title&amp;updated=date&amp;src=/jp/query-index.json%3Flimit%3D10%26hlx_property.property%3Dtopics%26hlx_property.operation%3Dlike%26hlx_property.value%3DCreative%20Cloud%20%E9%81%93%E5%A0%B4">
 </feed>
