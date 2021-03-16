@@ -3,5 +3,5 @@
   <title>Adobe Blog: Corporate News</title>
   <link href="https://blog.adobe.com/jp/topics/corporate-news.html"/>
   <id>https://blog.adobe.com/jp/topics/corporate-news.html</id>
-  <esi:include src="/cgi-bin/feed.xml?src=/jp/query-index.json%3Flimit%3D10%26hlx_property.property%3Dtopics%26hlx_property.value%3D%2522Corporate%20News%2522%26hlx_property.operation%3Dlike&amp;id=path&amp;title=title&amp;updated=date">
+  <esi:include src="/cgi-bin/feed.xml?id=path&amp;title=title&amp;updated=date&amp;src=/jp/query-index.json%3Flimit%3D10%26hlx_property.property%3Dtopics%26hlx_property.operation%3Dlike%26hlx_property.value%3D%E3%82%B3%E3%83%BC%E3%83%9D%E3%83%AC%E3%83%BC%E3%83%88%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9">
 </feed>
