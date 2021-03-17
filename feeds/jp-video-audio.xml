@@ -3,5 +3,5 @@
   <title>Adobe Blog: Video Audio</title>
   <link href="https://blog.adobe.com/jp/topics/video-audio.html"/>
   <id>https://blog.adobe.com/jp/topics/video-audio.html</id>
-  <esi:include src="/cgi-bin/feed.xml?src=/jp/query-index.json%3Flimit%3D10%26hlx_property.property%3Dtopics%26hlx_property.value%3D%2522Video%2522%26hlx_property.operation%3Dlike&amp;id=path&amp;title=title&amp;updated=date">
+  <esi:include src="/cgi-bin/feed.xml?id=path&amp;title=title&amp;updated=date&amp;src=/jp/query-index.json%3Flimit%3D10%26hlx_property.property%3Dtopics%26hlx_property.operation%3Dlike%26hlx_property.value%3D%E3%83%93%E3%83%87%E3%82%AA">
 </feed>
