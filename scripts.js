@@ -150,6 +150,7 @@ window.blog = function() {
     AUTHOR: 'author',
     TOPIC: 'topic',
     PRODUCT: 'product',
+    PROMOTION: 'promotion',
     BLANK: 'blank',
   };
   const LANG = {
