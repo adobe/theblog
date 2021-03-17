@@ -807,6 +807,25 @@ function shapeBanners() {
   });
 }
 
+async function decoratePromotions() {
+  document.querySelectorAll('main .promotion').forEach(async ($promotion) => {
+    const $a = $promotion.querySelector('a');
+    if ($a && $a.href) {
+      const promoURL = new URL($a.href).pathname.split('.')[0];
+      const resp = await fetch(`${promoURL}.plain.html`);
+      const main = await resp.text();
+      const $promo = createTag('div', {class: 'embed embed-internal embed-internal-promotions'});
+      $promo.innerHTML = `<div><div class="embed-promotions-text">${main}</div></div>`;
+      const $img = $promo.querySelector('img');
+      $img.src = $img.src + '?auto=webp&format=pjpg&optimize=medium&width=160';
+      $img.setAttribute('loading', 'lazy');
+      $promo.children[0].prepend($img.parentNode);
+      console.log($promo.innerHTML);
+      $promotion.parentElement.replaceChild($promo, $promotion);
+    }
+  });
+}
+
 function addPublishDependencies() {
   const path = window.location.pathname;
   if (!/\d{4}\/\d{2}\/\d{2}/.test(path)) {
@@ -835,6 +854,7 @@ window.addEventListener('load', async function() {
   await handleAsyncMetadata();
   await addCategory();
   await addTopics();
+  decoratePromotions();
   loadGetSocial();
   shapeBanners();
   fetchArticles();
