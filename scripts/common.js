@@ -228,6 +228,26 @@ export function getPostPaths(el, parent, removeContainer) {
 }
 
 /**
+ * Formats the article date for the card using the date locale
+ * matching the content displayed.
+ * @param {number} date The date to format in milliseconds
+ * @returns {string} The formatted card date
+ */
+export function formatLocalCardDate(date) {
+  let dateString = new Date(date).toLocaleDateString(window.blog.dateLocale, {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+  if (window.blog.dateLocale === 'en-US') {
+    // stylize US date format with dashes instead of slashes
+    dateString = dateString.replaceAll('/', '-');
+  }
+  return dateString;
+}
+
+/**
  * Prepares a query hit object for use as a card.
  * @param {object} item The query hit object
  * @returns {object} The processed query hit object
@@ -242,14 +262,7 @@ export async function itemTransformer(item = {}) {
         crop: '3:2',
       })
       : '#',
-    date: item.date
-      ? new Date(item.date * 1000).toLocaleDateString('en-US', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-          timeZone: 'UTC',
-        }).replace(/\//g, '-')
-      : '',
+    date: item.date ? formatLocalCardDate(item.date * 1000) : '',
     authorUrl: item.author ? getLink(window.blog.TYPE.AUTHOR, item.author) : '',
     topic: item.topics && item.topics.length > 0 ? item.topics[0] : '',
     topicUrl: item.topics && item.topics.length > 0 ? taxonomy.getLink(item.topics[0]) || getLink(window.blog.TYPE.TOPIC, item.topics[0]) : '',
