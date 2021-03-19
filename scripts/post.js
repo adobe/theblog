@@ -33,8 +33,7 @@ const DEFAULT_AVATAR = '/hlx_942ea2ad17270c65cda838d52145ec5b26704d41.png';
  * @returns {string} The formatted date
  */
 function formatLocalDate(date) {
-  const dateObj = date.split('-');
-  const dateString = new Date(date).toLocaleDateString(window.blog.dateLocale, {
+  const dateString = new Date(date.replace(/-/g, '/')).toLocaleDateString(window.blog.dateLocale, {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -73,7 +72,7 @@ function handleImmediateMetadata() {
     content: window.blog.language,
   },{
     property: 'article:published_time',
-    content: window.blog.rawDate ? new Date(window.blog.rawDate).toISOString() : '',
+    content: window.blog.rawDate ? new Date(window.blog.rawDate.replace(/-/g, '/')).toISOString() : '',
   }]);
 }
 
