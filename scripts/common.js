@@ -242,7 +242,7 @@ export function formatLocalCardDate(date) {
   });
   if (window.blog.dateLocale === 'en-US') {
     // stylize US date format with dashes instead of slashes
-    dateString = dateString.replaceAll('/', '-');
+    dateString = dateString.replace(/\//g, '-');
   }
   return dateString;
 }
