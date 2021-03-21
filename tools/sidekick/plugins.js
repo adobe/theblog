@@ -190,13 +190,18 @@
   function getArticleData() {
     let date = 0;
     if (window.blog.rawDate) {
-      date = new Date(window.blog.rawDate).setHours(12); // pacific time AM
+      const [month, day, year] = window.blog.rawDate.split('-');
+      date = Date.UTC(parseInt(year), parseInt(month) - 1, parseInt(day), 15); // pacific time AM
+    }
+    let hero = '';
+    const metaImg = document.head.querySelector('meta[property="og:image"]');
+    if (metaImg) {
+      hero = new URL(metaImg.getAttribute('content')).pathname;
     }
     return [
       window.blog.author,
       date/1000,
-      `/hlx_${document.head.querySelector('meta[property="og:image"]')
-        .getAttribute('content').split('/hlx_')[1].split('?')[0]}`,
+      hero,
       predictUrl(null, sk.location.pathname),
       `["${window.blog.products.join('\", \"')}"]`,
       '0',
