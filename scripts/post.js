@@ -29,6 +29,10 @@ const DEFAULT_AVATAR = '/hlx_942ea2ad17270c65cda838d52145ec5b26704d41.png';
 /**
  * Formats the document-provided date (e.g. "01-15-2020") using the
  * date locale matching the content displayed (e.g. "January 15, 2020").
+ *
+ * Note: we deliberately omit the { timeZone: 'UTC' } used when formatting a numeric
+ * date as it leads to wrong date output (e.g. 03-11-2021 becomes 12 March 2021).
+ *
  * @param {string} date The date string to format
  * @returns {string} The formatted date
  */
@@ -37,7 +41,6 @@ function formatLocalDate(date) {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
-    // timeZone: 'UTC',
   });
   return dateString;
 }
