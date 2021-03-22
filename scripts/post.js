@@ -29,6 +29,10 @@ const DEFAULT_AVATAR = '/hlx_942ea2ad17270c65cda838d52145ec5b26704d41.png';
 /**
  * Formats the document-provided date (e.g. "01-15-2020") using the
  * date locale matching the content displayed (e.g. "January 15, 2020").
+ *
+ * Note: we deliberately omit the { timeZone: 'UTC' } used when formatting a numeric
+ * date as it leads to wrong date output (e.g. 03-11-2021 becomes 12 March 2021).
+ *
  * @param {string} date The date string to format
  * @returns {string} The formatted date
  */
@@ -37,7 +41,6 @@ function formatLocalDate(date) {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
-    timeZone: 'UTC',
   });
   return dateString;
 }
@@ -64,7 +67,7 @@ function handleImmediateMetadata() {
     window.blog.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
     if (window.blog.date) window.blog.rawDate = d[0];
   }
-  
+
   extractTopicsAndProducts();
 
   addMetaTags([{
@@ -81,7 +84,7 @@ function handleImmediateMetadata() {
  */
 async function handleAsyncMetadata() {
   const taxonomy = await getTaxonomy(window.blog.language);
-  
+
   const allTopics = Array.from(new Set([
     ...window.blog.topics,
     ...taxonomy.getParents(window.blog.topics),
@@ -91,7 +94,7 @@ async function handleAsyncMetadata() {
     ...window.blog.products,
     ...taxonomy.getParents(window.blog.products, taxonomy.PRODUCTS),
   ]));
-  
+
 
   // de-dupe UFT, NUFT + parents
   const allTags = Array.from(new Set([
@@ -149,7 +152,7 @@ function decorateTables() {
           $div=createTag('div', {class:`${cols[0]}`});
           $div.innerHTML=$rows[0].querySelector('td').innerHTML;
       } else {
-          $div=turnTableIntoCards($table, cols) 
+          $div=turnTableIntoCards($table, cols)
       }
       $table.parentNode.replaceChild($div, $table);
   });
@@ -256,7 +259,7 @@ function decoratePullQuotes() {
           $e.parentNode.replaceChild($pullquote, $e);
         }
       }
-    } 
+    }
   })
 }
 
@@ -303,29 +306,29 @@ function decorateImages() {
   })
 }
 
-/**	
- * Checks if a given match intersects with an existing match	
- * before adding it to the list of matches. In case of an 	
+/**
+ * Checks if a given match intersects with an existing match
+ * before adding it to the list of matches. In case of an
  * intersection, the more specific (i.e. longer) match wins.
- * @param {array} matches The existing matches	
- * @param {object} contender The match to check and add	
+ * @param {array} matches The existing matches
+ * @param {object} contender The match to check and add
  * @param {number} maxMatches The maximum number of matches
- */	
-export function checkAndAddMatch(matches, contender, maxMatches) {	
-  const collisions = matches	
-    // check for intersections	
-    .filter((match) => {	
-      if (contender.end < match.start || contender.start > match.end) {	
-        // no intersection with existing match	
-        return false;	
-      }	
-      // contender starts or ends within existing match	
-      return true;	
-    });	
-  if (collisions.length === 0 && matches.length < maxMatches) {	
+ */
+export function checkAndAddMatch(matches, contender, maxMatches) {
+  const collisions = matches
+    // check for intersections
+    .filter((match) => {
+      if (contender.end < match.start || contender.start > match.end) {
+        // no intersection with existing match
+        return false;
+      }
+      // contender starts or ends within existing match
+      return true;
+    });
+  if (collisions.length === 0 && matches.length < maxMatches) {
     // no intersecting existing matches, add contender if max not yet reached
-    matches.push(contender);	
-  }	
+    matches.push(contender);
+  }
 }
 
 /**
@@ -335,7 +338,7 @@ export function checkAndAddMatch(matches, contender, maxMatches) {
 async function addInterLinks() {
   if (window.blog.topics.includes('no-interlinks')) return;
   const response = await fetch('/en/keywords.json');
-  if (response.ok) { 
+  if (response.ok) {
     const json = await response.json();
     const articleBody = document.querySelector('main .post-body');
     const articleText = articleBody.textContent.toLowerCase();
@@ -375,7 +378,7 @@ async function addInterLinks() {
       if (maxParLinks <= 0) return;
 
       Array.from(p.childNodes)
-        // filter out non text nodes  
+        // filter out non text nodes
         .filter((node) => node.nodeType === Node.TEXT_NODE)
         .forEach((textNode) => {
           const matches = [];
@@ -595,7 +598,7 @@ function decorateCaptions() {
     if ($pCheck) {
       $caption.querySelectorAll('p').forEach(($p) => {
         $p.classList.add('legend');
-      })    
+      })
     } else {
       const $p=createTag('p', {class: 'legend'});
       $p.innerHTML=$caption.innerHTML;
@@ -626,8 +629,8 @@ function decorateEmbeds() {
       const location = window.location.href;
       embedHTML=`
         <div style="width: 100%; position: relative; padding-bottom: 56.25%; display: flex; justify-content: center">
-        <iframe class="instagram-media instagram-media-rendered" id="instagram-embed-0" src="${url.href}/embed/?cr=1&amp;v=13&amp;wp=1316&amp;rd=${location.endsWith('.html') ? location : location + '.html'}" 
-        allowtransparency="true" allowfullscreen="true" frameborder="0" height="530" style="background: white; border-radius: 3px; border: 1px solid rgb(219, 219, 219); 
+        <iframe class="instagram-media instagram-media-rendered" id="instagram-embed-0" src="${url.href}/embed/?cr=1&amp;v=13&amp;wp=1316&amp;rd=${location.endsWith('.html') ? location : location + '.html'}"
+        allowtransparency="true" allowfullscreen="true" frameborder="0" height="530" style="background: white; border-radius: 3px; border: 1px solid rgb(219, 219, 219);
         box-shadow: none; display: block;">
         </iframe>
         </div>`;
@@ -640,7 +643,7 @@ function decorateEmbeds() {
       const video = linkArr ? linkArr[3] : linkArr;
       embedHTML=`
         <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-        <iframe src="${vimeoPlayerFlag ? url.href : `https://player.vimeo.com/video/${video}`}?byline=0&badge=0&portrait=0&title=0" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" 
+        <iframe src="${vimeoPlayerFlag ? url.href : `https://player.vimeo.com/video/${video}`}?byline=0&badge=0&portrait=0&title=0" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;"
         allowfullscreen="" scrolling="no" allow="encrypted-media" title="content from vimeo" loading="lazy">
         </iframe>
         </div>`
@@ -650,20 +653,20 @@ function decorateEmbeds() {
     if ($a.href.startsWith('https://video.tv.adobe.com/v/')) {
       embedHTML=`
         <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-        <iframe src="${url.href}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" 
+        <iframe src="${url.href}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen=""
         scrolling="no" allow="encrypted-media" title="content from adobe" loading="lazy">
         </iframe>
         </div>`
         type='adobe-tv';
     }
- 
+
     if (type) {
       const $embed=createTag('div', {class: `embed embed-oembed embed-${type}`});
       const $div=$a.closest('div');
       $embed.innerHTML=embedHTML;
       $div.parentElement.replaceChild($embed, $div);
     }
-    
+
   })
 
   document.querySelectorAll('.post-page .post-body .embed').forEach(($e) => {
@@ -707,14 +710,14 @@ function decorateAnimations() {
       $video.innerHTML=`<source src="${href}" type="video/mp4">`;
       $a.parentNode.replaceChild($video, $a);
       if (isAnimation) {
-          $video.addEventListener('canplay', (evt) => { 
+          $video.addEventListener('canplay', (evt) => {
             $video.muted=true;
             $video.play() });
       }
     }
-    
+
     if (href.endsWith('.gif')) {
-      $a.parentNode.replaceChild(createTag('img',{src: `/hlx_${helixId}.gif`}), $a);  
+      $a.parentNode.replaceChild(createTag('img',{src: `/hlx_${helixId}.gif`}), $a);
     }
 
     const $next=$parent.nextElementSibling;
@@ -730,7 +733,7 @@ function decorateAnimations() {
     const $heroImg=document.querySelector('main .hero-image img');
     $heroImg.parentNode.replaceChild($video, $heroImg);
 
-    $video.addEventListener('canplay', (evt) => { 
+    $video.addEventListener('canplay', (evt) => {
       $video.muted=true;
       $video.play() });
   }
