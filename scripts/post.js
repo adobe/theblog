@@ -61,6 +61,10 @@ function handleImmediateMetadata() {
     const r = /^[bB]y(.*)\n*(.*)$/gmi.exec(authorSection.innerText);
     window.blog.author = r && r.length > 0 ? r[1].trim() : '';
     const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
+    const authorLink = authorSection.querySelector('a');
+    if (authorLink && authorLink.href && authorLink.href.includes('/authors/')) {
+      window.blog.authorPath = new URL(authorLink.href).pathname;
+    }
     window.blog.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
     if (window.blog.date) window.blog.rawDate = d[0];
   }
@@ -467,7 +471,7 @@ function fetchAuthor() {
 
     const xhr = new XMLHttpRequest();
     const fileName = window.blog.author.replace(/\s/gm, '-').toLowerCase();
-    const pageURL = getLink(window.blog.TYPE.AUTHOR, window.blog.author);
+    const pageURL = window.blog.authorPath || getLink(window.blog.TYPE.AUTHOR, window.blog.author);
     xhr.open('GET', pageURL);
     xhr.onload = function() {
       try {
