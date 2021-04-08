@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Adobe Blog: Digital Document</title>
+  <link href="https://blog.adobe.com/jp/topics/digital-document.html"/>
+  <id>https://blog.adobe.com/jp/topics/digital-document.html</id>
+  <esi:include src="/cgi-bin/feed.xml?id=path&amp;title=title&amp;updated=date&amp;src=/jp/query-index.json%3Flimit%3D10%26hlx_group.1_property%3Dtopics%26hlx_group.1_property.operation%3Dlike%26hlx_group.1_property.value%3DPDF%26hlx_group.p.or%3Dtrue%26hlx_group.2_property%3Dtopics%26hlx_group.2_property.operation%3Dlike%26hlx_group.2_property.value%3D%E9%9B%BB%E5%AD%90%E3%82%B5%E3%82%A4%E3%83%B3%26hlx_group.3_property%3Dtopics%26hlx_group.3_property.operation%3Dlike%26hlx_group.3_property.value%3D%E3%83%87%E3%82%B8%E3%82%BF%E3%83%AB%E3%83%89%E3%82%AD%E3%83%A5%E3%83%A1%E3%83%B3%E3%83%88">
+</feed>

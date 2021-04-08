@@ -27,17 +27,22 @@ import {
 const DEFAULT_AVATAR = '/hlx_942ea2ad17270c65cda838d52145ec5b26704d41.png';
 
 /**
- * Reformats a date string from "01-15-2020" to "January 15, 2020"
+ * Formats the document-provided date (e.g. "01-15-2020") using the
+ * date locale matching the content displayed (e.g. "January 15, 2020").
+ *
+ * Note: we deliberately omit the { timeZone: 'UTC' } used when formatting a numeric
+ * date as it leads to wrong date output (e.g. 03-11-2021 becomes 12 March 2021).
+ *
  * @param {string} date The date string to format
  * @returns {string} The formatted date
  */
 function formatLocalDate(date) {
-  const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-  ];  
-  const dateObj = date.split('-');
-
-  return monthNames[parseInt(dateObj[0])-1] + " " + dateObj[1] + ", " + dateObj[2];
+  const dateString = new Date(date.replace(/-/g, '/')).toLocaleDateString(window.blog.dateLocale, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+  return dateString;
 }
 
 /**
@@ -59,10 +64,14 @@ function handleImmediateMetadata() {
     const r = /^[bB]y(.*)\n*(.*)$/gmi.exec(authorSection.innerText);
     window.blog.author = r && r.length > 0 ? r[1].trim() : '';
     const d = r && r.length > 1 ? /\d{2}[.\/-]\d{2}[.\/-]\d{4}/.exec(r[2]) : null;
+    const authorLink = authorSection.querySelector('a');
+    if (authorLink && authorLink.href && authorLink.href.includes('/authors/')) {
+      window.blog.authorPath = new URL(authorLink.href).pathname;
+    }
     window.blog.date = d && d.length > 0 ? formatLocalDate(d[0]) : '';
     if (window.blog.date) window.blog.rawDate = d[0];
   }
-  
+
   extractTopicsAndProducts();
 
   addMetaTags([{
@@ -70,7 +79,7 @@ function handleImmediateMetadata() {
     content: window.blog.language,
   },{
     property: 'article:published_time',
-    content: window.blog.date ? new Date(window.blog.date).toISOString() : '',
+    content: window.blog.rawDate ? new Date(window.blog.rawDate.replace(/-/g, '/')).toISOString() : '',
   }]);
 }
 
@@ -79,7 +88,7 @@ function handleImmediateMetadata() {
  */
 async function handleAsyncMetadata() {
   const taxonomy = await getTaxonomy(window.blog.language);
-  
+
   const allTopics = Array.from(new Set([
     ...window.blog.topics,
     ...taxonomy.getParents(window.blog.topics),
@@ -89,7 +98,7 @@ async function handleAsyncMetadata() {
     ...window.blog.products,
     ...taxonomy.getParents(window.blog.products, taxonomy.PRODUCTS),
   ]));
-  
+
 
   // de-dupe UFT, NUFT + parents
   const allTags = Array.from(new Set([
@@ -147,7 +156,7 @@ function decorateTables() {
           $div=createTag('div', {class:`${cols[0]}`});
           $div.innerHTML=$rows[0].querySelector('td').innerHTML;
       } else {
-          $div=turnTableIntoCards($table, cols) 
+          $div=turnTableIntoCards($table, cols)
       }
       $table.parentNode.replaceChild($div, $table);
   });
@@ -254,7 +263,7 @@ function decoratePullQuotes() {
           $e.parentNode.replaceChild($pullquote, $e);
         }
       }
-    } 
+    }
   })
 }
 
@@ -301,29 +310,29 @@ function decorateImages() {
   })
 }
 
-/**	
- * Checks if a given match intersects with an existing match	
- * before adding it to the list of matches. In case of an 	
+/**
+ * Checks if a given match intersects with an existing match
+ * before adding it to the list of matches. In case of an
  * intersection, the more specific (i.e. longer) match wins.
- * @param {array} matches The existing matches	
- * @param {object} contender The match to check and add	
+ * @param {array} matches The existing matches
+ * @param {object} contender The match to check and add
  * @param {number} maxMatches The maximum number of matches
- */	
-export function checkAndAddMatch(matches, contender, maxMatches) {	
-  const collisions = matches	
-    // check for intersections	
-    .filter((match) => {	
-      if (contender.end < match.start || contender.start > match.end) {	
-        // no intersection with existing match	
-        return false;	
-      }	
-      // contender starts or ends within existing match	
-      return true;	
-    });	
-  if (collisions.length === 0 && matches.length < maxMatches) {	
+ */
+export function checkAndAddMatch(matches, contender, maxMatches) {
+  const collisions = matches
+    // check for intersections
+    .filter((match) => {
+      if (contender.end < match.start || contender.start > match.end) {
+        // no intersection with existing match
+        return false;
+      }
+      // contender starts or ends within existing match
+      return true;
+    });
+  if (collisions.length === 0 && matches.length < maxMatches) {
     // no intersecting existing matches, add contender if max not yet reached
-    matches.push(contender);	
-  }	
+    matches.push(contender);
+  }
 }
 
 /**
@@ -333,7 +342,7 @@ export function checkAndAddMatch(matches, contender, maxMatches) {
 async function addInterLinks() {
   if (window.blog.topics.includes('no-interlinks')) return;
   const response = await fetch('/en/keywords.json');
-  if (response.ok) { 
+  if (response.ok) {
     const json = await response.json();
     const articleBody = document.querySelector('main .post-body');
     const articleText = articleBody.textContent.toLowerCase();
@@ -373,7 +382,7 @@ async function addInterLinks() {
       if (maxParLinks <= 0) return;
 
       Array.from(p.childNodes)
-        // filter out non text nodes  
+        // filter out non text nodes
         .filter((node) => node.nodeType === Node.TEXT_NODE)
         .forEach((textNode) => {
           const matches = [];
@@ -465,7 +474,7 @@ function fetchAuthor() {
 
     const xhr = new XMLHttpRequest();
     const fileName = window.blog.author.replace(/\s/gm, '-').toLowerCase();
-    const pageURL = getLink(window.blog.TYPE.AUTHOR, window.blog.author);
+    const pageURL = window.blog.authorPath || getLink(window.blog.TYPE.AUTHOR, window.blog.author);
     xhr.open('GET', pageURL);
     xhr.onload = function() {
       try {
@@ -593,7 +602,7 @@ function decorateCaptions() {
     if ($pCheck) {
       $caption.querySelectorAll('p').forEach(($p) => {
         $p.classList.add('legend');
-      })    
+      })
     } else {
       const $p=createTag('p', {class: 'legend'});
       $p.innerHTML=$caption.innerHTML;
@@ -624,8 +633,8 @@ function decorateEmbeds() {
       const location = window.location.href;
       embedHTML=`
         <div style="width: 100%; position: relative; padding-bottom: 56.25%; display: flex; justify-content: center">
-        <iframe class="instagram-media instagram-media-rendered" id="instagram-embed-0" src="${url.href}/embed/?cr=1&amp;v=13&amp;wp=1316&amp;rd=${location.endsWith('.html') ? location : location + '.html'}" 
-        allowtransparency="true" allowfullscreen="true" frameborder="0" height="530" style="background: white; border-radius: 3px; border: 1px solid rgb(219, 219, 219); 
+        <iframe class="instagram-media instagram-media-rendered" id="instagram-embed-0" src="${url.href}/embed/?cr=1&amp;v=13&amp;wp=1316&amp;rd=${location.endsWith('.html') ? location : location + '.html'}"
+        allowtransparency="true" allowfullscreen="true" frameborder="0" height="530" style="background: white; border-radius: 3px; border: 1px solid rgb(219, 219, 219);
         box-shadow: none; display: block;">
         </iframe>
         </div>`;
@@ -638,7 +647,7 @@ function decorateEmbeds() {
       const video = linkArr ? linkArr[3] : linkArr;
       embedHTML=`
         <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-        <iframe src="${vimeoPlayerFlag ? url.href : `https://player.vimeo.com/video/${video}`}?byline=0&badge=0&portrait=0&title=0" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" 
+        <iframe src="${vimeoPlayerFlag ? url.href : `https://player.vimeo.com/video/${video}`}?byline=0&badge=0&portrait=0&title=0" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;"
         allowfullscreen="" scrolling="no" allow="encrypted-media" title="content from vimeo" loading="lazy">
         </iframe>
         </div>`
@@ -648,20 +657,20 @@ function decorateEmbeds() {
     if ($a.href.startsWith('https://video.tv.adobe.com/v/')) {
       embedHTML=`
         <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-        <iframe src="${url.href}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" 
+        <iframe src="${url.href}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen=""
         scrolling="no" allow="encrypted-media" title="content from adobe" loading="lazy">
         </iframe>
         </div>`
         type='adobe-tv';
     }
- 
+
     if (type) {
       const $embed=createTag('div', {class: `embed embed-oembed embed-${type}`});
       const $div=$a.closest('div');
       $embed.innerHTML=embedHTML;
       $div.parentElement.replaceChild($embed, $div);
     }
-    
+
   })
 
   document.querySelectorAll('.post-page .post-body .embed').forEach(($e) => {
@@ -705,14 +714,14 @@ function decorateAnimations() {
       $video.innerHTML=`<source src="${href}" type="video/mp4">`;
       $a.parentNode.replaceChild($video, $a);
       if (isAnimation) {
-          $video.addEventListener('canplay', (evt) => { 
+          $video.addEventListener('canplay', (evt) => {
             $video.muted=true;
             $video.play() });
       }
     }
-    
+
     if (href.endsWith('.gif')) {
-      $a.parentNode.replaceChild(createTag('img',{src: `/hlx_${helixId}.gif`}), $a);  
+      $a.parentNode.replaceChild(createTag('img',{src: `/hlx_${helixId}.gif`}), $a);
     }
 
     const $next=$parent.nextElementSibling;
@@ -728,7 +737,7 @@ function decorateAnimations() {
     const $heroImg=document.querySelector('main .hero-image img');
     $heroImg.parentNode.replaceChild($video, $heroImg);
 
-    $video.addEventListener('canplay', (evt) => { 
+    $video.addEventListener('canplay', (evt) => {
       $video.muted=true;
       $video.play() });
   }
@@ -807,6 +816,25 @@ function shapeBanners() {
   });
 }
 
+async function decoratePromotions() {
+  document.querySelectorAll('main .promotion').forEach(async ($promotion) => {
+    const $a = $promotion.querySelector('a');
+    if ($a && $a.href) {
+      const promoURL = new URL($a.href).pathname.split('.')[0];
+      const resp = await fetch(`${promoURL}.plain.html`);
+      const main = await resp.text();
+      const $promo = createTag('div', {class: 'embed embed-internal embed-internal-promotions'});
+      $promo.innerHTML = `<div><div class="embed-promotions-text">${main}</div></div>`;
+      const $img = $promo.querySelector('img');
+      $img.src = $img.src + '?auto=webp&format=pjpg&optimize=medium&width=160';
+      $img.setAttribute('loading', 'lazy');
+      $promo.children[0].prepend($img.parentNode);
+      console.log($promo.innerHTML);
+      $promotion.parentElement.replaceChild($promo, $promotion);
+    }
+  });
+}
+
 function addPublishDependencies() {
   const path = window.location.pathname;
   if (!/\d{4}\/\d{2}\/\d{2}/.test(path)) {
@@ -835,6 +863,7 @@ window.addEventListener('load', async function() {
   await handleAsyncMetadata();
   await addCategory();
   await addTopics();
+  decoratePromotions();
   loadGetSocial();
   shapeBanners();
   fetchArticles();
