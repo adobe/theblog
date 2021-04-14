@@ -44,6 +44,18 @@ export function createTag(name, attrs) {
   return el;
 }
 
+export function loadScript(url, callback, type) {
+  const $head = document.querySelector('head');
+  const $script = createTag('script', { src: url });
+  if (type) {
+    $script.setAttribute('type', type);
+  }
+  $head.append($script);
+  $script.onload = callback;
+  return $script;
+}
+
+
 /**
  * Adds page type as body class.
  */
@@ -855,10 +867,21 @@ function handleDropdownRegion() {
   }
 }
 
-function decoratePage() {
-  setDocumentLanguage();
-  removeHeaderAndFooter();
-  addPageTypeAsBodyClass();
+export function globalPostLCP() {
+  // loadFonts();
+  const martechUrl = '/scripts/martech.js';
+  const usp = new URLSearchParams(window.location.search);
+  const martech = usp.get('martech');
+
+  if (!(martech === 'off' || document.querySelector(`head script[src="${martechUrl}"]`))) {
+    let ms = 2000;
+    const delay = usp.get('delay');
+    if (delay) ms = +delay;
+    setTimeout(() => {
+      loadScript(martechUrl, null, 'module');
+    }, ms);
+  }
+
   /**
    * Check if FEDS is available before loading the Dropdown Selector
    */
@@ -867,6 +890,12 @@ function decoratePage() {
   } else {
     window.addEventListener('feds.events.experience.loaded', handleDropdownRegion);
   }
+}
+
+function decoratePage() {
+  addPageTypeAsBodyClass();
+  setDocumentLanguage();
+  removeHeaderAndFooter();
 };
 
 decoratePage();

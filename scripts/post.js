@@ -18,6 +18,7 @@ import {
   wrapNodes,
   createTag,
   extractTopicsAndProducts,
+  globalPostLCP
 } from '/scripts/common.js';
 
 import {
@@ -875,6 +876,7 @@ function setLCPTrigger() {
 
 async function postLCP() {
   handleImmediateMetadata();
+  globalPostLCP();
   decorateImages();
   decorateTables();
   decorateAnimations();
