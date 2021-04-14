@@ -214,6 +214,10 @@ function decoratePostPage(){
   addClass('.post-page main>div:nth-of-type(4)', 'post-body');
   addClass('.post-page main>div.post-body>p>img', 'images', 1);
 
+  wrap('post-header',['main>div.category','main>div.post-title']);
+
+  prepareCategory();
+
   // fix tables
   fixTableCleanup();
 
@@ -227,8 +231,6 @@ function decoratePostPage(){
   const $heroImage=document.querySelector('.hero-image');
 
   if ($postAuthor && $heroImage) $main.insertBefore($postAuthor,$heroImage);
-
-  wrap('post-header',['main>div.category','main>div.post-title']);
 
   document.querySelectorAll('.post-body .embed-internal>div:not(.banner)').forEach(($e) => {
     $e.parentNode.classList.add('embed-internal-promotions');
@@ -460,6 +462,7 @@ function fetchAuthor() {
   if (authorSection) {
     // clear the content of the div and replace by avatar and text
     authorSection.innerHTML = '';
+    authorSection.classList.remove('hide');
 
     if (!window.blog.author) {
       const authorDiv = document.createElement('div');
@@ -501,7 +504,7 @@ function fetchAuthor() {
           <span class="post-date">${window.blog.date || ''}</span></div></div>`;
         authorDiv.classList.add('author');
         authorSection.appendChild(authorDiv);
-        authorSection.classList.remove('hide');
+        // authorSection.classList.remove('hide');
       } catch(e) {
         console.error('Error while extracting author info', e);
       }
@@ -510,18 +513,24 @@ function fetchAuthor() {
   }
 }
 
+function prepareCategory() {
+  const categoryWrap = document.createElement('div');
+  categoryWrap.className = 'category';
+  document.querySelector('main .post-header').prepend(categoryWrap);
+}
+
 /**
  * Adds the primary topic as category to the post header
  */
 async function addCategory() {
   if (!window.blog.allVisibleTopics || window.blog.allVisibleTopics.length === 0) return;
   const topic = window.blog.allVisibleTopics[0];
-  const categoryWrap = document.createElement('div');
+  const categoryWrap = document.querySelector('main div.category');
+
   const taxonomy = await getTaxonomy(window.blog.language);
   const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
-  categoryWrap.className = 'category';
   categoryWrap.innerHTML = `<a href="${href}" title="${topic}">${topic}</a>`;
-  document.querySelector('main .post-header').prepend(categoryWrap);
+  
 }
 
 /**
@@ -829,7 +838,6 @@ async function decoratePromotions() {
       $img.src = $img.src + '?auto=webp&format=pjpg&optimize=medium&width=160';
       $img.setAttribute('loading', 'lazy');
       $promo.children[0].prepend($img.parentNode);
-      console.log($promo.innerHTML);
       $promotion.parentElement.replaceChild($promo, $promotion);
     }
   });
@@ -847,9 +855,25 @@ function addPublishDependencies() {
   window.hlx.dependencies = [path.replace('/publish/', '/')];
 }
 
+function setLCPTrigger() {
+  const $lcpCandidate = document.querySelector('main .hero-image img');
+  if ($lcpCandidate) {
+    if ($lcpCandidate.complete) {
+      postLCP();
+    } else {
+      $lcpCandidate.addEventListener('load', () => {
+        postLCP();
+      });
+      $lcpCandidate.addEventListener('error', () => {
+        postLCP();
+      });
+    }
+  } else {
+    postLCP();
+  }
+}
 
-window.addEventListener('load', async function() {
-  decoratePostPage();
+async function postLCP() {
   handleImmediateMetadata();
   decorateImages();
   decorateTables();
@@ -868,4 +892,11 @@ window.addEventListener('load', async function() {
   shapeBanners();
   fetchArticles();
   addPublishDependencies();
-});
+}
+
+async function decoratePage() {
+  decoratePostPage();
+  setLCPTrigger();
+};
+
+decoratePage();

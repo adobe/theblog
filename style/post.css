@@ -158,6 +158,7 @@
 .post-page div.category {
   margin: 0 32px;
   padding: 0;
+  height: 28px;
 }
 
 .post-page div.category a {

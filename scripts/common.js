@@ -855,7 +855,7 @@ function handleDropdownRegion() {
   }
 }
 
-window.addEventListener('load', function() {
+function decoratePage() {
   setDocumentLanguage();
   removeHeaderAndFooter();
   addPageTypeAsBodyClass();
@@ -867,4 +867,6 @@ window.addEventListener('load', function() {
   } else {
     window.addEventListener('feds.events.experience.loaded', handleDropdownRegion);
   }
-});
+};
+
+decoratePage();
