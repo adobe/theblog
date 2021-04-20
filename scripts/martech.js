@@ -68,10 +68,13 @@ function setDigitalData() {
   var lang=window.blog.language;
   if (langMap[lang]) lang=langMap[lang];
   digitalData._set('page.pageInfo.language', lang);
-  console.log(lang);
 }
 
 setMarTechContext();
+
+window.targetGlobalSettings = {
+  bodyHidingEnabled: false,
+};
 
 loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   setDigitalData();
