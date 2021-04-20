@@ -344,7 +344,7 @@ export function checkAndAddMatch(matches, contender, maxMatches) {
  */
 async function addInterLinks() {
   if (window.blog.topics.includes('no-interlinks')) return;
-  const response = await fetch('/en/keywords.json');
+  const response = await fetch(`/${window.blog.language}/keywords.json`);
   if (response.ok) {
     const json = await response.json();
     const articleBody = document.querySelector('main .post-body');

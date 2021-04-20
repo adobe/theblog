@@ -57,6 +57,26 @@ allow: /*/publish/
 allow: /*/authors/
 allow: /*/topics/
 
+allow: /br/$
+allow: /br/index.html
+allow: /de/$
+allow: /de/index.html
+allow: /en/$
+allow: /en/index.html
+allow: /en/uk.html
+allow: /en/apac.html
+allow: /es/$
+allow: /es/index.html
+allow: /es/latam.html
+allow: /fr/$
+allow: /fr/index.html
+allow: /it/$
+allow: /it/index.html
+allow: /jp/$
+allow: /jp/index.html
+allow: /ko/$
+allow: /ko/index.html
+
 sitemap: https://blog.adobe.com/sitemap.xml
 sitemap: https://blog.adobe.com/sitemap.br.xml
 sitemap: https://blog.adobe.com/sitemap.de.xml
