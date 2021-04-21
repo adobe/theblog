@@ -30,7 +30,7 @@
     override: true,
     condition: (s) => s.isEditor() || s.location.host === s.config.host,
     button: {
-      action: () => {
+      action: (evt) => {
         const { config, location } = sk;
         let url;
         if (sk.isEditor()) {
