@@ -867,8 +867,25 @@ function handleDropdownRegion() {
   }
 }
 
+async function loadFonts() {
+  try {
+    /* todo promise.All */
+    const f900 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/b0c5f5/00000000000000003b9b3f85/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3")', 400);
+    const f400 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3")', 900);
+    const f700 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3")', 700);
+    document.fonts.add(f900);
+    document.fonts.add(f400);
+    document.fonts.add(f700);
+    sessionStorage.setItem('helix-fonts', 'loaded');
+  } catch (err) {
+    /* something went wrong */
+    console.log(err);
+  }
+  document.body.classList.add('font-loaded');
+}
+
 export function globalPostLCP() {
-  // loadFonts();
+  loadFonts();
   const martechUrl = '/scripts/martech.js';
   const usp = new URLSearchParams(window.location.search);
   const martech = usp.get('martech');
