@@ -867,6 +867,12 @@ function handleDropdownRegion() {
   }
 }
 
+async function loadFont(name, url, weight) {
+  const font = new FontFace(name, url, { weight });
+  const fontLoaded = await font.load();
+  return (fontLoaded);
+}
+
 async function loadFonts() {
   try {
     /* todo promise.All */
