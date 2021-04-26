@@ -832,9 +832,9 @@ function addPublishDependencies() {
 }
 
 async function decoratePage() {
+  globalPostLCP();
   decoratePostPage();
   handleImmediateMetadata();
-  globalPostLCP();
   decorateImages();
   decorateTables();
   decorateAnimations();

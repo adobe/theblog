@@ -890,7 +890,7 @@ async function loadFonts() {
   document.body.classList.add('font-loaded');
 }
 
-export function globalPostLCP() {
+export async function globalPostLCP() {
   loadFonts();
   const martechUrl = '/scripts/martech.js';
   const usp = new URLSearchParams(window.location.search);
