@@ -12,9 +12,7 @@
 import {
   fetchArticles,
   getSection,
-  addClass,
   getLink,
-  wrap,
   wrapNodes,
   createTag,
   extractTopicsAndProducts,
@@ -207,18 +205,6 @@ function fixTableCleanup() {
  * Decorates the post page with CSS classes
  */
 function decoratePostPage(){
-  addClass('.post-page main>div:first-of-type', 'post-title');
-  addClass('.post-page main>div:nth-of-type(2)', 'hero-image');
-  addClass('.post-page main>div:nth-of-type(3)', 'post-author');
-   // hide author name
-  addClass('.post-author', 'hide');
-  addClass('.post-page main>div:nth-of-type(4)', 'post-body');
-  addClass('.post-page main>div.post-body>p>img', 'images', 1);
-
-  wrap('post-header',['main>div.category','main>div.post-title']);
-
-  prepareCategory();
-
   // fix tables
   fixTableCleanup();
 
@@ -227,11 +213,6 @@ function decoratePostPage(){
   if (!last.classList.contains('post-body')) {
     last.classList.add('hide');
   }
-  const $main=document.querySelector('main');
-  const $postAuthor=document.querySelector('.post-author');
-  const $heroImage=document.querySelector('.hero-image');
-
-  if ($postAuthor && $heroImage) $main.insertBefore($postAuthor,$heroImage);
 
   document.querySelectorAll('.post-body .embed-internal>div:not(.banner)').forEach(($e) => {
     $e.parentNode.classList.add('embed-internal-promotions');
@@ -512,12 +493,6 @@ function fetchAuthor() {
     };
     xhr.send();
   }
-}
-
-function prepareCategory() {
-  const categoryWrap = document.createElement('div');
-  categoryWrap.className = 'category';
-  document.querySelector('main .post-header').prepend(categoryWrap);
 }
 
 /**
@@ -856,25 +831,8 @@ function addPublishDependencies() {
   window.hlx.dependencies = [path.replace('/publish/', '/')];
 }
 
-function setLCPTrigger() {
-  const $lcpCandidate = document.querySelector('main .hero-image img');
-  if ($lcpCandidate) {
-    if ($lcpCandidate.complete) {
-      postLCP();
-    } else {
-      $lcpCandidate.addEventListener('load', () => {
-        postLCP();
-      });
-      $lcpCandidate.addEventListener('error', () => {
-        postLCP();
-      });
-    }
-  } else {
-    postLCP();
-  }
-}
-
-async function postLCP() {
+async function decoratePage() {
+  decoratePostPage();
   handleImmediateMetadata();
   globalPostLCP();
   decorateImages();
@@ -895,10 +853,5 @@ async function postLCP() {
   fetchArticles();
   addPublishDependencies();
 }
-
-async function decoratePage() {
-  decoratePostPage();
-  setLCPTrigger();
-};
 
 decoratePage();

@@ -33,6 +33,61 @@ function loadCSS(href) {
 };
 
 /**
+ * Wraps nodes with a new parent node.
+ * @param {node} newparent The new parent node
+ * @param {array} nodes The nodes to wrap
+ */
+ function wrapNodes(newparent, nodes) {	
+  nodes.forEach((el, index) => {	
+    newparent.appendChild(el.cloneNode(true));	
+    if (newparent.children.length !== 1) {	
+      el.parentNode.removeChild(el);	
+    } else {	
+      el.parentNode.replaceChild(newparent, el);	
+    }	
+  });	
+}
+
+/**
+ * Uses a selector to find and wrap nodes with a new parent element,
+ * which will get the specified CSS class.
+ * @param {string} classname The CSS class for the wrapping node
+ * @param {array|string} selectors The selectors for the affected nodes
+ */
+ function wrap(classname, selectors) {	
+  if (!Array.isArray(selectors)) {
+    selectors=[selectors];
+  }
+  const div = document.createElement('div');	
+  div.className = classname;
+
+  selectors.forEach((selector) => {
+    const elems = document.querySelectorAll(selector);
+    wrapNodes(div, elems);	
+  });
+}
+
+/**
+ * Adds a CSS class to either the nodes found using the selector,
+ * or one of their parent nodes.
+ * @param {string} selector The selector for the affected nodes
+ * @param {string} cssClass The CSS class to add
+ * @param {number} parent The number of parent nodes to climb
+ */
+function addClass(selector, cssClass, parent) {
+  document.querySelectorAll(selector).forEach((el) => {
+    if (el) {
+      var up=parent;
+      while (up) {
+        el = el.parentNode;
+        up--;
+      }
+      el.classList.add(cssClass);
+    }  
+  });
+}
+
+/**
  * Returns an image URL with optimization parameters
  * @param {string} url The image URL
  * @param {object} options The configuration options
@@ -76,7 +131,9 @@ window.blog = function() {
   };
   const context = '/';
   let language = LANG.EN;
-  let pageType = TYPE.HOME;
+  // let pageType = TYPE.HOME;
+  // TODO REVERT!
+  let pageType = TYPE.POST;
   const segs = window.location.pathname
     .split('/')
     .filter(seg => seg !== '');
@@ -171,10 +228,71 @@ function checkRedirect() {
 
 checkRedirect();
 
-// Load page specific code
-loadCSS(`/style/${window.blog.pageType}.css`);
-loadJSModule(`/scripts/${window.blog.pageType}.js`);
+function postLCP() {
+  // Load page specific code
+  loadCSS(`/style/${window.blog.pageType}.css`);
+  loadJSModule(`/scripts/${window.blog.pageType}.js`);
 
-// Load language specific CSS overlays
-loadCSS(`/i18n/dict.${window.blog.language}.css`);
+  // Load language specific CSS overlays
+  loadCSS(`/i18n/dict.${window.blog.language}.css`);
+}
 
+const handleLCPPerType = {};
+
+/* post-page pre lcp handlers*/
+handleLCPPerType[window.blog.TYPE.POST] = {};
+
+handleLCPPerType[window.blog.TYPE.POST].decoratePage = () => {
+  const prepareCategory = () => {
+    const categoryWrap = document.createElement('div');
+    categoryWrap.className = 'category';
+    document.querySelector('main .post-header').prepend(categoryWrap);
+  }
+
+  addClass('.post-page main>div:first-of-type', 'post-title');
+  addClass('.post-page main>div:nth-of-type(2)', 'hero-image');
+  addClass('.post-page main>div:nth-of-type(3)', 'post-author');
+   // hide author name
+  addClass('.post-author', 'hide');
+  addClass('.post-page main>div:nth-of-type(4)', 'post-body');
+  addClass('.post-page main>div.post-body>p>img', 'images', 1);
+
+  wrap('post-header',['main>div.category','main>div.post-title']);
+
+  prepareCategory();
+
+  const $main=document.querySelector('main');
+  const $postAuthor=document.querySelector('.post-author');
+  const $heroImage=document.querySelector('.hero-image');
+
+  if ($postAuthor && $heroImage) $main.insertBefore($postAuthor,$heroImage);
+};
+
+handleLCPPerType[window.blog.TYPE.POST].computeLCPCandidate = () => {
+  const $lcpCandidate = document.querySelector('main .hero-image img');
+  if ($lcpCandidate) {
+    if ($lcpCandidate.complete) {
+      postLCP();
+    } else {
+      $lcpCandidate.addEventListener('load', () => {
+        postLCP();
+      });
+      $lcpCandidate.addEventListener('error', () => {
+        postLCP();
+      });
+    }
+  } else {
+    postLCP();
+  }
+};
+
+function decoratePage() {
+  const handler = handleLCPPerType[window.blog.pageType];
+  if (handler) {
+    handler.decoratePage();
+    handler.computeLCPCandidate();
+  } else {
+    postLCP();
+  }
+}
+document.addEventListener("DOMContentLoaded", decoratePage);
