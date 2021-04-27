@@ -848,10 +848,11 @@ async function decoratePage() {
   await addCategory();
   await addTopics();
   decoratePromotions();
-  loadGetSocial();
   shapeBanners();
   fetchArticles();
   addPublishDependencies();
+  // defer get social to later
+  window.setTimeout(loadGetSocial, 2000);
 }
 
 decoratePage();
