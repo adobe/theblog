@@ -55,14 +55,6 @@ export function loadScript(url, callback, type) {
   return $script;
 }
 
-
-/**
- * Adds page type as body class.
- */
-function addPageTypeAsBodyClass() {
-  document.body.classList.add(`${window.blog.pageType}-page`);
-}
-
 /**
  * Wraps nodes with a new parent node.
  * @param {node} newparent The new parent node
@@ -916,7 +908,6 @@ export async function globalPostLCP() {
 }
 
 function decoratePage() {
-  addPageTypeAsBodyClass();
   setDocumentLanguage();
   removeHeaderAndFooter();
 };

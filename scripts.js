@@ -131,9 +131,7 @@ window.blog = function() {
   };
   const context = '/';
   let language = LANG.EN;
-  // let pageType = TYPE.HOME;
-  // TODO REVERT!
-  let pageType = TYPE.POST;
+  let pageType = TYPE.HOME;
   const segs = window.location.pathname
     .split('/')
     .filter(seg => seg !== '');
@@ -286,7 +284,15 @@ handleLCPPerType[window.blog.TYPE.POST].computeLCPCandidate = () => {
   }
 };
 
+/**
+ * Adds page type as body class.
+ */
+ function addPageTypeAsBodyClass() {
+  document.body.classList.add(`${window.blog.pageType}-page`);
+}
+
 function decoratePage() {
+  addPageTypeAsBodyClass();
   const handler = handleLCPPerType[window.blog.pageType];
   if (handler) {
     handler.decoratePage();
@@ -295,4 +301,5 @@ function decoratePage() {
     postLCP();
   }
 }
-document.addEventListener("DOMContentLoaded", decoratePage);
+
+decoratePage();
