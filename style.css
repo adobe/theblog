@@ -30,7 +30,12 @@
    font-weight: 300;
    font-size: 1.125rem;
    line-height: 1.5em;
+   display: none;
  }
+
+body.appear {
+  display: block;
+}
 
 main > div {
   padding: 1rem 2rem;

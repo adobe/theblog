@@ -227,6 +227,8 @@ function checkRedirect() {
 checkRedirect();
 
 function postLCP() {
+  document.body.classList.add('appear');
+
   // Load page specific code
   loadCSS(`/style/${window.blog.pageType}.css`);
   loadJSModule(`/scripts/${window.blog.pageType}.js`);
