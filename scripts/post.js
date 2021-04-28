@@ -452,7 +452,7 @@ function fetchAuthor() {
       authorDiv.classList.add('author');
       authorSection.innerHTML = '';
       authorSection.appendChild(authorDiv);
-      authorSection.classList.remove('hide');
+      authorSection.classList.remove('invisible');
       return;
     }
 
@@ -486,7 +486,7 @@ function fetchAuthor() {
         authorDiv.classList.add('author');
         authorSection.innerHTML = '';
         authorSection.appendChild(authorDiv);
-        authorSection.classList.remove('hide');
+        authorSection.classList.remove('invisible');
       } catch(e) {
         console.error('Error while extracting author info', e);
       }

@@ -407,6 +407,10 @@ main > div img {
  .hide {
    display: none !important;
  }
+
+ .invisible {
+  opacity: 0;
+}
  
  @media (min-width:600px) {
  

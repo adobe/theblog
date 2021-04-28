@@ -253,7 +253,7 @@ handleLCPPerType[window.blog.TYPE.POST].decoratePage = () => {
   addClass('.post-page main>div:nth-of-type(2)', 'hero-image');
   addClass('.post-page main>div:nth-of-type(3)', 'post-author');
    // hide author name
-  addClass('.post-author', 'hide');
+  addClass('.post-author', 'invisible');
   addClass('.post-page main>div:nth-of-type(4)', 'post-body');
   addClass('.post-page main>div.post-body>p>img', 'images', 1);
 
