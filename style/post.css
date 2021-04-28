@@ -65,13 +65,6 @@
   margin-top: 49px;
 }
 
-.post-page main div.post-author {
-  margin-top: 20px;
-  height: 96px;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
 .post-page main div.post-author .author {
   max-width: 600px; 
   margin: 20px auto 0 auto;

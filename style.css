@@ -597,3 +597,10 @@ a.region-dropdown-picker.selected:after {
   width: 100%;
   object-fit: cover;
 }
+
+.post-page main div.post-author {
+  margin-top: 20px;
+  height: 96px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
