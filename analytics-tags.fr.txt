@@ -1,4 +1,12 @@
 url	Categories	Products	Industries	Internals
+https://blog.adobe.com/fr/publish/2021/03/31/romain-penchenat-le-carnet-est-un-outil-elegant-simple-et-pratique.html	"Inspiration créative & tendances, Design"	"Creative Cloud, XD"	""	"Creative Cloud"
+https://blog.adobe.com/fr/publish/2021/03/24/presentation-du-premier-international-advisory-board-dadobe.html	"Leadership, Actualités"	""	""	"Corporate"
+https://blog.adobe.com/fr/publish/2021/03/22/post-covid-que-faut-il-faire-pour-reussir-dans-la-nouvelle-ere-de-lexperience.html	"Transformation digitale, Cas clients, Leadership, Tendances & études, Actualités"	"Experience Cloud"	""	"COVID-19, Experience Cloud"
+https://blog.adobe.com/fr/publish/2021/03/10/photoshop-disponible-sur-mac-avec-puce-m1.html	"Créativité, Art, Photographie, Actualités"	"Creative Cloud, Photoshop"	""	"Creative Cloud"
+https://blog.adobe.com/fr/publish/2021/03/10/super-resolution-passer-d-une-photo-de-10-a-40-megapixels-de-qualite.html	"Actualités, Photographie"	"Creative Cloud, Lightroom, Photoshop"	"B2B"	"Creative Cloud"
+https://blog.adobe.com/fr/publish/2021/03/10/ce-que-les-entrepreuneurs-creatifs-m-ont-appris.html	"Actualités, Inspiration créative & tendances"	"Creative Cloud"	""	"Creative Cloud"
+https://blog.adobe.com/fr/publish/2021/03/10/le-rendu-multi-images-est-integre-a-la-version-beta-d-after-effects.html	"Actualités, Vidéo & Audio"	"Creative Cloud, After Effects"	"B2B"	"Creative Cloud"
+https://blog.adobe.com/fr/publish/2021/03/10/mise-a-jour-de-mars-2021-pour-les-applications-video-d-adobe.html	"Actualités, Vidéo & Audio"	"Creative Cloud, After Effects, Audition, Character Animator, Premiere Pro, Premiere Rush, Stock"	"B2B"	"Creative Cloud"
 https://blog.adobe.com/fr/publish/2021/02/09/photoshop-illustrator-et-fresco-introduisent-la-collaboration-sur-les-documents.html	"Actualités, Créativité"	"Creative Cloud, Fresco, Illustrator, Photoshop"	""	"Creative Cloud"
 https://blog.adobe.com/fr/publish/2021/02/08/adobe-stock-romantisme-austere-tendance-2021-design.html	"Tendances & études"	"Stock"	""	"Tendances visuelles"
 https://blog.adobe.com/fr/publish/2021/01/28/adobe-video-mise-a-jour-sundance.html	"Vidéo & Audio, Actualités"	"Creative Cloud, After Effects, Premiere Pro"	"Médias & divertissement"	"Creative Cloud"

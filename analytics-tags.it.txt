@@ -1,4 +1,8 @@
 url	Categories	Products	Industries	Internals
+https://blog.adobe.com/it/publish/2021/04/15/verso-un-futuro-piu-inclusivo-per-le-emoji.html	"Creatività e design, Responsabilità aziendale, Tipografia, Diversità & Inclusione"	"Creative Cloud, Typography"	""	"Creative Cloud"
+https://blog.adobe.com/it/publish/2021/03/11/rendering-multi-fotogramma-debutta-versione-beta-after-effects.html	"Creatività e design"	"Creative Cloud, After Effects"	"Media & intrattenimento"	"Creative Cloud"
+https://blog.adobe.com/it/publish/2021/03/11/adobe-photoshop-arriva-mac-apple-silicon-selezioni-veloci-performance-filtri-migliorati.html	"News, Creatività e design, Fotografia, Illustrazione"	"Creative Cloud, Lightroom, Photoshop"	""	"Creative Cloud"
+https://blog.adobe.com/it/publish/2021/03/11/nuova-release-strumenti-audio-video-adobe-potere-creators-oggi-professionisti-storyteller-social.html	"News, Creatività e design"	"Creative Cloud, After Effects, Premiere Pro, Premiere Rush"	""	"Creative Cloud"
 https://blog.adobe.com/it/publish/2021/02/12/buon-san-valentino-lamore-ai-tempi-del-lockdown-secondo-gli-adobe-insiders.html	"Creatività e design"	"Creative Cloud"	""	"Creative Cloud"
 https://blog.adobe.com/it/publish/2021/02/09/adobe-annuncia-nuovi-strumenti-di-collaborazione-per-photoshop-illustrator-e-fresco.html	"Creatività e design"	"Fresco, Illustrator, Photoshop"	""	""
 https://blog.adobe.com/it/publish/2021/02/02/i-visual-trends-di-adobe-stock-per-il-2021-colori-che-migliorano-lumore.html	"Creatività e design"	"Stock, Creative Cloud"	""	"Creative Cloud"
