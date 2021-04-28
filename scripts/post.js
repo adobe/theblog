@@ -443,8 +443,6 @@ function fetchAuthor() {
   const authorSection = document.querySelector('.post-author');
   if (authorSection) {
     // clear the content of the div and replace by avatar and text
-    authorSection.innerHTML = '';
-    authorSection.classList.remove('hide');
 
     if (!window.blog.author) {
       const authorDiv = document.createElement('div');
@@ -452,6 +450,7 @@ function fetchAuthor() {
         <div><span class="post-author"></span>
         <span class="post-date">${window.blog.date || ''}</span></div></div>`;
       authorDiv.classList.add('author');
+      authorSection.innerHTML = '';
       authorSection.appendChild(authorDiv);
       authorSection.classList.remove('hide');
       return;
@@ -477,7 +476,7 @@ function fetchAuthor() {
         avatarURL = getOptimizedImageUrl(avatarURL, { width: 128, crop: '1:1' });
         const authorDiv = document.createElement('div');
         authorDiv.innerHTML = `<div class="author-summary">
-          <img class="lazyload" alt="${window.blog.author}" title="${window.blog.author}" data-src="${avatarURL}">
+          <img alt="${window.blog.author}" title="${window.blog.author}" src="${avatarURL}">
           <div><span class="post-author">
             ${xhr.status < 400 ? `<a href="${pageURL}" title="${window.blog.author}">` : ''}
               ${window.blog.author}
@@ -485,8 +484,9 @@ function fetchAuthor() {
           </span>
           <span class="post-date">${window.blog.date || ''}</span></div></div>`;
         authorDiv.classList.add('author');
+        authorSection.innerHTML = '';
         authorSection.appendChild(authorDiv);
-        // authorSection.classList.remove('hide');
+        authorSection.classList.remove('hide');
       } catch(e) {
         console.error('Error while extracting author info', e);
       }
