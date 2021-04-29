@@ -115,7 +115,9 @@ export function addClass(selector, cssClass, parent) {
  */
 function setDocumentLanguage() {
   // set document language
-  document.documentElement.setAttribute('lang', window.blog.language);
+  if (window.blog && window.blog.language) {
+    document.documentElement.setAttribute('lang', window.blog.language);
+  }
 }
 
 /**
