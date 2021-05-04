@@ -28,7 +28,7 @@
   sk.add({
     id: 'preview',
     override: true,
-    condition: (s) => s.isEditor() || s.location.host === s.config.host,
+    condition: (s) => s.isEditor() || s.isHelix(),
     button: {
       action: (evt) => {
         const { config, location } = sk;
@@ -263,7 +263,7 @@
       action: async () => {
         const { config } = sk;
         sk.showModal('Publishing data...', true);
-        const url = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@v2');
+        const url = new URL('https://helix-pages.anywhere.run/helix-services/content-proxy@v2');
         url.search = new URLSearchParams([
           ['report', 'true'],
           ['owner', config.owner],
