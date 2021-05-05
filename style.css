@@ -37,6 +37,10 @@ body.appear {
   display: block;
 }
 
+header {
+  height: 65px;
+}
+
 main > div {
   padding: 1rem 2rem;
 }
