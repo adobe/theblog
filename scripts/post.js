@@ -666,7 +666,7 @@ function decorateEmbeds() {
 
     if (type) {
       const $embed=createTag('div', {class: `embed embed-oembed embed-${type}`});
-      const $div=$a.closest('div');
+      const $div=$a.closest('.block-embed');
       $embed.innerHTML=embedHTML;
       $div.parentElement.replaceChild($embed, $div);
     }

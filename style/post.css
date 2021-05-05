@@ -265,13 +265,13 @@
   line-height: 1.3em;
 }
 
-.post-page main>div.post-body *+h2 {
+.post-page main>div.post-body *:not(*:empty)+h2 {
   margin-top: 0;
   padding-top: 64px;
   clear: both;
 }
 
-.post-page main>div.post-body *+h3 {
+.post-page main>div.post-body *:not(*:empty)+h3 {
   margin-top: 0;
   padding-top: 48px;
   clear: both;
@@ -371,7 +371,7 @@
   line-height: 0;
 }
 
-.embed-internal-promotions>div>p img {
+.embed-internal-promotions>div img {
   width: 100px;
   max-width: unset;
 }
