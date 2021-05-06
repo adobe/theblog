@@ -42,6 +42,8 @@ function addDependencies() {
   window.hlx.dependencies = [
     window.location.pathname.replace('.html', '.embed.html'),
     window.location.pathname.toLowerCase().replace('.html', '.embed.html'),
+    window.location.pathname.replace('.html', '.plain.html'),
+    window.location.pathname.toLowerCase().replace('.html', '.plain.html'),
   ];
 }
 
