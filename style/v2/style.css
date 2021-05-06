@@ -1,0 +1,614 @@
+/*
+ * Copyright 2020 Adobe. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+@keyframes appear {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+ *,
+ *:before,
+ *:after {
+    box-sizing: border-box;
+    border: 0;
+ }
+ 
+ body {
+   padding: 0;
+   margin: 0;
+   background-color: white;
+   font-family: 'adobe-clean', 'Adobe Clean', sans-serif;
+   font-weight: 300;
+   font-size: 1.125rem;
+   line-height: 1.5em;
+   display: none;
+ }
+
+body.appear {
+  display: block;
+}
+
+header {
+  height: 65px;
+}
+
+main > div {
+  padding: 1rem 2rem;
+}
+
+img {
+  width: 100%;
+}
+
+main > div img {
+  max-width: 100%;
+}
+
+ h1, h2, h3, h4, h5, h6 {
+   font-weight: 600;
+   line-height: 1.25em;
+   margin: 0.25em 0;
+ }
+ 
+ h1 {
+   font-size: 28px;
+ }
+ 
+ h2 {
+   font-size: 24px;
+ }
+ 
+ 
+ h3 {
+   font-size: 20px;
+ }
+ 
+ h4, h5, h6 {
+   font-size: 16px;
+ }
+ 
+ .detail-m, .detail-l, .detail-xl {
+   margin: 0.5em 0;
+   line-height: 1.5em;
+ }
+ 
+ .detail-m {
+   font-size: 12px;
+ }
+ 
+ .detail-l {
+   font-size: 14px;
+ }
+ 
+ .detail-xl {
+   font-size: 16px;
+ }
+ 
+ p, .body-l, .body-m, .body-xl {
+   margin: 0.5em 0;
+   line-height: 1.5em;
+ }
+ 
+ p, .body-xl {
+   font-size: 20px; 
+ }
+ 
+ .body-l {
+   font-size: 18px; 
+ }
+ 
+ .body-m {
+   font-size: 16px; 
+ }
+ 
+ 
+ a {
+   color: #2c6d9f;
+   text-decoration: underline;
+ }
+ 
+ pre {
+   background-color: lightgrey;
+   padding: 1em;
+   border-radius: 1em;
+   overflow: hidden;
+ }
+ 
+ code {
+   font-size: 1.1em;
+ }
+ 
+ h3 code {
+   font-size: 1em;
+   font-family: inherit;
+   background-color: lightgrey;
+ }
+ 
+ p code,li code {
+   background-color: lightgrey;
+   padding: 0 2px;
+ }
+ 
+ table th, table td {
+   border: 1px solid #dfe2e5;
+   padding: 6px 13px;
+ }
+ 
+ table tr:nth-child(2n) {
+   background-color: #f6f8fa;
+ }
+ 
+ table th {
+   font-weight: 600;
+ }
+ 
+ table {
+   border-collapse: collapse;
+   border-spacing: 0;
+ }
+ 
+ header,
+ header h5,
+ footer,
+ footer h5 {
+   font-family: adobe-clean,sans-serif;
+ }
+ 
+ header a:any-link,
+ footer a:any-link {
+   text-decoration: none;
+ }
+ 
+ header:empty, footer:empty {
+   display: none;
+ }
+ 
+ a.action {
+   width: fit-content;
+   border-radius: 22px;
+   font-size:0.875rem;
+   font-weight: 700;
+   text-align: center;
+   text-decoration: none;
+   white-space: nowrap;
+   padding: 5px 16px;
+   cursor: pointer;
+   outline: none;
+ }
+ 
+ a.action:disabled {
+   border: none;
+   color: #bcbcbc;
+ }
+ 
+ a.action.primary {
+   border: solid #505050 2px;
+   color: #505050;
+ }
+ 
+ a.action.primary:hover,
+ a.action.primary:focus {
+   color: white;
+   background-color: #505050;
+ }
+ 
+ a.action.primary:active {
+   color: white;
+   background-color: #323232;
+ }
+ 
+ a.action.secondary {
+   color: #747474;
+   border: solid currentColor 2px;
+ }
+ 
+ a.action.secondary:hover,
+ a.action.secondary:focus {
+   color: white;
+   background-color: #747474;
+ }
+ 
+ a.action.secondary:active {
+   color: white;
+   background-color: #505050;
+ }
+ 
+ a.action.quiet {
+   color: #747474;
+ }
+ 
+ a.action.quiet:hover,
+ a.action.quiet:focus {
+   color: #505050;
+   text-decoration: underline;
+ }
+
+ a.action.call-to-action {
+   border: solid #1673e6 2px;
+   color: white;
+   background-color: #1673e6;
+ }
+ 
+ a.action.call-to-action:hover {
+   color: white;
+   background-color: #0e65d0;
+ }
+
+ a.action.call-to-action:focus {
+   color: #0e65d0;
+   background-color: white;
+ }
+ 
+ a.action.call-to-action:active {
+   color: white;
+   background-color: #095abb;
+ }
+ 
+ a.load-more {
+   margin: 0 auto 2rem auto;
+ }
+ 
+ .articles {
+   background-color: #eaeaea;
+   text-align: center;
+   padding: 0 0 80px 0;
+ }
+ 
+ .articles-empty {
+   width: 100%;
+   margin: 80px 0;
+   text-align: middle;
+ }
+ 
+ .articles-empty::before {
+   display: inline;
+   margin: 0 auto;
+ }
+ 
+ .deck {
+   margin: 0 auto;
+   padding: 48px 32px 0 32px;
+   max-width: 443px;
+   display: flex;
+   flex-flow: row wrap;
+ }
+ 
+ .card {
+   width: 100%;
+   min-width: 268px;
+   max-width: 378px;
+   margin-bottom: 24px;
+   border-radius: 4px;
+   border: solid 1px #eaeaea;
+   box-sizing: border-box;
+   text-align: left;
+   display: inline-block;
+   animation: appear 800ms;
+ }
+ 
+ .card:focus-within {
+   box-shadow: 0 0 0 2px #505050;
+ }
+ 
+ .card .hero {
+   width: 100%;
+   padding-bottom: 66.67%; /* 3:2 aspect ratio */
+   position: relative;
+   background-color: #eaeaea;
+   border-top-left-radius: 4px;
+   border-top-right-radius: 4px;
+ }
+ 
+ .card .hero img {
+   object-fit: cover;
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   width: 100%;
+   height: 100%;
+   margin: 0;
+   border-top-left-radius: 4px;
+   border-top-right-radius: 4px;
+ }
+ 
+ .card .hero:hover {
+   background-color: black;
+ }
+ 
+ .card .hero img:hover {
+   opacity: 0.6;
+ }
+ 
+ .card .hero img.lazyload:not([src]),
+ .card .hero img[src="#"] {
+   /* hide if hero image missing */
+   visibility: hidden;
+ }
+
+ .card .hero a {
+   font-size: 0;
+ }
+ 
+ .card a {
+   text-decoration: none;
+   color: currentColor;
+ }
+ 
+ .card a:focus {
+  outline: none;
+  text-decoration: underline;
+}
+
+.card .content {
+   position: relative;
+   padding: 2rem;
+   background-color: white;
+   border-bottom-left-radius: 4px;
+   border-bottom-right-radius: 4px;
+ }
+ 
+ .card .content p {
+   margin: 0;
+   font-size: 0.875rem;
+ }
+ 
+ .card p.topic,
+ .card p.date {
+   color: #707070;
+   font-size: 0.75rem;
+   line-height: 1rem;
+   text-transform: uppercase;
+   letter-spacing: .1em;
+   font-weight: 600;
+ }
+ 
+ .card p.topic {
+   margin-bottom: 0.5rem;
+   max-height: 2rem;
+   overflow: hidden;
+   text-overflow: ellipsis;
+ }
+ 
+ .card h2 {
+   margin: 0;
+   font-size: 1rem;
+   line-height: 1.25rem;
+   font-weight: 700;
+   color: #2c2c2c;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   max-height: 3.75rem;
+ }
+ 
+ .card p.teaser {
+   color: #747474;
+   font-size: 0.875rem;
+   line-height: 1.25rem;
+   height: 2.5rem;
+   overflow: hidden;
+   margin-bottom: 1rem;
+   text-overflow: ellipsis;
+   display: none;
+   -webkit-line-clamp: 2;
+   -webkit-box-orient: vertical;
+ }
+ 
+ .card p.date {
+   display: none;
+ }
+ 
+ .hide {
+   display: none !important;
+ }
+
+ .invisible {
+  opacity: 0;
+}
+ 
+ @media (min-width:600px) {
+ 
+   h1 {
+     font-size: 36px;
+   }
+   
+   h2 {
+     font-size: 28px;
+   }
+   
+   h3 {
+     font-size: 24px;
+   }
+   
+   h4 {
+     font-size: 20px;
+   }
+   
+   h5, h6 {
+     font-size: 16px;
+   }
+ 
+   body {
+     font-size: 1.25rem;
+   }
+ 
+   .deck {
+     padding-left:0;
+     padding-right:0;
+     width: calc(100% - 64px);
+     min-width: 568px;
+     max-width: 790px;
+   }
+ 
+   .card {
+     width: calc(100%/2 - 16px);
+     margin-right: 32px;
+     margin-bottom: 32px;
+   }
+ 
+   .card:nth-of-type(2n) {
+     margin-right: 0;
+   }
+ 
+   .card a:hover {
+     text-decoration: underline;
+   }
+ 
+   .card .content {
+     box-sizing: content-box;
+     height: 11.5rem;
+   }
+ 
+   .card p.date {
+     position: absolute;
+     bottom: 2rem;
+   }
+ 
+   .card h2 {
+     font-size: 1.25rem;
+     line-height: 1.5rem;
+     margin-bottom: 0.5rem;
+     max-height: unset;
+     display: -webkit-box;
+     -webkit-line-clamp: 3;
+     -webkit-box-orient: vertical;
+   }
+ 
+   .card p.teaser {
+     display: -webkit-box;
+   }
+ 
+   .card p.date {
+     display: block;
+   }
+ 
+ }
+ 
+ @media (min-width:1200px) {
+ 
+   .deck {
+     max-width: 1200px;
+   }
+ 
+   .card {
+     width: calc(100%/3 - 22px);
+   }
+ 
+   .card:nth-of-type(2n) {
+     margin-right: 32px;
+   }
+ 
+   .card:nth-of-type(3n) {
+     margin-right: 0;
+   }
+ 
+ }
+ 
+ /*
+  * Workaround to hide duplicate AdChoices link.
+  * See https://github.com/adobe/theblog/issues/141
+  */
+ div.evidon-notice-link {
+   display:none;
+ }
+ 
+  /*
+  * Styles for Dropdown Region Selector
+  */
+.region-dropdown {
+  border: 1px solid #d3d3d3;
+  background-color: #ffffff;
+  border-radius: 4px;
+  display: inline-block;
+  font-size: inherit;
+  padding: 3px 10px 5px 8px;
+  margin: 0;
+  visibility: hidden;
+  position: absolute;
+  z-index: 0;
+}
+
+.region-dropdown.visible {
+  visibility: visible;
+  z-index: 2;
+}
+
+.region-dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+a.region-dropdown-picker {
+  color: #505050;
+  font-size: .9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 8px 5px 8px 0;
+}
+
+a.region-dropdown-picker:focus {
+  outline: 2px solid #109cde;
+}
+
+a.region-dropdown-picker:after {
+  margin-left: 15px;
+  color:rgba(20, 115, 230, 0);
+  content: " ";
+  display: block;
+  width: 0.4em;
+  height: 0.8em;
+  border: solid rgba(20, 115, 230, 0);
+  border-width: 0 0.1em 0.1em 0;
+  margin-top: -0.4em;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+a.region-dropdown-picker.selected:after {
+  border-color: rgb(20, 115, 230);
+}
+
+.region-dropdown-list a:hover {
+  opacity: 60%;
+}
+
+/* post-page (lcp) */
+.post-page .hero-image {
+  width: 100%;
+  padding: 0;
+  margin: auto;
+  max-width: 1000px;
+}
+
+.post-page .hero-image img {
+  width: 100%;
+  max-height: 438px;
+  object-fit: cover;
+}
+
+.post-page main .hero-image video {
+  width: 100%;
+  object-fit: cover;
+}
+
+.post-page main div.post-author {
+  margin-top: 20px;
+  height: 96px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
