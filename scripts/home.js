@@ -21,6 +21,7 @@ import {
   fetchArticleIndex,
   itemTransformer,
   extractTopicsAndProducts,
+  globalPostLCP,
 } from '/scripts/common.js';
 
 const NUM_PURGED_INDEX_SEGMENTS = 10;
@@ -122,4 +123,5 @@ async function setupHomepage() {
 
 window.addEventListener('load', function() {
   setupHomepage();
+  globalPostLCP();
 });

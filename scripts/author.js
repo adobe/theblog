@@ -14,6 +14,7 @@ import {
   addClass,
   getSection,
   fetchArticles,
+  globalPostLCP,
 } from '/scripts/common.js';
 
 /**
@@ -110,6 +111,7 @@ function addSocialLinks(source, target) {
 }
 
 window.addEventListener('load', function() {
+  globalPostLCP();
   decorateAuthorPage();
   addSocialLinks();
   fetchArticles();

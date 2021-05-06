@@ -23,5 +23,6 @@ function decorateBlankPage() {
 }
 
 window.addEventListener('load', async function() {
+  globalPostLCP();
   decorateBlankPage();
 });

@@ -14,7 +14,7 @@ import {
   createTag,
   wrap,
   wrapNodes,
-  getSection,
+  globalPostLCP,
 } from '/scripts/common.js';
 
 async function decoratePromotionPage() {
@@ -47,6 +47,7 @@ function addDependencies() {
 
 window.addEventListener('load', () => {
   loadCSS('/style/post.css');
+  globalPostLCP();
   decoratePromotionPage();
   addDependencies();
 });

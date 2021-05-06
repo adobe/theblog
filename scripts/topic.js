@@ -17,6 +17,7 @@ import {
   wrapNodes,
   createTag,
   extractTopicsAndProducts,
+  globalPostLCP,
 } from '/scripts/common.js';
 import {
   addFilters,
@@ -50,6 +51,7 @@ function decorateTopicPage() {
 }
 
 window.addEventListener('load', async function() {
+  globalPostLCP();
   detectFeaturedPosts();
   extractTopicsAndProducts();
   decorateTopicPage();
