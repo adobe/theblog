@@ -203,6 +203,47 @@ function fixTableCleanup() {
 }
 
 /**
+ * Add post-blocks class to blocks and add missing <p>s
+ */
+function fixPostBlocks() {
+  ['.image-50-image-50'].forEach((block) => {
+    document.querySelectorAll(block).forEach(($el) => {
+      $el.classList.add('post-blocks');
+      for (let i = 0; i < $el.children.length; i += 1) {
+        $el.children[i].classList.add('post-block');
+      }
+    });
+  });
+
+  // embed youtube (don't know if this is still required; commenting for now.)
+  // document.querySelectorAll('.post-block > div a[href]').forEach(($a) => {
+  //   const href = $a.getAttribute('href');
+  //   if (href.startsWith('https://www.youtube.com/')) {
+  //     const yturl = new URL(href);
+  //     const vid=yturl.searchParams.get('v');
+  //     $a.parentNode.innerHTML = `<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;"><iframe src="https://www.youtube.com/embed/${vid}?rel=0" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen scrolling="no" allow="encrypted-media; accelerometer; gyroscope; picture-in-picture"></iframe></div>`;
+  //   }
+  // });
+
+  // remove empty paragraphs
+  document.querySelectorAll('.post-block > div > p:empty').forEach($p=>$p.remove());
+
+  // wrap pictures with <p>
+  document.querySelectorAll('.post-block div > picture').forEach(($img) => {
+    const $p=createTag('p');
+    $p.appendChild($img.cloneNode(true));
+    $img.parentNode.replaceChild($p,$img);
+  })
+
+  // wrap em with <p>
+  document.querySelectorAll('.post-block div>em').forEach(($em) => {
+    const $p=createTag('p');
+    $p.appendChild($em.cloneNode(true));
+    $em.parentNode.replaceChild($p,$em);
+  })
+}
+
+/**
  * Decorates the post page with CSS classes
  */
 function decoratePostPage(){
@@ -212,9 +253,10 @@ function decoratePostPage(){
    // hide author name
   addClass('.post-author', 'hide');
   addClass('.post-page main>div:nth-of-type(4)', 'post-body');
-  addClass('.post-page main>div.post-body>p>img', 'images', 1);
+  addClass('.post-page main>div.post-body>p>picture', 'images', 1);
 
   // fix tables
+  fixPostBlocks();
   fixTableCleanup();
 
   // hide product / topics section
@@ -598,6 +640,8 @@ function decorateLinkedImages() {
 }
 function decorateCaptions() {
   document.querySelectorAll('.caption').forEach(($caption) => {
+    // clean empty paragraphs
+    $caption.querySelectorAll('p:empty').forEach($p=>$p.remove());
     const $pCheck = $caption.querySelector('p');
     if ($pCheck) {
       $caption.querySelectorAll('p').forEach(($p) => {
