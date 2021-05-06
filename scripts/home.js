@@ -27,7 +27,6 @@ import {
 const NUM_PURGED_INDEX_SEGMENTS = 10;
 
 async function postLCP() {
-  document.body.classList.add('appear');
   globalPostLCP();
 }
 
