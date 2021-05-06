@@ -105,6 +105,16 @@ function getOptimizedImageUrl(url, config) {
   }
   const opts = new URLSearchParams(query);
   Object.keys(config).forEach(key => config[key] ? opts.set(key, config[key]) : null); 
+
+  // keep only width or height but not both (and let image optimizer do his job)
+  if (config.height) {
+    opts.delete('width');
+  } else {
+    if (config.width) {
+      opts.delete('height');
+    }
+  }
+
   return `${path}?${opts.toString()}`;
 }
 
@@ -255,7 +265,7 @@ handleLCPPerType[window.blog.TYPE.POST].decoratePage = () => {
    // hide author name
   addClass('.post-author', 'invisible');
   addClass('.post-page main>div:nth-of-type(4)', 'post-body');
-  addClass('.post-page main>div.post-body>p>img', 'images', 1);
+  addClass('.post-page main>div.post-body>p>picture', 'images', 1);
 
   wrap('post-header',['main>div.category','main>div.post-title']);
 
