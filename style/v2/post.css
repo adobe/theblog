@@ -1,0 +1,627 @@
+/*
+ * Copyright 2020 Adobe. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
+
+.post-page header,
+.post-page footer {
+  visibility: visible;
+}
+
+.post-page footer.mobile-footer {
+  margin-bottom: 61px;
+}
+
+.post-page main {
+  visibility: visible;
+}
+
+.post-page .post-title {
+  text-align: left;
+  color: #363636;
+  margin: 0 32px;
+  padding: 0;
+}
+
+.post-page .post-title h3:empty,
+.post-page .post-title p {
+    display: none;
+}
+
+/* hero caption */
+.post-page main div.hero-image p {
+  margin: 0;
+}
+
+.post-page main p + p {
+  margin-top: 1.5em;
+}
+
+.post-page main div.images + div.caption, .post-page main div.embed + div.caption {
+  margin-top: 0;
+}
+
+.post-page main div.hero-image p:nth-of-type(2) {
+  text-align: left;
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 0 32px;
+  color: #4b4b4b;
+}
+
+.post-page main div.post-header {
+  align-self: center;
+  margin-top: 49px;
+}
+
+.post-page main div.post-author .author {
+  max-width: 600px; 
+  margin: 20px auto 0 auto;
+}
+
+.post-page main>div.post-body .images img,
+.post-page main>div.post-body .images video,
+.embed {
+  margin-top: 64px;
+  max-width: 100%;
+  max-height: 600px;
+  width: unset;
+}
+
+.post-page main>div.post-body .images + *,
+.post-page main>div.post-body .images + *,
+.embed + * ,
+.caption + * {
+  margin-top: 64px;
+}
+
+.post-page main>div.post-body .images + p.legend,
+.post-page main>div.post-body .images + p.legend,
+.embed + p.legend {
+  margin-top: 16px;
+}
+
+.post-page main>div.post-body p.legend {
+  font-style: italic;
+  font-size: 14px;
+  color: #4b4b4b
+}
+
+
+.post-page main>div.post-body {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 57px;
+}
+
+.post-page main>div.articles {
+  padding-top: 80px;
+}
+
+.post-page main>div.products {
+  border-style: solid;
+  border-color: #dddddd;
+  border-width: 2px 0 2px 0;
+  margin: 16px 32px;
+  text-align: center;
+  display: none;
+}
+
+.post-page main>div.products .prod-design {
+  display: flex;
+}
+
+.post-page main>div.products .prod-design p {
+  margin: 0;
+  padding: 0;
+  font-size: 0.8em;
+  font-weight: 700;
+  display: none;
+}
+
+.post-page main>div.products .prod-design a {
+  font-size: 1em;
+  font-weight: 400;
+  color: #4682E1;
+  text-decoration: none;
+}
+.post-page div.category {
+  margin: 0 32px;
+  padding: 0;
+  height: 28px;
+}
+
+.post-page div.category a {
+  text-decoration: none;
+  color: #707070;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  font-size: 0.8em;
+}
+
+.post-page .author {
+  text-align: left;
+  color: #363636;
+  font-size: 0.9em;
+  line-height: 1.5em;
+}
+
+.post-page .author .author-summary {
+  display: flex;
+  align-items: center;
+}
+
+.post-page .author img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin-right: 15px;
+  display: block;
+  object-fit: cover;
+}
+
+.post-page .author .post-author {
+  font-weight: 600;
+  display: block;
+}
+
+
+.post-page .author .post-author a {
+  text-decoration: none;
+  color: currentColor;
+}
+
+.post-page .topics {
+  margin: 0 auto 56px auto;
+  padding: 0;
+  text-align: center;
+}
+
+.post-page main>div.post-body .post-blocks {
+  margin-bottom: 64px;
+  margin-top: 64px;
+}
+
+.post-page .topics a {
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  line-height: 1;
+  color: rgb(10,10,10);
+  position: relative;
+  font-weight: 500;
+  font-size: .693rem;
+  z-index: 1;
+  padding: 16px 14px 16px 14px;
+  position: relative;
+  background: #fff;
+  overflow: hidden;
+  border: 1px solid #eaeaea;
+  border-radius: 6px;
+  margin: 0 15px 10px 0;
+  display: inline-block;
+}
+
+.post-page .topics a:hover {
+  color: #007bff;
+}
+
+.post-page .articles::before {
+  font-size: 1.5rem;
+  display: block;
+  text-align: center;
+  font-weight: 700;
+  width: 100%;
+}
+
+.post-page .products {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  color: #363636;
+  line-height: 1.3em;
+}
+
+.post-page .products::before {
+  display: block;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  font-size: 0.7em;
+  width: 100%;
+  padding: 16px 0;
+  line-height: 1.3em;
+}
+
+.post-page main>div.post-body *:not(*:empty)+h2 {
+  margin-top: 0;
+  padding-top: 64px;
+  clear: both;
+}
+
+.post-page main>div.post-body *:not(*:empty)+h3 {
+  margin-top: 0;
+  padding-top: 48px;
+  clear: both;
+}
+
+.post-page main>div.post-body h1+h2,
+.post-page main>div.post-body h2+h3 {
+  margin-top: 32px;
+}
+
+.post-body .pull-quote  {
+  border-left: 3px solid #367ea8;
+  padding: 12px 24px;
+  margin: 64px 0;
+}
+
+.post-body .pull-quote img {
+  height: 96px;
+  width: 96px;
+  object-fit: cover;
+  border-radius: 100%;
+  margin: 0;
+}
+
+.post-page main>div.post-body .pull-quote h2, .post-page main>div.post-body .pull-quote h3 {
+  margin-top: 32px;
+  color: #367ea8;
+}
+
+.post-page .products a {
+  margin: 0 .125rem .5rem;
+  font-size: .75rem;
+}
+
+.post-page .products a img {
+  width: 45px;
+  height: 45px;
+  margin: 0 .188rem;
+}
+
+
+
+.post-page .social::before {
+  display: block;
+  margin-bottom: 5px;
+  color: rgb(10,10,10);
+  text-align: center;
+  text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  font-family: adobe-clean,sans-serif;
+  font-size: .75rem;
+  line-height:18px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  user-select: text;
+}
+
+.post-page .social {
+  margin: 0 auto 50px auto;
+  text-align:center;
+}
+
+.post-page .social svg {
+  fill: #000;
+  height: 1em;
+  width: 1em;
+  margin: 0 10px;
+}
+
+.post-page main>div.post-body>p.images.left {
+  text-align: left;
+}
+
+.post-page main>div.post-body>p.images.left>img {
+  float: left;
+  padding-right: 16px;
+  margin: 0;
+  margin-bottom: 64px;
+  width: unset;
+}
+
+.embed img {
+  max-width: 100%;
+}
+
+.embed-internal-promotions>div {
+  display: flex;
+  padding: 24px 0;
+  border-top: 2px solid #ddd;
+  border-bottom: 2px solid #ddd;
+  margin: 64px 0;
+}
+
+.embed-internal-promotions>div>p {
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+}
+
+.embed-internal-promotions>div img {
+  width: 100px;
+  max-width: unset;
+}
+
+.embed-internal-promotions .embed-promotions-text {
+  padding-left: 32px;
+  text-align: left;
+}
+
+.embed-promotions-text h1, .embed-promotions-text h2, .embed-promotions-text h3, .embed-promotions-text h4, .embed-promotions-text h5 {
+  margin: 0.5em 0;
+  line-height: 1.5em;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+.embed-promotions-text p {
+  margin: 0.5em 0;
+  line-height: 1.5em;
+  font-size: 16px; 
+}
+
+.embed-promotions-text p a:any-link{
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.embed-promotions-text p a::after{
+  content: " >";
+}
+
+.banner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #000;
+  background-size: cover;
+  background-position: center center;
+  color: #fff;
+  padding: 30px 32px;
+  font-family: adobe-clean,sans-serif;
+  margin-top: 48px;
+  padding: none;
+  border: none;
+}
+
+.banner .banner-left, .banner .banner-right {
+  flex: 0 0 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 1;
+  padding: 10px 20px;
+}
+
+.banner .banner-left {
+  align-items: center;
+  text-align: center;
+}
+
+.banner .banner-right {
+  align-items: flex-start;
+}
+
+.banner .banner-left img {
+  width: 70px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.banner .banner-left h1 {
+  padding-bottom: .2rem;
+  font-size: 2.3rem;
+  font-weight: 200;
+  line-height: 2.8rem;
+  margin: 0;
+}
+
+.banner .banner-right a {
+  padding: 3px 15px;
+  border: solid 2px #fff;
+  border-radius: 20px;
+  font-size: 15px;
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+.banner .banner-right p {
+  margin-bottom: 1.75rem;
+  margin-top: 0;
+  line-height: 24px;
+  font-size: 0.9rem;
+  text-align: left;
+  font-weight: 500;
+}
+
+.embed-soundcloud > iframe {
+  height: 200px ! important;
+}
+
+/*
+ * GetSocial floating share bar
+ */
+ html div.gs-buttons {
+  margin-top: -73px !important;
+}
+
+.post-page main .post-title h3 {
+  display: none;
+}
+
+.post-page main>div.topics {
+  margin-top: 64px;
+  border-top: 1px solid #eaeaea;
+  padding-top: 32px;
+  margin-left: 32px;
+  margin-right: 32px;
+  text-align: left;
+}
+
+.post-page main>div.post-body>.images, .post-page main>div.post-body>.embed {
+  text-align: center;
+}
+
+
+
+
+@media (min-width:700px) {
+
+  .embed-internal-promotions>div.default>p img {
+    width: 182px;
+  }  
+
+  .post-page main>div.topics {
+    margin-bottom: 80px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+
+  .post-page main>div.post-header>div {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .post-page main>div.post-header,
+  .post-page main>div.topics {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 0;
+    padding-right: 0;
+    max-width: 600px
+  }
+
+  .post-page main>div.post-body {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 24px;
+    padding: 0;
+    max-width: 800px;
+  }
+
+  .post-page main>div.post-body>* {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .post-page main>div.post-body>.embed {
+    max-width: 800px;
+  }
+
+  .post-page main>div.post-body>.embed-instagram {
+    max-width: fit-content;
+  }
+
+  .post-page main>div.post-body>.embed-twitter {
+    max-height: unset;
+  }
+
+  .post-page main>div.post-body>.embed.embed-internal-promotions {
+    max-width: 600px;
+  }
+
+  .post-page main>div.post-body>.embed.embed-internal-promotions.embed-banner {
+    max-width: 800px;
+  }
+
+  .post-page main>div.post-body .post-blocks {
+    margin-left: 0px;
+    margin-right: 0px;
+    max-width: 800px;  
+  }
+  .post-page main>div.post-body .post-block {
+    flex-wrap: nowrap;
+    display: flex;
+  }
+
+  .post-page main>div.post-body .post-block .image-50 {
+    flex: 1;
+  }
+
+  .post-page main>div.post-body .post-block>div {
+    margin-left: 32px;
+  }
+
+  .post-page main>div.post-body .post-block>div:first-of-type {
+    margin-left: 0px;
+  }
+
+  .post-page main>div.post-body>.images {
+    margin-left: 0px;
+    margin-right: 0px;
+    max-width: 800px;
+  }
+
+  .post-page main>div.post-body>.infographic {
+    margin-left: 0px;
+    margin-right: 0px;
+    max-width: 800px;
+  }
+
+  .post-page main>div.post-body>p.images.left {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 600px;
+  }
+
+  .post-page main>div.post-body>.images>img,
+  .post-page main>div.post-body .images video {
+    max-width: 100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-height: 600px;
+    width: unset;
+  }
+
+  .post-page main>div.products .prod-design p {
+    display: block;
+  }
+
+  main>div.post-body div.banner {
+    flex-direction: row;
+    margin: 32px;
+  }
+
+  /*
+   * GetSocial floating share bar
+   */
+   html div.gs-buttons {
+    margin-top: -172px !important;
+  }
+
+}
+
+@media (min-width:900px) {
+  .post-page main>div.post-header,
+  .post-page main>div.topics {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
