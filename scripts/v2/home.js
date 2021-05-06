@@ -22,7 +22,7 @@ import {
   itemTransformer,
   extractTopicsAndProducts,
   globalPostLCP,
-} from '/scripts/common-v2.js';
+} from '/scripts/v2/common.js';
 
 const NUM_PURGED_INDEX_SEGMENTS = 10;
 

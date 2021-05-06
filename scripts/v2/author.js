@@ -15,7 +15,7 @@ import {
   getSection,
   fetchArticles,
   globalPostLCP,
-} from '/scripts/common-v2.js';
+} from '/scripts/v2/common.js';
 
 /**
  * Creates an SVG tag using the specified ID.

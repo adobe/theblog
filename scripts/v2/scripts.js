@@ -230,8 +230,8 @@ function postLCP() {
   document.body.classList.add('appear');
 
   // Load page specific code
-  loadCSS(`/style/${window.blog.pageType}-v2.css`);
-  loadJSModule(`/scripts/${window.blog.pageType}-v2.js`);
+  loadCSS(`/style/v2/${window.blog.pageType}.css`);
+  loadJSModule(`/scripts/v2/${window.blog.pageType}.js`);
 
   // Load language specific CSS overlays
   loadCSS(`/i18n/dict.${window.blog.language}.css`);

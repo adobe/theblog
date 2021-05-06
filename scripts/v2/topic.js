@@ -18,7 +18,7 @@ import {
   createTag,
   extractTopicsAndProducts,
   globalPostLCP,
-} from '/scripts/common-v2.js';
+} from '/scripts/v2/common.js';
 import {
   addFilters,
 } from '/scripts/filters.js';
