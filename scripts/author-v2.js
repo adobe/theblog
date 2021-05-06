@@ -14,7 +14,8 @@ import {
   addClass,
   getSection,
   fetchArticles,
-} from '/scripts/common.js';
+  globalPostLCP,
+} from '/scripts/common-v2.js';
 
 /**
  * Creates an SVG tag using the specified ID.
@@ -110,6 +111,7 @@ function addSocialLinks(source, target) {
 }
 
 window.addEventListener('load', function() {
+  globalPostLCP();
   decorateAuthorPage();
   addSocialLinks();
   fetchArticles();

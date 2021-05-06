@@ -44,11 +44,15 @@ export function createTag(name, attrs) {
   return el;
 }
 
-/**
- * Adds page type as body class.
- */
-function addPageTypeAsBodyClass() {
-  document.body.classList.add(`${window.blog.pageType}-page`);
+export function loadScript(url, callback, type) {
+  const $head = document.querySelector('head');
+  const $script = createTag('script', { src: url });
+  if (type) {
+    $script.setAttribute('type', type);
+  }
+  $head.append($script);
+  $script.onload = callback;
+  return $script;
 }
 
 /**
@@ -111,7 +115,9 @@ export function addClass(selector, cssClass, parent) {
  */
 function setDocumentLanguage() {
   // set document language
-  document.documentElement.setAttribute('lang', window.blog.language);
+  if (window.blog && window.blog.language) {
+    document.documentElement.setAttribute('lang', window.blog.language);
+  }
 }
 
 /**
@@ -855,10 +861,44 @@ function handleDropdownRegion() {
   }
 }
 
-window.addEventListener('load', function() {
-  setDocumentLanguage();
-  removeHeaderAndFooter();
-  addPageTypeAsBodyClass();
+async function loadFont(name, url, weight) {
+  const font = new FontFace(name, url, { weight });
+  const fontLoaded = await font.load();
+  return (fontLoaded);
+}
+
+async function loadFonts() {
+  try {
+    /* todo promise.All */
+    const f900 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/b0c5f5/00000000000000003b9b3f85/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3")', 400);
+    const f400 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3")', 900);
+    const f700 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3")', 700);
+    document.fonts.add(f900);
+    document.fonts.add(f400);
+    document.fonts.add(f700);
+    sessionStorage.setItem('helix-fonts', 'loaded');
+  } catch (err) {
+    /* something went wrong */
+    console.log(err);
+  }
+  document.body.classList.add('font-loaded');
+}
+
+export async function globalPostLCP() {
+  loadFonts();
+  const martechUrl = '/scripts/martech.js';
+  const usp = new URLSearchParams(window.location.search);
+  const martech = usp.get('martech');
+
+  if (!(martech === 'off' || document.querySelector(`head script[src="${martechUrl}"]`))) {
+    let ms = 2000;
+    const delay = usp.get('delay');
+    if (delay) ms = +delay;
+    setTimeout(() => {
+      loadScript(martechUrl, null, 'module');
+    }, ms);
+  }
+
   /**
    * Check if FEDS is available before loading the Dropdown Selector
    */
@@ -867,4 +907,11 @@ window.addEventListener('load', function() {
   } else {
     window.addEventListener('feds.events.experience.loaded', handleDropdownRegion);
   }
-});
+}
+
+function decoratePage() {
+  setDocumentLanguage();
+  removeHeaderAndFooter();
+};
+
+decoratePage();

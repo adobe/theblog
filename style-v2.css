@@ -26,11 +26,20 @@
    padding: 0;
    margin: 0;
    background-color: white;
-   font-family: adobe-clean, sans-serif;
+   font-family: 'adobe-clean', 'Adobe Clean', sans-serif;
    font-weight: 300;
    font-size: 1.125rem;
    line-height: 1.5em;
+   display: none;
  }
+
+body.appear {
+  display: block;
+}
+
+header {
+  height: 65px;
+}
 
 main > div {
   padding: 1rem 2rem;
@@ -402,6 +411,10 @@ main > div img {
  .hide {
    display: none !important;
  }
+
+ .invisible {
+  opacity: 0;
+}
  
  @media (min-width:600px) {
  
@@ -572,4 +585,30 @@ a.region-dropdown-picker.selected:after {
 
 .region-dropdown-list a:hover {
   opacity: 60%;
+}
+
+/* post-page (lcp) */
+.post-page .hero-image {
+  width: 100%;
+  padding: 0;
+  margin: auto;
+  max-width: 1000px;
+}
+
+.post-page .hero-image img {
+  width: 100%;
+  max-height: 438px;
+  object-fit: cover;
+}
+
+.post-page main .hero-image video {
+  width: 100%;
+  object-fit: cover;
+}
+
+.post-page main div.post-author {
+  margin-top: 20px;
+  height: 96px;
+  padding-top: 0;
+  padding-bottom: 0;
 }

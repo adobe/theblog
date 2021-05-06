@@ -12,13 +12,12 @@
 import {
   fetchArticles,
   getSection,
-  addClass,
   getLink,
-  wrap,
   wrapNodes,
   createTag,
   extractTopicsAndProducts,
-} from '/scripts/common.js';
+  globalPostLCP
+} from '/scripts/common-v2.js';
 
 import {
   getTaxonomy
@@ -206,14 +205,6 @@ function fixTableCleanup() {
  * Decorates the post page with CSS classes
  */
 function decoratePostPage(){
-  addClass('.post-page main>div:first-of-type', 'post-title');
-  addClass('.post-page main>div:nth-of-type(2)', 'hero-image');
-  addClass('.post-page main>div:nth-of-type(3)', 'post-author');
-   // hide author name
-  addClass('.post-author', 'hide');
-  addClass('.post-page main>div:nth-of-type(4)', 'post-body');
-  addClass('.post-page main>div.post-body>p>img', 'images', 1);
-
   // fix tables
   fixTableCleanup();
 
@@ -222,13 +213,6 @@ function decoratePostPage(){
   if (!last.classList.contains('post-body')) {
     last.classList.add('hide');
   }
-  const $main=document.querySelector('main');
-  const $postAuthor=document.querySelector('.post-author');
-  const $heroImage=document.querySelector('.hero-image');
-
-  if ($postAuthor && $heroImage) $main.insertBefore($postAuthor,$heroImage);
-
-  wrap('post-header',['main>div.category','main>div.post-title']);
 
   document.querySelectorAll('.post-body .embed-internal>div:not(.banner)').forEach(($e) => {
     $e.parentNode.classList.add('embed-internal-promotions');
@@ -459,7 +443,6 @@ function fetchAuthor() {
   const authorSection = document.querySelector('.post-author');
   if (authorSection) {
     // clear the content of the div and replace by avatar and text
-    authorSection.innerHTML = '';
 
     if (!window.blog.author) {
       const authorDiv = document.createElement('div');
@@ -467,8 +450,9 @@ function fetchAuthor() {
         <div><span class="post-author"></span>
         <span class="post-date">${window.blog.date || ''}</span></div></div>`;
       authorDiv.classList.add('author');
+      authorSection.innerHTML = '';
       authorSection.appendChild(authorDiv);
-      authorSection.classList.remove('hide');
+      authorSection.classList.remove('invisible');
       return;
     }
 
@@ -492,7 +476,7 @@ function fetchAuthor() {
         avatarURL = getOptimizedImageUrl(avatarURL, { width: 128, crop: '1:1' });
         const authorDiv = document.createElement('div');
         authorDiv.innerHTML = `<div class="author-summary">
-          <img class="lazyload" alt="${window.blog.author}" title="${window.blog.author}" data-src="${avatarURL}">
+          <img alt="${window.blog.author}" title="${window.blog.author}" src="${avatarURL}">
           <div><span class="post-author">
             ${xhr.status < 400 ? `<a href="${pageURL}" title="${window.blog.author}">` : ''}
               ${window.blog.author}
@@ -500,8 +484,9 @@ function fetchAuthor() {
           </span>
           <span class="post-date">${window.blog.date || ''}</span></div></div>`;
         authorDiv.classList.add('author');
+        authorSection.innerHTML = '';
         authorSection.appendChild(authorDiv);
-        authorSection.classList.remove('hide');
+        authorSection.classList.remove('invisible');
       } catch(e) {
         console.error('Error while extracting author info', e);
       }
@@ -516,12 +501,12 @@ function fetchAuthor() {
 async function addCategory() {
   if (!window.blog.allVisibleTopics || window.blog.allVisibleTopics.length === 0) return;
   const topic = window.blog.allVisibleTopics[0];
-  const categoryWrap = document.createElement('div');
+  const categoryWrap = document.querySelector('main div.category');
+
   const taxonomy = await getTaxonomy(window.blog.language);
   const href = taxonomy.getLink(topic) || getLink(window.blog.TYPE.TOPIC, topic.replace(/\s/gm, '-').toLowerCase());
-  categoryWrap.className = 'category';
   categoryWrap.innerHTML = `<a href="${href}" title="${topic}">${topic}</a>`;
-  document.querySelector('main .post-header').prepend(categoryWrap);
+  
 }
 
 /**
@@ -829,7 +814,6 @@ async function decoratePromotions() {
       $img.src = $img.src + '?auto=webp&format=pjpg&optimize=medium&width=160';
       $img.setAttribute('loading', 'lazy');
       $promo.children[0].prepend($img.parentNode);
-      console.log($promo.innerHTML);
       $promotion.parentElement.replaceChild($promo, $promotion);
     }
   });
@@ -847,8 +831,8 @@ function addPublishDependencies() {
   window.hlx.dependencies = [path.replace('/publish/', '/')];
 }
 
-
-window.addEventListener('load', async function() {
+async function decoratePage() {
+  globalPostLCP();
   decoratePostPage();
   handleImmediateMetadata();
   decorateImages();
@@ -864,8 +848,11 @@ window.addEventListener('load', async function() {
   await addCategory();
   await addTopics();
   decoratePromotions();
-  loadGetSocial();
   shapeBanners();
   fetchArticles();
   addPublishDependencies();
-});
+  // defer get social to later
+  window.setTimeout(loadGetSocial, 2000);
+}
+
+decoratePage();

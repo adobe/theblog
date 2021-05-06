@@ -12,7 +12,7 @@
 
 import {
   addClass,
-} from '/scripts/common.js';
+} from '/scripts/common-v2.js';
 
 
 /**
@@ -23,5 +23,6 @@ function decorateBlankPage() {
 }
 
 window.addEventListener('load', async function() {
+  globalPostLCP();
   decorateBlankPage();
 });

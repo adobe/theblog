@@ -14,8 +14,8 @@ import {
   createTag,
   wrap,
   wrapNodes,
-  getSection,
-} from '/scripts/common.js';
+  globalPostLCP,
+} from '/scripts/common-v2.js';
 
 async function decoratePromotionPage() {
   document.body.classList.add('post-page');
@@ -46,7 +46,8 @@ function addDependencies() {
 }
 
 window.addEventListener('load', () => {
-  loadCSS('/style/post.css');
+  loadCSS('/style/post-v2.css');
+  globalPostLCP();
   decoratePromotionPage();
   addDependencies();
 });

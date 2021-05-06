@@ -12,7 +12,7 @@
 
 import {
   loadScript
-} from '/scripts/common.js';
+} from '/scripts/common-v2.js';
 
 function checkDX(tags) {
   const dxtags=`Experience Cloud, Experience Manager, Magento Commerce, Marketo Engage, Target, Commerce Cloud, Campaign, Audience Manager, Analytics, Advertising Cloud,

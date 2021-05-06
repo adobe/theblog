@@ -21,29 +21,16 @@ import {
   fetchArticleIndex,
   itemTransformer,
   extractTopicsAndProducts,
-} from '/scripts/common.js';
+  globalPostLCP,
+} from '/scripts/common-v2.js';
 
 const NUM_PURGED_INDEX_SEGMENTS = 10;
 
-/**
- * Sets up the homepage
- */
-async function setupHomepage() {
-  if (!document.title) {
-    document.title = 'The Blog | Welcome to the Adobe Blog';
-  }
-  const titleSection = getSection(0);
-  if (titleSection.innerText.trim() === document.title) {
-    titleSection.remove();
-  }
+async function postLCP() {
+  globalPostLCP();
+}
 
-  window.blog.indexPath = getIndexPath();
-
-  // add featured placeholder
-  const featuredPlaceholder = createTag('div', { 'class': 'featured-placeholder' });
-  const $main=document.querySelector('main');
-  $main.insertBefore(featuredPlaceholder, $main.childNodes[0]);
-
+async function handleNews() {
   // news box
   let newsPaths=[];
   addClass('h2#news', 'news-box', 1);
@@ -72,8 +59,6 @@ async function setupHomepage() {
     newsBox.appendChild(createTag('div', { class: 'deck' }));
   }
 
-  await fetchArticleIndex(0);
-
   const pathLookup = window.blog.articleIndex.pathLookup;
   let news=[];
   newsPaths.forEach((n) => {
@@ -87,7 +72,30 @@ async function setupHomepage() {
     n.hero= getOptimizedImageUrl(n.hero, { height: 260 });
     addCard(n, newsdeck)
   });
+}
 
+/**
+ * Sets up the homepage
+ */
+async function setupHomepage() {
+  if (!document.title) {
+    document.title = 'The Blog | Welcome to the Adobe Blog';
+  }
+  const titleSection = getSection(0);
+  if (titleSection.innerText.trim() === document.title) {
+    titleSection.remove();
+  }
+
+  window.blog.indexPath = getIndexPath();
+
+  // add featured placeholder
+  const featuredPlaceholder = createTag('div', { 'class': 'featured-placeholder' });
+  const $main=document.querySelector('main');
+  $main.insertBefore(featuredPlaceholder, $main.childNodes[0]);
+
+  await fetchArticleIndex(0);
+  
+  await handleNews();
   extractTopicsAndProducts();
 
   await fetchArticles({
@@ -100,6 +108,17 @@ async function setupHomepage() {
           $firstCard.classList.add('featured');
           const hero = $firstCard.querySelector('.hero img');
           hero.setAttribute('data-src', getOptimizedImageUrl(hero.getAttribute('data-src'), { height: 640, crop: '' }));
+
+          if (hero.complete) {
+            postLCP();
+          } else {
+            hero.addEventListener('load', () => {
+              postLCP();
+            });
+            hero.addEventListener('error', () => {
+              postLCP();
+            });
+          }
           const $main=document.querySelector('main');
           $main.insertBefore($firstCard,featuredPlaceholder);
           featuredPlaceholder.remove();
@@ -120,6 +139,4 @@ async function setupHomepage() {
 
 }
 
-window.addEventListener('load', function() {
-  setupHomepage();
-});
+setupHomepage();

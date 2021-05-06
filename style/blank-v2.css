@@ -10,18 +10,32 @@
  * governing permissions and limitations under the License.
  */
 
-import {
-  addClass,
-} from '/scripts/common.js';
-
-
-/**
- * Decorates the topic page with CSS classes
- */
-function decorateBlankPage() {
-  if (window.isErrorPage) { addClass('body',`error-${window.errorCode}`) }
+.blank-page header,
+.blank-page footer {
+  visibility: visible;
 }
 
-window.addEventListener('load', async function() {
-  decorateBlankPage();
-});
+.blank-page.error-404 main {
+  visibility: visible;
+  background-image: url(https://adobe.com/content/dam/acom/en/error-pages/images/404-1440x612_edge2.jpg);
+  background-size: cover;
+  background-position: 70%;
+  height: 80vh;
+  position: relative;
+}
+
+.blank-page main a:any-link {
+  text-decoration: none;
+
+}
+
+.blank-page main nav {
+  margin-top: 30px;
+}
+
+.blank-page main cite {
+  position: absolute;
+  bottom: 20px;
+  font-style: normal;
+  font-size: 12px;
+}
