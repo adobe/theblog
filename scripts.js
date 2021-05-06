@@ -226,8 +226,10 @@ function checkRedirect() {
 
 checkRedirect();
 
-function postLCP() {
-  document.body.classList.add('appear');
+function postLCP(show = true) {
+  if (show) {
+    document.body.classList.add('appear');
+  }
 
   // Load page specific code
   loadCSS(`/style/${window.blog.pageType}.css`);
@@ -238,6 +240,13 @@ function postLCP() {
 }
 
 const handleLCPPerType = {};
+
+//TODO move home.js code here
+handleLCPPerType[window.blog.TYPE.HOME] = {};
+handleLCPPerType[window.blog.TYPE.HOME].decoratePage = () => {
+  postLCP(false);
+};
+handleLCPPerType[window.blog.TYPE.HOME].computeLCPCandidate = () => {};
 
 /* post-page pre lcp handlers*/
 handleLCPPerType[window.blog.TYPE.POST] = {};
