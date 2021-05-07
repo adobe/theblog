@@ -60,16 +60,16 @@ export function loadScript(url, callback, type) {
  * @param {node} newparent The new parent node
  * @param {array} nodes The nodes to wrap
  */
-export function wrapNodes(newparent, nodes) {	
-  nodes.forEach((el, index) => {	
-    newparent.appendChild(el.cloneNode(true));	
-    if (newparent.children.length !== 1) {	
-      el.parentNode.removeChild(el);	
-    } else {	
-      el.parentNode.replaceChild(newparent, el);	
-    }	
-  });	
-}	
+export function wrapNodes(newparent, nodes) {
+  nodes.forEach((el, index) => {
+    newparent.appendChild(el.cloneNode(true));
+    if (newparent.children.length !== 1) {
+      el.parentNode.removeChild(el);
+    } else {
+      el.parentNode.replaceChild(newparent, el);
+    }
+  });
+}
 
 /**
  * Uses a selector to find and wrap nodes with a new parent element,
@@ -77,16 +77,16 @@ export function wrapNodes(newparent, nodes) {
  * @param {string} classname The CSS class for the wrapping node
  * @param {array|string} selectors The selectors for the affected nodes
  */
-export function wrap(classname, selectors) {	
+export function wrap(classname, selectors) {
   if (!Array.isArray(selectors)) {
     selectors=[selectors];
   }
-  const div = document.createElement('div');	
+  const div = document.createElement('div');
   div.className = classname;
 
   selectors.forEach((selector) => {
     const elems = document.querySelectorAll(selector);
-    wrapNodes(div, elems);	
+    wrapNodes(div, elems);
   });
 }
 
@@ -106,7 +106,7 @@ export function addClass(selector, cssClass, parent) {
         up--;
       }
       el.classList.add(cssClass);
-    }  
+    }
   });
 }
 
@@ -223,7 +223,7 @@ export function getPostPaths(el, parent, removeContainer) {
         p.splice(2, 0, 'publish');
         path = p.join('/');
       }
-      if (!path.endsWith('.html')) path+='.html'; 
+      if (!path.endsWith('.html')) path+='.html';
       paths.push(path);
     });
     if (removeContainer) {
@@ -312,7 +312,7 @@ async function addArticlesToDeck(hits, omitEmpty, transformer, hasMore, setFocus
         document.querySelector('main').appendChild($container);
       }
     }
-    
+
     if (!hits.length) {
       if (!omitEmpty) {
         $deck.innerHTML = '<div class="articles-empty"><div>';
@@ -381,7 +381,7 @@ async function translateTable(pages, index) {
     if (!Array.isArray(products)) products=[];
     if (!Array.isArray(topics)) topics=[];
     // also append parents
-    
+
     r.topics = topics;
     topics.forEach((topic) => {
       r.topics = r.topics.concat(taxonomy.getParents(topic));
@@ -417,7 +417,7 @@ export async function fetchArticleIndex(offset) {
   queryParams.set('offset', offset);
   let response=await fetch(`${indexPath.split('?')[0]}?${queryParams.toString()}`);
 
-  if (response.ok) { 
+  if (response.ok) {
     const json = await response.json();
     const data = Array.isArray(json) ? json : json.data;
     await translateTable(data,window.blog.articleIndex);
@@ -434,7 +434,7 @@ async function fetchHits(filters, limit, cursor) {
   if (!window.blog.articleIndex) {
     await fetchArticleIndex(0);
   }
-  
+
   const index=window.blog.articleIndex;
   const articles=window.blog.articleIndex.articles;
   const pathLookup=window.blog.articleIndex.pathLookup;
@@ -448,7 +448,7 @@ async function fetchHits(filters, limit, cursor) {
       if (filters.pathsOnly) {
         while (!index.done && (articles[articles.length-1].path>p.substring(1))) {
           await fetchArticleIndex(articles.length);
-        }  
+        }
       }
      if (pathLookup[p.substring(1)]) hits.push(pathLookup[p.substring(1)]);
    };
@@ -490,7 +490,7 @@ async function fetchHits(filters, limit, cursor) {
           // if user topics AND products, both must match
           matched = userTopicsMatched && productsMatched;
         } else if (filters.userTopics || filters.products) {
-          // if user topics OR products, one of them must match 
+          // if user topics OR products, one of them must match
           matched = userTopicsMatched || productsMatched;;
         }
       }
@@ -504,7 +504,7 @@ async function fetchHits(filters, limit, cursor) {
           matched = false;
         }
       }
-  
+
       if (matched) {
         if (hits.length==limit) {
           break;
@@ -521,7 +521,7 @@ async function fetchHits(filters, limit, cursor) {
   let result={hits: hits};
   if (i && i<articles.length) {
     result.cursor=i;
-  }  
+  }
 
   return result;
 }
@@ -587,10 +587,10 @@ export async function fetchArticles({
     const hits=result.hits;
     const setFocus=window.blog.page?true:false;
     window.blog.cursor=result.cursor;
-  
+
     await addArticlesToDeck(hits, omitEmpty, transformer, result.cursor, setFocus);
     if (typeof callback === 'function') callback(hits);
-  
+
   }
 }
 
@@ -728,7 +728,7 @@ function handleDropdownRegion() {
     regionDropdownContainer.classList.add('region-dropdown');
     regionDropdownContainer.innerHTML = `<ul class="region-dropdown-list"></ul>`;
     fedsFooterButton.parentNode.parentNode.appendChild(regionDropdownContainer);
-    
+
     // Get actual selected Region
     const getSelectedRegion = () => {
       const regionByPath = regionsNameList.find(r => r.home === location.pathname);
@@ -748,22 +748,22 @@ function handleDropdownRegion() {
           // else we get the Region name base on the blog.language and after have find the same language in our RegionListName
           if (regionByLang !== undefined) {
               regionName = regionByLang.name;
-          }       
+          }
         }
       } else {
         regionLang = regionByPath.lang;
         regionName = regionByPath.name;
-        // sessionStorage will be used only if current Region lang is not same as blog.lang as en_apac or en_uk 
+        // sessionStorage will be used only if current Region lang is not same as blog.lang as en_apac or en_uk
         // where blog.lang will still being en
         if (regionByPath.lang !== window.blog.language) {
           sessionStorage.setItem('blog-selected-language', regionByPath.lang);
         }
-      } 
+      }
       return {regionLang, regionName};
     }
 
     const dropdownRegionList = document.querySelector('.region-dropdown-list');
-    const {regionLang, regionName} = getSelectedRegion(); 
+    const {regionLang, regionName} = getSelectedRegion();
 
     // Change Region name value from Feds Region Picker Button adding the actual Region Name
     const FEDSregionPickerText = document.querySelector('.feds-regionPicker-text');
@@ -832,7 +832,7 @@ function handleDropdownRegion() {
       regionDropdownModal.classList.add('visible');
     }
   }
-  
+
   function hideDropdownModal() {
     const regionDropdownModal = document.querySelector('.region-dropdown');
     if (regionDropdownModal) {
@@ -861,25 +861,64 @@ function handleDropdownRegion() {
   }
 }
 
-async function loadFont(name, url, weight) {
-  const font = new FontFace(name, url, { weight });
-  const fontLoaded = await font.load();
-  return (fontLoaded);
-}
-
 async function loadFonts() {
   try {
-    /* todo promise.All */
-    const f900 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/b0c5f5/00000000000000003b9b3f85/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3")', 400);
-    const f400 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n9&v=3")', 900);
-    const f700 = await loadFont('adobe-clean', 'url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3")', 700);
-    document.fonts.add(f900);
-    document.fonts.add(f400);
-    document.fonts.add(f700);
+    const fonts = [{
+      family: 'adobe-clean',
+      src: 'url("https://use.typekit.net/af/b0c5f5/00000000000000003b9b3f85/27/l?primer=ac8c128253c94f374040a4dde020a0c48540a1a7146e7c4a375a2dd0a9189251&fvd=n4&v=3")',
+      style: 'normal',
+      weight: 400,
+    }, {
+      family: 'adobe-clean',
+      src: 'url("https://use.typekit.net/af/aa41d0/00000000000000003b9b3f86/27/l?primer=ac8c128253c94f374040a4dde020a0c48540a1a7146e7c4a375a2dd0a9189251&fvd=i4&v=3")',
+      style: 'italic',
+      weight: 400,
+    }, {
+      family: 'adobe-clean',
+      src: 'url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/l?primer=ac8c128253c94f374040a4dde020a0c48540a1a7146e7c4a375a2dd0a9189251&fvd=n7&v=3")',
+      style: 'normal',
+      weight: 700,
+    }, {
+      family: 'adobe-clean',
+      src: 'url("https://use.typekit.net/af/37eaae/00000000000000003b9b3f83/27/l?primer=ac8c128253c94f374040a4dde020a0c48540a1a7146e7c4a375a2dd0a9189251&fvd=n3&v=3")',
+      style: 'normal',
+      weight: 300,
+    }, {
+      family: 'adobe-clean',
+      src: 'url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/l?primer=ac8c128253c94f374040a4dde020a0c48540a1a7146e7c4a375a2dd0a9189251&fvd=n9&v=3")',
+      style: 'normal',
+      weight: 900,
+    }, {
+      family: 'adobe-clean',
+      src: 'url("https://use.typekit.net/af/a0c22f/00000000000000003b9b3f84/27/l?primer=ac8c128253c94f374040a4dde020a0c48540a1a7146e7c4a375a2dd0a9189251&fvd=i3&v=3")',
+      style: 'italic',
+      weight: 300,
+    }, {
+      family: 'adobe-clean-serif',
+      src: 'url("https://use.typekit.net/af/e09494/00000000000000003b9aee45/27/l?primer=ac8c128253c94f374040a4dde020a0c48540a1a7146e7c4a375a2dd0a9189251&fvd=n4&v=3")',
+      style: 'normal',
+      weight: 400,
+    }, {
+      family: 'adobe-clean-serif',
+      src: 'url("https://use.typekit.net/af/c8f445/00000000000000003b9aee47/27/l?primer=ac8c128253c94f374040a4dde020a0c48540a1a7146e7c4a375a2dd0a9189251&fvd=n5&v=3")',
+      style: 'normal',
+      weight: 500,
+    }];
+
+    await Promise.all(fonts.map(async (fontDef) => {
+      const {
+        family,
+        src,
+        ...descriptors
+      } = fontDef;
+      const font = new FontFace(family, src, descriptors);
+      const fontLoaded = await font.load();
+      document.fonts.add(fontLoaded);
+    }));
     sessionStorage.setItem('helix-fonts', 'loaded');
   } catch (err) {
     /* something went wrong */
-    console.log(err);
+    console.log('problem loading fonts', err);
   }
   document.body.classList.add('font-loaded');
 }
@@ -903,7 +942,7 @@ export async function globalPostLCP() {
    * Check if FEDS is available before loading the Dropdown Selector
    */
   if (typeof feds === 'object' && typeof feds.events === 'object' && feds.events.experience === true) {
-    handleDropdownRegion();  
+    handleDropdownRegion();
   } else {
     window.addEventListener('feds.events.experience.loaded', handleDropdownRegion);
   }
