@@ -710,8 +710,8 @@ function decorateEmbeds() {
 
     if ($a.href.startsWith('https://twitter.com') || $a.href.startsWith('https://www.twitter.com')){
       embedHTML = `<blockquote class="twitter-tweet" data-dnt="true" align="center">
-      <a href="https://twitter.com/Gap/status/614452344734904320?ref_src=twsrc%5Etfw"></a></blockquote>
-      <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`;
+      <a href="${url}"></a></blockquote>
+      <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`;
       type = 'twitter';
     }
 

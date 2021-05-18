@@ -693,6 +693,15 @@ function decorateEmbeds() {
         type='adobe-tv';
     }
 
+    if ($a.href.startsWith('https://twitter.com') || $a.href.startsWith('https://www.twitter.com')){
+      embedHTML = `
+      <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
+      <blockquote class="twitter-tweet" data-dnt="true" align="center">
+      <a href="${url}"></a></blockquote>
+      <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></div>`;
+      type = 'twitter';
+    }
+
     if (type) {
       const $embed=createTag('div', {class: `embed embed-oembed embed-${type}`});
       const $div=$a.closest('.block-embed');
