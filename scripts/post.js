@@ -708,6 +708,13 @@ function decorateEmbeds() {
         type='adobe-tv';
     }
 
+    if ($a.href.startsWith('https://twitter.com') || $a.href.startsWith('https://www.twitter.com')){
+      embedHTML = `<blockquote class="twitter-tweet" data-dnt="true" align="center">
+      <a href="https://twitter.com/Gap/status/614452344734904320?ref_src=twsrc%5Etfw"></a></blockquote>
+      <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>`;
+      type = 'twitter';
+    }
+
     if (type) {
       const $embed=createTag('div', {class: `embed embed-oembed embed-${type}`});
       const $div=$a.closest('.block-embed');
