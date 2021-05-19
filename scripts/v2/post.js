@@ -15,6 +15,7 @@ import {
   getLink,
   wrapNodes,
   createTag,
+  loadScript,
   extractTopicsAndProducts,
   globalPostLCP
 } from '/scripts/v2/common.js';
@@ -691,6 +692,14 @@ function decorateEmbeds() {
         </iframe>
         </div>`
         type='adobe-tv';
+    }
+
+    if ($a.href.startsWith('https://twitter.com') || $a.href.startsWith('https://www.twitter.com')){
+      embedHTML = `
+      <blockquote class="twitter-tweet" data-dnt="true" align="center">
+      <a href="${url}"></a></blockquote>`
+      loadScript("https://platform.twitter.com/widgets.js");
+      type = 'twitter';
     }
 
     if (type) {
