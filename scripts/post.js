@@ -708,13 +708,6 @@ function decorateEmbeds() {
         type='adobe-tv';
     }
 
-    if ($a.href.startsWith('https://twitter.com') || $a.href.startsWith('https://www.twitter.com')){
-      embedHTML = `<blockquote class="twitter-tweet" data-dnt="true" align="center">
-      <a href="${url}"></a></blockquote>`
-      loadJSModule("https://platform.twitter.com/widgets.js");
-      type = 'twitter';
-    }
-
     if (type) {
       const $embed=createTag('div', {class: `embed embed-oembed embed-${type}`});
       const $div=$a.closest('.block-embed');

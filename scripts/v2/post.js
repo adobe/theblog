@@ -15,13 +15,11 @@ import {
   getLink,
   wrapNodes,
   createTag,
+  loadScript,
   extractTopicsAndProducts,
   globalPostLCP
 } from '/scripts/v2/common.js';
 
-import {
-  loadJSModule
-} from '/scripts/v2/scripts.js';
 import {
   getTaxonomy
 } from '/scripts/taxonomy.js';
@@ -698,11 +696,9 @@ function decorateEmbeds() {
 
     if ($a.href.startsWith('https://twitter.com') || $a.href.startsWith('https://www.twitter.com')){
       embedHTML = `
-      <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
       <blockquote class="twitter-tweet" data-dnt="true" align="center">
-      <a href="${url}"></a></blockquote></div>`
-
-      loadJSModule("https://platform.twitter.com/widgets.js");
+      <a href="${url}"></a></blockquote>`
+      loadScript("https://platform.twitter.com/widgets.js");
       type = 'twitter';
     }
 
