@@ -20,6 +20,9 @@ import {
 } from '/scripts/v2/common.js';
 
 import {
+  loadJSModule
+} from '/scripts/v2/scripts.js';
+import {
   getTaxonomy
 } from '/scripts/taxonomy.js';
 
@@ -697,8 +700,9 @@ function decorateEmbeds() {
       embedHTML = `
       <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
       <blockquote class="twitter-tweet" data-dnt="true" align="center">
-      <a href="${url}"></a></blockquote>
-      <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></div>`;
+      <a href="${url}"></a></blockquote></div>`
+
+      loadJSModule("https://platform.twitter.com/widgets.js");
       type = 'twitter';
     }
 
