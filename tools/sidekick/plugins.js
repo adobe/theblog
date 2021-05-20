@@ -52,6 +52,7 @@
           window.location.href = url.toString();
         }
       },
+      isPressed: () => sk.isInner(),
     },
   });
 
