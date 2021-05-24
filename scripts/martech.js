@@ -139,3 +139,36 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
 loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js').id = 'feds-script';
 loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
 
+console.log('this');
+
+/* Core Web Vitals */
+const weight = 1;
+window.hlx.cwv = {};
+
+function storeCWV(measurement) {
+  window.hlx.cwv[measurement.name] = measurement.value; 
+}
+
+if (Math.random() * weight < 1) {
+  var script = document.createElement('script');
+  script.src = 'https://unpkg.com/web-vitals';
+  script.onload = function() {
+    // When loading `web-vitals` using a classic script, all the public
+    // methods can be found on the `webVitals` global namespace.
+    webVitals.getCLS(storeCWV);
+    webVitals.getFID(storeCWV);
+    webVitals.getLCP(storeCWV);
+  }
+  document.head.appendChild(script);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      const body = JSON.stringify(window.hlx.cwv);
+      const url = `/.rum/${weight}`;
+      console.log (url, body);
+
+      // Use `navigator.sendBeacon()` if available, falling back to `fetch()`.
+      (navigator.sendBeacon && navigator.sendBeacon(url, body)) ||
+          fetch(url, {body, method: 'POST', keepalive: true});
+      }
+  });
+}
