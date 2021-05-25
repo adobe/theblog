@@ -142,10 +142,10 @@ loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
 /* Core Web Vitals */
 const weight = 1;
 window.hlx = window.hlx || {};
-window.hlx.cwv = {};
+window.hlx.rum = { cwv:{}, weight};
 
 function storeCWV(measurement) {
-  window.hlx.cwv[measurement.name] = measurement.value; 
+  window.hlx.rum.cwv[measurement.name] = measurement.value; 
 }
 
 if (Math.random() * weight < 1) {
@@ -161,7 +161,7 @@ if (Math.random() * weight < 1) {
   document.head.appendChild(script);
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden') {
-      const body = JSON.stringify(window.hlx.cwv);
+      const body = JSON.stringify(window.hlx.rum);
       const url = `/.rum/${weight}`;
       console.log (url, body);
 
