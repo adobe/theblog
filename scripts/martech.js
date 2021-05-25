@@ -139,8 +139,6 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
 loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js').id = 'feds-script';
 loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
 
-console.log('this');
-
 /* Core Web Vitals */
 const weight = 1;
 window.hlx.cwv = {};
