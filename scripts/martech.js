@@ -141,6 +141,7 @@ loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
 
 /* Core Web Vitals */
 const weight = 1;
+window.hlx = window.hlx || {};
 window.hlx.cwv = {};
 
 function storeCWV(measurement) {
