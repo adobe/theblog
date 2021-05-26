@@ -89,6 +89,10 @@
   margin: 20px auto 0 auto;
 }
 
+.post-page main .post-date.invalid-date {
+  border: 10px solid red;
+}
+
 .post-page main>div.post-body .images img,
 .post-page main>div.post-body .images video,
 .embed {

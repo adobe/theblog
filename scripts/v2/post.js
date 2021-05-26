@@ -533,6 +533,16 @@ function fetchAuthor() {
       } catch(e) {
         console.error('Error while extracting author info', e);
       }
+
+      if (!window.location.hostname.includes('adobe.com') && window.location.pathname.includes('publish')) {
+        const $date = authorSection.querySelector('.post-date');
+        if ($date && window.blog.rawDate) {
+          const [ mm, dd, yyyy ] = window.blog.rawDate.split('-');
+          if (!window.location.pathname.includes(`${yyyy}/${mm}/${dd}/`)) {
+            $date.classList.add('invalid-date');
+          }
+        }
+      }
     };
     xhr.send();
   }
