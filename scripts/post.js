@@ -668,7 +668,8 @@ function decorateEmbeds() {
     'vimeo': ['https://www.vimeo.com', 'https://player.vimeo.com/video/', 'https://vimeo.com'],
     'instagram': ['https://www.instagram.com/'],
     'adobe': ['https://video.tv.adobe.com/v/'],
-    'twitter': ['https://twitter.com', 'https://www.twitter.com']
+    'twitter': ['https://twitter.com', 'https://www.twitter.com'],
+    'tiktok': ['https://tiktok.com', 'https://www.tiktok.com']
   }
 
   document.querySelectorAll('.block-embed a[href]').forEach(($a) => {
@@ -736,6 +737,14 @@ function decorateEmbeds() {
       `
       loadScript("https://platform.twitter.com/widgets.js");
       type = 'twitter';
+    }
+
+    if(firstLvl === 'tiktok' && isEmbedUrl($a.href, urlList[firstLvl])) {
+      embedHTML = `
+        <blockquote class="tiktok-embed" cite="${url.href}"  style="max-width: 605px;min-width: 325px;" ></blockquote>
+      `
+      loadScript("https://www.tiktok.com/embed.js");
+      type = 'tiktok';
     }
 
     if (type) {
