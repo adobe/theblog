@@ -140,7 +140,7 @@ loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.
 loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
 
 /* Core Web Vitals */
-const weight = 1;
+const weight = 100;
 window.hlx = window.hlx || {};
 window.hlx.rum = { cwv:{}, weight};
 
