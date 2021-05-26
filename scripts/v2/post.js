@@ -642,24 +642,44 @@ function decorateCaptions() {
 
   })
 }
+
+function isEmbedUrl(url, urlList){
+  return urlList && urlList.find((link) => url.startsWith(link));
+}
+
 function decorateEmbeds() {
+  const urlList = {
+    'youtube': ['https://www.youtube.com/watch', 'https://www.youtu.be', 'https://youtu.be', 'https://www.youtube.com/embed'],
+    'vimeo': ['https://www.vimeo.com', 'https://player.vimeo.com/video/', 'https://vimeo.com'],
+    'instagram': ['https://www.instagram.com/'],
+    'adobe': ['https://video.tv.adobe.com/v/'],
+    'twitter': ['https://twitter.com', 'https://www.twitter.com']
+  }
 
   document.querySelectorAll('.block-embed a[href]').forEach(($a) => {
     const url = new URL($a.href.replace(/\/$/, ''));
     const usp=new URLSearchParams(url.search);
+    const hostname = url.hostname;
+    let firstLvl = hostname.split('.').reverse()[1];
     let embedHTML='';
     let type='';
 
-    if ($a.href.startsWith('https://www.youtube.com/watch')) {
-      const vid=usp.get('v');
+    firstLvl = firstLvl === 'youtu' ? 'youtube' : firstLvl;
+    if (firstLvl === 'youtube' && isEmbedUrl($a.href, urlList[firstLvl])) {
+      let vid=usp.get('v');
+      if(!vid){
+        const videoId = url.pathname.split('/').slice(-1)[0];
+        const qpIndex = videoId.indexOf('?');
+        vid = qpIndex > 0 ? videoId.subst(0, qpIndex+1) : videoId;
+      }
       embedHTML=`<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
-        <iframe src="https://www.youtube.com/embed/${vid}?rel=0&amp;v=${vid}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" scrolling="no" allow="encrypted-media; accelerometer; gyroscope; picture-in-picture" title="content from youtube" loading="lazy"></iframe>
-        </div>
-      `;
+      <iframe src="https://www.youtube.com/embed/${vid}?rel=0&amp;v=${vid}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen="" scrolling="no" allow="encrypted-media; accelerometer; gyroscope; picture-in-picture" title="content from youtube" loading="lazy"></iframe>
+      </div>
+    `
       type = 'youtube';
     }
 
-    if($a.href.startsWith('https://www.instagram.com/')) {
+    if(firstLvl === 'instagram' && isEmbedUrl($a.href, urlList[firstLvl])) {
       const location = window.location.href;
       embedHTML=`
         <div style="width: 100%; position: relative; padding-bottom: 56.25%; display: flex; justify-content: center">
@@ -672,7 +692,7 @@ function decorateEmbeds() {
     }
 
     const vimeoPlayerFlag = url.href.startsWith('https://player.vimeo.com/video/');
-    if (vimeoPlayerFlag || url.href.startsWith('https://vimeo.com')) {
+    if (firstLvl === 'vimeo' && isEmbedUrl($a.href, urlList[firstLvl])) {
       const linkArr = url.href.split('/');
       const video = linkArr ? linkArr[3] : linkArr;
       embedHTML=`
@@ -684,7 +704,7 @@ function decorateEmbeds() {
         type='vimeo-player';
     }
 
-    if ($a.href.startsWith('https://video.tv.adobe.com/v/')) {
+    if (firstLvl === 'adobe' && isEmbedUrl($a.href, urlList[firstLvl])) {
       embedHTML=`
         <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 56.25%;">
         <iframe src="${url.href}" style="border: 0; top: 0; left: 0; width: 100%; height: 100%; position: absolute;" allowfullscreen=""
@@ -694,10 +714,11 @@ function decorateEmbeds() {
         type='adobe-tv';
     }
 
-    if ($a.href.startsWith('https://twitter.com') || $a.href.startsWith('https://www.twitter.com')){
+    if(firstLvl === 'twitter' && isEmbedUrl($a.href, urlList[firstLvl])) {
       embedHTML = `
-      <blockquote class="twitter-tweet" data-dnt="true" align="center">
-      <a href="${url}"></a></blockquote>`
+        <blockquote class="twitter-tweet" data-dnt="true" align="center">
+        <a href="${url}"></a></blockquote>
+      `
       loadScript("https://platform.twitter.com/widgets.js");
       type = 'twitter';
     }
@@ -708,7 +729,6 @@ function decorateEmbeds() {
       $embed.innerHTML=embedHTML;
       $div.parentElement.replaceChild($embed, $div);
     }
-
   })
 
   document.querySelectorAll('.post-page .post-body .embed').forEach(($e) => {
