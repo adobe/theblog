@@ -85,8 +85,7 @@
 
 .post-page main>div.post-body .images + *,
 .post-page main>div.post-body .images + *,
-.embed + * ,
-.caption + * {
+.embed + * {
   margin-top: 64px;
 }
 
