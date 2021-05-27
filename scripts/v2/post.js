@@ -299,7 +299,7 @@ function decoratePullQuotes() {
  * Adds CSS classes to images appearing within text
  */
 function decorateImages() {
-  document.querySelectorAll('.post-page .post-body img').forEach(($e) => {
+  document.querySelectorAll('.post-page .post-body picture').forEach(($e) => {
     let hasText = false;
     $e.parentNode.childNodes.forEach(($c) => {
       if ($c.nodeName == '#text') hasText=true;

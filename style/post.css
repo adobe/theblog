@@ -103,13 +103,15 @@
 }
 
 .post-page main>div.post-body .images + *,
-.post-page main>div.post-body .images + *,
-.embed + * ,
+.embed + *,
 .caption + * {
   margin-top: 64px;
 }
 
-.post-page main>div.post-body .images + p.legend,
+.post-page main>div.post-body .caption {
+  margin-top: 0;
+}
+
 .post-page main>div.post-body .images + p.legend,
 .embed + p.legend {
   margin-top: 16px;
