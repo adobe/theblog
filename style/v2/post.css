@@ -35,18 +35,6 @@
     display: none;
 }
 
-.post-page .hero-image {
-  width: 100%;
-  padding: 0;
-  margin: 0;
-}
-
-.post-page main .hero-image img, .post-page main .hero-image video {
-  width: 100%;
-  object-fit: cover;
-}
-
-
 /* hero caption */
 .post-page main div.hero-image p {
   margin: 0;
@@ -75,13 +63,6 @@
 .post-page main div.post-header {
   align-self: center;
   margin-top: 49px;
-}
-
-.post-page main div.post-author {
-  margin-top: 20px;
-  height: 96px;
-  padding-top: 0;
-  padding-bottom: 0;
 }
 
 .post-page main div.post-author .author {
@@ -164,6 +145,7 @@
 .post-page div.category {
   margin: 0 32px;
   padding: 0;
+  height: 28px;
 }
 
 .post-page div.category a {
@@ -538,16 +520,6 @@
     padding-left: 0;
     padding-right: 0;
     max-width: 600px
-  }
-
-
-  .post-page .hero-image {
-    max-width: 1000px;
-    margin: auto;
-  }
-  .post-page .hero-image img {
-    max-height: 438px;
-    object-fit: cover;
   }
 
   .post-page main>div.post-body {

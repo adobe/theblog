@@ -28,9 +28,9 @@
   sk.add({
     id: 'preview',
     override: true,
-    condition: (s) => s.isEditor() || s.location.host === s.config.host,
+    condition: (s) => s.isEditor() || s.isHelix(),
     button: {
-      action: () => {
+      action: (evt) => {
         const { config, location } = sk;
         let url;
         if (sk.isEditor()) {
@@ -46,8 +46,13 @@
           const host = location.host === config.innerHost ? config.host : config.innerHost;
           url = new URL(`https://${host}${location.pathname}`);
         }
-        window.open(url.toString(), `hlx-sk-preview-${btoa(location.href)}`);
+        if (evt.metaKey || evt.which === 2) {
+          window.open(url.toString());
+        } else {
+          window.location.href = url.toString();
+        }
       },
+      isPressed: () => sk.isInner(),
     },
   });
 
@@ -190,13 +195,18 @@
   function getArticleData() {
     let date = 0;
     if (window.blog.rawDate) {
-      date = new Date(window.blog.rawDate).setHours(12); // pacific time AM
+      const [month, day, year] = window.blog.rawDate.split('-');
+      date = Date.UTC(parseInt(year), parseInt(month) - 1, parseInt(day), 15); // pacific time AM
+    }
+    let hero = '';
+    const metaImg = document.head.querySelector('meta[property="og:image"]');
+    if (metaImg) {
+      hero = new URL(metaImg.getAttribute('content')).pathname;
     }
     return [
       window.blog.author,
       date/1000,
-      `/hlx_${document.head.querySelector('meta[property="og:image"]')
-        .getAttribute('content').split('/hlx_')[1].split('?')[0]}`,
+      hero,
       predictUrl(null, sk.location.pathname),
       `["${window.blog.products.join('\", \"')}"]`,
       '0',
@@ -234,51 +244,6 @@
     condition: (sidekick) => {
       // do not show publish button for drafts
       return sidekick.isHelix() && !sidekick.location.pathname.includes('/drafts/');
-    },
-  });
-
-  // PUBLISH TAXONOMY & REDIRECTS--------------------------------------------------
-
-  sk.add({
-    id: 'publish-data',
-    condition: (sk) => {
-      const { config, location } = sk;
-      return config.innerHost
-        && config.host
-        && sk.isEditor()
-        && (location.search.includes('file=_taxonomy.xlsx') || location.search.includes('file=redirects.xlsx'));
-    },
-    override: true,
-    button: {
-      text: 'Publish',
-      action: async () => {
-        const { config } = sk;
-        sk.showModal('Publishing data...', true);
-        const url = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@v2');
-        url.search = new URLSearchParams([
-          ['report', 'true'],
-          ['owner', config.owner],
-          ['repo', config.repo],
-          ['ref', config.ref || 'main'],
-          ['path', '/'],
-          ['lookup', location.href],
-        ]).toString();
-        const resp = await fetch(url.toString());
-        const json = await resp.json();
-        if (!resp.ok || !json.unfriendlyWebUrl) {
-          sk.notify('Failed to publish taxonomy. Please try again later.', 0);
-          console.log('error', JSON.stringify(await resp.json()));
-        }
-        const path = new URL(json.unfriendlyWebUrl).pathname;
-        const purge = await sk.publish(path);
-        if (purge.ok) {
-          await fetch(json.unfriendlyWebUrl, {cache: 'reload', mode: 'no-cors'});
-          sk.notify('Data published');
-        } else {
-          sk.notify('Failed to publish data. Please try again later.', 0);
-          console.log('error', JSON.stringify(purge));
-        }
-      },
     },
   });
 })();

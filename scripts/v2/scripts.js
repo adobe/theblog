@@ -32,94 +32,60 @@ function loadCSS(href) {
   document.head.appendChild(link);
 };
 
-
-function checkDX(tags) {
-  const dxtags=`Experience Cloud, Experience Manager, Magento Commerce, Marketo Engage, Target, Commerce Cloud, Campaign, Audience Manager, Analytics, Advertising Cloud,
-      Travel & Hospitality, Media & Entertainment, Financial Services, Government, Non-profits, Other, Healthcare, High Tech, Retail, Telecom, Manufacturing, Education,
-      B2B, Social, Personalization, Campaign Management, Content Management, Email Marketing, Commerce, Analytics, Advertising, Digital Transformation`;
-  const dx=dxtags.split(',').map(e => e.trim());
-  let found=false;
-  tags.split(',').forEach((p) => {
-    p=p.trim();
-    if (dx.includes(p)) found=true;
-  });
-  return found;
+/**
+ * Wraps nodes with a new parent node.
+ * @param {node} newparent The new parent node
+ * @param {array} nodes The nodes to wrap
+ */
+ function wrapNodes(newparent, nodes) {	
+  nodes.forEach((el, index) => {	
+    newparent.appendChild(el.cloneNode(true));	
+    if (newparent.children.length !== 1) {	
+      el.parentNode.removeChild(el);	
+    } else {	
+      el.parentNode.replaceChild(newparent, el);	
+    }	
+  });	
 }
 
 /**
- * sets marketing tech context
+ * Uses a selector to find and wrap nodes with a new parent element,
+ * which will get the specified CSS class.
+ * @param {string} classname The CSS class for the wrapping node
+ * @param {array|string} selectors The selectors for the affected nodes
  */
-
-function setMarTechContext() {
-  var env='dev';
-  var hostname=window.location.hostname;
-  if (hostname.includes('staging')) env='stage';
-  if (hostname == 'blog.adobe.com') env='production';
-
-  var isDX=false;
-  document.querySelectorAll('main>div:last-of-type>p').forEach(($p) => {
-    if ($p.innerHTML.includes('Products:') || $p.innerHTML.includes('Topics:')) {
-      if (checkDX($p.innerHTML.split(':')[1])) {
-        isDX=true;
-      }
-    }
-  });
-
-  var accounts='';
-  if (isDX) {
-    if (env == 'production') {
-      accounts='adbadobedxprod';
-    }
-    if (env == 'stage') {
-      accounts='adbadobedxqa';
-    }
+ function wrap(classname, selectors) {	
+  if (!Array.isArray(selectors)) {
+    selectors=[selectors];
   }
+  const div = document.createElement('div');	
+  div.className = classname;
 
-  window.marketingtech = {
-    adobe: {
-      launch: {
-        property: 'global',
-        environment: env  // “production” for prod/live site or “stage” for qa/staging site
-      },
-      analytics: {
-        additionalAccounts: accounts // additional report suites to send data to “,” separated  Ex: 'RS1,RS2'
-      },
-      target: true,    // if target needs to be enabled else false
-      audienceManager: true    // if audience manager needs to be enabled else false
-    }
-  };
-  // console.log(window.marketingtech)
+  selectors.forEach((selector) => {
+    const elems = document.querySelectorAll(selector);
+    wrapNodes(div, elems);	
+  });
 }
 
 /**
- * sets digital data
+ * Adds a CSS class to either the nodes found using the selector,
+ * or one of their parent nodes.
+ * @param {string} selector The selector for the affected nodes
+ * @param {string} cssClass The CSS class to add
+ * @param {number} parent The number of parent nodes to climb
  */
-
-function setDigitalData() {
-  var langMap={'en': 'en-US'};
-  var lang=window.blog.language;
-  if (langMap[lang]) lang=langMap[lang];
-  digitalData._set('page.pageInfo.language', lang);
-  // console.log(lang);
+function addClass(selector, cssClass, parent) {
+  document.querySelectorAll(selector).forEach((el) => {
+    if (el) {
+      var up=parent;
+      while (up) {
+        el = el.parentNode;
+        up--;
+      }
+      el.classList.add(cssClass);
+    }  
+  });
 }
-
-
-
-/**
- * Return the correct CMP integration ID based on the domain name
- */
-function getOtDomainId() {
-  const domains = {
-    'adobe.com': '7a5eb705-95ed-4cc4-a11d-0cc5760e93db',
-    'hlx.page': '3a6a37fe-9e07-4aa9-8640-8f358a623271',
-    'project-helix.page': '45a95a10-dff7-4048-a2f3-a235b5ec0492',
-    'helix-demo.xyz': 'ff276bfd-1218-4a19-88d4-392a537b6ce3',
-    'adobeaemcloud.com': '70cd62b6-0fe3-4e20-8788-ef0435b8cdb1',
-  };
-  const currentDomain = Object.keys(domains).find(domain => window.location.host.indexOf(domain) > -1);
-
-  return `${domains[currentDomain] || domains[Object.keys(domains)[0]]}`;
-};
 
 /**
  * Returns an image URL with optimization parameters
@@ -225,33 +191,6 @@ window.blog = function() {
   return { context, language, dateLocale, pageType, TYPE, LANG };
 }();
 
-// Adobe config
-window.fedsMapping = {
-  ko: 'kr'
-};
-
-window.fedsConfig = {
-  locale: window.fedsMapping[window.blog.language] || window.blog.language,
-  content: {
-    experience: 'blogs/blog-gnav',
-  },
-  search: {
-    context: 'blogs',
-    passExperienceName: true,
-  },
-  disableSticky: false,
-  privacy: {
-    otDomainId: getOtDomainId(),
-    footerLinkSelector: '[data-feds-action="open-adchoices-modal"]',
-  },
-};
-
-window.adobeid = {
-  client_id: 'theblog-helix',
-  scope: 'AdobeID,openid',
-  locale: window.blog.language,
-};
-
 // Prep images for lazy loading and use adequate sizes
 let imgCount = 0;
 const observer = new MutationObserver(mutations => {
@@ -297,10 +236,82 @@ function checkRedirect() {
 
 checkRedirect();
 
-// Load page specific code
-loadCSS(`/style/${window.blog.pageType}.css`);
-loadJSModule(`/scripts/${window.blog.pageType}.js`);
+function postLCP() {
+  document.body.classList.add('appear');
 
-// Load language specific CSS overlays
-loadCSS(`/i18n/dict.${window.blog.language}.css`);
+  // Load page specific code
+  loadCSS(`/style/v2/${window.blog.pageType}.css`);
+  loadJSModule(`/scripts/v2/${window.blog.pageType}.js`);
 
+  // Load language specific CSS overlays
+  loadCSS(`/i18n/dict.${window.blog.language}.css`);
+}
+
+const handleLCPPerType = {};
+
+/* post-page pre lcp handlers*/
+handleLCPPerType[window.blog.TYPE.POST] = {};
+
+handleLCPPerType[window.blog.TYPE.POST].decoratePage = () => {
+  const prepareCategory = () => {
+    const categoryWrap = document.createElement('div');
+    categoryWrap.className = 'category';
+    document.querySelector('main .post-header').prepend(categoryWrap);
+  }
+
+  addClass('.post-page main>div:first-of-type', 'post-title');
+  addClass('.post-page main>div:nth-of-type(2)', 'hero-image');
+  addClass('.post-page main>div:nth-of-type(3)', 'post-author');
+   // hide author name
+  addClass('.post-author', 'invisible');
+  addClass('.post-page main>div:nth-of-type(4)', 'post-body');
+  addClass('.post-page main>div.post-body>p>picture', 'images', 1);
+
+  wrap('post-header',['main>div.category','main>div.post-title']);
+
+  prepareCategory();
+
+  const $main=document.querySelector('main');
+  const $postAuthor=document.querySelector('.post-author');
+  const $heroImage=document.querySelector('.hero-image');
+
+  if ($postAuthor && $heroImage) $main.insertBefore($postAuthor,$heroImage);
+};
+
+handleLCPPerType[window.blog.TYPE.POST].computeLCPCandidate = () => {
+  const $lcpCandidate = document.querySelector('main .hero-image img');
+  if ($lcpCandidate) {
+    if ($lcpCandidate.complete) {
+      postLCP();
+    } else {
+      $lcpCandidate.addEventListener('load', () => {
+        postLCP();
+      });
+      $lcpCandidate.addEventListener('error', () => {
+        postLCP();
+      });
+    }
+  } else {
+    postLCP();
+  }
+};
+
+/**
+ * Adds page type as body class.
+ */
+ function addPageTypeAsBodyClass() {
+  document.body.classList.add(`${window.blog.pageType}-page`);
+}
+
+function decoratePage() {
+  addPageTypeAsBodyClass();
+  const handler = handleLCPPerType[window.blog.pageType];
+  if (handler) {
+    handler.decoratePage();
+    handler.computeLCPCandidate();
+  } else {
+    postLCP();
+  }
+}
+
+decoratePage();

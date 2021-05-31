@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Adobe Blog: UI UX</title>
-  <link href="https://blog.adobe.com/jp/topics/ui-ux.html"/>
-  <id>https://blog.adobe.com/jp/topics/ui-ux.html</id>
-  <esi:include src="/cgi-bin/feed.xml?src=/jp/query-index.json%3Flimit%3D10%26hlx_property.property%3Dtopics%26hlx_property.value%3D%2522UX%2522%26hlx_property.operation%3Dlike&amp;id=path&amp;title=title&amp;updated=date">
+  <title>Adobe Blog: UI/UX &amp; Web</title>
+  <link href="https://blog.adobe.com/jp/topics/ui-ux-web.html"/>
+  <id>https://blog.adobe.com/jp/topics/ui-ux-web.html</id>
+  <esi:include src="/cgi-bin/feed.xml?id=path&amp;title=title&amp;updated=date&amp;src=/jp/query-index.json%3Flimit%3D10%26hlx_property.property%3Dtopics%26hlx_property.operation%3Dlike%26hlx_property.value%3DUI%2FUX%20%26%20Web">
 </feed>
