@@ -142,10 +142,20 @@ loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
 /* Core Web Vitals */
 const weight = 100;
 window.hlx = window.hlx || {};
-window.hlx.rum = { cwv:{}, weight};
+
+const hashCode = (s) => s.split('').reduce((a,b) => (((a << 5) - a) + b.charCodeAt(0))|0, 0);
+const id = `${hashCode(window.location.href)}-${new Date().getTime()}-${Math.random().toString(16).substr(2, 14)}`;
 
 function storeCWV(measurement) {
-  window.hlx.rum.cwv[measurement.name] = measurement.value; 
+  const rum = { cwv:{}, weight, id};
+  rum.cwv[measurement.name] = measurement.value;
+
+  const body = JSON.stringify(rum);
+  const url = `/.rum/${weight}`;
+  
+  // Use `navigator.sendBeacon()` if available, falling back to `fetch()`.
+  (navigator.sendBeacon && navigator.sendBeacon(url, body)) ||
+      fetch(url, {body, method: 'POST', keepalive: true});
 }
 
 if (Math.random() * weight < 1) {
@@ -159,15 +169,4 @@ if (Math.random() * weight < 1) {
     webVitals.getLCP(storeCWV);
   }
   document.head.appendChild(script);
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') {
-      const body = JSON.stringify(window.hlx.rum);
-      const url = `/.rum/${weight}`;
-      console.log (url, body);
-
-      // Use `navigator.sendBeacon()` if available, falling back to `fetch()`.
-      (navigator.sendBeacon && navigator.sendBeacon(url, body)) ||
-          fetch(url, {body, method: 'POST', keepalive: true});
-      }
-  });
 }
