@@ -164,7 +164,10 @@ function storeCWV(measurement) {
   store(rum);
 }
 
-if (Math.random() * weight < 1) {
+const usp = new URLSearchParams(window.location.search);
+const cwv = usp.get('cwv');
+
+if (cwv === 'on' || Math.random() * weight < 1) {
   // store a page view
   store({ weight, id });
 
