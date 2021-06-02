@@ -146,19 +146,28 @@ window.hlx = window.hlx || {};
 const hashCode = (s) => s.split('').reduce((a,b) => (((a << 5) - a) + b.charCodeAt(0))|0, 0);
 const id = `${hashCode(window.location.href)}-${new Date().getTime()}-${Math.random().toString(16).substr(2, 14)}`;
 
-function storeCWV(measurement) {
-  const rum = { cwv:{}, weight, id};
-  rum.cwv[measurement.name] = measurement.value;
-
-  const body = JSON.stringify(rum);
+function store(data) {
+  const body = JSON.stringify(data);
   const url = `/.rum/${weight}`;
-  
+
+  // console.log('storing', body);
+
   // Use `navigator.sendBeacon()` if available, falling back to `fetch()`.
   (navigator.sendBeacon && navigator.sendBeacon(url, body)) ||
       fetch(url, {body, method: 'POST', keepalive: true});
 }
 
+function storeCWV(measurement) {
+  const rum = { cwv:{}, weight, id };
+  rum.cwv[measurement.name] = measurement.value;
+
+  store(rum);
+}
+
 if (Math.random() * weight < 1) {
+  // store a page view
+  store({ weight, id });
+
   var script = document.createElement('script');
   script.src = 'https://unpkg.com/web-vitals';
   script.onload = function() {
