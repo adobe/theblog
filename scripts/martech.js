@@ -140,7 +140,12 @@ loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.
 loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
 
 /* Core Web Vitals */
-const weight = 100;
+const usp = new URLSearchParams(window.location.search);
+const cwv = usp.get('cwv');
+
+// with parameter, weight is 1. Defaults to 100.
+const weight = (cwv === 'on') ? 1 : 100;
+
 window.hlx = window.hlx || {};
 
 const hashCode = (s) => s.split('').reduce((a,b) => (((a << 5) - a) + b.charCodeAt(0))|0, 0);
@@ -164,10 +169,7 @@ function storeCWV(measurement) {
   store(rum);
 }
 
-const usp = new URLSearchParams(window.location.search);
-const cwv = usp.get('cwv');
-
-if (cwv === 'on' || Math.random() * weight < 1) {
+if (Math.random() * weight < 1) {
   // store a page view
   store({ weight, id });
 
