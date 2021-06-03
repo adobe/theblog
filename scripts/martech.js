@@ -142,13 +142,35 @@ loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
 /* Core Web Vitals */
 const weight = 100;
 window.hlx = window.hlx || {};
-window.hlx.rum = { cwv:{}, weight};
 
-function storeCWV(measurement) {
-  window.hlx.rum.cwv[measurement.name] = measurement.value; 
+const hashCode = (s) => s.split('').reduce((a,b) => (((a << 5) - a) + b.charCodeAt(0))|0, 0);
+const id = `${hashCode(window.location.href)}-${new Date().getTime()}-${Math.random().toString(16).substr(2, 14)}`;
+
+function store(data) {
+  const body = JSON.stringify(data);
+  const url = `/.rum/${weight}`;
+
+  // console.log('storing', body);
+
+  // Use `navigator.sendBeacon()` if available, falling back to `fetch()`.
+  (navigator.sendBeacon && navigator.sendBeacon(url, body)) ||
+      fetch(url, {body, method: 'POST', keepalive: true});
 }
 
-if (Math.random() * weight < 1) {
+function storeCWV(measurement) {
+  const rum = { cwv:{}, weight, id };
+  rum.cwv[measurement.name] = measurement.value;
+
+  store(rum);
+}
+
+const usp = new URLSearchParams(window.location.search);
+const cwv = usp.get('cwv');
+
+if (cwv === 'on' || Math.random() * weight < 1) {
+  // store a page view
+  store({ weight, id });
+
   var script = document.createElement('script');
   script.src = 'https://unpkg.com/web-vitals';
   script.onload = function() {
@@ -159,15 +181,4 @@ if (Math.random() * weight < 1) {
     webVitals.getLCP(storeCWV);
   }
   document.head.appendChild(script);
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'hidden') {
-      const body = JSON.stringify(window.hlx.rum);
-      const url = `/.rum/${weight}`;
-      console.log (url, body);
-
-      // Use `navigator.sendBeacon()` if available, falling back to `fetch()`.
-      (navigator.sendBeacon && navigator.sendBeacon(url, body)) ||
-          fetch(url, {body, method: 'POST', keepalive: true});
-      }
-  });
 }
