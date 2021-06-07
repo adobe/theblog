@@ -1,4 +1,7 @@
 url	Categories	Products	Industries	Internals
+https://blog.adobe.com/fr/publish/2021/05/20/il-est-temps-de-raviver-l-inspiration-et-de-combattre-la-page-blanche-beattheblank.html	"Inspiration créative & tendances, Actualités, Créativité"	"Creative Cloud"	""	"Creative Cloud"
+https://blog.adobe.com/fr/publish/2021/05/12/zoom-sur-les-gagnants-du-challenge-photo-portraits-avec-designers-interactifs.html	"Inspiration créative & tendances, Actualités"	"Creative Cloud, Lightroom, Photoshop"	""	"Creative Cloud"
+https://blog.adobe.com/fr/publish/2021/04/29/creative-cloud-pro-une-nouvelle-offre-adaptee-aux-nouveaux-espaces-de-travail-creatifs.html	"Créativité, Transformation digitale"	"Creative Cloud"	""	"Creative Cloud"
 https://blog.adobe.com/fr/publish/2021/04/27/adobe-summit-coup-d-oeil-sur-nos-sneaks-a-l-ere-de-l-ia-du-machine-learning-et-du-teletravail.html	"Transformation digitale, Adobe Summit, Actualités"	"Experience Cloud"	""	"Experience Cloud"
 https://blog.adobe.com/fr/publish/2021/04/27/de-nouvelles-methodes-collaboratives-avec-adobe-acrobat-et-adobe-sign-dans-microsoft-teams.html	"Transformation digitale, Actualités, Adobe Summit"	"Document Cloud, Acrobat, Sign"	""	"Document Cloud"
 https://blog.adobe.com/fr/publish/2021/04/27/offrir-des-experiences-d-exception-avec-customer-journey-analytics-de-nouvelles-fonctionnalites-d-ia-pour-tirer-parti-de-la-donnee.html	"Transformation digitale, Actualités, Adobe Summit, Analytics"	"Experience Cloud, Analytics"	""	"Experience Cloud"
@@ -766,7 +769,6 @@ https://blog.adobe.com/fr/publish/2016/09/13/le-cross-canal-au-service-dun-parco
 https://blog.adobe.com/fr/publish/2016/09/07/la-creativite-connectee-devoilee-au-salon-ibc-2016.html	"Créativité"	"Audition, Character Animator"	""	""
 https://blog.adobe.com/fr/publish/2016/09/06/pokemon-go-ou-lirruption-de-la-realite-augmentee-dans-nos-quotidiens.html	"Transformation digitale"	""	""	""
 https://blog.adobe.com/fr/publish/2016/09/06/processus-creatif-fin-des-banques-d-images-telles-que-nous-les-connaissons.html	"Créativité"	"Stock"	""	""
-https://blog.adobe.com/fr/publish/2016/09/02/lavenir-du-design.html	"Futur du travail"	"Creative Cloud"	""	"Creative Cloud"
 https://blog.adobe.com/fr/publish/2016/09/02/lavenir-du-design.html	"Futur du travail"	"Creative Cloud"	""	"Creative Cloud"
 https://blog.adobe.com/fr/publish/2016/08/30/4-principes-pour-une-belle-carriere-dans-le-ux-design.html	"Créativité, Design"	""	""	""
 https://blog.adobe.com/fr/publish/2016/08/29/gant-modernise-workflow-creative-cloud-abonnement-entreprise.html	"Créativité, Design"	""	""	""

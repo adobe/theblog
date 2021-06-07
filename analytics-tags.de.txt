@@ -1,7 +1,7 @@
 url	Categories	Products	Industries	Internals
+https://blog.adobe.com/de/publish/2021/05/28/ssi-schaefer-shop-digitale-datenanalyse.html	""	"Analytics, Experience Cloud"	""	"Experience Cloud"
+https://blog.adobe.com/de/publish/2021/05/20/beat-the-blank-entfacht-eure-inspiration-adobe-generator.html	"Kreativität"	"Creative Cloud, Fresco, Illustrator, Photoshop"	""	"Creative Cloud"
 https://blog.adobe.com/de/publish/2021/05/06/summit-recap-takeaways.html	"Adobe Summit"	"Experience Cloud"	""	"Experience Cloud"
-https://blog.adobe.com/de/publish/2021/05/11/summit-recap-takeaways.html	"Adobe Summit"	"Experience Cloud"	""	"Experience Cloud"
-https://blog.adobe.com/de/publish/2021/05/04/fit-fuers-berufsleben-die-beuth-hochschule-fuer-technik-berlin-setzt-auf-die-student-option-creative-cloud.html	"Aktuelles, Kreativität, Kundenreferenzen, Zukunft der Arbeit"	"Creative Cloud"	"Bildung"	"Creative Cloud"
 https://blog.adobe.com/de/publish/2021/04/29/mit-der-creative-cloud-pro-edition-starten-teams-in-unternehmen-voll-durch.html	"Aktuelles, Kreativität, Management, 3D & AR, Design, Fotografie, Illustration, Inspiration & Trends, Video, Produktivität & Workflows"	"Creative Cloud, Stock"	"B2B, Einzelhandel, Medien & Unterhaltung, Mittelstand, Non-Profit-Organisationen, Touristik & Gastgewerbe"	"Creative Cloud"
 https://blog.adobe.com/de/publish/2021/04/28/adobe-summit-sneaks.html	"Adobe Summit"	""	""	""
 https://blog.adobe.com/de/publish/2021/04/27/modern-work-kollaboratives-arbeiten-acrobat-sign-microsoft-teams.html	"Adobe Summit"	"Document Cloud"	""	"Document Cloud"
@@ -255,6 +255,7 @@ https://blog.adobe.com/de/publish/2019/08/01/15-zahlen-uber-die-generation-z-die
 https://blog.adobe.com/de/publish/2019/07/30/as-2019-07-newface-lilly-friedeberg.html	"Illustration"	"Stock"	""	"Visual Trends"
 https://blog.adobe.com/de/publish/2019/07/29/mit-createfulness-durch-den-sommer.html	"Design"	"Creative Cloud"	""	"Creative Cloud"
 https://blog.adobe.com/de/publish/2019/07/29/gamechanger-ki-fangt-endlich-an-zu-spielen.html	""	""	""	""
+https://blog.adobe.com/de/publish/2019/07/25/2019-07-grenzenlose-freiheit-in-cloud.html	"Kreativität"	"Document Cloud, Sign"	""	"Document Cloud"
 https://blog.adobe.com/de/publish/2019/07/24/2019-07-integration-von-xd-in-amazon-alexa.html	"Kreativität"	"XD"	""	""
 https://blog.adobe.com/de/publish/2019/07/19/2019-07-adobe-feiert-christopher-street-day.html	"Community"	""	""	""
 https://blog.adobe.com/de/publish/2019/07/19/as-2019-07-erfolg-adobe-stock-portfolio-videos.html	"Kreativität, Video"	"Stock"	""	""
