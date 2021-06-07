@@ -155,8 +155,6 @@ function store(data) {
   const body = JSON.stringify(data);
   const url = `/.rum/${weight}`;
 
-  // console.log('storing', body);
-
   // Use `navigator.sendBeacon()` if available, falling back to `fetch()`.
   (navigator.sendBeacon && navigator.sendBeacon(url, body)) ||
       fetch(url, {body, method: 'POST', keepalive: true});
@@ -174,7 +172,7 @@ if (Math.random() * weight < 1) {
   store({ weight, id });
 
   var script = document.createElement('script');
-  script.src = 'https://unpkg.com/web-vitals';
+  script.src = 'https://unpkg.com/web-vitals@2.0.1/dist/web-vitals.base.iife.js';
   script.onload = function() {
     // When loading `web-vitals` using a classic script, all the public
     // methods can be found on the `webVitals` global namespace.
