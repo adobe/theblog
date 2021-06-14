@@ -1002,7 +1002,7 @@ export async function globalPostLCP() {
   const martech = usp.get('martech');
 
   if (!(martech === 'off' || document.querySelector(`head script[src="${martechUrl}"]`))) {
-    let ms = 2000;
+    let ms = 3000;
     const delay = usp.get('delay');
     if (delay) ms = +delay;
     setTimeout(() => {
