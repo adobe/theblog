@@ -12,6 +12,7 @@
 
 import {
   addClass,
+  globalPostLCP,
 } from '/scripts/v2/common.js';
 
 
