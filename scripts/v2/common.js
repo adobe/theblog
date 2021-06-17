@@ -934,7 +934,7 @@ function handleDropdownRegion() {
 }
 
 export async function globalPostLCP() {
-  loadCSS('/style/v2/lazy-styles');
+  loadCSS('/style/v2/lazy-styles.css');
   const martechUrl = '/scripts/martech.js';
   const usp = new URLSearchParams(window.location.search);
   const martech = usp.get('martech');
