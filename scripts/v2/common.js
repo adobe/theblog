@@ -933,70 +933,8 @@ function handleDropdownRegion() {
   }
 }
 
-async function loadFonts() {
-  try {
-    const fonts = [{
-      family: 'adobe-clean',
-      src: 'url("https://use.typekit.net/af/b0c5f5/00000000000000003b9b3f85/27/l?primer=ac8c128253c94f374040a4dde020a0c48540a1a7146e7c4a375a2dd0a9189251&fvd=n4&v=3")',
-      style: 'normal',
-      weight: 400,
-    }, {
-      family: 'adobe-clean',
-      src: 'url("https://use.typekit.net/af/aa41d0/00000000000000003b9b3f86/27/l?primer=ac8c128253c94f374040a4dde020a0c48540a1a7146e7c4a375a2dd0a9189251&fvd=i4&v=3")',
-      style: 'italic',
-      weight: 400,
-    }, {
-      family: 'adobe-clean',
-      src: 'url("https://use.typekit.net/af/97fbd1/00000000000000003b9b3f88/27/l?primer=ac8c128253c94f374040a4dde020a0c48540a1a7146e7c4a375a2dd0a9189251&fvd=n7&v=3")',
-      style: 'normal',
-      weight: 700,
-    }, {
-      family: 'adobe-clean',
-      src: 'url("https://use.typekit.net/af/37eaae/00000000000000003b9b3f83/27/l?primer=ac8c128253c94f374040a4dde020a0c48540a1a7146e7c4a375a2dd0a9189251&fvd=n3&v=3")',
-      style: 'normal',
-      weight: 300,
-    }, {
-      family: 'adobe-clean',
-      src: 'url("https://use.typekit.net/af/ad2a79/00000000000000003b9b3f8c/27/l?primer=ac8c128253c94f374040a4dde020a0c48540a1a7146e7c4a375a2dd0a9189251&fvd=n9&v=3")',
-      style: 'normal',
-      weight: 900,
-    }, {
-      family: 'adobe-clean',
-      src: 'url("https://use.typekit.net/af/a0c22f/00000000000000003b9b3f84/27/l?primer=ac8c128253c94f374040a4dde020a0c48540a1a7146e7c4a375a2dd0a9189251&fvd=i3&v=3")',
-      style: 'italic',
-      weight: 300,
-    }, {
-      family: 'adobe-clean-serif',
-      src: 'url("https://use.typekit.net/af/e09494/00000000000000003b9aee45/27/l?primer=ac8c128253c94f374040a4dde020a0c48540a1a7146e7c4a375a2dd0a9189251&fvd=n4&v=3")',
-      style: 'normal',
-      weight: 400,
-    }, {
-      family: 'adobe-clean-serif',
-      src: 'url("https://use.typekit.net/af/c8f445/00000000000000003b9aee47/27/l?primer=ac8c128253c94f374040a4dde020a0c48540a1a7146e7c4a375a2dd0a9189251&fvd=n5&v=3")',
-      style: 'normal',
-      weight: 500,
-    }];
-
-    await Promise.all(fonts.map(async (fontDef) => {
-      const {
-        family,
-        src,
-        ...descriptors
-      } = fontDef;
-      const font = new FontFace(family, src, descriptors);
-      const fontLoaded = await font.load();
-      document.fonts.add(fontLoaded);
-    }));
-    sessionStorage.setItem('helix-fonts', 'loaded');
-  } catch (err) {
-    /* something went wrong */
-    console.log('problem loading fonts', err);
-  }
-  document.body.classList.add('font-loaded');
-}
-
 export async function globalPostLCP() {
-  loadFonts();
+  loadCSS('/style/v2/lazy-styles');
   const martechUrl = '/scripts/martech.js';
   const usp = new URLSearchParams(window.location.search);
   const martech = usp.get('martech');

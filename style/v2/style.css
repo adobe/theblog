@@ -612,3 +612,77 @@ a.region-dropdown-picker.selected:after {
   padding-top: 0;
   padding-bottom: 0;
 }
+
+.post-page .post-title {
+  text-align: left;
+  color: #363636;
+  margin: 0 32px;
+  padding: 0;
+}
+
+.post-page .post-title h3:empty,
+.post-page .post-title p {
+    display: none;
+}
+
+/* hero caption */
+.post-page main div.hero-image p {
+  margin: 0;
+}
+
+.post-page main p + p {
+  margin-top: 1.5em;
+}
+.post-page .author {
+  text-align: left;
+  color: #363636;
+  font-size: 0.9em;
+  line-height: 1.5em;
+}
+
+.post-page .author .author-summary {
+  display: flex;
+  align-items: center;
+}
+
+.post-page .author img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin-right: 15px;
+  display: block;
+  object-fit: cover;
+}
+
+.post-page .author .post-author {
+  font-weight: 600;
+  display: block;
+}
+
+
+.post-page .author .post-author a {
+  text-decoration: none;
+  color: currentColor;
+}
+
+.post-page main div.hero-image p:nth-of-type(2) {
+  text-align: left;
+  width: 100%;
+  max-width: 600px;
+  margin: auto;
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 0 32px;
+  color: #4b4b4b;
+}
+
+.post-page main div.post-header {
+  align-self: center;
+  margin-top: 49px;
+}
+
+.post-page main div.post-author .author {
+  max-width: 600px; 
+  margin: 20px auto 0 auto;
+}
