@@ -686,3 +686,31 @@ a.region-dropdown-picker.selected:after {
   max-width: 600px; 
   margin: 20px auto 0 auto;
 }
+
+@media (min-width:700px) {
+
+  .post-page main>div.post-header>div {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .post-page main>div.post-header,
+  .post-page main>div.topics {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 0;
+    padding-right: 0;
+    max-width: 600px
+  }
+}
+
+
+@media (min-width:900px) {
+  .post-page main>div.post-header,
+  .post-page main>div.topics {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
