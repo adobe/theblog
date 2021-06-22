@@ -315,3 +315,31 @@ function decoratePage() {
 }
 
 decoratePage();
+
+/* performance instrumentation */
+
+function stamp(message) {
+  console.log(`${new Date() - performance.timing.navigationStart}ms: ${message}`);
+}
+
+function registerPerformanceLogger() {
+  try {
+    const polcp = new PerformanceObserver((entryList) => {
+      const entries = entryList.getEntries();
+      stamp(JSON.stringify(entries));
+    });
+    polcp.observe({ type: 'largest-contentful-paint', buffered: true });
+    const pores = new PerformanceObserver((entryList) => {
+      const entries = entryList.getEntries();
+      entries.forEach((entry) => {
+        stamp(`resource loaded: ${entry.name} - [${Math.round(entry.startTime + entry.duration)}]`);
+      });
+    });
+
+    pores.observe({ type: 'resource', buffered: true });
+  } catch (e) {
+    // no output
+  }
+}
+
+if (window.name.includes('performance')) registerPerformanceLogger();
