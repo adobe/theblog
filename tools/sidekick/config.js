@@ -12,7 +12,7 @@
 
 // This file contains the blog-specific configuration for the sidekick.
 (() => {
-  function getArticleData() {
+  function getArticleData(sk) {
     let date = 0;
     if (window.blog.rawDate) {
       const [month, day, year] = window.blog.rawDate.split('-');
@@ -36,8 +36,8 @@
     ];
   }
 
-  function getCardData() {
-    const d = getArticleData();
+  function getCardData(sk) {
+    const d = getArticleData(sk);
     return {
       author: d[0],
       date: d[1],
@@ -88,7 +88,7 @@
         override: true,
         condition: (s) => s.isEditor() || s.isHelix(),
         button: {
-          action: (evt) => {
+          action: (evt, sk) => {
             const { config, location } = sk;
             let url;
             if (sk.isEditor()) {
@@ -110,7 +110,7 @@
               window.location.href = url.toString();
             }
           },
-          isPressed: () => sk.isInner(),
+          isPressed: (sk) => sk.isInner(),
         },
       },
       // TAGGER -----------------------------------------------------------------------
@@ -119,7 +119,7 @@
         condition: (sk) => sk.isEditor() && (sk.location.search.includes('.docx&') || sk.location.search.includes('.md&')),
         button: {
           text: 'Tagger',
-          action: () => {
+          action: (_, sk) => {
             const { config } = sk;
             window.open(`https://${config.host}/tools/tagger/`, 'hlx-sidekick-tagger');
           },
@@ -135,7 +135,7 @@
         },
         button: {
           text: 'Card Preview',
-          action: async (evt) => {
+          action: async (evt, sk) => {
             const {
               addCard,
               itemTransformer,
@@ -150,7 +150,7 @@
               sk.showModal('', true);
               $modal = document.querySelector('.hlx-sk-overlay > div');
               $modal.classList.remove('wait');
-              $modal.innerHTML = addCard(await itemTransformer(getCardData()),
+              $modal.innerHTML = addCard(await itemTransformer(getCardData(sk)),
                 document.createDocumentFragment()).outerHTML;
               function hideCardPreview() {
                 sk.hideModal();
@@ -216,9 +216,9 @@
         },
         button: {
           text: 'Copy Article Data',
-          action: async () => {
+          action: async (_, sk) => {
             try {
-              navigator.clipboard.writeText(getArticleData().join('\t'));
+              navigator.clipboard.writeText(getArticleData(sk).join('\t'));
               sk.notify('Article data copied to clipboard');
             } catch (e) {
               sk.notify([
