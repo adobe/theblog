@@ -73,15 +73,6 @@
     project: 'Adobe Blog',
     host: 'blog.adobe.com',
     plugins: [
-      {
-        id: 'test',
-        button: {
-          text: 'Test',
-          action: () => {
-            console.log('test');
-          },
-        },
-      },
       // PREVIEW ----------------------------------------------------------------------
       {
         id: 'preview',
