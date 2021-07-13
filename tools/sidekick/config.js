@@ -209,10 +209,16 @@
   }
 
   sk.addEventListener('statusfetched', () => {
-    // add .html extension back
     const webPath = sk.status.webPath;
-    if (webPath && !webPath.split('/').pop().includes('.')) {
+    if (!webPath) {
+      return;
+    }
+    if (!webPath.split('/').pop().includes('.')) {
+      // add .html extension back
       sk.status.webPath = `${webPath}.html`;
+    } else if (webPath.endsWith('taxonomy.json')) {
+      // add leading underscore back
+      sk.status.webPath = webPath.replace('taxonomy.json', '_taxonomy.json');
     }
   });
 })();
