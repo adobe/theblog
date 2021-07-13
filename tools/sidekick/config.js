@@ -121,7 +121,7 @@
         id: 'card-preview',
         condition: (sidekick) => {
           return sidekick.isHelix()
-            && window.blog.pageType === window.blog.TYPE.POST
+            && window.blog && window.blog.pageType === window.blog.TYPE.POST
             && allowedPostPath(sidekick.location.pathname);
         },
         button: {
@@ -180,7 +180,7 @@
         condition: (sidekick) => {
           const { config, location } = sidekick;
           return sidekick.isHelix()
-            && window.blog.pageType === window.blog.TYPE.POST
+            && window.blog && window.blog.pageType === window.blog.TYPE.POST
             && config.host
             && location.host != config.host
             && allowedPostPath(location.pathname);
@@ -202,7 +202,8 @@
       {
         id: 'article-data',
         condition: (sidekick) => {
-          return sidekick.isHelix() && window.blog.pageType === window.blog.TYPE.POST;
+          return sidekick.isHelix()
+            && window.blog && window.blog.pageType === window.blog.TYPE.POST;
         },
         button: {
           text: 'Copy Article Data',
