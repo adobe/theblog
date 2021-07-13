@@ -73,37 +73,6 @@
     project: 'Adobe Blog',
     host: 'blog.adobe.com',
     plugins: [
-      // PREVIEW ----------------------------------------------------------------------
-      {
-        id: 'preview',
-        override: true,
-        condition: (s) => s.isEditor() || s.isHelix(),
-        button: {
-          action: (evt, sk) => {
-            const { config, location } = sk;
-            let url;
-            if (sk.isEditor()) {
-              url = new URL('https://adobeioruntime.net/api/v1/web/helix/helix-services/content-proxy@2.7.0');
-              url.search = new URLSearchParams([
-                ['owner', config.owner],
-                ['repo', config.repo],
-                ['ref', config.ref || 'main'],
-                ['path', '/'],
-                ['lookup', location.href],
-              ]).toString();
-            } else {
-              const host = location.host === config.innerHost ? config.host : config.innerHost;
-              url = new URL(`https://${host}${location.pathname}`);
-            }
-            if (evt.metaKey || evt.which === 2) {
-              window.open(url.toString());
-            } else {
-              window.location.href = url.toString();
-            }
-          },
-          isPressed: (sk) => sk.isInner(),
-        },
-      },
       // TAGGER -----------------------------------------------------------------------
       {
         id: 'tagger',
@@ -238,4 +207,18 @@
     segs.splice(2, 0, 'publish')
     sk.location = new URL(segs.join('/'), sk.location.origin);
   }
+
+  sk.addEventListener('statusfetched', () => {
+    const webPath = sk.status.webPath;
+    if (!webPath) {
+      return;
+    }
+    if (!webPath.split('/').pop().includes('.')) {
+      // add .html extension back
+      sk.status.webPath = `${webPath}.html`;
+    } else if (webPath.endsWith('taxonomy.json')) {
+      // add leading underscore back
+      sk.status.webPath = webPath.replace('taxonomy.json', '_taxonomy.json');
+    }
+  });
 })();
