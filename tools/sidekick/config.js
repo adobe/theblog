@@ -213,7 +213,8 @@
     if (!webPath) {
       return;
     }
-    if (!webPath.split('/').pop().includes('.')) {
+    const file = webPath.split('/').pop();
+    if (file && !file.includes('.')) {
       // add .html extension back
       sk.status.webPath = `${webPath}.html`;
     } else if (webPath.endsWith('taxonomy.json')) {
