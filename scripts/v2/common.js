@@ -935,6 +935,12 @@ function handleDropdownRegion() {
 
 export async function globalPostLCP() {
   loadCSS('/style/v2/lazy-styles.css');
+  
+  const $header = document.querySelector('header');
+  $header.setAttribute('data-block-name', 'gnav');
+  $header.setAttribute('data-gnav-source', '/en/drafts/uncleds/gnav');
+  loadBlock($header);
+
   const martechUrl = '/scripts/martech.js';
   const usp = new URLSearchParams(window.location.search);
   const martech = usp.get('martech');
@@ -967,3 +973,23 @@ function decoratePage() {
 };
 
 decoratePage();
+
+
+/**
+ * Loads JS and CSS for a block.
+ * @param {Element} $block The block element
+ */
+ export async function loadBlock($block) {
+  const blockName = $block.getAttribute('data-block-name');
+  try {
+    const mod = await import(`/blocks/${blockName}/${blockName}.js`);
+    if (mod.default) {
+      await mod.default($block, blockName, document);
+    }
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.log(`failed to load module for ${blockName}`, err);
+  }
+
+  loadCSS(`/blocks/${blockName}/${blockName}.css`);
+}

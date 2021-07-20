@@ -136,7 +136,7 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   setDigitalData();
 });
 
-loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js').id = 'feds-script';
+//loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js').id = 'feds-script';
 loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
 
 /* Core Web Vitals */
