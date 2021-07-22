@@ -164,6 +164,10 @@ header .gnav .gnav-section .gnav-selected {
   box-sizing: border-box;
 }
 
+header .gnav .gnav-section .gnav-selected > div {
+  font-weight: 400;
+}
+
 header .gnav .gnav-button {
 font-size: 14px;
 margin-left: 0px;
