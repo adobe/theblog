@@ -13,9 +13,28 @@
 
 import { createTag } from '../../scripts/v2/common.js';
 
+function getRelativeURL(href) {
+  const url = new URL(href, window.location);
+  if (url.hostname.includes('blog.adobe.com')
+  || url.hostname.includes('.page')
+  || url.hostname.includes('.live')
+  || url.hostname.includes('localhost')) {
+    return (url.pathname);
+  } else {
+    return (href);
+  }
+}
+
 function isSelected(navItem) {
+  if (navItem.submenu) {
+    const matches = navItem.submenu.filter((e) => {
+      const navpath = new URL(e.href, window.location).pathname;
+      return (navpath === window.location.pathname);
+    });
+    if (matches.length) return (true);
+  }
   if (navItem.href) {
-    const navpath = new URL(navItem.href).pathname;
+    const navpath = new URL(navItem.href, window.location).pathname;
     return (navpath === window.location.pathname);
   } else {
     return false;
@@ -96,7 +115,7 @@ async function markupToNav(url) {
     navItem.text = h2.textContent;
     const h2a = h2.closest('a') || h2.querySelector('a');
     if (h2a) {
-      navItem.href = new URL(h2a.href);
+      navItem.href = getRelativeURL(h2a.href);
     }
     if (div.querySelector('li')) {
       navItem.submenu = [...div.querySelectorAll('li')].map((li) => {
@@ -104,7 +123,7 @@ async function markupToNav(url) {
         const ni = {
           text: li.textContent,
         };
-        if (a) ni.href = a.href;
+        if (a) ni.href = getRelativeURL(a.href);
         return (ni);
       });
     }

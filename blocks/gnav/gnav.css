@@ -156,17 +156,12 @@ header .gnav .gnav-section > span {
 
 header .gnav .gnav-section span:hover,
 header .gnav .gnav-section span a:hover {
-color: #1473e6;  
+  color: #1473e6;  
 }
 
 header .gnav .gnav-section .gnav-selected {
-border-bottom: 2px solid #2c2c2c;
-padding-top: 2px;
-font-weight: 700;
-display: inline-flex;
-height: 100%;
-box-sizing: border-box;
-align-items: center;
+  font-weight: 700;
+  box-sizing: border-box;
 }
 
 header .gnav .gnav-button {
@@ -193,7 +188,6 @@ font-weight: 700;
   }
   
 
-  header .gnav .gnav-search,
   header .gnav .gnav-logo,
   header .gnav .gnav-section {
     display: block;
@@ -217,21 +211,27 @@ font-weight: 700;
   }
 
   header .gnav .gnav-section > span {
-    display: flex;
-  }  
+    display: inline-flex;
+    height: 64px;
+    align-items: center;
+  }
+
+  header .gnav .gnav-section > span.gnav-selected {
+    padding-top: 2px;
+    border-bottom: 2px solid #2c2c2c;
+  }
 
   header .gnav .gnav-right > div {
     padding: 0px 6px 1px 6px;
   }
 
-  header .gnav .gnav-right > div.gnav-search {
-    padding: 6px 10px 2px 12px;
+  header .gnav .gnav-search {
+    display: flex;
     fill: currentColor;
   }
 
   header .gnav .gnav-drop {
     display: flex;
-    align-items: center;
   }
 
   header .gnav .gnav-selected.drop::after {
@@ -258,10 +258,6 @@ font-weight: 700;
   header .gnav .gnav-drop[aria-expanded=true]::after {
     transform: rotate( 225deg );
   }
-  header .gnav .gnav-right {
-    display: flex;
-    align-items: center;
-  }
 
   header .gnav .gnav-section {
     display: flex;
@@ -270,7 +266,7 @@ font-weight: 700;
 
   header .gnav .gnav-submenu {
     position: absolute;
-    top: 47px;
+    top: 64px;
     background-color: #fbfbfb;
     box-shadow: 0px 3px 3px 0px rgb(0 0 0 / 20%);
     margin-left: -20px;
