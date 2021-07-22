@@ -9,49 +9,55 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global fetch document */
+/* global fetch window */
 
 import { createTag } from '../../scripts/v2/common.js';
 
-function isSelected(navItem, nav) {
-  return (false);
+function isSelected(navItem) {
+  if (navItem.href) {
+    const navpath = new URL(navItem.href).pathname;
+    return (navpath === window.location.pathname);
+  } else {
+    return false;
+  }
 }
+
 function getSubmenu(submenu) {
-  const submenuEl = createTag('div', { class: 'submenu' });
+  const submenuEl = createTag('div', { class: 'gnav-submenu' });
   submenu.forEach((e) => {
-    const navItemEl = createTag('span');
+    const navItemEl = createTag('div');
     navItemEl.innerHTML = `<a href="${e.href}">${e.text}</a>`;
     submenuEl.appendChild(navItemEl);
   });
+  return submenuEl;
 }
 
 function getGnav(nav) {
   const gnav = createTag('div', { class: 'gnav' });
   const html = `
-    <div class="gnav-top">
-      <div class="gnav-left">
         <div class="gnav-hamburger" tabindex="0"></div>
         <div class="gnav-logo"><a href="${nav.logo.href}"><img loading="lazy" src="/blocks/gnav/adobe-logo.svg"></a><span class="gnav-adobe">${nav.logo.text}</span></a></div>
         <div class="gnav-section"></div>
-          </div>
-      <div class="gnav-center">
-        <div class="gnav-logo"><a href="${nav.logo.href}"><img loading="lazy" src="/blocks/gnav/adobe-logo.svg"></a></div>
-      </div>
-      <div class="gnav-right">
-          <div class="gnav-search" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" focusable="false">
-          <path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path>
-      </svg></div>
-          <div class="gnav-signin"><a href="${nav.signIn.href}">${nav.signIn.text}</a></div>
         </div>
-      </div>`;
+        <div class="gnav-search" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" id="gnav-search-icon" width="20" height="20" viewBox="0 0 24 24" focusable="false">
+            <path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path>
+          </svg><div class="gnav-search-box"></div>
+        </div>
+        <div class="gnav-signin"><a href="${nav.signIn.href}">${nav.signIn.text}</a></div>`;
 
   gnav.innerHTML = html;
-  const sectionEl = gnav.querySelector('.gnav-top .gnav-section');
+  const hamburger = gnav.querySelector('.gnav-hamburger');
+  hamburger.addEventListener('click', () => {
+    const expanded = gnav.getAttribute('aria-expanded') === 'true';
+    gnav.setAttribute('aria-expanded', !expanded);
+  });
+
+  const sectionEl = gnav.querySelector('.gnav-section');
 
   nav.top.forEach((e) => {
-    const selected = isSelected(e, nav);
-    const navItemEl = createTag('span'); 
-    if (selected) navItemEl.classList.add('selected');
+    const selected = isSelected(e);
+    const navItemEl = createTag('span');
+    if (selected) navItemEl.classList.add('gnav-selected');
     if (e.href) {
       navItemEl.innerHTML = `<a href="${e.href}">${e.text}</a>`;
     } else if (e.type === 'button') {
@@ -61,10 +67,16 @@ function getGnav(nav) {
       navItemEl.setAttribute('tabindex', '0');
       navItemEl.innerHTML = `${e.text}`;
       if (e.submenu) {
-        // getSubmenu(e.submenu);
+        const submenuEl = getSubmenu(e.submenu);
+        navItemEl.appendChild(submenuEl);
+        navItemEl.addEventListener('click', () => {
+          const expanded = navItemEl.getAttribute('aria-expanded') === 'true';
+          [...sectionEl.children].forEach((ni) => {
+            ni.setAttribute('aria-expanded', 'false');
+          });
+          navItemEl.setAttribute('aria-expanded', !expanded);
+        });
       }
-      navItemEl.addEventListener('click', () => {
-      });
     }
     sectionEl.appendChild(navItemEl);
   });
@@ -77,17 +89,40 @@ async function markupToNav(url) {
   const html = await resp.text();
   const $header = createTag('header');
   $header.innerHTML = html;
-  const nav = {
-    top: [],
-  };
-  $header.querySelectorAll('h2').forEach((h2) => {
-    
+  const nav = {};
+  nav.top = [...$header.querySelectorAll(':scope > div h2')].map((h2) => {
+    const navItem = {};
+    const div = h2.closest('div');
+    navItem.text = h2.textContent;
+    const h2a = h2.closest('a') || h2.querySelector('a');
+    if (h2a) {
+      navItem.href = new URL(h2a.href);
+    }
+    if (div.querySelector('li')) {
+      navItem.submenu = [...div.querySelectorAll('li')].map((li) => {
+        const a = li.querySelector('a');
+        const ni = {
+          text: li.textContent,
+        };
+        if (a) ni.href = a.href;
+        return (ni);
+      });
+    }
+    return (navItem);
   });
+  const logo = nav.top.shift();
+  nav.logo = logo;
   return nav;
 }
 
 export async function decorateGNav(blockEl, url) {
-  let nav = await markupToNav(url);
+  const nav = await markupToNav(url);
+
+  nav.signIn = {
+    text: 'Sign In',
+    href: 'https://www.adobe.com/',
+  };
+  /*
 
   nav = {
     signIn: {
@@ -144,6 +179,7 @@ export async function decorateGNav(blockEl, url) {
       },
     ],
   };
+  */
 
   blockEl.appendChild(getGnav(nav));
 }
