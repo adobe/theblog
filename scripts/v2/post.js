@@ -736,7 +736,7 @@ function decorateEmbeds() {
 
     if (firstLvl === 'slideshare' && isEmbedUrl($a.href, urlList[firstLvl])) {
       embedHTML=`<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 61%;">
-      <iframe src="${url.href}" style="border: 0; top: 0; left: 0; position: absolute; width: 100%; height: 100%;" allowfullscreen="" scrolling="no" allow="encrypted-media; accelerometer; gyroscope; picture-in-picture" title="content from youtube" loading="lazy"></iframe>
+      <iframe src="${url.href}" style="border: 0; top: 0; left: 0; position: absolute; width: 100%; height: 100%;" allowfullscreen="" scrolling="no" allow="encrypted-media; accelerometer; gyroscope; picture-in-picture" title="content from slideshare" loading="lazy"></iframe>
       </div>
     `
       type = 'slideshare';
