@@ -663,7 +663,8 @@ function decorateEmbeds() {
     'vimeo': ['https://www.vimeo.com', 'https://player.vimeo.com/video/', 'https://vimeo.com'],
     'instagram': ['https://www.instagram.com/'],
     'adobe': ['https://video.tv.adobe.com/v/'],
-    'twitter': ['https://twitter.com', 'https://www.twitter.com']
+    'twitter': ['https://twitter.com', 'https://www.twitter.com'],
+    'slideshare': ['https://www.slideshare.net/']
   }
 
   document.querySelectorAll('.block-embed a[href]').forEach(($a) => {
@@ -732,6 +733,15 @@ function decorateEmbeds() {
       loadScript("https://platform.twitter.com/widgets.js");
       type = 'twitter';
     }
+
+    if (firstLvl === 'slideshare' && isEmbedUrl($a.href, urlList[firstLvl])) {
+      embedHTML=`<div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 61%;">
+      <iframe src="${url.href}" style="border: 0; top: 0; left: 0; position: absolute; width: 100%; height: 100%;" allowfullscreen="" scrolling="no" allow="encrypted-media; accelerometer; gyroscope; picture-in-picture" title="content from youtube" loading="lazy"></iframe>
+      </div>
+    `
+      type = 'slideshare';
+    }
+
 
     if (type) {
       const $embed=createTag('div', {class: `embed embed-oembed embed-${type}`});
