@@ -11,7 +11,61 @@
  */
 /* global fetch window */
 
-import { createTag } from '../../scripts/v2/common.js';
+import { createTag, fetchArticleIndex, formatLocalCardDate } from '../../scripts/v2/common.js';
+
+async function populateSearchResults(searchTerms, searchResultsEl) {
+  const limit = 12;
+  const terms = searchTerms.toLowerCase().split(' ').map((e) => e.trim()).filter((e) => !!e);
+  searchResultsEl.innerHTML = '';
+
+  if (terms.length) {
+    if (!window.blog.articleIndex) {
+      await fetchArticleIndex(0);
+    }
+
+    const index = window.blog.articleIndex;
+    const { articles } = window.blog.articleIndex;
+
+    const hits = [];
+    let i = 0;
+    for (; i < articles.length; i += 1) {
+      const e = articles[i];
+      const text = [...e.topics, ...e.products, e.title, e.author, e.teaser].join(' ').toLowerCase();
+
+      if (terms.every((term) => text.includes(term))) {
+        if (hits.length === limit) {
+          break;
+        }
+        hits.push(e);
+      }
+
+      if (i === articles.length - 1 && !index.done) {
+        // eslint-disable-next-line no-await-in-loop
+        await fetchArticleIndex(articles.length);
+      }
+    }
+
+    const result = { hits };
+    if (i && i < articles.length) {
+      result.cursor = i;
+    }
+
+    hits.forEach((e) => {
+      const card = createTag('div', { class: 'card' });
+      const imagePath = new URL(e.hero, new URL(e.path, window.location)).pathname;
+      card.innerHTML = `<div class="hero">
+        <a href="${e.path}" title="${e.title}" tabindex="-1"><img class=" lazyloaded" src="${imagePath}?format=pjpg&amp;optimize=medium&amp;auto=webp&amp;height=512&amp;crop=3%3A2" alt="${e.title}"></a>
+      </div>
+      <div class="content">
+        <p class="topic"><a href="${e.path}" title="${e.topics[0]}">${e.topics[0]}</a></p>
+        <h2><a href="${e.path}" title="${e.title}">${e.title}</a></h2>
+        <p class="teaser"><a href="${e.path}" title="${e.teaser}" tabindex="-1">${e.teaser}</a></p>
+        <p class="date">${formatLocalCardDate(e.date * 1000)}</p>
+      </div></div>`;
+      searchResultsEl.appendChild(card);
+    });
+  }
+}
 
 function getRelativeURL(href) {
   const url = new URL(href, window.location);
@@ -60,15 +114,37 @@ function getGnav(nav) {
         </div>
         <div class="gnav-search" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" id="gnav-search-icon" width="20" height="20" viewBox="0 0 24 24" focusable="false">
             <path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path>
-          </svg><div class="gnav-search-box"></div>
+          </svg><div class="gnav-search-box">
+          <input type="text" id="gnav-search-terms">
+          <svg xmlns="http://www.w3.org/2000/svg" id="gnav-search-icon" width="20" height="20" viewBox="0 0 24 24" focusable="false">
+            <path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path>
+          </svg>
+          <div id="gnav-search-results" class="gnav-search-results deck">
+
+          </div>
+          </div>
         </div>
         <div class="gnav-signin"><a href="${nav.signIn.href}">${nav.signIn.text}</a></div>`;
 
   gnav.innerHTML = html;
+
   const hamburger = gnav.querySelector('.gnav-hamburger');
   hamburger.addEventListener('click', () => {
     const expanded = gnav.getAttribute('aria-expanded') === 'true';
     gnav.setAttribute('aria-expanded', !expanded);
+  });
+
+  const search = gnav.querySelector('.gnav-search');
+  const searchIcon = gnav.querySelector('.gnav-search > svg');
+  searchIcon.addEventListener('click', () => {
+    const expanded = search.getAttribute('aria-expanded') === 'true';
+    search.setAttribute('aria-expanded', !expanded);
+  });
+
+  const searchTerms = gnav.querySelector('#gnav-search-terms');
+  searchTerms.addEventListener('input', () => {
+    const searchResultsEl = gnav.querySelector('#gnav-search-results');
+    populateSearchResults(searchTerms.value, searchResultsEl);
   });
 
   const sectionEl = gnav.querySelector('.gnav-section');
