@@ -36,7 +36,6 @@ function highlightTextElements(terms, elements) {
           markedUp += txt.substring(hit.offset + hit.term.length, matches[i + 1].offset);
         }
       });
-      console.log(markedUp);
       e.innerHTML = markedUp;
     }
   });
