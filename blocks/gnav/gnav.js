@@ -13,6 +13,35 @@
 
 import { createTag, fetchArticleIndex, formatLocalCardDate } from '../../scripts/v2/common.js';
 
+function highlightTextElements(terms, elements) {
+  elements.forEach((e) => {
+    const matches = [];
+    const txt = e.textContent;
+    terms.forEach((term) => {
+      const offset = txt.toLowerCase().indexOf(term);
+      if (offset >= 0) {
+        matches.push({ offset, term });
+      }
+    });
+    matches.sort((a, b) => a.offset - b.offset);
+    let markedUp = '';
+    if (!matches.length) markedUp = txt;
+    else {
+      markedUp = txt.substr(0, matches[0].offset);
+      matches.forEach((hit, i) => {
+        markedUp += `<span class="gnav-search-highlight">${txt.substr(hit.offset, hit.term.length)}</span>`;
+        if (matches.length - 1 === i) {
+          markedUp += txt.substr(hit.offset + hit.term.length);
+        } else {
+          markedUp += txt.substring(hit.offset + hit.term.length, matches[i + 1].offset);
+        }
+      });
+      console.log(markedUp);
+      e.innerHTML = markedUp;
+    }
+  });
+}
+
 async function populateSearchResults(searchTerms, searchResultsEl) {
   const limit = 12;
   const terms = searchTerms.toLowerCase().split(' ').map((e) => e.trim()).filter((e) => !!e);
@@ -64,6 +93,8 @@ async function populateSearchResults(searchTerms, searchResultsEl) {
       </div></div>`;
       searchResultsEl.appendChild(card);
     });
+
+    highlightTextElements(terms, searchResultsEl.querySelectorAll('a'));
   }
 }
 

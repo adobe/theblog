@@ -168,8 +168,8 @@ header .gnav-search-box svg {
   right: 30px;
 }
 
-header .gnav .gnav-search-results {
-
+header .gnav .gnav-search-highlight {
+  background-color: yellow;
 }
 
 @media (max-width: 1199px) {
