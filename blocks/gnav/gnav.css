@@ -146,11 +146,39 @@ header .gnav-search > svg {
   display: none;
 }
 
+header .gnav .gnav-nosearch .gnav-search-results {
+  display: none;
+}
+
+header .gnav .gnav-nosearch .gnav-search-link {
+  display: none;
+}
+
+
 header .gnav-search-box {
+  max-width: 1200px;
+  margin: auto;
+}
+
+header .gnav-search-box-wrapper {
   position: relative;
   padding: 20px;
   width: 100%;
   background-color: white;
+}
+
+header .gnav-search-results {
+  margin: 16px 0 0 0;
+}
+
+header .gnav-search-results, header .gnav-search-link {
+  background-color: #f4f4f4;  
+  padding: 20px;
+  width: 100%;
+}
+
+header .gnav-search-link {
+  text-align: center;
 }
 
 header .gnav-search-box input {
@@ -315,11 +343,11 @@ header .gnav .gnav-search-highlight {
     padding: 7px 0;
   }
 
-  header .gnav .gnav-search-box {
+  header .gnav .gnav-search-box-wrapper {
     display: none;
   }
 
-  header .gnav .gnav-search[aria-expanded=true] .gnav-search-box {
+  header .gnav .gnav-search[aria-expanded=true] .gnav-search-box-wrapper {
     display: block;
     position: absolute;
     top: 64px;

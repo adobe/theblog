@@ -58,7 +58,7 @@ async function populateSearchResults(searchTerms, searchResultsEl) {
     let i = 0;
     for (; i < articles.length; i += 1) {
       const e = articles[i];
-      const text = [...e.topics, ...e.products, e.title, e.author, e.teaser].join(' ').toLowerCase();
+      const text = [e.topics[0], e.title, e.teaser].join(' ').toLowerCase();
 
       if (terms.every((term) => text.includes(term))) {
         if (hits.length === limit) {
@@ -144,14 +144,19 @@ function getGnav(nav) {
         </div>
         <div class="gnav-search" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" id="gnav-search-icon" width="20" height="20" viewBox="0 0 24 24" focusable="false">
             <path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path>
-          </svg><div class="gnav-search-box">
-          <input type="text" id="gnav-search-terms">
-          <svg xmlns="http://www.w3.org/2000/svg" id="gnav-search-icon" width="20" height="20" viewBox="0 0 24 24" focusable="false">
-            <path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path>
           </svg>
-          <div id="gnav-search-results" class="gnav-search-results deck">
-
-          </div>
+          <div class="gnav-search-box-wrapper">
+            <div class="gnav-search-box gnav-nosearch">
+              <input type="text" id="gnav-search-terms">
+              <svg xmlns="http://www.w3.org/2000/svg" id="gnav-search-icon" width="20" height="20" viewBox="0 0 24 24" focusable="false">
+                <path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path>
+              </svg>
+              <div id="gnav-search-results" class="gnav-search-results deck">
+              </div>
+              <div class="gnav-search-link">
+                <a href="https://helpx.adobe.com/globalsearch.html?q=&start_index=0&country=US&activeScopes=%5B%22adobe_com%3Ablog%22%5D&scopeConfigs=%5B%7B%22value%22%3A%22adobe_com%3Ablog%22%2C%22renderStyle%22%3A%22vert%22%2C%22seeMoreLink%22%3Anull%2C%22isSelectable%22%3Atrue%7D%5D&filters=%7B%22products%22%3A%5B%5D%7D&banners=%7B%22aboveResults%22%3A%7B%22count%22%3A3%2C%22ids%22%3A%5B%22auto%22%5D%7D%2C%22sidebar%22%3A%7B%22count%22%3A0%2C%22ids%22%3A%5B%5D%7D%7D&ctrls=%7B%22prodFilts%22%3Afalse%7D&gnavExp=blogs%2Fblog-gnav">Try our advanced search</a>
+              </div>
+            </div>
           </div>
         </div>
         <div class="gnav-signin"><a href="${nav.signIn.href}">${nav.signIn.text}</a></div>`;
@@ -175,6 +180,18 @@ function getGnav(nav) {
   searchTerms.addEventListener('input', () => {
     const searchResultsEl = gnav.querySelector('#gnav-search-results');
     populateSearchResults(searchTerms.value, searchResultsEl);
+    const searchBox = gnav.querySelector('.gnav-search-box');
+    if (searchTerms.value.trim().length === 0) {
+      searchBox.classList.add('gnav-nosearch');
+    } else {
+      searchBox.classList.remove('gnav-nosearch');
+    }
+    const a = gnav.querySelector('.gnav-search-link a');
+    if (a) {
+      const href = new URL(a.href);
+      href.searchParams.set('q', searchTerms.value);
+      a.href = href.toString();
+    }
   });
 
   const sectionEl = gnav.querySelector('.gnav-section');
