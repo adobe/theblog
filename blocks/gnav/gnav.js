@@ -171,12 +171,16 @@ function getGnav(nav) {
 
   const search = gnav.querySelector('.gnav-search');
   const searchIcon = gnav.querySelector('.gnav-search > svg');
+  const searchTerms = gnav.querySelector('#gnav-search-terms');
+
   searchIcon.addEventListener('click', () => {
     const expanded = search.getAttribute('aria-expanded') === 'true';
     search.setAttribute('aria-expanded', !expanded);
+    if (!expanded) {
+      searchTerms.focus();
+    }
   });
 
-  const searchTerms = gnav.querySelector('#gnav-search-terms');
   searchTerms.addEventListener('input', () => {
     const searchResultsEl = gnav.querySelector('#gnav-search-results');
     populateSearchResults(searchTerms.value, searchResultsEl);
