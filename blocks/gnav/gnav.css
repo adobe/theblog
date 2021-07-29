@@ -181,6 +181,10 @@ header .gnav-search-link {
   text-align: center;
 }
 
+header .gnav-search-input {
+  position: relative;
+}
+
 header .gnav-search-box input {
   width: 100%;
   font-size: 16px;
@@ -192,8 +196,8 @@ header .gnav-search-box input {
 
 header .gnav-search-box svg {
   position: absolute;
-  top: 25px;
-  right: 30px;
+  top: 6px;
+  right: 10px;
 }
 
 header .gnav .gnav-search-highlight {

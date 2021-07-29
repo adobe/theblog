@@ -125,6 +125,12 @@ function isSelected(navItem) {
   }
 }
 
+function collapseAll(gnav) {
+  [...gnav.querySelectorAll('[aria-expanded=true]')].forEach((expanded) => {
+    expanded.setAttribute('aria-expanded', 'false');
+  });
+}
+
 function getSubmenu(submenu) {
   const submenuEl = createTag('div', { class: 'gnav-submenu' });
   submenu.forEach((e) => {
@@ -147,14 +153,16 @@ function getGnav(nav) {
           </svg>
           <div class="gnav-search-box-wrapper">
             <div class="gnav-search-box gnav-nosearch">
-              <input type="text" id="gnav-search-terms">
-              <svg xmlns="http://www.w3.org/2000/svg" id="gnav-search-icon" width="20" height="20" viewBox="0 0 24 24" focusable="false">
-                <path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path>
-              </svg>
+              <div class="gnav-search-input">
+                <input type="text" id="gnav-search-terms">
+                <svg xmlns="http://www.w3.org/2000/svg" id="gnav-search-icon" width="20" height="20" viewBox="0 0 24 24" focusable="false">
+                  <path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path>
+                </svg>
+              </div>
               <div id="gnav-search-results" class="gnav-search-results deck">
               </div>
               <div class="gnav-search-link">
-                <a href="https://helpx.adobe.com/globalsearch.html?q=&start_index=0&country=US&activeScopes=%5B%22adobe_com%3Ablog%22%5D&scopeConfigs=%5B%7B%22value%22%3A%22adobe_com%3Ablog%22%2C%22renderStyle%22%3A%22vert%22%2C%22seeMoreLink%22%3Anull%2C%22isSelectable%22%3Atrue%7D%5D&filters=%7B%22products%22%3A%5B%5D%7D&banners=%7B%22aboveResults%22%3A%7B%22count%22%3A3%2C%22ids%22%3A%5B%22auto%22%5D%7D%2C%22sidebar%22%3A%7B%22count%22%3A0%2C%22ids%22%3A%5B%5D%7D%7D&ctrls=%7B%22prodFilts%22%3Afalse%7D&gnavExp=blogs%2Fblog-gnav">Try our advanced search</a>
+                <a href="${nav.search.href}">Try our advanced search</a>
               </div>
             </div>
           </div>
@@ -174,6 +182,7 @@ function getGnav(nav) {
   const searchTerms = gnav.querySelector('#gnav-search-terms');
 
   searchIcon.addEventListener('click', () => {
+    collapseAll(gnav);
     const expanded = search.getAttribute('aria-expanded') === 'true';
     search.setAttribute('aria-expanded', !expanded);
     if (!expanded) {
@@ -217,9 +226,7 @@ function getGnav(nav) {
         navItemEl.appendChild(submenuEl);
         navItemEl.addEventListener('click', () => {
           const expanded = navItemEl.getAttribute('aria-expanded') === 'true';
-          [...sectionEl.children].forEach((ni) => {
-            ni.setAttribute('aria-expanded', 'false');
-          });
+          collapseAll(gnav);
           navItemEl.setAttribute('aria-expanded', !expanded);
         });
       }
@@ -233,10 +240,11 @@ function getGnav(nav) {
 async function markupToNav(url) {
   const resp = await fetch(`${url}.plain.html`);
   const html = await resp.text();
-  const $header = createTag('header');
-  $header.innerHTML = html;
+  const header = createTag('header');
+  console.log(html);
+  header.innerHTML = html;
   const nav = {};
-  nav.top = [...$header.querySelectorAll(':scope > div h2')].map((h2) => {
+  nav.top = [...header.querySelectorAll(':scope > div h2')].map((h2) => {
     const navItem = {};
     const div = h2.closest('div');
     navItem.text = h2.textContent;
@@ -258,74 +266,28 @@ async function markupToNav(url) {
   });
   const logo = nav.top.shift();
   nav.logo = logo;
+
+  const signInEl = header.querySelector('.sign-in a');
+  if (signInEl) {
+    nav.signIn = {
+      text: signInEl.textContent,
+      href: signInEl.href,
+    };
+  }
+
+  const searchEl = header.querySelector('.search a');
+  if (searchEl) {
+    nav.search = {
+      text: searchEl.textContent,
+      href: searchEl.href,
+    };
+  }
+
   return nav;
 }
 
 export async function decorateGNav(blockEl, url) {
   const nav = await markupToNav(url);
-
-  nav.signIn = {
-    text: 'Sign In',
-    href: 'https://www.adobe.com/',
-  };
-  /*
-
-  nav = {
-    signIn: {
-      text: 'Sign In',
-      href: 'https://www.adobe.com/',
-    },
-    logo: {
-      text: 'Adobe Blog',
-      href: 'https://blog.adobe.com/',
-    },
-    top: [
-      {
-        text: 'News',
-        href: 'https://blog.adobe.com/en/topics/news.html',
-      },
-      {
-        text: 'Insights & Inspiration',
-        submenu: [
-          {
-            text: 'Creativity',
-            href: 'https://blog.adobe.com/en/topics/creativity.html',
-          },
-          {
-            text: 'Creativity',
-            href: 'https://blog.adobe.com/en/topics/creativity.html',
-          },
-          {
-            text: 'Creativity',
-            href: 'https://blog.adobe.com/en/topics/creativity.html',
-          },
-          {
-            text: 'Creativity',
-            href: 'https://blog.adobe.com/en/topics/creativity.html',
-          },
-        ],
-      },
-      {
-        text: 'Responsibility',
-        submenu: [
-          {
-            text: 'Creativity',
-            href: 'https://blog.adobe.com/en/topics/creativity.html',
-          },
-        ],
-      },
-      {
-        text: 'Adobe Life',
-        submenu: [
-          {
-            text: 'Creativity',
-            href: 'https://blog.adobe.com/en/topics/creativity.html',
-          },
-        ],
-      },
-    ],
-  };
-  */
 
   blockEl.appendChild(getGnav(nav));
 }
