@@ -1,4 +1,6 @@
 url	Categories	Products	Industries	Internals
+https://blog.adobe.com/br/publish/2021/06/11/saiba-tudo-sobre-o-adobe-fresco-o-aplicativo-de-ilustracao-digital.html	"Criatividade, Inspiração criativa e tendências"	"Creative Cloud, Photoshop"	""	"Creative Cloud"
+https://blog.adobe.com/br/publish/2021/02/03/documento.html	""	"Creative Cloud"	""	"Creative Cloud"
 https://blog.adobe.com/br/publish/2021/06/04/crie-uma-estrategia-de-marketing-de-influencia.html	"Inspiração, Transformação Digital, Inspiração criativa e tendências, Social"	""	""	""
 https://blog.adobe.com/br/publish/2021/05/31/truques-e-dicas-de-ilustracao-em-adobe-fresco-com-mariangel-briceno.html	"Criatividade, Inspiração criativa e tendências"	"Creative Cloud"	""	"Creative Cloud"
 https://blog.adobe.com/br/publish/2021/05/28/assine-os-seus-documentos-a-partir-do-seu-celular-com-o-fill-sign.html	"Transformação Digital"	"Document Cloud, Sign"	""	"Document Cloud"
