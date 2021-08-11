@@ -21,7 +21,7 @@ import {
 } from '/scripts/v2/common.js';
 import {
   addFilters,
-} from '/scripts/filters.js';
+} from '/scripts/v2/filters.js';
 
 /**
  * Detects if there are featured posts
