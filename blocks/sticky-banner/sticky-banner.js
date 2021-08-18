@@ -56,7 +56,7 @@ import {
     const hide = localStorage.getItem('hideStickyBanner');
 
     console.log(pvs, hide);
-    if (pvs > 5 && !hide) {
+    if (pvs > 5 && !hide && window.blog.language === 'en') {
       window.setTimeout(() => $block.classList.add('show'), 10000);
     }
 
