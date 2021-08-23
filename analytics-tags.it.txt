@@ -1,4 +1,7 @@
 url	Categories	Products	Industries	Internals
+https://blog.adobe.com/it/publish/2021/07/30/adobe-da-voce-giovani-giornata-internazionale-amicizia-giornata-gioventu.html	""	""	""	""
+https://blog.adobe.com/it/publish/2021/07/20/da-oggi-versione-piu-veloce-after-effects-nuove-funzionalita-rendering-multi-fotogramma-beta-pubblica.html	"Creatività e design, News"	"After Effects"	""	""
+https://blog.adobe.com/it/publish/2021/07/20/trascrizione-vocale-inclusa-abbonamento-supporto-nativo-mac-m1-disponibili-premiere-pro.html	""	"Creative Cloud, After Effects, Premiere Pro, Character Animator"	""	"Creative Cloud"
 https://blog.adobe.com/it/publish/2021/07/15/giornata-mondiale-emoji-2021.html	"Creatività e design"	""	"Media & intrattenimento"	""
 https://blog.adobe.com/it/publish/2021/06/23/adobe-substance-3d-strumenti-per-nuova-generazione-creativita.html	"News, Creatività e design, 3D & AR"	"Creative Cloud, Illustrator, Photoshop"	""	"Creative Cloud"
 https://blog.adobe.com/it/publish/2021/06/22/premiere-pro-si-aggiorna-per-creator-di-oggi.html	"News, Creatività e design, Trasformazione Digitale"	"Creative Cloud, Premiere Pro"	"Media & intrattenimento"	"Creative Cloud"
@@ -253,8 +256,6 @@ https://blog.adobe.com/it/publish/2016/09/07/le-citta-del-domani-una-collezione-
 https://blog.adobe.com/it/publish/2016/09/05/adobe-stock-e-le-altre-meraviglie-della-creative-cloud-di-cui-forse-non-ti-sei-accorto.html	"Creatività e design, Design"	"Stock, Creative Cloud, Photoshop"	""	"Creative Cloud"
 https://blog.adobe.com/it/publish/2016/09/01/limportanza-della-gerarchia-visiva.html	"Creatività e design"	""	""	""
 https://blog.adobe.com/it/publish/2016/08/29/la-storia-della-creazione-di-unimmagine-man-making-a-base-jump.html	"Creatività e design, Fotografia"	"Stock"	""	""
-https://blog.adobe.com/it/publish/2016/08/26/games-of-thrones-in-gif.html	"Creatività e design, Design, Illustrazione"	""	""	""
-https://blog.adobe.com/it/publish/2016/08/22/come-creare-un-medagliere-in-vettoriale.html	"Creatività e design, Illustrazione"	"Illustrator"	""	""
 https://blog.adobe.com/it/publish/2016/08/26/games-of-thrones-in-gif.html	"Creatività e design, Design, Illustrazione"	""	""	""
 https://blog.adobe.com/it/publish/2016/08/22/come-creare-un-medagliere-in-vettoriale.html	"Creatività e design, Illustrazione"	"Illustrator"	""	""
 https://blog.adobe.com/it/publish/2016/08/19/computer-grafica-larte-di-raccontare-storie.html	"Creatività e design, Illustrazione"	""	""	""
