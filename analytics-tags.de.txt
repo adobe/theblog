@@ -1,4 +1,7 @@
 url	Categories	Products	Industries	Internals
+https://blog.adobe.com/de/publish/2021/08/17/photoshop-update-neue-features-himmel-austausch-funktion-reparaturpinsel-zauberstab-ipad.html	"Kreativität, Fotografie"	"Creative Cloud, Photoshop"	""	"Creative Cloud"
+https://blog.adobe.com/de/publish/2021/08/16/registriert-euch-jetzt-fuer-die-kreativkonferenz-adobe-max.html	"Adobe MAX"	"Creative Cloud"	""	"Creative Cloud"
+https://blog.adobe.com/de/publish/2021/08/12/adobe-unterstuetzt-stimmen-junger-menschen-beim-international-youth-day.html	"Aktuelles"	"Creative Cloud"	""	"Creative Cloud"
 https://blog.adobe.com/de/publish/2021/07/22/neue-adobe-document-services-apis-heben-pdfs-auf-ein-neues-level.html	"Produktivität & Workflows, Aktuelles, Digitale Transformation"	"Document Cloud, Adobe Sensei, Acrobat"	""	"Document Cloud, Adobe Sensei"
 https://blog.adobe.com/de/publish/2021/07/20/sprache-zu-text-native-m1-unterstuetzung-jetzt-in-premiere-pro-verfuegbar.html	"Aktuelles, Video"	"Creative Cloud, After Effects, Premiere Pro"	""	"Creative Cloud"
 https://blog.adobe.com/de/publish/2021/07/20/after-effects-jetzt-noch-schneller-beta-testversion-bietet-neue-multi-frame-rendering-funktionen.html	"Digitale Transformation, Aktuelles"	"Creative Cloud, After Effects"	"Medien & Unterhaltung"	"Creative Cloud"
