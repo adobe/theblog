@@ -80,6 +80,11 @@ window.addEventListener('load', async function() {
       }
     }
   });
+  // add publish dependencies
+  window.hlx = window.hlx || {};
+  window.hlx.dependencies = [
+    `${window.blog.context}${window.blog.language}/topics/_taxonomy.json`
+  ];
 });
 
 (new MutationObserver(mutations => {
