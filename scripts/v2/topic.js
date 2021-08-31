@@ -21,7 +21,7 @@ import {
 } from '/scripts/v2/common.js';
 import {
   addFilters,
-} from '/scripts/filters.js';
+} from '/scripts/v2/filters.js';
 
 /**
  * Detects if there are featured posts
@@ -80,6 +80,11 @@ window.addEventListener('load', async function() {
       }
     }
   });
+  // add publish dependencies
+  window.hlx = window.hlx || {};
+  window.hlx.dependencies = [
+    `${window.blog.context}${window.blog.language}/topics/_taxonomy.json`
+  ];
 });
 
 (new MutationObserver(mutations => {

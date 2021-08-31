@@ -22,7 +22,7 @@ indices:
       date:
         select: main > div:nth-of-type(3)
         value: |
-          parseTimestamp(el, '[POSTED ON] MM-DD-YYYY')
+          parseTimestamp(match(el, '[Oo][Nn] \\d\\d-\\d\\d-\\d\\d\\d\\d'), 'MM-DD-YYYY')
       topics:
         select: main > div:last-of-type > p:first-of-type
         values: |
