@@ -210,7 +210,6 @@
   }
 
   sk.addEventListener('statusfetched', () => {
-    console.log(sk.status);
     const webPath = sk.status.webPath;
     if (!webPath) {
       return;
