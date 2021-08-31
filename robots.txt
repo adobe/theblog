@@ -58,24 +58,24 @@ allow: /*/authors/
 allow: /*/topics/
 
 allow: /br/$
-allow: /br/index.html
+allow: /br/index*
 allow: /de/$
-allow: /de/index.html
+allow: /de/index*
 allow: /en/$
-allow: /en/index.html
-allow: /en/uk.html
-allow: /en/apac.html
+allow: /en/index*
+allow: /en/uk*
+allow: /en/apac*
 allow: /es/$
-allow: /es/index.html
-allow: /es/latam.html
+allow: /es/index*
+allow: /es/latam*
 allow: /fr/$
-allow: /fr/index.html
+allow: /fr/index*
 allow: /it/$
-allow: /it/index.html
+allow: /it/index*
 allow: /jp/$
-allow: /jp/index.html
+allow: /jp/index*
 allow: /ko/$
-allow: /ko/index.html
+allow: /ko/index*
 
 sitemap: https://blog.adobe.com/sitemap.xml
 sitemap: https://blog.adobe.com/sitemap.br.xml

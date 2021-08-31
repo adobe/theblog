@@ -123,6 +123,9 @@ function removeHeaderAndFooter() {
   const footer = document.querySelector("footer");
   if (header && header.innerHTML == "/header.plain.html") header.innerHTML = "";
   if (footer && footer.innerHTML == "/footer.plain.html") footer.innerHTML = "";
+  // prep header and footer for gnav
+  header.innerHTML = '<div><div id="feds-header"></div></div>';
+  footer.innerHTML = '<div id="feds-footer"><div class="evidon-notice-link"></div></div>';
 }
 
 /**

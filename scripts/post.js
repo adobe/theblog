@@ -24,7 +24,7 @@ import {
   getTaxonomy
 } from '/scripts/taxonomy.js';
 
-const DEFAULT_AVATAR = '/hlx_942ea2ad17270c65cda838d52145ec5b26704d41.png';
+const DEFAULT_AVATAR = '/media_942ea2ad17270c65cda838d52145ec5b26704d41.png';
 
 /**
  * Formats the document-provided date (e.g. "01-15-2020") using the
@@ -783,7 +783,7 @@ function decorateAnimations() {
 
       const $video=createTag('video', attribs);
       if (href.startsWith('https://hlx.blob.core.windows.net/external/')) {
-        href='/hlx_'+href.split('/')[4].replace('#image','');
+        href='/media_'+href.split('/')[4].replace('#image','');
       }
       $video.innerHTML=`<source src="${href}" type="video/mp4">`;
       $a.parentNode.replaceChild($video, $a);
@@ -795,7 +795,7 @@ function decorateAnimations() {
     }
 
     if (href.endsWith('.gif')) {
-      $a.parentNode.replaceChild(createTag('img',{src: `/hlx_${helixId}.gif`}), $a);
+      $a.parentNode.replaceChild(createTag('img',{src: `/media_${helixId}.gif`}), $a);
     }
 
     const $next=$parent.nextElementSibling;

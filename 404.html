@@ -6,11 +6,32 @@
 	window.isErrorPage = true;
 	window.errorCode = '404';
   </script>
-  <esi:include src="/head.html" onerror="continue"/>
+  <link rel="stylesheet" href="/style/v2/style.css"/>
+  <script src="/scripts/v2/scripts.js" defer></script>
+  <script src="/scripts/v2/common.js" type="module"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="google-site-verification" content="YD_ublu5NDiQWLZhQC5N-7eL-zo0TFpPS-l9vFqgdSI"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Adobe"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:site_name" content="Adobe Blog"/>
+  <meta name="twitter:site" content="@Adobe"/>
+  <meta name="twitter:creator" content="@Adobe"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="serp-content-type" content="blog"/>
+  <link rel="publisher" href="https://www.facebook.com/Adobe"/>
+  <link rel="icon" type="image/svg+xml" href="/icons/adobe.svg"/>
+  <link rel="alternate icon" href="https://www.adobe.com/favicon.ico"/>
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png"/>
+  <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-touch-icon-120x120.png"/>
+  <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-touch-icon-152x152.png"/>
+  <link rel="apple-touch-icon" sizes="167x167" href="/icons/apple-touch-icon-167x167.png"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon-180x180.png"/>
+  <link rel="apple-touch-icon-precomposed" href="/icons/apple-touch-icon-precomposed.png"/>
 </head>
 <body>
   <!--  header -->
-  <header><esi:include src="/header.plain.html" onerror="continue"/></header>
+  <header><div><div id="feds-header"></div></div></header>
   <!--  main content -->
   <main>
 	  <div class="default">
@@ -26,6 +47,6 @@
 	  </div>
   </main>
   <!--  footer -->
-  <footer><esi:include src="/footer.plain.html"  onerror="continue"/></footer>
+  <footer><div id="feds-footer"></div><div class="evidon-notice-link"></div></footer>
 </body>
 </html>

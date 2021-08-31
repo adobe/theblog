@@ -196,8 +196,8 @@ let imgCount = 0;
 const observer = new MutationObserver(mutations => {
   mutations.forEach(mutation => {
     mutation.addedNodes.forEach(node => {
-      // only handle images with src=/hlx_*
-      if (node.tagName === 'IMG' && /\/hlx_/.test(node.src)) {
+      // only handle images with src=/media_*
+      if (node.tagName === 'IMG' && /\/media_/.test(node.src)) {
         const img = node;
         let width;
         if (window.blog.pageType === window.blog.TYPE.TOPIC) {
@@ -303,8 +303,17 @@ handleLCPPerType[window.blog.TYPE.POST].computeLCPCandidate = () => {
   document.body.classList.add(`${window.blog.pageType}-page`);
 }
 
+/**
+ * Preps header and footer for gnav
+ */
+function decorateHeaderAndFooter() {
+  document.querySelector('body > header').innerHTML = '<div><div id="feds-header"></div></div>';
+  document.querySelector('body > footer').innerHTML = '<div id="feds-footer"><div class="evidon-notice-link"></div></div>';
+}
+
 function decoratePage() {
   addPageTypeAsBodyClass();
+  decorateHeaderAndFooter();
   const handler = handleLCPPerType[window.blog.pageType];
   if (handler) {
     handler.decoratePage();

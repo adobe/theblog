@@ -66,12 +66,13 @@
       }
     }
     const filename = (pathsplits[pathsplits.length-1].split('.')[0]).toLowerCase().replace(/[^a-z\d_\/\.]/g,'-');
-    return `${host ? `https://${host}/` : ''}${pathsplits[1]}${publishPath}/${filename}.html`;
+    return `${host ? `https://${host}/` : ''}${pathsplits[1]}${publishPath}/${filename}`;
   }
 
   const sk = window.hlx.initSidekick({
     project: 'Adobe Blog',
     host: 'blog.adobe.com',
+    hlx3: true,
     plugins: [
       // TAGGER -----------------------------------------------------------------------
       {
@@ -99,7 +100,7 @@
             const {
               addCard,
               itemTransformer,
-            } = await import('/scripts/common.js');
+            } = await import('/scripts/v2/common.js');
             const btn = evt.target;
             let $modal = document.querySelector('.hlx-sk-overlay > div > .card');
             if ($modal) {
@@ -209,14 +210,10 @@
   }
 
   sk.addEventListener('statusfetched', () => {
+    console.log(sk.status);
     const webPath = sk.status.webPath;
     if (!webPath) {
       return;
-    }
-    const file = webPath.split('/').pop();
-    if (file && !file.includes('.')) {
-      // add .html extension back
-      sk.status.webPath = `${webPath}.html`;
     } else if (webPath.endsWith('taxonomy.json')) {
       // add leading underscore back
       sk.status.webPath = webPath.replace('taxonomy.json', '_taxonomy.json');
