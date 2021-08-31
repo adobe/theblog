@@ -1,0 +1,69 @@
+main > div.sticky-banner {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: -200px;
+  background-color: #1473E6;
+  color: white;
+  padding: 12px;
+  padding-right: 36px;
+  font-weight: 700;
+  z-index: 10;
+  display: block;
+  text-align: center;
+  transition: bottom 0.3s;
+}
+
+main > div.sticky-banner.show {
+  bottom: 0;
+}
+
+main .sticky-banner a:any-link {
+  color: white;
+  border: 2px solid white;
+  border-radius: 20px;
+  padding: 3px 10px 5px 10px;
+  text-decoration: none;
+  margin-left: 20px;
+  font-weight: 400;
+  font-size: 0.9em;
+  white-space: nowrap;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+main .sticky-banner .close {
+  color: white;
+  position: absolute;
+  margin-top: 0;
+  margin-left: 0;
+  width: 21px;
+  height: 21px;
+  top: 18px;
+  right: 20px;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+main .sticky-banner .close:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  width: 21px;
+  height: 1px;
+  background-color: currentColor;
+  transform: rotate(-45deg);
+  left: 0;
+}
+
+main .sticky-banner .close:after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  width: 21px;
+  height: 1px;
+  background-color: currentColor;
+  transform: rotate(45deg);
+  left: 0;
+}

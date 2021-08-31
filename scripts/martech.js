@@ -11,7 +11,9 @@
  */
 
 import {
-  loadScript
+  loadScript,
+  loadBlock, 
+  buildBlock,
 } from '/scripts/v2/common.js';
 
 function checkDX(tags) {
@@ -184,3 +186,10 @@ if (Math.random() * weight < 1) {
   }
   document.head.appendChild(script);
 }
+
+const $main = document.querySelector('main');
+const $stickyBanner = buildBlock('sticky-banner', `<p>Help us make your
+Adobe Blog Experience even better <a href="https://pages.adobe.com/general/en/blog/">Answer 7 Short Questions</a><p>`);
+$stickyBanner.setAttribute('data-block-name', 'sticky-banner')
+$main.appendChild($stickyBanner);
+loadBlock($stickyBanner);
