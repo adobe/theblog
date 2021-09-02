@@ -17,7 +17,8 @@ import {
   createTag,
   loadScript,
   extractTopicsAndProducts,
-  globalPostLCP
+  globalPostLCP,
+  getMetadata,
 } from '/scripts/v2/common.js';
 
 import {
@@ -243,10 +244,21 @@ function fixTableCleanup() {
   })
 }
 
+function adjustCanonical() {
+  const canonical = getMetadata('canonical');
+  if (canonical) {
+    const link = document.querySelector('link[rel="canonical"]');
+    link.setAttribute('href', canonical);
+  }
+}
+
 /**
  * Decorates the post page with CSS classes
  */
 function decoratePostPage(){
+
+  adjustCanonical();
+
   // fix tables
   fixPostBlocks();
   fixTableCleanup();
