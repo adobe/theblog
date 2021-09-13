@@ -799,7 +799,8 @@ function decorateAnimations() {
 
       const $video=createTag('video', attribs);
       if (href.startsWith('https://hlx.blob.core.windows.net/external/')) {
-        href='/hlx_'+href.split('/')[4].replace('#image','').replace('#video', '');
+        const { pathname } = new URL(href);
+        href = pathname.replace('external/', 'media_') + '.mp4';
       }
       $video.innerHTML=`<source src="${href}" type="video/mp4">`;
       $a.parentNode.replaceChild($video, $a);
