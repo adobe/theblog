@@ -1,4 +1,7 @@
 url	Categories	Products	Industries	Internals
+https://blog.adobe.com/fr/publish/2021/09/08/abonnez-vous-a-la-creativite.html	"Inspiration créative & tendances"	"Creative Cloud"	""	"Creative Cloud"
+https://blog.adobe.com/fr/publish/2021/08/26/la-pandemie-modifie-notre-rapport-au-temps-decryptage-avec-une-nouvelle-etude-adobe-document-cloud.html	"Futur du travail, Actualités"	"Document Cloud"	"B2B"	"Document Cloud"
+https://blog.adobe.com/fr/publish/2021/08/25/lavenir-sans-cookies-quatre-evolutions-qui-transformeront-le-marketing.html	"Transformation digitale, Actualités, Analytics"	"Experience Cloud, Analytics"	"B2B"	"Experience Cloud"
 https://blog.adobe.com/fr/publish/2021/08/17/photoshop-lance-une-mise-a-jour-majeure-de-ses-fonctionnalites-remplacement-du-ciel-outil-correcteur-baguette-magique-et-bien-plus-encore.html	"Créativité, Actualités"	"Creative Cloud, Photoshop"	"High-tech"	"Creative Cloud"
 https://blog.adobe.com/fr/publish/2021/08/16/inscrivez-vous-a-adobe-max-the-creativity-conference.html	"Adobe MAX, Actualités"	"Creative Cloud"	"High-tech"	"Creative Cloud"
 https://blog.adobe.com/fr/publish/2021/07/30/adobe-celebre-les-journees-internationales-de-l-amitie-et-de-la-jeunesse.html	"Créativité, Adobe Life, Diversité & Inclusion"	"Creative Cloud"	""	"Creative Cloud"
