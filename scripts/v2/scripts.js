@@ -9,6 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+/* global window document fetch navigator */
 
 /**
  * Loads a JS module.
@@ -237,6 +238,20 @@ function checkRedirect() {
 checkRedirect();
 
 function postLCP() {
+  const { weight, id, random } = window.hlx.rum;
+  const generation = 'blog-rum-microfunnel-lcptrigger';
+
+  if (random && (random * weight < 1)) {
+    // store a page view
+    // eslint-disable-next-line no-use-before-define
+    sendRUMData({
+      weight,
+      id,
+      referer: window.location.href,
+      generation,
+    }, weight);
+  }
+
   document.body.classList.add('appear');
 
   // Load page specific code
@@ -312,6 +327,73 @@ function decoratePage() {
   } else {
     postLCP();
   }
+}
+
+/* Core Web Vitals */
+
+function sendRUMData(data, weight) {
+  const body = JSON.stringify(data);
+  const url = `https://rum.hlx3.page/.rum/${weight}`;
+
+  // console.log('storing', body);
+
+  // Use `navigator.sendBeacon()` if available, falling back to `fetch()`.
+  // eslint-disable-next-line no-unused-expressions
+  (navigator.sendBeacon && navigator.sendBeacon(url, body))
+  || fetch(url, { body, method: 'POST', keepalive: true });
+}
+
+function rumInit() {
+  const usp = new URLSearchParams(window.location.search);
+  const cwv = usp.get('cwv');
+
+  // with parameter, weight is 1. Defaults to 100.
+  const weight = (cwv === 'on') ? 1 : 100;
+
+  window.hlx = window.hlx || {};
+
+  // eslint-disable-next-line no-bitwise
+  const hashCode = (s) => s.split('').reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0);
+  const id = `${hashCode(window.location.href)}-${new Date().getTime()}-${Math.random().toString(16).substr(2, 14)}`;
+
+  const random = Math.random();
+  window.hlx.rum = { weight, id, random };
+  return window.hlx.rum;
+}
+
+const { random, weight, id } = rumInit();
+if (random && (random * weight < 1)) {
+  // store a page view
+  sendRUMData({
+    weight,
+    id,
+    referer: window.location.href,
+    generation: 'blog-rum-microfunnel-top',
+  }, weight);
+}
+
+function rumLoad() {
+  // eslint-disable-next-line no-shadow
+  const { weight, id, random } = window.hlx.rum;
+  const generation = 'blog-rum-microfunnel-load';
+
+  if (random && (random * weight < 1)) {
+    // store a page view
+    sendRUMData({
+      weight,
+      id,
+      referer: window.location.href,
+      generation,
+    }, weight);
+  }
+}
+
+if (document.readyState === 'complete') {
+  rumLoad();
+} else {
+  window.addEventListener('load', () => {
+    rumLoad();
+  });
 }
 
 decoratePage();
