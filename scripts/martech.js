@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window webVitals document sendRUMData */
+/* global window webVitals document sampleRUM */
 
 import {
   loadScript,
@@ -142,30 +142,17 @@ loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
 loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js').id = 'feds-script';
 loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
 
-/* Core Web Vitals */
+/* Core Web Vitals RUM collection */
+
+sampleRUM('cwv');
 
 function storeCWV(measurement) {
-  const { weight, id, generation } = window.hlx.rum;
-  const rum = { cwv: { }, weight, id };
+  const rum = { cwv: { } };
   rum.cwv[measurement.name] = measurement.value;
-  rum.referer = window.location.href;
-  if (generation) rum.generation = generation;
-  sendRUMData(rum, weight);
+  sampleRUM('cwv', rum);
 }
 
-const { weight, id, random } = window.hlx.rum;
-const generation = 'blog-rum-microfunnel-cwv';
-window.hlx.rum.generation = generation;
-
-if (random && (random * weight < 1)) {
-  // store a page view
-  sendRUMData({
-    weight,
-    id,
-    referer: window.location.href,
-    generation,
-  }, weight);
-
+if (window.hlx.rum.isSelected) {
   const script = document.createElement('script');
   script.src = 'https://unpkg.com/web-vitals';
   script.onload = () => {
@@ -178,9 +165,11 @@ if (random && (random * weight < 1)) {
   document.head.appendChild(script);
 }
 
+/*
 const $main = document.querySelector('main');
 const $stickyBanner = buildBlock('sticky-banner', `<p>Help us make your
 Adobe Blog Experience even better <a href="https://pages.adobe.com/general/en/blog/">Answer 7 Short Questions</a><p>`);
 $stickyBanner.setAttribute('data-block-name', 'sticky-banner')
 $main.appendChild($stickyBanner);
 loadBlock($stickyBanner);
+*/
