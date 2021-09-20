@@ -13,8 +13,6 @@
 
 import {
   loadScript,
-  loadBlock,
-  buildBlock,
 } from './v2/common.js';
 
 function checkDX(tags) {
