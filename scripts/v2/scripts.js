@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* global window document fetch navigator */
+/* global window document Image navigator */
 
 /**
  * log RUM if part of the sample.
@@ -17,9 +17,8 @@
  * @param {Object} data additional data for RUM sample
  */
 
-// eslint-disable-next-line object-curly-newline
-// eslint-disable-next-line max-statements-per-line
-if (!navigator.sendBeacon) { window.data = JSON.stringify({ referer: window.location.href, checkpoint: 'unsupported', weight: 1 }); new Image().src = `https://rum.hlx3.page/.rum/1?data=${window.data}`; }
+// eslint-disable-next-line
+if (!navigator.sendBeacon) { window.data = JSON.stringify({ referer: window.location.href, checkpoint: 'unsupported', weight: 1 }); new Image().src = 'https://rum.hlx3.page/.rum/1?data='+window.data; }
 
 // eslint-disable-next-line import/prefer-default-export
 function sampleRUM(checkpoint, data = {}) {
