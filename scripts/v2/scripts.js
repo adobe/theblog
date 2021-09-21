@@ -18,7 +18,7 @@
  */
 
 // eslint-disable-next-line
-if (!navigator.sendBeacon) { window.data = JSON.stringify({ referer: window.location.href, checkpoint: 'unsupported', weight: 1 }); new Image().src = 'https://rum.hlx3.page/.rum/1?data='+window.data; }
+if (!navigator.sendBeacon) { data = JSON.stringify({ referer: window.location.href, checkpoint: 'unsupported', weight: 1 }); img = new Image(); img.src = 'https://rum.hlx3.page/.rum/1?data='+data; }
 
 // eslint-disable-next-line import/prefer-default-export
 function sampleRUM(checkpoint, data = {}) {
