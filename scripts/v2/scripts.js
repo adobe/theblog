@@ -12,6 +12,48 @@
 /* global window document fetch navigator */
 
 /**
+ * log RUM if part of the sample.
+ * @param {string} checkpoint identifies the checkpoint in funnel
+ * @param {Object} data additional data for RUM sample
+ */
+
+// eslint-disable-next-line object-curly-newline
+// eslint-disable-next-line max-statements-per-line
+if (!navigator.sendBeacon) { window.data = JSON.stringify({ referer: window.location.href, checkpoint: 'unsupported', weight: 1 }); new Image().src = `https://rum.hlx3.page/.rum/1?data=${window.data}`; }
+
+// eslint-disable-next-line import/prefer-default-export
+function sampleRUM(checkpoint, data = {}) {
+  try {
+    window.hlx = window.hlx || {};
+    if (!window.hlx.rum) {
+      const usp = new URLSearchParams(window.location.search);
+      const weight = (usp.get('rum') === 'on') ? 1 : 100; // with parameter, weight is 1. Defaults to 100.
+      // eslint-disable-next-line no-bitwise
+      const hashCode = (s) => s.split('').reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0);
+      const id = `${hashCode(window.location.href)}-${new Date().getTime()}-${Math.random().toString(16).substr(2, 14)}`;
+      const random = Math.random();
+      const isSelected = (random * weight < 1);
+      // eslint-disable-next-line object-curly-newline
+      window.hlx.rum = { weight, id, random, isSelected };
+    }
+    const { random, weight, id } = window.hlx.rum;
+    if (random && (random * weight < 1)) {
+      // eslint-disable-next-line object-curly-newline
+      const body = JSON.stringify({ weight, id, referer: window.location.href, generation: 'blog-gen1', checkpoint, ...data });
+      const url = `https://rum.hlx3.page/.rum/${weight}`;
+      // eslint-disable-next-line no-unused-expressions
+      navigator.sendBeacon(url, body); // we should probably use XHR instead of fetch
+    }
+  } catch (e) {
+    // somethign went wrong
+  }
+}
+
+sampleRUM('top');
+window.addEventListener('load', () => sampleRUM('load'));
+document.addEventListener('click', () => sampleRUM('click'));
+
+/**
  * Loads a JS module.
  * @param {string} src The path to the JS module
  */
@@ -238,19 +280,7 @@ function checkRedirect() {
 checkRedirect();
 
 function postLCP() {
-  const { weight, id, random } = window.hlx.rum;
-  const generation = 'blog-rum-microfunnel-lcptrigger';
-
-  if (random && (random * weight < 1)) {
-    // store a page view
-    // eslint-disable-next-line no-use-before-define
-    sendRUMData({
-      weight,
-      id,
-      referer: window.location.href,
-      generation,
-    }, weight);
-  }
+  sampleRUM('lcp');
 
   document.body.classList.add('appear');
 
@@ -327,73 +357,6 @@ function decoratePage() {
   } else {
     postLCP();
   }
-}
-
-/* Core Web Vitals */
-
-function sendRUMData(data, weight) {
-  const body = JSON.stringify(data);
-  const url = `https://rum.hlx3.page/.rum/${weight}`;
-
-  // console.log('storing', body);
-
-  // Use `navigator.sendBeacon()` if available, falling back to `fetch()`.
-  // eslint-disable-next-line no-unused-expressions
-  (navigator.sendBeacon && navigator.sendBeacon(url, body))
-  || fetch(url, { body, method: 'POST', keepalive: true });
-}
-
-function rumInit() {
-  const usp = new URLSearchParams(window.location.search);
-  const cwv = usp.get('cwv');
-
-  // with parameter, weight is 1. Defaults to 100.
-  const weight = (cwv === 'on') ? 1 : 100;
-
-  window.hlx = window.hlx || {};
-
-  // eslint-disable-next-line no-bitwise
-  const hashCode = (s) => s.split('').reduce((a, b) => (((a << 5) - a) + b.charCodeAt(0)) | 0, 0);
-  const id = `${hashCode(window.location.href)}-${new Date().getTime()}-${Math.random().toString(16).substr(2, 14)}`;
-
-  const random = Math.random();
-  window.hlx.rum = { weight, id, random };
-  return window.hlx.rum;
-}
-
-const { random, weight, id } = rumInit();
-if (random && (random * weight < 1)) {
-  // store a page view
-  sendRUMData({
-    weight,
-    id,
-    referer: window.location.href,
-    generation: 'blog-rum-microfunnel-top',
-  }, weight);
-}
-
-function rumLoad() {
-  // eslint-disable-next-line no-shadow
-  const { weight, id, random } = window.hlx.rum;
-  const generation = 'blog-rum-microfunnel-load';
-
-  if (random && (random * weight < 1)) {
-    // store a page view
-    sendRUMData({
-      weight,
-      id,
-      referer: window.location.href,
-      generation,
-    }, weight);
-  }
-}
-
-if (document.readyState === 'complete') {
-  rumLoad();
-} else {
-  window.addEventListener('load', () => {
-    rumLoad();
-  });
 }
 
 decoratePage();
