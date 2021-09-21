@@ -18,7 +18,7 @@
  */
 
 // eslint-disable-next-line
-if (!navigator.sendBeacon) { var data = JSON.stringify({ referer: window.location.href, checkpoint: 'unsupported', weight: 1 }); var img = new Image(); img.src = 'https://rum.hlx3.page/.rum/1?data='+data; }
+if (!navigator.sendBeacon) { var data = JSON.stringify({ referer: window.location.href, checkpoint: 'unsupported', weight: 1 }); var img = new Image(); img.src = 'https://rum.hlx3.page/.rum/1?data='+data; document.appendChild(img); }
 
 // eslint-disable-next-line import/prefer-default-export
 function sampleRUM(checkpoint, data = {}) {
