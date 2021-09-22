@@ -86,3 +86,4 @@ sitemap: https://blog.adobe.com/sitemap.it.xml
 sitemap: https://blog.adobe.com/sitemap.jp.xml
 sitemap: https://blog.adobe.com/sitemap.ko.xml
 
+disallow: /.helix-bot-honigtopf

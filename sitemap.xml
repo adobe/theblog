@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+  	<loc>https://blog.adobe.com/.helix-bot-honigtopf</loc>
+  	<lastmod>2021-09-22</lastmod>
+  </url>
+  <url>
     <loc>https://blog.adobe.com/en/publish/2021/07/29/indiana-university-expands-creative-possibilities-with-adobe-creative-cloud-adobe-stock.html</loc>
     <lastmod>2021-07-29</lastmod>
   </url>
