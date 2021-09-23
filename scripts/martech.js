@@ -123,10 +123,28 @@ function setMarTechContext() {
  */
 
 function setDigitalData() {
+  // creates a string from the categories & products for analytics
+  // example: "Category: #AdobeForAll | Category: Adobe Life | Product: Photoshop"
+  const getPageFilterInfo = () => {
+    let pageFilterInfo = "";
+    const categories = window.blog.topics || [];
+    const products = window.blog.products || [];
+    categories.forEach(categories => {
+      pageFilterInfo += `Category: ${categories} | `;
+    })
+    products.forEach(product => {
+      pageFilterInfo += `Product: ${product} | `;
+    })
+    // remove " | " from the end of the string
+    return pageFilterInfo.replace(/ \| $/m, "");
+  }
+
   var langMap={'en': 'en-US'};
   var lang=window.blog.language;
   if (langMap[lang]) lang=langMap[lang];
   digitalData._set('page.pageInfo.language', lang);
+  digitalData._set('page.pageInfo.siteSection', 'blog.adobe.com');
+  digitalData._set('page.pageInfo.attributes.pageFilterInfo', getPageFilterInfo());
 }
 
 setMarTechContext();
