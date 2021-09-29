@@ -128,8 +128,8 @@ function setDigitalData() {
   // example: "Category: #AdobeForAll | Category: Adobe Life | Product: Photoshop"
   const getPageFilterInfo = () => {
     let pageFilterInfo = "";
-    const categories = window.blog.topics || [];
-    const products = window.blog.products || [];
+    const categories = window.blog.allTopics || [];
+    const products = window.blog.allProducts || [];
     categories.forEach(categories => {
       pageFilterInfo += `Category: ${categories} | `;
     })
