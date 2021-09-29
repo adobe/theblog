@@ -106,7 +106,8 @@ function setMarTechContext() {
     adobe: {
       launch: {
         property: 'global',
-        environment: env  // “production” for prod/live site or “stage” for qa/staging site
+        environment: env,  // “production” for prod/live site or “stage” for qa/staging site
+        controlPageLoad: true  // if the pageload needs to be controlled by dev team then value needs to be true
       },
       analytics: {
         additionalAccounts: accounts // additional report suites to send data to “,” separated  Ex: 'RS1,RS2'
@@ -147,6 +148,20 @@ function setDigitalData() {
   digitalData._set('page.pageInfo.attributes.pageFilterInfo', getPageFilterInfo());
 }
 
+/**
+ * tracks the initial page load
+ */
+function trackPageLoad() {
+  if (!digitalData || !_satellite) {
+    return;
+  }
+
+  //pageload for initial pageload (For regular tracking of pageload hits)
+  _satellite.track('pageload', {
+    digitalData: digitalData._snapshot()
+  });
+}
+
 setMarTechContext();
 
 window.targetGlobalSettings = {
@@ -155,6 +170,7 @@ window.targetGlobalSettings = {
 
 loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   setDigitalData();
+  trackPageLoad();
 });
 
 loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js').id = 'feds-script';
