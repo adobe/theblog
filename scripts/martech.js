@@ -104,7 +104,8 @@ function setMarTechContext() {
     adobe: {
       launch: {
         property: 'global',
-        environment: env  // “production” for prod/live site or “stage” for qa/staging site
+        environment: env,  // “production” for prod/live site or “stage” for qa/staging site
+        controlPageLoad: true  // if the pageload needs to be controlled by dev team then value needs to be true
       },
       analytics: {
         additionalAccounts: accounts // additional report suites to send data to “,” separated  Ex: 'RS1,RS2'
@@ -121,10 +122,42 @@ function setMarTechContext() {
  */
 
 function setDigitalData() {
+  // creates a string from the categories & products for analytics
+  // example: "Category: #AdobeForAll | Category: Adobe Life | Product: Photoshop"
+  const getPageFilterInfo = () => {
+    let pageFilterInfo = "";
+    const categories = window.blog.allTopics || [];
+    const products = window.blog.allProducts || [];
+    categories.forEach(categories => {
+      pageFilterInfo += `Category: ${categories} | `;
+    })
+    products.forEach(product => {
+      pageFilterInfo += `Product: ${product} | `;
+    })
+    // remove " | " from the end of the string
+    return pageFilterInfo.replace(/ \| $/m, "");
+  }
+
   var langMap={'en': 'en-US'};
   var lang=window.blog.language;
   if (langMap[lang]) lang=langMap[lang];
   digitalData._set('page.pageInfo.language', lang);
+  digitalData._set('page.pageInfo.siteSection', 'blog.adobe.com');
+  digitalData._set('page.pageInfo.attributes.pageFilterInfo', getPageFilterInfo());
+}
+
+/**
+ * tracks the initial page load
+ */
+function trackPageLoad() {
+  if (!digitalData || !_satellite) {
+    return;
+  }
+
+  //pageload for initial pageload (For regular tracking of pageload hits)
+  _satellite.track('pageload', {
+    digitalData: digitalData._snapshot()
+  });
 }
 
 setMarTechContext();
@@ -135,6 +168,7 @@ window.targetGlobalSettings = {
 
 loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   setDigitalData();
+  trackPageLoad();
 });
 
 loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js').id = 'feds-script';
