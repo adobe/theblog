@@ -9,12 +9,11 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+/* global window webVitals document sampleRUM */
 
 import {
   loadScript,
-  loadBlock, 
-  buildBlock,
-} from '/scripts/v2/common.js';
+} from './v2/common.js';
 
 function checkDX(tags) {
   const dxtags=`Experience Cloud, Experience Manager, Magento Commerce, Marketo Engage, Target, Commerce Cloud, Campaign, Audience Manager, Analytics, Advertising Cloud,
@@ -105,7 +104,8 @@ function setMarTechContext() {
     adobe: {
       launch: {
         property: 'global',
-        environment: env  // “production” for prod/live site or “stage” for qa/staging site
+        environment: env,  // “production” for prod/live site or “stage” for qa/staging site
+        controlPageLoad: true  // if the pageload needs to be controlled by dev team then value needs to be true
       },
       analytics: {
         additionalAccounts: accounts // additional report suites to send data to “,” separated  Ex: 'RS1,RS2'
@@ -122,10 +122,42 @@ function setMarTechContext() {
  */
 
 function setDigitalData() {
+  // creates a string from the categories & products for analytics
+  // example: "Category: #AdobeForAll | Category: Adobe Life | Product: Photoshop"
+  const getPageFilterInfo = () => {
+    let pageFilterInfo = "";
+    const categories = window.blog.allTopics || [];
+    const products = window.blog.allProducts || [];
+    categories.forEach(categories => {
+      pageFilterInfo += `Category: ${categories} | `;
+    })
+    products.forEach(product => {
+      pageFilterInfo += `Product: ${product} | `;
+    })
+    // remove " | " from the end of the string
+    return pageFilterInfo.replace(/ \| $/m, "");
+  }
+
   var langMap={'en': 'en-US'};
   var lang=window.blog.language;
   if (langMap[lang]) lang=langMap[lang];
   digitalData._set('page.pageInfo.language', lang);
+  digitalData._set('page.pageInfo.siteSection', 'blog.adobe.com');
+  digitalData._set('page.pageInfo.attributes.pageFilterInfo', getPageFilterInfo());
+}
+
+/**
+ * tracks the initial page load
+ */
+function trackPageLoad() {
+  if (!digitalData || !_satellite) {
+    return;
+  }
+
+  //pageload for initial pageload (For regular tracking of pageload hits)
+  _satellite.track('pageload', {
+    digitalData: digitalData._snapshot()
+  });
 }
 
 setMarTechContext();
@@ -136,60 +168,40 @@ window.targetGlobalSettings = {
 
 loadScript('https://www.adobe.com/marketingtech/main.min.js', () => {
   setDigitalData();
+  trackPageLoad();
 });
 
 loadScript('https://www.adobe.com/etc.clientlibs/globalnav/clientlibs/base/feds.js').id = 'feds-script';
 loadScript('https://static.adobelogin.com/imslib/imslib.min.js');
 
-/* Core Web Vitals */
-const usp = new URLSearchParams(window.location.search);
-const cwv = usp.get('cwv');
+/* Core Web Vitals RUM collection */
 
-// with parameter, weight is 1. Defaults to 100.
-const weight = (cwv === 'on') ? 1 : 100;
-
-window.hlx = window.hlx || {};
-
-const hashCode = (s) => s.split('').reduce((a,b) => (((a << 5) - a) + b.charCodeAt(0))|0, 0);
-const id = `${hashCode(window.location.href)}-${new Date().getTime()}-${Math.random().toString(16).substr(2, 14)}`;
-
-function store(data) {
-  const body = JSON.stringify(data);
-  const url = `/.rum/${weight}`;
-
-  // console.log('storing', body);
-
-  // Use `navigator.sendBeacon()` if available, falling back to `fetch()`.
-  (navigator.sendBeacon && navigator.sendBeacon(url, body)) ||
-      fetch(url, {body, method: 'POST', keepalive: true});
-}
+sampleRUM('cwv');
 
 function storeCWV(measurement) {
-  const rum = { cwv:{}, weight, id };
+  const rum = { cwv: { } };
   rum.cwv[measurement.name] = measurement.value;
-
-  store(rum);
+  sampleRUM('cwv', rum);
 }
 
-if (Math.random() * weight < 1) {
-  // store a page view
-  store({ weight, id });
-
-  var script = document.createElement('script');
+if (window.hlx.rum.isSelected) {
+  const script = document.createElement('script');
   script.src = 'https://unpkg.com/web-vitals';
-  script.onload = function() {
+  script.onload = () => {
     // When loading `web-vitals` using a classic script, all the public
     // methods can be found on the `webVitals` global namespace.
     webVitals.getCLS(storeCWV);
     webVitals.getFID(storeCWV);
     webVitals.getLCP(storeCWV);
-  }
+  };
   document.head.appendChild(script);
 }
 
+/*
 const $main = document.querySelector('main');
 const $stickyBanner = buildBlock('sticky-banner', `<p>Help us make your
 Adobe Blog Experience even better <a href="https://pages.adobe.com/general/en/blog/">Answer 7 Short Questions</a><p>`);
 $stickyBanner.setAttribute('data-block-name', 'sticky-banner')
 $main.appendChild($stickyBanner);
 loadBlock($stickyBanner);
+*/

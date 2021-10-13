@@ -17,7 +17,8 @@ import {
   createTag,
   loadScript,
   extractTopicsAndProducts,
-  globalPostLCP
+  globalPostLCP,
+  getMetadata,
 } from '/scripts/v2/common.js';
 
 import {
@@ -243,10 +244,21 @@ function fixTableCleanup() {
   })
 }
 
+function adjustCanonical() {
+  const canonical = getMetadata('canonical');
+  if (canonical) {
+    const link = document.querySelector('link[rel="canonical"]');
+    link.setAttribute('href', canonical);
+  }
+}
+
 /**
  * Decorates the post page with CSS classes
  */
 function decoratePostPage(){
+  
+  adjustCanonical();
+
   // fix tables
   fixPostBlocks();
   fixTableCleanup();
@@ -534,7 +546,7 @@ function fetchAuthor() {
         console.error('Error while extracting author info', e);
       }
 
-      if (!window.location.hostname.includes('adobe.com') && window.location.pathname.includes('publish')) {
+      if (!window.location.hostname.includes('adobe.com') && window.location.pathname.includes('/publish/')) {
         const $date = authorSection.querySelector('.post-date');
         if ($date && window.blog.rawDate) {
           const [ mm, dd, yyyy ] = window.blog.rawDate.split('-');
@@ -787,7 +799,8 @@ function decorateAnimations() {
 
       const $video=createTag('video', attribs);
       if (href.startsWith('https://hlx.blob.core.windows.net/external/')) {
-        href='/hlx_'+href.split('/')[4].replace('#image','');
+        const { pathname } = new URL(href);
+        href = pathname.replace('external/', 'media_') + '.mp4';
       }
       $video.innerHTML=`<source src="${href}" type="video/mp4">`;
       $a.parentNode.replaceChild($video, $a);

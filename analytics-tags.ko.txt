@@ -1,4 +1,8 @@
 url	Categories	Products	Industries	Internals
+https://blog.adobe.com/ko/publish/2021/09/01/photoshop-release-major-update-august.html	"포토그래피, 인사이트 및 영감, 인공지능, 크리에이티브"	"크리에이티브 클라우드, 포토샵, 프레스코"	"미디어 및 엔터테인먼트"	"크리에이티브 클라우드"
+https://blog.adobe.com/ko/publish/2021/08/30/the-rise-of-c2m-model-in-ecommerce.html	"고객사례, 디지털 혁신, 개인화, 커머스"	"익스피리언스 클라우드, 애널리틱스, 타깃"	"리테일"	"유통 및 전자상거래 트렌드, 익스피리언스 클라우드"
+https://blog.adobe.com/ko/publish/2021/08/27/premier-pro-beta-youtube-creator-campaign.html	"비디오 및 오디오, 크리에이티브, 소셜, 콘텐츠 관리, 크리에이티브 영감 및 트렌드, 뉴스"	"크리에이티브 클라우드, 프리미어 프로"	""	"크리에이티브 클라우드"
+https://blog.adobe.com/ko/publish/2021/08/25/super-resolution.html	"포토그래피, 인사이트 및 영감, 뉴스, 인공지능, 크리에이티브"	"크리에이티브 클라우드, 라이트룸, 포토샵"	""	"크리에이티브 클라우드"
 https://blog.adobe.com/ko/publish/2021/08/23/digital-transformation-in-financial-industry.html	"고객사례, 디지털 혁신, 업무의 미래, 트렌드 및 리서치, 개인화"	"익스피리언스 클라우드, 애널리틱스, 타깃"	"금융"	"마케팅, IT, 익스피리언스 클라우드"
 https://blog.adobe.com/ko/publish/2021/08/19/what-is-composite-photography.html	"인사이트 및 영감, 크리에이티브, 포토그래피"	"크리에이티브 클라우드, 포토샵"	"미디어 및 엔터테인먼트"	"크리에이티브 클라우드"
 https://blog.adobe.com/ko/publish/2021/08/11/truth-about-green-marketing.html	"지속가능성, 디지털 혁신, 고객사례, 트렌드 및 리서치, 캠페인 관리"	"익스피리언스 클라우드"	"정부, 제조"	"마케팅, 익스피리언스 클라우드"
@@ -307,7 +311,6 @@ https://blog.adobe.com/ko/publish/2019/04/25/premiere-rush.html	"비디오 및 �
 https://blog.adobe.com/ko/publish/2019/04/18/open-data-initiative-summit2019.html	"어도비 서밋 Adobe Summit"	"어도비 센세이, 익스피리언스 클라우드, 애드버타이징 클라우드"	""	"익스피리언스 클라우드, 마케팅"
 https://blog.adobe.com/ko/publish/2019/04/11/acrobat-dc-five-tips.html	"크리에이티브 영감 및 트렌드"	"도큐먼트 클라우드, 애크로뱃"	""	"도큐먼트 클라우드"
 https://blog.adobe.com/ko/publish/2019/04/09/digital-transformation-20-customer-experience-management.html	"어도비 서밋 Adobe Summit"	"애드버타이징 클라우드, 익스피리언스 클라우드, 어도비 센세이"	""	"익스피리언스 클라우드, 마케팅"
-https://blog.adobe.com/ko/publish/2019/04/03/hitachi-solutions-europe-accelerates-pace-of-business.html	"디지털 혁신, 업무의 미래"	"애크로뱃, 도큐먼트 클라우드, 사인"	""	"도큐먼트 클라우드"
 https://blog.adobe.com/ko/publish/2019/04/02/the-stylespotlight-sam-horine.html	"크리에이티브 영감 및 트렌드, 포토그래피"	"크리에이티브 클라우드, 라이트룸"	""	"크리에이티브 클라우드"
 https://blog.adobe.com/ko/publish/2019/03/26/photoshop-aftereffects-awesomeness.html	"디자인, 비디오 및 오디오"	"크리에이티브 클라우드, 애프터 이펙트, 포토샵"	""	"크리에이티브 클라우드"
 https://blog.adobe.com/ko/publish/2019/03/19/top5-graphic-design-trends-2019.html	"크리에이티브 영감 및 트렌드"	"크리에이티브 클라우드, 일러스트레이터, 포토샵"	""	"크리에이티브 클라우드"

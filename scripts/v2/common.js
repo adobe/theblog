@@ -940,7 +940,7 @@ export async function globalPostLCP() {
   const martech = usp.get('martech');
 
   if (!(martech === 'off' || document.querySelector(`head script[src="${martechUrl}"]`))) {
-    let ms = 3000;
+    let ms = 0;
     const delay = usp.get('delay');
     if (delay) ms = +delay;
     setTimeout(() => {
@@ -1016,4 +1016,16 @@ decoratePage();
     blockEl.appendChild(rowEl);
   });
   return (blockEl);
+}
+
+
+/**
+ * Retrieves the content of a metadata tag.
+ * @param {string} name The metadata name (or property)
+ * @returns {string} The metadata value
+ */
+ export function getMetadata(name) {
+  const attr = name && name.includes(':') ? 'property' : 'name';
+  const $meta = document.head.querySelector(`meta[${attr}="${name}"]`);
+  return $meta && $meta.content;
 }
