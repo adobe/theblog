@@ -49,6 +49,55 @@
     };
   }
 
+  async function toggleCardPreview(sk) {
+    if (document.getElementById('hlx-sk-card-preview')) {
+      document.getElementById('hlx-sk-card-preview').remove();
+      document.body.removeEventListener('keydown', cardPreviewEscListener);
+    } else {
+      const {
+        addCard,
+        itemTransformer,
+      } = await import('/scripts/v2/common.js');
+      const $overlay = document.createElement('div');
+      $overlay.id = 'hlx-sk-card-preview';
+      $overlay.addEventListener('click', () => {
+        toggleCardPreview(sk);
+      });
+      document.body.prepend($overlay);
+
+      const $modal = document.createElement('div');
+      $modal.innerHTML = `
+      <style>
+        #hlx-sk-card-preview {
+          z-index: 9999998;
+          position: fixed;
+          width: 100vw;
+          height: 100vh;
+          top: 0;
+          left: 0;
+          background-color: rgba(0,0,0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        #hlx-sk-card-preview .card {
+          width: 376px;
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 10px 20px 0 rgba(0, 0, 0, 0.3);
+        }
+      </style>`;
+      addCard(await itemTransformer(getCardData(sk)), $modal);
+      $overlay.append($modal);
+      document.body.addEventListener('keydown', cardPreviewEscListener);
+    }
+    sk.get('card-preview').firstElementChild.classList.toggle('pressed');
+  }
+
+  function cardPreviewEscListener(keyEvt) {
+    if (keyEvt.key === 'Escape') {
+      toggleCardPreview(sk);
+    }
+  };
+
   function allowedPostPath(path) {
     return ![
       'documentation',
@@ -95,52 +144,7 @@
         },
         button: {
           text: 'Card Preview',
-          action: async (evt, sk) => {
-            const {
-              addCard,
-              itemTransformer,
-            } = await import('/scripts/common.js');
-            const btn = evt.target;
-            let $modal = document.querySelector('.hlx-sk-overlay > div > .card');
-            if ($modal) {
-              sk.hideModal();
-              btn.classList.remove('pressed');
-            } else {
-              sk.showModal('', true);
-              $modal = document.querySelector('.hlx-sk-overlay > div');
-              $modal.classList.remove('wait');
-              $modal.innerHTML = addCard(await itemTransformer(getCardData(sk)),
-                document.createDocumentFragment()).outerHTML;
-              function hideCardPreview() {
-                sk.hideModal();
-                btn.classList.remove('pressed');
-              }
-              $modal.parentElement.onclick = (evt) => {
-                hideCardPreview();
-                evt.target.onclick = null;
-              };
-              document.body.onkeydown = (evt) => {
-                if (evt.key === 'Escape') {
-                  hideCardPreview();
-                  evt.target.onkeydown = null;
-                }
-              };
-            
-              const style = document.createElement('style');
-              style.textContent = `
-              .hlx-sk-overlay .card {
-                width: 376px;
-                box-shadow: var(--hlx-sk-shadow);
-              }
-              .hlx-sk-overlay > div {
-                text-align: center;
-                background-color: transparent;
-                box-shadow: none;
-              }`;
-              $modal.appendChild(style);
-              btn.classList.add('pressed');
-            }
-          },
+          action: () => toggleCardPreview(sk),
         },
       },
       // PREDICTED URL ----------------------------------------------------------------
