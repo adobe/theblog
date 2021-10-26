@@ -121,6 +121,7 @@
   const sk = window.hlx.initSidekick({
     project: 'Adobe Blog',
     host: 'blog.adobe.com',
+    pushDownSelector: '#feds-header',
     plugins: [
       // TAGGER -----------------------------------------------------------------------
       {
